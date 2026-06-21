@@ -1,0 +1,211 @@
+export type SourceStatus = 'ok' | 'warn' | 'error' | 'skipped'
+
+export interface SourceHealth {
+  id: string
+  name: string
+  status: SourceStatus
+  url: string
+  lastCheckedAt: string
+  detail: string
+}
+
+export interface Team {
+  id: string
+  name: string
+  zhName: string
+  abbreviation: string
+  logo?: string
+  form?: string
+  record?: string
+}
+
+export interface MarketOutcome {
+  label: string
+  side: 'home' | 'draw' | 'away' | 'over' | 'under' | 'spreadHome' | 'spreadAway'
+  american: string | null
+  decimal: number | null
+  impliedProbability: number | null
+  normalizedProbability?: number | null
+  line?: string | null
+  movement?: number | null
+}
+
+export interface MarketSnapshot {
+  provider: string
+  details: string
+  moneyline: MarketOutcome[]
+  total: MarketOutcome[]
+  spread: MarketOutcome[]
+  updatedAt: string
+}
+
+export interface ModelFactor {
+  label: string
+  value: number
+  tone: 'good' | 'watch' | 'bad'
+  note: string
+}
+
+export interface ModelJudgement {
+  confidence: number
+  risk: number
+  tier: '观望' | '小额娱乐' | '避免追高'
+  lean: string
+  stake: string
+  guidance: string
+  avoid: string
+  factors: ModelFactor[]
+}
+
+export interface ResultProbability {
+  label: string
+  side: 'home' | 'draw' | 'away'
+  probability: number
+}
+
+export interface ScorelineCandidate {
+  score: string
+  result: '主胜' | '平局' | '客胜'
+  probability: number
+  fairOdds: number
+  suggestedMinOdds: number
+  officialOdds: number | null
+  expectedValue: number | null
+  expectedValueAtSuggestedOdds: number
+  grade: '首选核验' | '备选' | '回避'
+  reason: string
+}
+
+export interface ScorelineAnalysis {
+  model: string
+  homeExpectedGoals: number
+  awayExpectedGoals: number
+  totalExpectedGoals: number
+  resultProbabilities: ResultProbability[]
+  bestPick: ScorelineCandidate | null
+  candidates: ScorelineCandidate[]
+  avoid: ScorelineCandidate[]
+  notes: string[]
+}
+
+export interface ProfessionalSignal {
+  label: string
+  score: number
+  tone: 'good' | 'watch' | 'bad'
+  evidence: string
+}
+
+export interface ExpertAnswer {
+  verdict: string
+  recommendedScore: string
+  secondaryScores: string[]
+  marketDirection: string
+  totalGoals: string
+  buyCondition: string
+  passCondition: string
+  stakeCeiling: string
+  confidenceBand: string
+}
+
+export interface PlayRecommendation {
+  playType: '比分' | '胜平负' | '让球胜平负' | '总进球' | '回避'
+  selection: string
+  priority: '主方案' | '备选' | '防守' | '不建议'
+  confidence: number
+  budgetShare: string
+  minOdds: string
+  expectedValueNote: string
+  reason: string
+  noBetIf: string
+}
+
+export interface ScenarioNote {
+  title: string
+  probability: string
+  scorePath: string
+  action: string
+}
+
+export interface RiskControlNote {
+  label: string
+  level: '低' | '中' | '高'
+  detail: string
+}
+
+export interface ProfessionalBrief {
+  rankScore: number
+  grade: '重点核验' | '小额分散' | '只核验不追高' | '观望'
+  headline: string
+  finalAdvice: string
+  stakingPlan: string
+  expertAnswer: ExpertAnswer
+  primary: PlayRecommendation | null
+  plays: PlayRecommendation[]
+  scenarios: ScenarioNote[]
+  signals: ProfessionalSignal[]
+  riskControls: RiskControlNote[]
+  checklist: string[]
+  downgradeTriggers: string[]
+}
+
+export interface SportteryMapping {
+  status: '需赛前核验' | '接口可用' | '暂无官方数据'
+  officialUrl: string
+  markets: string[]
+  note: string
+}
+
+export interface MatchBrief {
+  id: string
+  name: string
+  group: string
+  status: string
+  kickoffUtc: string
+  kickoffChina: string
+  venue: string
+  home: Team
+  away: Team
+  score?: string
+  market: MarketSnapshot | null
+  judgement: ModelJudgement
+  scoreline: ScorelineAnalysis
+  professional: ProfessionalBrief
+  sporttery: SportteryMapping
+}
+
+export interface NewsItem {
+  id: string
+  title: string
+  summary: string
+  url: string
+  publishedAt: string
+  impact: string
+}
+
+export interface BankrollRule {
+  label: string
+  value: string
+  note: string
+}
+
+export interface WorldCupBrief {
+  generatedAt: string
+  generatedAtChina: string
+  targetDateChina: string
+  timezone: string
+  summary: {
+    headline: string
+    note: string
+    trackedMatches: number
+    healthySources: number
+    updateMode: string
+  }
+  sources: SourceHealth[]
+  news: NewsItem[]
+  matches: MatchBrief[]
+  bankroll: {
+    title: string
+    disclaimer: string
+    rules: BankrollRule[]
+  }
+}
