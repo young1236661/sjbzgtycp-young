@@ -923,6 +923,175 @@
   font-weight: 800;
 }
 
+.deep-thinking-panel {
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid rgba(20, 133, 101, 0.24);
+  border-radius: 8px;
+  background: linear-gradient(180deg, rgba(20, 133, 101, 0.08), rgba(255, 255, 255, 0.96));
+}
+
+.deep-thinking-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 96px;
+  gap: 14px;
+  align-items: stretch;
+}
+
+.deep-thinking-hero > div:first-child {
+  display: grid;
+  gap: 7px;
+}
+
+.deep-thinking-hero span,
+.purchase-plan-card span,
+.purchase-plan-card dt,
+.thinking-details-grid li {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.deep-thinking-hero > div:first-child > span,
+.purchase-plan-card span,
+.purchase-plan-card dt {
+  font-weight: 800;
+}
+
+.deep-thinking-hero strong {
+  font-size: 20px;
+  line-height: 1.3;
+}
+
+.deep-thinking-hero p,
+.purchase-plan-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.deep-thinking-score {
+  display: grid;
+  place-items: center;
+  border-left: 1px solid rgba(20, 133, 101, 0.18);
+}
+
+.deep-thinking-score span {
+  color: var(--green);
+  font-size: 34px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.purchase-plan-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.purchase-plan-card {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid #e5eeeb;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.purchase-plan-card > div:first-child {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.purchase-plan-card > div:first-child strong {
+  padding: 3px 7px;
+  border-radius: 999px;
+  font-size: 11px;
+}
+
+.purchase-plan-card h4 {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.35;
+}
+
+.purchase-plan-card dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+}
+
+.purchase-plan-card dl div {
+  display: grid;
+  gap: 4px;
+  padding: 8px;
+  border-radius: 6px;
+  background: #f5f8f7;
+}
+
+.purchase-plan-card dd {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.action-买入核验 > div:first-child strong {
+  color: var(--green);
+  background: rgba(20, 133, 101, 0.11);
+}
+
+.action-小额防守 > div:first-child strong,
+.action-只看不买 > div:first-child strong {
+  color: #8a6a12;
+  background: rgba(146, 112, 14, 0.12);
+}
+
+.action-放弃 > div:first-child strong {
+  color: #9d2630;
+  background: rgba(199, 50, 63, 0.12);
+}
+
+.thinking-details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.thinking-details-grid section {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid #e7eeeb;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.thinking-details-grid strong {
+  font-size: 13px;
+}
+
+.thinking-details-grid ul {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding-left: 16px;
+}
+
+.thinking-details-grid li {
+  line-height: 1.45;
+}
+
+.no-buy-section {
+  border-color: rgba(199, 50, 63, 0.15) !important;
+  background: rgba(199, 50, 63, 0.03) !important;
+}
+
 .expert-answer {
   display: grid;
   gap: 14px;
@@ -1354,6 +1523,26 @@
   font-size: 18px;
 }
 
+.decision-deep {
+  display: grid;
+  gap: 5px;
+  padding: 11px;
+  border: 1px solid rgba(20, 133, 101, 0.18);
+  border-radius: 8px;
+  background: rgba(20, 133, 101, 0.06);
+}
+
+.decision-deep span,
+.decision-deep small {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.decision-deep strong {
+  font-size: 15px;
+  line-height: 1.35;
+}
+
 .mini-chart {
   margin-top: 14px;
 }
@@ -1572,6 +1761,9 @@
   .summary-strip,
   .scoreline-grid,
   .playbook-grid,
+  .deep-thinking-hero,
+  .purchase-plan-grid,
+  .thinking-details-grid,
   .answer-grid,
   .scenario-risk-grid,
   .memo-grid,
@@ -1583,6 +1775,12 @@
 
   .answer-grid > div.wide {
     grid-column: auto;
+  }
+
+  .deep-thinking-score {
+    min-height: 78px;
+    border-top: 1px solid rgba(20, 133, 101, 0.18);
+    border-left: none;
   }
 
   .memo-score {

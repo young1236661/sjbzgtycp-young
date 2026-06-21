@@ -132,12 +132,32 @@ export interface RiskControlNote {
   detail: string
 }
 
+export interface DeepThinkingPurchase {
+  label: string
+  selection: string
+  allocation: string
+  minOdds: string
+  action: '买入核验' | '小额防守' | '只看不买' | '放弃'
+  rationale: string
+}
+
+export interface DeepThinkingPlan {
+  label: string
+  conclusion: string
+  confidenceScore: number
+  purchasePlan: DeepThinkingPurchase[]
+  reasoningSummary: string[]
+  noBuyRules: string[]
+  updateSensitivity: string
+}
+
 export interface ProfessionalBrief {
   rankScore: number
   grade: '重点核验' | '小额分散' | '只核验不追高' | '观望'
   headline: string
   finalAdvice: string
   stakingPlan: string
+  deepThinking: DeepThinkingPlan
   expertAnswer: ExpertAnswer
   primary: PlayRecommendation | null
   plays: PlayRecommendation[]

@@ -31,6 +31,7 @@ import {
 import './App.css'
 import type {
   BankrollRule,
+  DeepThinkingPurchase,
   MatchBrief,
   MarketOutcome,
   PlayRecommendation,
@@ -540,6 +541,7 @@ function ProfessionalMemo({ match }: { match: MatchBrief }) {
         </div>
       </div>
 
+      <DeepThinkingPanel match={match} />
       <ExpertAnswerPanel match={match} />
 
       <div className="playbook-grid">
@@ -582,6 +584,74 @@ function ProfessionalMemo({ match }: { match: MatchBrief }) {
 
       <div className="staking-note">{match.professional.stakingPlan}</div>
     </section>
+  )
+}
+
+function DeepThinkingPanel({ match }: { match: MatchBrief }) {
+  const thinking = match.professional.deepThinking
+
+  return (
+    <section className="deep-thinking-panel">
+      <div className="deep-thinking-hero">
+        <div>
+          <span>{thinking.label}</span>
+          <strong>{thinking.conclusion}</strong>
+          <p>{thinking.updateSensitivity}</p>
+        </div>
+        <div className="deep-thinking-score">
+          <span>{thinking.confidenceScore}</span>
+          <small>推演分</small>
+        </div>
+      </div>
+
+      <div className="purchase-plan-grid">
+        {thinking.purchasePlan.map((item) => (
+          <PurchasePlanCard item={item} key={`${item.label}-${item.selection}`} />
+        ))}
+      </div>
+
+      <div className="thinking-details-grid">
+        <section>
+          <strong>判断摘要</strong>
+          <ul>
+            {thinking.reasoningSummary.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </section>
+        <section className="no-buy-section">
+          <strong>不买条件</strong>
+          <ul>
+            {thinking.noBuyRules.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </section>
+      </div>
+    </section>
+  )
+}
+
+function PurchasePlanCard({ item }: { item: DeepThinkingPurchase }) {
+  return (
+    <article className={'purchase-plan-card action-' + item.action}>
+      <div>
+        <span>{item.label}</span>
+        <strong>{item.action}</strong>
+      </div>
+      <h4>{item.selection}</h4>
+      <dl>
+        <div>
+          <dt>资金</dt>
+          <dd>{item.allocation}</dd>
+        </div>
+        <div>
+          <dt>门槛</dt>
+          <dd>{item.minOdds}</dd>
+        </div>
+      </dl>
+      <p>{item.rationale}</p>
+    </article>
   )
 }
 
@@ -886,6 +956,11 @@ function DecisionPanel({ match }: { match: MatchBrief }) {
             <strong>{match.scoreline.bestPick.score}</strong>
           </div>
         ) : null}
+        <div className="decision-deep">
+          <span>深度推演</span>
+          <strong>{match.professional.deepThinking.purchasePlan[0]?.selection ?? '等待核验'}</strong>
+          <small>{match.professional.deepThinking.purchasePlan[0]?.allocation ?? '保留预算'}</small>
+        </div>
         <strong>{match.judgement.stake}</strong>
         <p>{match.judgement.avoid}</p>
       </div>

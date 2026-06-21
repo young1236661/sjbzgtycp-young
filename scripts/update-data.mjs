@@ -479,6 +479,24 @@ function buildProfessionalBrief(market, homeTeam, awayTeam, judgement, scoreline
       headline: '等待赔率恢复后再判断',
       finalAdvice: '缺少足够市场数据时，不建议给出购买方向。',
       stakingPlan: '本场跳过，保留预算。',
+      deepThinking: {
+        label: '深度推演层',
+        conclusion: '数据不足，本场最合适的买法是放弃。',
+        confidenceScore: 25,
+        purchasePlan: [
+          {
+            label: '最终动作',
+            selection: '放弃本场',
+            allocation: '0%',
+            minOdds: '等待官方赔率',
+            action: '放弃',
+            rationale: '缺少可验证赔率和比分分布时，无法判断赔率是否补偿风险。',
+          },
+        ],
+        reasoningSummary: ['赔率、盘口和比分分布缺口过大。', '没有足够数据时，保留预算比猜比分更重要。'],
+        noBuyRules: ['任一关键数据源不可用时不买。', '中国体彩未开售或停售时不买。'],
+        updateSensitivity: '等待赔率源恢复后重新计算。',
+      },
       expertAnswer: {
         verdict: '观望，不给出购买答案',
         recommendedScore: '不选比分',
@@ -589,6 +607,16 @@ function buildProfessionalBrief(market, homeTeam, awayTeam, judgement, scoreline
   const expertAnswer = buildExpertAnswer(grade, scorePlay, resultPlay, totalPlay, hedgePlay, judgement, scoreline)
   const scenarios = buildScenarios(scoreline, favoriteName, winnerSide, totalBand)
   const riskControls = buildRiskControls(market, judgement, scoreline, favorite)
+  const deepThinking = buildDeepThinkingPlan({
+    grade,
+    expertAnswer,
+    plays,
+    scenarios,
+    riskControls,
+    judgement,
+    scoreline,
+    newsItems,
+  })
 
   return {
     rankScore,
@@ -596,6 +624,7 @@ function buildProfessionalBrief(market, homeTeam, awayTeam, judgement, scoreline
     headline: professionalHeadline(grade, favoriteName, bestScore, scoreline),
     finalAdvice: professionalFinalAdvice(grade, scorePlay, resultPlay, totalPlay, judgement),
     stakingPlan: stakingPlanForGrade(grade, judgement),
+    deepThinking,
     expertAnswer,
     primary: scorePlay,
     plays,
@@ -640,6 +669,129 @@ function buildProfessionalBrief(market, homeTeam, awayTeam, judgement, scoreline
       '临场天气、红牌停赛、战意信息与当前模型假设冲突',
     ],
   }
+}
+
+function buildDeepThinkingPlan({ grade, expertAnswer, plays, scenarios, riskControls, judgement, scoreline, newsItems }) {
+  const scorePlay = plays.find((play) => play.playType === '比分' && play.priority === '主方案') ?? plays[0]
+  const resultPlay = plays.find((play) => play.playType === '胜平负')
+  const totalPlay = plays.find((play) => play.playType === '总进球')
+  const hedgePlay = plays.find((play) => play.priority === '防守')
+  const hotRisk = riskControls.find((risk) => risk.label === '赔率压缩')
+  const scoreRisk = riskControls.find((risk) => risk.label === '比分方差')
+  const newsRisk = newsItems.slice(0, 6).some((item) => /伤|红牌|injur|red card|lineup|suspend|doubt/i.test(item.title + item.summary))
+  const confidenceScore = clamp(
+    Math.round(
+      judgement.confidence * 0.46 +
+        (100 - judgement.risk) * 0.24 +
+        (scoreline.bestPick?.probability ?? 0) * 180 +
+        (grade === '重点核验' ? 8 : grade === '小额分散' ? 3 : grade === '只核验不追高' ? -6 : -14) -
+        (newsRisk ? 5 : 0),
+    ),
+    15,
+    92,
+  )
+
+  const purchasePlan = []
+
+  if (grade === '观望' || !scorePlay) {
+    purchasePlan.push({
+      label: '最终动作',
+      selection: '放弃本场',
+      allocation: '0%',
+      minOdds: '不适用',
+      action: '放弃',
+      rationale: '综合分不足或数据缺口过大，保留预算。',
+    })
+  } else {
+    purchasePlan.push({
+      label: '主票',
+      selection: scorePlay.selection,
+      allocation:
+        grade === '重点核验'
+          ? '本场预算 35%-45%'
+          : grade === '小额分散'
+            ? '本场预算 25%-35%'
+            : '本场预算 15%-25%',
+      minOdds: scorePlay.minOdds,
+      action: grade === '只核验不追高' ? '只看不买' : '买入核验',
+      rationale: `首选比分概率 ${formatPct(scoreline.bestPick?.probability ?? 0)}，盈亏线 ${scoreline.bestPick?.fairOdds.toFixed(2) ?? '待定'}，低于门槛不买。`,
+    })
+
+    if (resultPlay) {
+      purchasePlan.push({
+        label: '低方差票',
+        selection: resultPlay.selection,
+        allocation:
+          grade === '重点核验'
+            ? '本场预算 35%-45%'
+            : grade === '小额分散'
+              ? '本场预算 25%-35%'
+              : '只看赔率，不主动追',
+        minOdds: resultPlay.minOdds,
+        action: grade === '只核验不追高' ? '只看不买' : '买入核验',
+        rationale: '胜平负只用于降低比分玩法方差，赔率被压低时不参与。',
+      })
+    }
+
+    if (totalPlay) {
+      purchasePlan.push({
+        label: '节奏校验',
+        selection: totalPlay.selection,
+        allocation: '本场预算 10%-20%',
+        minOdds: totalPlay.minOdds,
+        action: '小额防守',
+        rationale: '总进球用于校验比分区间，不作为扩大投注的理由。',
+      })
+    }
+
+    if (hedgePlay) {
+      purchasePlan.push({
+        label: '平局防守',
+        selection: hedgePlay.selection,
+        allocation: '本场预算 5%-8%',
+        minOdds: hedgePlay.minOdds,
+        action: '小额防守',
+        rationale: '只在平局噪音偏高且官方赔率给足时使用。',
+      })
+    }
+  }
+
+  return {
+    label: '深度推演层',
+    conclusion: deepThinkingConclusion(grade, expertAnswer, scorePlay, resultPlay, totalPlay),
+    confidenceScore,
+    purchasePlan: purchasePlan.slice(0, 4),
+    reasoningSummary: [
+      `模型最集中比分：${expertAnswer.recommendedScore}；备选：${expertAnswer.secondaryScores.slice(0, 2).join(' / ') || '不扩展'}。`,
+      `胜平负方向：${expertAnswer.marketDirection}；总进球校验：${expertAnswer.totalGoals}。`,
+      `主要风险：${hotRisk?.label ?? '赔率'}为${hotRisk?.level ?? '中'}，${scoreRisk?.label ?? '比分方差'}为${scoreRisk?.level ?? '中'}。`,
+      scenarios[0] ? `基准剧本：${scenarios[0].scorePath}` : '等待更多情景数据。',
+    ],
+    noBuyRules: [
+      `中国体彩比分赔率低于 ${scorePlay?.minOdds ?? '建议门槛'} 时不买。`,
+      resultPlay ? `胜平负 ${resultPlay.selection} 低于 ${resultPlay.minOdds} 时不买。` : '胜平负赔率不可核验时不买。',
+      '首发出现核心前锋、门将或中卫明显轮换时不买。',
+      '临场 30 分钟内热门方向继续大幅降赔时不追。',
+      newsRisk ? '最新新闻存在阵容/纪律风险，必须等首发后再决定。' : '中国体彩未开售、停售或让球口径变化时不买。',
+    ],
+    updateSensitivity:
+      grade === '重点核验'
+        ? '对官方赔率和首发最敏感，赛前 30 分钟需要重新核验。'
+        : grade === '只核验不追高'
+          ? '对降赔最敏感，只要官方赔率低于门槛就直接放弃。'
+          : '对赔率、首发和新闻中等敏感，适合小额而非重仓。',
+  }
+}
+
+function deepThinkingConclusion(grade, expertAnswer, scorePlay, resultPlay, totalPlay) {
+  if (grade === '观望' || !scorePlay) return '最合适买法：不买。本场保留预算。'
+  if (grade === '只核验不追高') {
+    return `最合适买法：只核验 ${scorePlay.selection}，官方赔率达标才小额；不追 ${resultPlay?.selection ?? '热门方向'}。`
+  }
+  if (grade === '重点核验') {
+    return `最合适买法：主票 ${scorePlay.selection}，低方差票 ${resultPlay?.selection ?? expertAnswer.marketDirection}，用 ${totalPlay?.selection ?? expertAnswer.totalGoals} 校验节奏。`
+  }
+  return `最合适买法：小额分散，首看 ${scorePlay.selection}，再用 ${resultPlay?.selection ?? expertAnswer.marketDirection} 和 ${totalPlay?.selection ?? expertAnswer.totalGoals} 交叉确认。`
 }
 
 function buildExpertAnswer(grade, scorePlay, resultPlay, totalPlay, hedgePlay, judgement, scoreline) {
