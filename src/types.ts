@@ -67,6 +67,8 @@ export interface ScorelineCandidate {
   score: string
   result: '主胜' | '平局' | '客胜'
   probability: number
+  baseProbability?: number
+  tailMultiplier?: number
   fairOdds: number
   suggestedMinOdds: number
   officialOdds: number | null

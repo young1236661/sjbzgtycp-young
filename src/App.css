@@ -1383,6 +1383,17 @@
   font-size: 15px;
 }
 
+.probability-cell {
+  display: grid;
+  gap: 2px;
+}
+
+.probability-cell small {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.25;
+}
+
 .scoreline-notes {
   display: grid;
   gap: 8px;

@@ -871,7 +871,15 @@ function ScorelineTable({
         <div className="score-table-grid" key={`${title}-${candidate.score}`}>
           <strong>{candidate.score}</strong>
           <span>{candidate.result}</span>
-          <span>{formatProbability(candidate.probability)}</span>
+          <span className="probability-cell">
+            {formatProbability(candidate.probability)}
+            {candidate.baseProbability ? (
+              <small>
+                原始 {formatProbability(candidate.baseProbability)}
+                {candidate.tailMultiplier ? ` · x${candidate.tailMultiplier.toFixed(2)}` : ''}
+              </small>
+            ) : null}
+          </span>
           <span>{candidate.fairOdds.toFixed(2)}</span>
           <span>{candidate.suggestedMinOdds.toFixed(2)}</span>
           <span>{candidate.expectedValue === null ? `官方待核验，≥${formatSignedPercent(candidate.expectedValueAtSuggestedOdds)}` : formatSignedPercent(candidate.expectedValue)}</span>

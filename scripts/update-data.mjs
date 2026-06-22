@@ -402,33 +402,76 @@ function buildScorelineAnalysis(market, homeTeam, awayTeam, judgement, newsItems
   const homeProbability = resultProbabilities.find((item) => item.side === 'home')?.probability ?? 0.33
   const drawProbability = resultProbabilities.find((item) => item.side === 'draw')?.probability ?? 0.26
   const awayProbability = resultProbabilities.find((item) => item.side === 'away')?.probability ?? 0.33
-  const totalExpectedGoals = estimateTotalGoals(market)
-  const goalDiff = estimateGoalDifference(homeProbability, awayProbability, drawProbability, market)
+  const baseTotalExpectedGoals = estimateTotalGoals(market)
+  const totalExpectedGoals = calibrateTotalGoals(baseTotalExpectedGoals, homeProbability, awayProbability, drawProbability, market)
+  const goalDiff = calibrateGoalDifference(
+    estimateGoalDifference(homeProbability, awayProbability, drawProbability, market),
+    homeProbability,
+    awayProbability,
+    drawProbability
+  )
   const homeExpectedGoals = clamp(round((totalExpectedGoals + goalDiff) / 2, 2), 0.18, 4.8)
   const awayExpectedGoals = clamp(round(totalExpectedGoals - homeExpectedGoals, 2), 0.18, 4.8)
   const newsRisk = newsItems.slice(0, 5).some((item) => /伤|红牌|fit|injur|red card|lineup/i.test(item.title + item.summary))
+  const uncertainty = uncertaintyMultiplier(judgement.risk, newsRisk)
 
-  const allScores = []
-  for (let homeGoals = 0; homeGoals <= 5; homeGoals += 1) {
-    for (let awayGoals = 0; awayGoals <= 5; awayGoals += 1) {
-      const probability = poisson(homeGoals, homeExpectedGoals) * poisson(awayGoals, awayExpectedGoals)
-      const fairOdds = probability > 0 ? 1 / probability : null
-      if (!fairOdds) continue
+  const rawScores = []
+  for (let homeGoals = 0; homeGoals <= 6; homeGoals += 1) {
+    for (let awayGoals = 0; awayGoals <= 6; awayGoals += 1) {
+      const baseProbability = poisson(homeGoals, homeExpectedGoals) * poisson(awayGoals, awayExpectedGoals)
+      const tailMultiplier = scoreTailMultiplier(
+        homeGoals,
+        awayGoals,
+        totalExpectedGoals,
+        resultProbabilities,
+        judgement
+      )
 
-      allScores.push({
+      rawScores.push({
+        homeGoals,
+        awayGoals,
         score: `${homeGoals}-${awayGoals}`,
         result: scoreResult(homeGoals, awayGoals),
-        probability,
-        fairOdds: round(fairOdds, 2),
-        suggestedMinOdds: round(fairOdds * uncertaintyMultiplier(judgement.risk, newsRisk), 2),
-        officialOdds: null,
-        expectedValue: null,
-        expectedValueAtSuggestedOdds: round(probability * fairOdds * uncertaintyMultiplier(judgement.risk, newsRisk) - 1, 3),
-        grade: '备选',
-        reason: scoreReason(homeGoals, awayGoals, homeTeam, awayTeam, resultProbabilities, totalExpectedGoals, judgement),
+        baseProbability,
+        tailMultiplier,
+        weightedProbability: baseProbability * tailMultiplier,
       })
     }
   }
+
+  const baseMass = rawScores.reduce((sum, item) => sum + item.baseProbability, 0)
+  const weightedMass = rawScores.reduce((sum, item) => sum + item.weightedProbability, 0) || 1
+  const allScores = rawScores
+    .map((item) => {
+      const probability = (item.weightedProbability / weightedMass) * baseMass
+      const fairOdds = probability > 0 ? 1 / probability : null
+      if (!fairOdds) return null
+
+      return {
+        score: item.score,
+        result: item.result,
+        probability: round(probability, 4),
+        baseProbability: round(item.baseProbability, 4),
+        tailMultiplier: round(item.tailMultiplier, 2),
+        fairOdds: round(fairOdds, 2),
+        suggestedMinOdds: round(fairOdds * uncertainty, 2),
+        officialOdds: null,
+        expectedValue: null,
+        expectedValueAtSuggestedOdds: round(probability * fairOdds * uncertainty - 1, 3),
+        grade: '备选',
+        reason: scoreReason(
+          item.homeGoals,
+          item.awayGoals,
+          homeTeam,
+          awayTeam,
+          resultProbabilities,
+          totalExpectedGoals,
+          judgement,
+          item.tailMultiplier
+        ),
+      }
+    })
+    .filter(Boolean)
 
   const resultStrength = {
     主胜: homeProbability,
@@ -436,16 +479,16 @@ function buildScorelineAnalysis(market, homeTeam, awayTeam, judgement, newsItems
     客胜: awayProbability,
   }
   const candidates = allScores
-    .filter((item) => item.probability >= 0.025)
+    .filter((item) => item.probability >= 0.018)
     .sort((left, right) => scoreCandidateRank(right, resultStrength) - scoreCandidateRank(left, resultStrength))
-    .slice(0, 7)
+    .slice(0, 9)
     .map((item, index) => ({
       ...item,
       grade: index === 0 ? '首选核验' : '备选',
     }))
 
   const avoid = allScores
-    .filter((item) => item.probability < 0.018 && item.fairOdds > 55)
+    .filter((item) => item.probability < 0.014 && item.fairOdds > 70)
     .sort((left, right) => left.probability - right.probability)
     .slice(0, 3)
     .map((item) => ({
@@ -455,7 +498,7 @@ function buildScorelineAnalysis(market, homeTeam, awayTeam, judgement, newsItems
     }))
 
   return {
-    model: '胜平负去水概率 + 大小球盘口校准 Poisson 比分分布',
+    model: '胜平负去水概率 + 大小球盘口 + 进攻尾部校准 Poisson 比分分布',
     homeExpectedGoals,
     awayExpectedGoals,
     totalExpectedGoals,
@@ -465,6 +508,7 @@ function buildScorelineAnalysis(market, homeTeam, awayTeam, judgement, newsItems
     avoid,
     notes: [
       '比分玩法方差很大，候选只适合小额娱乐或赛前核验。',
+      `本版把总进球从基础 ${baseTotalExpectedGoals.toFixed(2)} 校准到 ${totalExpectedGoals.toFixed(2)}，并对强弱分明场景的 3+ 进球比分做尾部上调。`,
       'expectedValue 只有抓到中国体彩官方比分赔率后才会填充；当前显示的是盈亏平衡与建议最低赔率。',
       newsRisk ? '最新新闻触发阵容/纪律风险词，建议等首发和官方停售前赔率。' : '最新新闻未触发高风险词，但仍需赛前核验首发。',
     ],
@@ -1007,14 +1051,20 @@ function resultProbabilitiesFromMarket(market) {
 }
 
 function estimateTotalGoals(market) {
+  const { line, overProbability } = totalMarketSignal(market)
+  const baseMean = invertPoissonOverLine(overProbability, line)
+  return round(clamp(baseMean, 1.65, 4.15), 2)
+}
+
+function totalMarketSignal(market) {
   const over = market.total.find((item) => item.side === 'over')
   const under = market.total.find((item) => item.side === 'under')
   const line = parseFloat(String(over?.line ?? under?.line ?? '2.5').replace(/[ou]/gi, '')) || 2.5
   const overRaw = over?.impliedProbability ?? null
   const underRaw = under?.impliedProbability ?? null
   const overProbability = overRaw !== null && underRaw !== null ? overRaw / (overRaw + underRaw) : 0.5
-  const baseMean = invertPoissonOverLine(overProbability, line)
-  return round(clamp(baseMean, 1.65, 4.15), 2)
+
+  return { line, overProbability }
 }
 
 function invertPoissonOverLine(probability, line) {
@@ -1045,26 +1095,102 @@ function estimateGoalDifference(homeProbability, awayProbability, drawProbabilit
   return clamp(round(marketTilt * 1.15 + spreadSignal, 2), -2.4, 2.4)
 }
 
+function calibrateTotalGoals(baseMean, homeProbability, awayProbability, drawProbability, market) {
+  const { line, overProbability } = totalMarketSignal(market)
+  const favoriteProbability = Math.max(homeProbability, awayProbability)
+  const winGap = Math.abs(homeProbability - awayProbability)
+  let boost = 0
+
+  if (baseMean >= 2.65) boost += 0.08
+  if (baseMean >= 2.95) boost += 0.1
+  if (favoriteProbability >= 0.58) boost += 0.08
+  if (favoriteProbability >= 0.68) boost += 0.12
+  if (winGap >= 0.32) boost += 0.06
+  if (drawProbability <= 0.22) boost += 0.05
+  if (overProbability >= 0.56) boost += 0.06
+  if (line >= 3) boost += 0.08
+
+  return round(clamp(baseMean + boost, 1.7, 4.55), 2)
+}
+
+function calibrateGoalDifference(baseDiff, homeProbability, awayProbability, drawProbability) {
+  const favoriteProbability = Math.max(homeProbability, awayProbability)
+  const winGap = Math.abs(homeProbability - awayProbability)
+  const direction = homeProbability >= awayProbability ? 1 : -1
+  let calibratedDiff = baseDiff
+
+  if (favoriteProbability >= 0.62) calibratedDiff += direction * 0.1
+  if (favoriteProbability >= 0.72) calibratedDiff += direction * 0.12
+  if (winGap >= 0.38) calibratedDiff += direction * 0.08
+  if (drawProbability <= 0.21) calibratedDiff += direction * 0.05
+
+  return clamp(round(calibratedDiff, 2), -2.85, 2.85)
+}
+
+function scoreTailMultiplier(homeGoals, awayGoals, totalExpectedGoals, resultProbabilities, judgement) {
+  const result = scoreResult(homeGoals, awayGoals)
+  const homeWin = resultProbabilities.find((item) => item.side === 'home')?.probability ?? 0
+  const awayWin = resultProbabilities.find((item) => item.side === 'away')?.probability ?? 0
+  const draw = resultProbabilities.find((item) => item.side === 'draw')?.probability ?? 0
+  const favoriteSide = homeWin >= awayWin ? 'home' : 'away'
+  const favoriteResult = favoriteSide === 'home' ? '主胜' : '客胜'
+  const favoriteProbability = Math.max(homeWin, awayWin)
+  const favoriteGoals = favoriteSide === 'home' ? homeGoals : awayGoals
+  const underdogGoals = favoriteSide === 'home' ? awayGoals : homeGoals
+  const favoriteMargin = favoriteGoals - underdogGoals
+  const totalGoals = homeGoals + awayGoals
+  let multiplier = 1
+
+  if (totalExpectedGoals >= 2.75 && totalGoals >= 3) multiplier += 0.08
+  if (totalExpectedGoals >= 3.05 && totalGoals >= 4) multiplier += 0.1
+  if (favoriteProbability >= 0.58 && result === favoriteResult && favoriteMargin >= 2) multiplier += 0.12
+  if (favoriteProbability >= 0.68 && result === favoriteResult && favoriteGoals >= 3 && favoriteMargin >= 2) multiplier += 0.15
+  if (favoriteProbability >= 0.75 && result === favoriteResult && favoriteGoals >= 4) multiplier += 0.12
+  if (draw <= 0.23 && result === '平局' && totalGoals <= 2) multiplier -= 0.08
+  if (totalExpectedGoals >= 2.85 && totalGoals <= 1) multiplier -= 0.1
+  if (favoriteProbability >= 0.64 && result !== favoriteResult && result !== '平局' && Math.abs(homeGoals - awayGoals) >= 2) {
+    multiplier -= 0.16
+  }
+  if (judgement.tier === '避免追高' && favoriteProbability >= 0.65 && result === favoriteResult && favoriteGoals >= 3) {
+    multiplier -= 0.04
+  }
+
+  return clamp(round(multiplier, 2), 0.72, 1.55)
+}
+
 function uncertaintyMultiplier(risk, newsRisk) {
   return round(1.06 + risk / 500 + (newsRisk ? 0.04 : 0), 2)
 }
 
 function scoreCandidateRank(item, resultStrength) {
   const resultWeight = 0.85 + (resultStrength[item.result] ?? 0.25)
-  const oddsPenalty = item.fairOdds > 38 ? 0.86 : item.fairOdds > 24 ? 0.94 : 1
-  return item.probability * resultWeight * oddsPenalty
+  const [homeGoals, awayGoals] = item.score.split('-').map(Number)
+  const totalGoals = homeGoals + awayGoals
+  const margin = Math.abs(homeGoals - awayGoals)
+  const highScoreLift = totalGoals >= 3 ? 1.06 : 1
+  const marginLift = margin >= 2 ? 1.04 : 1
+  const tailLift = item.tailMultiplier > 1 ? 1 + (item.tailMultiplier - 1) * 0.22 : 1
+  const oddsPenalty = item.fairOdds > 85 ? 0.82 : item.fairOdds > 55 ? 0.9 : item.fairOdds > 34 ? 0.97 : 1
+
+  return item.probability * resultWeight * highScoreLift * marginLift * tailLift * oddsPenalty
 }
 
-function scoreReason(homeGoals, awayGoals, homeTeam, awayTeam, resultProbabilities, totalExpectedGoals, judgement) {
+function scoreReason(homeGoals, awayGoals, homeTeam, awayTeam, resultProbabilities, totalExpectedGoals, judgement, tailMultiplier = 1) {
   const result = scoreResult(homeGoals, awayGoals)
   const homeWin = resultProbabilities.find((item) => item.side === 'home')?.probability ?? 0
   const awayWin = resultProbabilities.find((item) => item.side === 'away')?.probability ?? 0
   const draw = resultProbabilities.find((item) => item.side === 'draw')?.probability ?? 0
   const totalGoals = homeGoals + awayGoals
   const tempo = totalExpectedGoals >= 2.85 ? '进球环境偏开放' : totalExpectedGoals <= 2.25 ? '进球环境偏谨慎' : '进球环境中性'
+  const calibrationText =
+    tailMultiplier >= 1.12
+      ? '进攻尾部校准已上调，说明该大比分不是单纯搏冷。'
+      : tailMultiplier <= 0.9
+        ? '尾部校准下调，需防模型把罕见路径估得过高。'
+        : ''
 
   if (result === '平局') {
-    return `${tempo}，平局概率约 ${Math.round(draw * 100)}%，${homeTeam.zhName} 与 ${awayTeam.zhName} 的胜负差距不宜过度放大。`
+    return `${tempo}，平局概率约 ${Math.round(draw * 100)}%，${homeTeam.zhName} 与 ${awayTeam.zhName} 的胜负差距不宜过度放大。${calibrationText}`
   }
 
   const winner = homeGoals > awayGoals ? homeTeam.zhName : awayTeam.zhName
@@ -1072,7 +1198,7 @@ function scoreReason(homeGoals, awayGoals, homeTeam, awayTeam, resultProbabiliti
   const marginText = Math.abs(homeGoals - awayGoals) >= 2 ? '两球以上优势' : '一球小胜'
   const totalText = totalGoals >= 4 ? '比分偏大，需要更高官方赔率补偿风险' : totalGoals <= 1 ? '低比分，对临场节奏和首发依赖更强' : '比分区间贴近市场总进球'
 
-  return `${winner} 胜面约 ${Math.round(winnerProbability * 100)}%，${marginText}；${totalText}。${judgement.tier === '避免追高' ? '热门过热时只核验，不追低赔。' : ''}`
+  return `${winner} 胜面约 ${Math.round(winnerProbability * 100)}%，${marginText}；${totalText}。${calibrationText}${judgement.tier === '避免追高' ? '热门过热时只核验，不追低赔。' : ''}`
 }
 
 function scoreResult(homeGoals, awayGoals) {
