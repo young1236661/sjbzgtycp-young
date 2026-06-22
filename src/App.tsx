@@ -6,12 +6,16 @@ import {
   CalendarDays,
   CheckCircle2,
   CircleDollarSign,
+  CloudSun,
+  Compass,
   Gauge,
   KeyRound,
   ListChecks,
   LineChart,
   LogOut,
+  MapPinned,
   RefreshCcw,
+  ScrollText,
   ShieldAlert,
   ShieldCheck,
   Sparkles,
@@ -457,6 +461,7 @@ function MatchWorkspace({ match }: { match: MatchBrief }) {
       </div>
 
       <ProfessionalMemo match={match} />
+      <ContextIntelPanel match={match} />
 
       <div className="analysis-grid">
         <section className="analysis-panel probability-panel">
@@ -584,6 +589,109 @@ function ProfessionalMemo({ match }: { match: MatchBrief }) {
 
       <div className="staking-note">{match.professional.stakingPlan}</div>
     </section>
+  )
+}
+
+function ContextIntelPanel({ match }: { match: MatchBrief }) {
+  const { context } = match
+
+  return (
+    <section className="analysis-panel context-intel-panel">
+      <PanelTitle icon={<ScrollText />} title="实况上下文" detail="近5场 / 球员 / 伤病 / 天气 / 地理 / 古法低权重" />
+      <div className="context-grid">
+        <TeamContextCard team={match.home} context={context.home} />
+        <TeamContextCard team={match.away} context={context.away} />
+      </div>
+      <div className="environment-grid">
+        <article>
+          <div className="environment-title">
+            <CloudSun size={16} aria-hidden="true" />
+            <strong>天气与场馆</strong>
+            <span className={'risk-badge risk-' + context.weather.riskLevel}>{context.weather.riskLevel}</span>
+          </div>
+          <p>{context.weather.summary}</p>
+          <div className="weather-metrics">
+            <MetricPill label="温度" value={context.weather.temperatureC === null ? '待核验' : `${Math.round(context.weather.temperatureC)}°C`} />
+            <MetricPill label="降水" value={context.weather.precipitationProbability === null ? '待核验' : `${Math.round(context.weather.precipitationProbability)}%`} />
+            <MetricPill label="风速" value={context.weather.windKph === null ? '待核验' : `${Math.round(context.weather.windKph)} km/h`} />
+            <MetricPill label="顶棚" value={context.weather.roofLikely ? '可能有' : '按露天'} />
+          </div>
+        </article>
+        <article>
+          <div className="environment-title">
+            <MapPinned size={16} aria-hidden="true" />
+            <strong>地理与适应</strong>
+          </div>
+          <p>{context.geography.summary}</p>
+          <div className="geo-pair">
+            <span>{match.home.zhName}: {context.geography.homeDistanceKm === null ? '距离待核验' : `${context.geography.homeDistanceKm.toLocaleString()} km`} · {context.geography.homeClimate}</span>
+            <span>{match.away.zhName}: {context.geography.awayDistanceKm === null ? '距离待核验' : `${context.geography.awayDistanceKm.toLocaleString()} km`} · {context.geography.awayClimate}</span>
+          </div>
+        </article>
+        <article>
+          <div className="environment-title">
+            <Compass size={16} aria-hidden="true" />
+            <strong>古法文化校验</strong>
+            <span>{context.divination.weight}</span>
+          </div>
+          <p>{context.divination.summary}</p>
+          <div className="divination-symbols">
+            <span>{match.home.zhName}: {context.divination.homeSymbol}</span>
+            <span>{match.away.zhName}: {context.divination.awaySymbol}</span>
+            <span>日时五行: {context.divination.dayElement}</span>
+          </div>
+        </article>
+      </div>
+      <div className="context-note">{context.note}</div>
+    </section>
+  )
+}
+
+function TeamContextCard({ team, context }: { team: MatchBrief['home']; context: MatchBrief['context']['home'] }) {
+  return (
+    <article className="team-context-card">
+      <div className="team-context-head">
+        <TeamBadge team={team} />
+        <div>
+          <span>近况分</span>
+          <strong>{context.formScore}</strong>
+        </div>
+      </div>
+      <p>{context.trendNote}</p>
+      <div className="recent-match-list">
+        {context.recentMatches.length > 0 ? (
+          context.recentMatches.map((recent) => (
+            <div className="recent-match-row" key={`${team.id}-${recent.date}-${recent.opponent}-${recent.score}`}>
+              <span className={'result-dot result-' + recent.result}>{recent.result}</span>
+              <strong>{recent.score}</strong>
+              <span>{recent.opponentZhName}</span>
+              <small>{recent.date} · {recent.homeAway}</small>
+            </div>
+          ))
+        ) : (
+          <div className="recent-empty">暂无足够实际比分，先参考 ESPN form：{context.formString || '无'}</div>
+        )}
+      </div>
+      <div className="player-injury-grid">
+        <section>
+          <strong>球员状态</strong>
+          {context.playerSignals.length > 0 ? (
+            context.playerSignals.map((signal) => (
+              <span key={`${team.id}-${signal.label}-${signal.player}`}>
+                {signal.label}: {signal.player} {signal.value}
+              </span>
+            ))
+          ) : (
+            <span>暂无球员榜单，等首发补充。</span>
+          )}
+        </section>
+        <section>
+          <strong>伤病/首发风险</strong>
+          <span>{context.injuries.status}</span>
+          <small>{context.injuries.note}</small>
+        </section>
+      </div>
+    </article>
   )
 }
 

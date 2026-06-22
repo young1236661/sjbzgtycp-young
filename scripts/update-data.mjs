@@ -9,6 +9,41 @@ const FIFA_URL =
 const SPORTTERY_URL = 'https://www.sporttery.cn/jc/'
 const SPORTTERY_API = 'https://webapi.sporttery.cn/gateway/jc/football/getMatchListV1.qry?clientCode=3001'
 const ODDS_API_SPORT = 'soccer_fifa_world_cup'
+const TEAM_SCHEDULE_URL = 'https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams'
+const TEAM_INJURY_URL = 'https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams'
+const GEOCODE_URL = 'https://geocoding-api.open-meteo.com/v1/search'
+const WEATHER_URL = 'https://api.open-meteo.com/v1/forecast'
+
+const contextStats = {
+  teamSchedulesTried: 0,
+  teamSchedulesOk: 0,
+  injuriesTried: 0,
+  injuriesOk: 0,
+  weatherTried: 0,
+  weatherOk: 0,
+}
+
+const indoorStadiums = new Set(['AT&T Stadium', 'Mercedes-Benz Stadium', 'SoFi Stadium', 'BC Place', 'State Farm Stadium'])
+
+const countryProfiles = new Map([
+  ['Argentina', { zhName: '阿根廷', lat: -34.6, lon: -58.38, region: '南美南部', climate: '温带/亚热带', element: '水' }],
+  ['Austria', { zhName: '奥地利', lat: 48.21, lon: 16.37, region: '中欧内陆', climate: '温带大陆', element: '土' }],
+  ['France', { zhName: '法国', lat: 48.86, lon: 2.35, region: '西欧', climate: '温带海洋', element: '金' }],
+  ['Iraq', { zhName: '伊拉克', lat: 33.31, lon: 44.36, region: '西亚', climate: '干热大陆', element: '火' }],
+  ['Norway', { zhName: '挪威', lat: 59.91, lon: 10.75, region: '北欧', climate: '冷凉海洋', element: '水' }],
+  ['Senegal', { zhName: '塞内加尔', lat: 14.69, lon: -17.45, region: '西非', climate: '热带草原', element: '火' }],
+  ['Jordan', { zhName: '约旦', lat: 31.95, lon: 35.93, region: '西亚', climate: '干燥半干旱', element: '土' }],
+  ['Algeria', { zhName: '阿尔及利亚', lat: 36.75, lon: 3.06, region: '北非', climate: '地中海/沙漠', element: '土' }],
+  ['Portugal', { zhName: '葡萄牙', lat: 38.72, lon: -9.14, region: '西南欧', climate: '地中海海洋', element: '金' }],
+  ['Uzbekistan', { zhName: '乌兹别克斯坦', lat: 41.31, lon: 69.24, region: '中亚内陆', climate: '干燥大陆', element: '土' }],
+  ['England', { zhName: '英格兰', lat: 51.51, lon: -0.13, region: '西北欧海岛', climate: '温带海洋', element: '水' }],
+  ['Ghana', { zhName: '加纳', lat: 5.56, lon: -0.2, region: '西非湾岸', climate: '热带湿热', element: '火' }],
+  ['Panama', { zhName: '巴拿马', lat: 8.98, lon: -79.52, region: '中美洲', climate: '热带湿热', element: '木' }],
+  ['Croatia', { zhName: '克罗地亚', lat: 45.81, lon: 15.98, region: '东南欧', climate: '地中海/大陆', element: '金' }],
+  ['Colombia', { zhName: '哥伦比亚', lat: 4.71, lon: -74.07, region: '南美北部', climate: '热带高原', element: '木' }],
+  ['Congo DR', { zhName: '刚果民主共和国', lat: -4.32, lon: 15.31, region: '中非', climate: '赤道湿热', element: '木' }],
+  ['DR Congo', { zhName: '刚果民主共和国', lat: -4.32, lon: 15.31, region: '中非', climate: '赤道湿热', element: '木' }],
+])
 
 const teamNames = new Map([
   ['Netherlands', '荷兰'],
@@ -21,12 +56,24 @@ const teamNames = new Map([
   ['United States', '美国'],
   ['Brazil', '巴西'],
   ['Argentina', '阿根廷'],
+  ['Austria', '奥地利'],
   ['France', '法国'],
+  ['Iraq', '伊拉克'],
   ['England', '英格兰'],
   ['Spain', '西班牙'],
   ['Portugal', '葡萄牙'],
   ['Italy', '意大利'],
   ['Norway', '挪威'],
+  ['Senegal', '塞内加尔'],
+  ['Jordan', '约旦'],
+  ['Algeria', '阿尔及利亚'],
+  ['Uzbekistan', '乌兹别克斯坦'],
+  ['Ghana', '加纳'],
+  ['Panama', '巴拿马'],
+  ['Croatia', '克罗地亚'],
+  ['Colombia', '哥伦比亚'],
+  ['Congo DR', '刚果民主共和国'],
+  ['DR Congo', '刚果民主共和国'],
   ['Turkey', '土耳其'],
   ['Haiti', '海地'],
   ['Japan', '日本'],
@@ -58,8 +105,6 @@ async function main() {
   const sportteryResult = await checkSporttery()
   const fifaResult = await checkFifa()
 
-  sources.push(fifaResult, ...scoreboards.map((board) => board.source), newsResult.source, oddsApiResult.source, sportteryResult)
-
   const upcomingWindow = events
     .filter((event) => {
       const kickoff = new Date(event.date).getTime()
@@ -70,7 +115,17 @@ async function main() {
     .sort((left, right) => new Date(left.date).getTime() - new Date(right.date).getTime())
     .slice(0, 8)
 
-  const matches = upcomingWindow.map((event) => normalizeMatch(event, newsResult.news))
+  const matches = await Promise.all(upcomingWindow.map((event) => normalizeMatch(event, newsResult.news)))
+  sources.push(
+    fifaResult,
+    ...scoreboards.map((board) => board.source),
+    newsResult.source,
+    oddsApiResult.source,
+    sportteryResult,
+    buildContextSource('espn-team-schedules', 'ESPN 球队近 5 场', contextStats.teamSchedulesOk, contextStats.teamSchedulesTried),
+    buildContextSource('espn-injuries', 'ESPN 伤病名单', contextStats.injuriesOk, contextStats.injuriesTried),
+    buildContextSource('open-meteo-weather', 'Open-Meteo 天气', contextStats.weatherOk, contextStats.weatherTried),
+  )
   const healthySources = sources.filter((source) => source.status === 'ok').length
 
   const brief = {
@@ -286,7 +341,7 @@ async function checkFifa() {
   }
 }
 
-function normalizeMatch(event, newsItems) {
+async function normalizeMatch(event, newsItems) {
   const competition = event.competitions?.[0] ?? {}
   const competitors = competition.competitors ?? []
   const home = competitors.find((item) => item.homeAway === 'home') ?? competitors[0] ?? {}
@@ -294,9 +349,10 @@ function normalizeMatch(event, newsItems) {
   const normalizedHome = normalizeTeam(home)
   const normalizedAway = normalizeTeam(away)
   const market = normalizeMarket(competition.odds?.[0], home, away)
-  const judgement = buildJudgement(market, event, newsItems)
-  const scoreline = buildScorelineAnalysis(market, normalizedHome, normalizedAway, judgement, newsItems)
-  const professional = buildProfessionalBrief(market, normalizedHome, normalizedAway, judgement, scoreline, newsItems)
+  const context = await buildMatchContext(event, competition, normalizedHome, normalizedAway, home, away, newsItems)
+  const judgement = buildJudgement(market, event, newsItems, context)
+  const scoreline = buildScorelineAnalysis(market, normalizedHome, normalizedAway, judgement, newsItems, context)
+  const professional = buildProfessionalBrief(market, normalizedHome, normalizedAway, judgement, scoreline, newsItems, context)
 
   return {
     id: String(event.id),
@@ -312,6 +368,7 @@ function normalizeMatch(event, newsItems) {
     away: normalizedAway,
     score: `${home.score ?? 0}-${away.score ?? 0}`,
     market,
+    context,
     judgement,
     scoreline,
     professional,
@@ -336,6 +393,445 @@ function normalizeTeam(competitor) {
     logo: team.logo,
     form: competitor.form,
     record: competitor.records?.[0]?.summary,
+  }
+}
+
+async function buildMatchContext(event, competition, homeTeam, awayTeam, homeCompetitor, awayCompetitor, newsItems) {
+  const venueName = competition.venue?.fullName ?? ''
+  const venueCity = competition.venue?.address?.city ?? ''
+  const [homeRecent, awayRecent, homeInjuries, awayInjuries, weather] = await Promise.all([
+    fetchTeamRecentContext(homeTeam, event.date),
+    fetchTeamRecentContext(awayTeam, event.date),
+    fetchTeamInjuryContext(homeTeam, newsItems),
+    fetchTeamInjuryContext(awayTeam, newsItems),
+    fetchWeatherContext(venueName, venueCity, event.date),
+  ])
+
+  const homeContext = {
+    ...homeRecent,
+    injuries: homeInjuries,
+    playerSignals: extractPlayerSignals(homeCompetitor),
+  }
+  const awayContext = {
+    ...awayRecent,
+    injuries: awayInjuries,
+    playerSignals: extractPlayerSignals(awayCompetitor),
+  }
+  const geography = buildGeographyContext(homeTeam, awayTeam, weather)
+  const divination = buildDivinationContext(event, homeTeam, awayTeam, geography)
+  const adjustment = buildContextAdjustment(homeContext, awayContext, weather, geography, divination)
+
+  return {
+    home: homeContext,
+    away: awayContext,
+    weather,
+    geography,
+    divination,
+    adjustment,
+    note: '近况、球员、伤病、天气和地理因素进入主模型；古法占卜仅作低权重文化校验，不覆盖可验证事实。',
+  }
+}
+
+async function fetchTeamRecentContext(team, kickoffUtc) {
+  contextStats.teamSchedulesTried += 1
+  const url = `${TEAM_SCHEDULE_URL}/${encodeURIComponent(team.id)}/schedule`
+
+  try {
+    const data = await fetchJson(url)
+    contextStats.teamSchedulesOk += 1
+    const cutoff = new Date(kickoffUtc).getTime()
+    const recentMatches = (data.events ?? [])
+      .map((event) => normalizeRecentMatch(event, team, cutoff))
+      .filter(Boolean)
+      .sort((left, right) => new Date(right.date).getTime() - new Date(left.date).getTime())
+      .slice(0, 5)
+    const formLetters = recentMatches.map((match) => match.result).join('') || team.form || ''
+    const wins = recentMatches.filter((match) => match.result === 'W').length
+    const draws = recentMatches.filter((match) => match.result === 'D').length
+    const goalsFor = recentMatches.reduce((sum, match) => sum + match.goalsFor, 0)
+    const goalsAgainst = recentMatches.reduce((sum, match) => sum + match.goalsAgainst, 0)
+    const sampleSize = recentMatches.length
+    const goalDiff = goalsFor - goalsAgainst
+    const formScore = clamp(Math.round(50 + wins * 9 + draws * 3 + goalDiff * 2 - Math.max(0, 5 - sampleSize) * 4), 18, 88)
+
+    return {
+      formString: formLetters,
+      recentMatches,
+      sampleSize,
+      formScore,
+      goalsForAvg: sampleSize ? round(goalsFor / sampleSize, 2) : null,
+      goalsAgainstAvg: sampleSize ? round(goalsAgainst / sampleSize, 2) : null,
+      trendNote:
+        sampleSize >= 3
+          ? `近 ${sampleSize} 场 ${wins} 胜 ${draws} 平，场均 ${round(goalsFor / sampleSize, 2)}-${round(goalsAgainst / sampleSize, 2)}。`
+          : `ESPN 实际比分样本只有 ${sampleSize} 场，剩余趋势参考 form：${team.form ?? '暂无'}。`,
+      sourceUrl: url,
+    }
+  } catch (error) {
+    return {
+      formString: team.form ?? '',
+      recentMatches: [],
+      sampleSize: 0,
+      formScore: formScoreFromLetters(team.form),
+      goalsForAvg: null,
+      goalsAgainstAvg: null,
+      trendNote: `队伍赛程抓取失败：${shortError(error)}；仅使用 ESPN form 字符串。`,
+      sourceUrl: url,
+    }
+  }
+}
+
+function normalizeRecentMatch(event, team, cutoff) {
+  const eventTime = new Date(event.date).getTime()
+  if (!Number.isFinite(eventTime) || eventTime >= cutoff) return null
+
+  const competitors = event.competitions?.[0]?.competitors ?? []
+  const own = competitors.find((item) => String(item.team?.id) === String(team.id) || item.team?.displayName === team.name)
+  const opponent = competitors.find((item) => item !== own)
+  const ownScore = readScore(own?.score)
+  const opponentScore = readScore(opponent?.score)
+  if (!own || !opponent || ownScore === null || opponentScore === null) return null
+
+  const result = ownScore > opponentScore ? 'W' : ownScore < opponentScore ? 'L' : 'D'
+  const homeAway = own.homeAway === 'home' ? '主' : own.homeAway === 'away' ? '客' : '中'
+  const league = event.league?.abbreviation ?? event.season?.slug ?? '赛事'
+
+  return {
+    date: formatShortDate(event.date),
+    opponent: opponent.team?.displayName ?? 'Unknown',
+    opponentZhName: teamNames.get(opponent.team?.displayName) ?? opponent.team?.displayName ?? 'Unknown',
+    result,
+    score: `${ownScore}-${opponentScore}`,
+    goalsFor: ownScore,
+    goalsAgainst: opponentScore,
+    homeAway,
+    competition: league,
+    note: `${homeAway}场 ${result} ${ownScore}-${opponentScore} vs ${teamNames.get(opponent.team?.displayName) ?? opponent.team?.displayName ?? 'Unknown'}`,
+  }
+}
+
+function readScore(score) {
+  const value = typeof score === 'object' && score !== null ? score.value ?? score.displayValue : score
+  const number = Number(value)
+  return Number.isFinite(number) ? number : null
+}
+
+function formScoreFromLetters(form) {
+  if (!form) return 46
+  const letters = String(form).slice(-5).toUpperCase().split('')
+  const score = letters.reduce((sum, letter) => sum + (letter === 'W' ? 10 : letter === 'D' ? 4 : letter === 'L' ? -5 : 0), 42)
+  return clamp(score, 22, 84)
+}
+
+async function fetchTeamInjuryContext(team, newsItems) {
+  contextStats.injuriesTried += 1
+  const url = `${TEAM_INJURY_URL}/${encodeURIComponent(team.id)}/injuries`
+  const relatedNews = newsItems
+    .filter((item) => {
+      const text = `${item.title} ${item.summary}`.toLowerCase()
+      return text.includes(team.name.toLowerCase()) || text.includes(team.zhName.toLowerCase())
+    })
+    .slice(0, 2)
+  const newsRisk = relatedNews.some((item) => /injur|伤|fit|doubt|lineup|suspend|red card|停赛|红牌/i.test(`${item.title} ${item.summary}`))
+
+  try {
+    const data = await fetchJson(url)
+    contextStats.injuriesOk += 1
+    const items = extractInjuryItems(data)
+    const riskScore = clamp(items.length * 18 + (newsRisk ? 16 : 0), 0, 78)
+
+    return {
+      status: items.length > 0 ? `${items.length} 条伤病/出战信息` : 'ESPN 未列出明确伤病',
+      riskScore,
+      items,
+      relatedNews: relatedNews.map((item) => item.title),
+      note:
+        items.length > 0
+          ? items.slice(0, 2).map((item) => `${item.player} ${item.status}`).join('；')
+          : newsRisk
+            ? '新闻出现阵容风险词，需等首发确认。'
+            : '公开伤病源未给出明确缺阵，仍需赛前首发核验。',
+      sourceUrl: url,
+    }
+  } catch (error) {
+    return {
+      status: '伤病接口不可用',
+      riskScore: newsRisk ? 42 : 20,
+      items: [],
+      relatedNews: relatedNews.map((item) => item.title),
+      note: `伤病接口失败：${shortError(error)}；按新闻风险词保守处理。`,
+      sourceUrl: url,
+    }
+  }
+}
+
+function extractInjuryItems(data) {
+  const candidates = Array.isArray(data?.injuries)
+    ? data.injuries
+    : Array.isArray(data?.athletes)
+      ? data.athletes
+      : Array.isArray(data?.items)
+        ? data.items
+        : []
+
+  return candidates.slice(0, 5).map((item) => ({
+    player: item.athlete?.displayName ?? item.displayName ?? item.name ?? '未命名球员',
+    status: item.status ?? item.type ?? item.details ?? '待确认',
+    detail: item.details ?? item.description ?? '',
+  }))
+}
+
+function extractPlayerSignals(competitor) {
+  const seen = new Set()
+  const signals = []
+
+  for (const group of competitor.leaders ?? []) {
+    const label = group.displayName ?? group.name ?? '数据榜'
+    if (/leaders/i.test(group.name ?? '') && signals.some((item) => item.label === label)) continue
+
+    for (const leader of (group.leaders ?? []).slice(0, 2)) {
+      const key = `${label}-${leader.athlete?.displayName ?? leader.displayName}`
+      if (seen.has(key)) continue
+      seen.add(key)
+      signals.push({
+        label,
+        player: leader.athlete?.displayName ?? leader.displayName ?? 'Unknown',
+        value: leader.displayValue ?? String(leader.value ?? ''),
+        position: leader.athlete?.position?.abbreviation ?? '',
+      })
+    }
+  }
+
+  return signals.slice(0, 4)
+}
+
+async function fetchWeatherContext(venueName, venueCity, kickoffUtc) {
+  contextStats.weatherTried += 1
+  const city = venueCity.split(',')[0]?.trim() || venueCity.trim()
+  const state = venueCity.split(',')[1]?.trim() ?? ''
+  const roofLikely = indoorStadiums.has(venueName)
+
+  if (!city) {
+    return {
+      status: '缺少场馆城市',
+      venueName,
+      city: venueCity || '待确认',
+      roofLikely,
+      temperatureC: null,
+      precipitationProbability: null,
+      windKph: null,
+      humidity: null,
+      riskLevel: '中',
+      summary: '场馆城市缺失，天气只做赛前人工核验。',
+    }
+  }
+
+  try {
+    const location = await geocodeCity(city, state)
+    if (!location) throw new Error(`无法定位 ${venueCity}`)
+    const params = new URLSearchParams({
+      latitude: String(location.latitude),
+      longitude: String(location.longitude),
+      hourly: 'temperature_2m,precipitation_probability,wind_speed_10m,relative_humidity_2m',
+      timezone: 'UTC',
+      forecast_days: '7',
+    })
+    const data = await fetchJson(`${WEATHER_URL}?${params}`)
+    contextStats.weatherOk += 1
+    const hour = pickWeatherHour(data.hourly, kickoffUtc)
+    const riskLevel = weatherRiskLevel(hour, roofLikely)
+    const summary = weatherSummary(hour, roofLikely)
+
+    return {
+      status: '小时预报已读取',
+      venueName,
+      city: `${location.name}${location.admin1 ? `, ${location.admin1}` : ''}`,
+      latitude: location.latitude,
+      longitude: location.longitude,
+      roofLikely,
+      temperatureC: hour?.temperatureC ?? null,
+      precipitationProbability: hour?.precipitationProbability ?? null,
+      windKph: hour?.windKph ?? null,
+      humidity: hour?.humidity ?? null,
+      riskLevel,
+      summary,
+    }
+  } catch (error) {
+    return {
+      status: '天气抓取失败',
+      venueName,
+      city: venueCity || city,
+      roofLikely,
+      temperatureC: null,
+      precipitationProbability: null,
+      windKph: null,
+      humidity: null,
+      riskLevel: roofLikely ? '低' : '中',
+      summary: `天气接口失败：${shortError(error)}；赛前需人工核验。`,
+    }
+  }
+}
+
+async function geocodeCity(city, state) {
+  const params = new URLSearchParams({
+    name: city,
+    count: '5',
+    language: 'en',
+    format: 'json',
+  })
+  const data = await fetchJson(`${GEOCODE_URL}?${params}`)
+  const results = data.results ?? []
+  return (
+    results.find((item) => state && item.admin1 && item.admin1.toLowerCase().includes(state.toLowerCase())) ??
+    results.find((item) => ['United States', 'Canada', 'Mexico'].includes(item.country)) ??
+    results[0] ??
+    null
+  )
+}
+
+function pickWeatherHour(hourly, kickoffUtc) {
+  const times = hourly?.time ?? []
+  if (times.length === 0) return null
+  const target = new Date(kickoffUtc).getTime()
+  let bestIndex = 0
+  let bestGap = Infinity
+  times.forEach((time, index) => {
+    const gap = Math.abs(new Date(`${time}Z`).getTime() - target)
+    if (gap < bestGap) {
+      bestGap = gap
+      bestIndex = index
+    }
+  })
+
+  return {
+    time: times[bestIndex],
+    temperatureC: hourly.temperature_2m?.[bestIndex] ?? null,
+    precipitationProbability: hourly.precipitation_probability?.[bestIndex] ?? null,
+    windKph: hourly.wind_speed_10m?.[bestIndex] ?? null,
+    humidity: hourly.relative_humidity_2m?.[bestIndex] ?? null,
+  }
+}
+
+function weatherRiskLevel(hour, roofLikely) {
+  if (!hour) return roofLikely ? '低' : '中'
+  const heatRisk = (hour.temperatureC ?? 22) >= 31 || (hour.humidity ?? 50) >= 78
+  const rainRisk = (hour.precipitationProbability ?? 0) >= 45
+  const windRisk = (hour.windKph ?? 0) >= 28
+  if (roofLikely) return heatRisk ? '中' : '低'
+  if (heatRisk || rainRisk || windRisk) return '高'
+  if ((hour.temperatureC ?? 22) >= 28 || (hour.precipitationProbability ?? 0) >= 30) return '中'
+  return '低'
+}
+
+function weatherSummary(hour, roofLikely) {
+  if (!hour) return roofLikely ? '场馆可能有顶棚，天气影响偏低。' : '天气小时预报缺失，赛前人工核验。'
+  const parts = [
+    `${Math.round(hour.temperatureC ?? 0)}°C`,
+    `降水 ${Math.round(hour.precipitationProbability ?? 0)}%`,
+    `风 ${Math.round(hour.windKph ?? 0)} km/h`,
+    `湿度 ${Math.round(hour.humidity ?? 0)}%`,
+  ]
+  return `${parts.join('，')}。${roofLikely ? '场馆可能有顶棚，天气权重下调。' : '露天影响按正常权重计入。'}`
+}
+
+function buildGeographyContext(homeTeam, awayTeam, weather) {
+  const homeProfile = countryProfiles.get(homeTeam.name) ?? countryProfiles.get(homeTeam.zhName)
+  const awayProfile = countryProfiles.get(awayTeam.name) ?? countryProfiles.get(awayTeam.zhName)
+  const venueLocation = Number.isFinite(weather.latitude) && Number.isFinite(weather.longitude)
+    ? { lat: weather.latitude, lon: weather.longitude }
+    : null
+  const homeDistanceKm = homeProfile && venueLocation ? Math.round(haversineKm(homeProfile, venueLocation)) : null
+  const awayDistanceKm = awayProfile && venueLocation ? Math.round(haversineKm(awayProfile, venueLocation)) : null
+  const distanceEdgeKm = homeDistanceKm !== null && awayDistanceKm !== null ? awayDistanceKm - homeDistanceKm : 0
+  const travelEdge =
+    Math.abs(distanceEdgeKm) < 1200
+      ? '旅行距离差不大'
+      : distanceEdgeKm > 0
+        ? `${homeTeam.zhName} 旅行距离少约 ${Math.round(distanceEdgeKm / 100) * 100} km`
+        : `${awayTeam.zhName} 旅行距离少约 ${Math.round(Math.abs(distanceEdgeKm) / 100) * 100} km`
+
+  return {
+    homeRegion: homeProfile?.region ?? '未知',
+    awayRegion: awayProfile?.region ?? '未知',
+    homeClimate: homeProfile?.climate ?? '未知',
+    awayClimate: awayProfile?.climate ?? '未知',
+    homeElement: homeProfile?.element ?? '中',
+    awayElement: awayProfile?.element ?? '中',
+    homeDistanceKm,
+    awayDistanceKm,
+    distanceEdgeKm,
+    travelEdge,
+    summary: `${homeTeam.zhName} 来自${homeProfile?.region ?? '未知地区'}，${awayTeam.zhName} 来自${awayProfile?.region ?? '未知地区'}；${travelEdge}。`,
+  }
+}
+
+function buildDivinationContext(event, homeTeam, awayTeam, geography) {
+  const kickoff = new Date(event.date)
+  const seed =
+    Number(event.id ?? 0) +
+    kickoff.getUTCFullYear() +
+    (kickoff.getUTCMonth() + 1) * 13 +
+    kickoff.getUTCDate() * 17 +
+    kickoff.getUTCHours() * 19 +
+    stringScore(homeTeam.name) -
+    stringScore(awayTeam.name)
+  const trigrams = ['乾', '兑', '离', '震', '巽', '坎', '艮', '坤']
+  const trigramElements = ['金', '金', '火', '木', '木', '水', '土', '土']
+  const fiveElements = ['木', '火', '土', '金', '水']
+  const homeIndex = positiveModulo(seed, 8)
+  const awayIndex = positiveModulo(seed * 3 + stringScore(awayTeam.name), 8)
+  const dayElement = fiveElements[positiveModulo(kickoff.getUTCDate() + kickoff.getUTCHours(), 5)]
+  const homeHarmony = elementHarmony(dayElement, geography.homeElement) + elementHarmony(trigramElements[homeIndex], geography.homeElement)
+  const awayHarmony = elementHarmony(dayElement, geography.awayElement) + elementHarmony(trigramElements[awayIndex], geography.awayElement)
+  const delta = clamp(homeHarmony - awayHarmony, -3, 3)
+  const lean = Math.abs(delta) <= 1 ? 'neutral' : delta > 0 ? 'home' : 'away'
+
+  return {
+    method: '梅花易数取数 + 五行方位取象 + 干支时气简化校验',
+    homeSymbol: `${trigrams[homeIndex]}(${trigramElements[homeIndex]})`,
+    awaySymbol: `${trigrams[awayIndex]}(${trigramElements[awayIndex]})`,
+    dayElement,
+    lean,
+    delta,
+    weight: '≤3%，只作文化辅助',
+    summary:
+      lean === 'neutral'
+        ? `取象双方差距很小，不改变主模型。日时五行取 ${dayElement}。`
+        : `取象略偏${lean === 'home' ? homeTeam.zhName : awayTeam.zhName}，只作为低权重校验；日时五行取 ${dayElement}。`,
+  }
+}
+
+function buildContextAdjustment(homeContext, awayContext, weather, geography, divination) {
+  const formEdge = homeContext.formScore - awayContext.formScore
+  const injuryEdge = awayContext.injuries.riskScore - homeContext.injuries.riskScore
+  const travelEdge = clamp((geography.distanceEdgeKm ?? 0) / 4500, -0.9, 0.9)
+  const divinationEdge = divination.lean === 'home' ? divination.delta * 0.25 : divination.lean === 'away' ? divination.delta * 0.25 : 0
+  const weatherRisk = weather.riskLevel === '高' ? 8 : weather.riskLevel === '中' ? 4 : 0
+  const formReliability = Math.min(homeContext.sampleSize, awayContext.sampleSize) >= 3 ? 1 : 0.55
+  const homeGoalDiffDelta = clamp(round(formEdge * 0.012 * formReliability + injuryEdge * 0.006 + travelEdge * 0.08 + divinationEdge * 0.03, 2), -0.34, 0.34)
+  const totalGoalsDelta = clamp(
+    round(
+      ((homeContext.goalsForAvg ?? 1.2) + (awayContext.goalsForAvg ?? 1.2) - 2.6) * 0.09 -
+        (weather.riskLevel === '高' ? 0.14 : weather.riskLevel === '中' ? 0.06 : 0),
+      2,
+    ),
+    -0.22,
+    0.24,
+  )
+  const confidenceDelta = clamp(Math.round(Math.abs(formEdge) * 0.08 * formReliability - weatherRisk * 0.35 - Math.max(homeContext.injuries.riskScore, awayContext.injuries.riskScore) * 0.04), -8, 7)
+  const riskDelta = clamp(Math.round(weatherRisk + Math.max(homeContext.injuries.riskScore, awayContext.injuries.riskScore) * 0.08 + (formReliability < 1 ? 3 : 0)), 0, 16)
+
+  return {
+    homeGoalDiffDelta,
+    totalGoalsDelta,
+    confidenceDelta,
+    riskDelta,
+    notes: [
+      `近况差修正 ${homeGoalDiffDelta > 0 ? '+' : ''}${homeGoalDiffDelta} 球。`,
+      `天气/节奏修正 ${totalGoalsDelta > 0 ? '+' : ''}${totalGoalsDelta} 总进球。`,
+      `伤病与天气风险使风险指数 ${riskDelta > 0 ? '+' : ''}${riskDelta}。`,
+      `古法取象 ${divination.weight}：${divination.summary}`,
+    ],
   }
 }
 
@@ -383,7 +879,7 @@ function outcome(label, side, openOdds, closeOdds, line = null) {
   }
 }
 
-function buildScorelineAnalysis(market, homeTeam, awayTeam, judgement, newsItems) {
+function buildScorelineAnalysis(market, homeTeam, awayTeam, judgement, newsItems, context = null) {
   if (!market) {
     return {
       model: '等待赔率后生成比分分布',
@@ -403,13 +899,17 @@ function buildScorelineAnalysis(market, homeTeam, awayTeam, judgement, newsItems
   const drawProbability = resultProbabilities.find((item) => item.side === 'draw')?.probability ?? 0.26
   const awayProbability = resultProbabilities.find((item) => item.side === 'away')?.probability ?? 0.33
   const baseTotalExpectedGoals = estimateTotalGoals(market)
-  const totalExpectedGoals = calibrateTotalGoals(baseTotalExpectedGoals, homeProbability, awayProbability, drawProbability, market)
+  const totalExpectedGoals = clamp(
+    round(calibrateTotalGoals(baseTotalExpectedGoals, homeProbability, awayProbability, drawProbability, market) + (context?.adjustment?.totalGoalsDelta ?? 0), 2),
+    1.55,
+    4.65,
+  )
   const goalDiff = calibrateGoalDifference(
     estimateGoalDifference(homeProbability, awayProbability, drawProbability, market),
     homeProbability,
     awayProbability,
     drawProbability
-  )
+  ) + (context?.adjustment?.homeGoalDiffDelta ?? 0)
   const homeExpectedGoals = clamp(round((totalExpectedGoals + goalDiff) / 2, 2), 0.18, 4.8)
   const awayExpectedGoals = clamp(round(totalExpectedGoals - homeExpectedGoals, 2), 0.18, 4.8)
   const newsRisk = newsItems.slice(0, 5).some((item) => /伤|红牌|fit|injur|red card|lineup/i.test(item.title + item.summary))
@@ -509,13 +1009,14 @@ function buildScorelineAnalysis(market, homeTeam, awayTeam, judgement, newsItems
     notes: [
       '比分玩法方差很大，候选只适合小额娱乐或赛前核验。',
       `本版把总进球从基础 ${baseTotalExpectedGoals.toFixed(2)} 校准到 ${totalExpectedGoals.toFixed(2)}，并对强弱分明场景的 3+ 进球比分做尾部上调。`,
+      ...(context?.adjustment?.notes?.slice(0, 2) ?? []),
       'expectedValue 只有抓到中国体彩官方比分赔率后才会填充；当前显示的是盈亏平衡与建议最低赔率。',
       newsRisk ? '最新新闻触发阵容/纪律风险词，建议等首发和官方停售前赔率。' : '最新新闻未触发高风险词，但仍需赛前核验首发。',
     ],
   }
 }
 
-function buildProfessionalBrief(market, homeTeam, awayTeam, judgement, scoreline, newsItems) {
+function buildProfessionalBrief(market, homeTeam, awayTeam, judgement, scoreline, newsItems, context = null) {
   if (!market || !scoreline.bestPick) {
     return {
       rankScore: 35,
@@ -594,8 +1095,10 @@ function buildProfessionalBrief(market, homeTeam, awayTeam, judgement, scoreline
   const bestScore = scoreline.bestPick
   const scoreConcentration = bestScore.probability * 100
   const overheatPenalty = judgement.tier === '避免追高' ? 8 : 0
+  const contextConfidence = context?.adjustment?.confidenceDelta ?? 0
+  const contextRisk = context?.adjustment?.riskDelta ?? 0
   const rankScore = clamp(
-    Math.round(judgement.confidence * 0.52 + (100 - judgement.risk) * 0.24 + scoreConcentration * 1.15 - overheatPenalty),
+    Math.round(judgement.confidence * 0.52 + (100 - judgement.risk) * 0.24 + scoreConcentration * 1.15 - overheatPenalty + contextConfidence - contextRisk * 0.4),
     20,
     91,
   )
@@ -650,7 +1153,7 @@ function buildProfessionalBrief(market, homeTeam, awayTeam, judgement, scoreline
   const plays = [scorePlay, resultPlay, totalPlay, hedgePlay].filter(Boolean)
   const expertAnswer = buildExpertAnswer(grade, scorePlay, resultPlay, totalPlay, hedgePlay, judgement, scoreline)
   const scenarios = buildScenarios(scoreline, favoriteName, winnerSide, totalBand)
-  const riskControls = buildRiskControls(market, judgement, scoreline, favorite)
+  const riskControls = buildRiskControls(market, judgement, scoreline, favorite, context)
   const deepThinking = buildDeepThinkingPlan({
     grade,
     expertAnswer,
@@ -660,6 +1163,7 @@ function buildProfessionalBrief(market, homeTeam, awayTeam, judgement, scoreline
     judgement,
     scoreline,
     newsItems,
+    context,
   })
 
   return {
@@ -694,15 +1198,43 @@ function buildProfessionalBrief(market, homeTeam, awayTeam, judgement, scoreline
       },
       {
         label: '新闻与阵容',
-        score: newsRisk ? 62 : 42,
-        tone: newsRisk ? 'watch' : 'good',
-        evidence: newsRisk ? '新闻中出现阵容/纪律风险词，需等首发。' : '最新新闻未触发高风险词，常规核验即可。',
+        score: context ? Math.max(context.home.injuries.riskScore, context.away.injuries.riskScore, newsRisk ? 62 : 42) : newsRisk ? 62 : 42,
+        tone: newsRisk || (context && Math.max(context.home.injuries.riskScore, context.away.injuries.riskScore) > 35) ? 'watch' : 'good',
+        evidence: context
+          ? `${homeTeam.zhName}: ${context.home.injuries.note} ${awayTeam.zhName}: ${context.away.injuries.note}`
+          : newsRisk
+            ? '新闻中出现阵容/纪律风险词，需等首发。'
+            : '最新新闻未触发高风险词，常规核验即可。',
       },
+      ...(context
+        ? [
+            {
+              label: '近5场与球员',
+              score: Math.round((context.home.formScore + context.away.formScore) / 2),
+              tone: Math.abs(context.home.formScore - context.away.formScore) > 16 ? 'good' : 'watch',
+              evidence: `${homeTeam.zhName} ${context.home.trendNote} ${awayTeam.zhName} ${context.away.trendNote}`,
+            },
+            {
+              label: '天气/地理',
+              score: context.weather.riskLevel === '高' ? 70 : context.weather.riskLevel === '中' ? 52 : 35,
+              tone: context.weather.riskLevel === '高' ? 'bad' : context.weather.riskLevel === '中' ? 'watch' : 'good',
+              evidence: `${context.weather.summary} ${context.geography.summary}`,
+            },
+            {
+              label: '古法占卜低权重',
+              score: Math.round(50 + context.divination.delta * 8),
+              tone: 'watch',
+              evidence: `${context.divination.homeSymbol} vs ${context.divination.awaySymbol}；${context.divination.summary}`,
+            },
+          ]
+        : []),
     ],
     riskControls,
     checklist: [
       `中国体彩比分 ${scorePlay.selection} 官方赔率是否 ${scorePlay.minOdds}`,
       `胜平负 ${resultPlay.selection} 是否达到 ${resultPlay.minOdds}`,
+      context ? `近5场实况是否仍支持：${context.home.formString || homeTeam.form || '暂无'} vs ${context.away.formString || awayTeam.form || '暂无'}` : '补充近5场走势',
+      context ? `天气地理是否冲突：${context.weather.summary}` : '补充天气和旅行距离',
       '赛前 30 分钟确认首发、门将、核心前锋和中卫组合',
       '停售前确认赔率没有突然下压，且比赛仍在竞彩开售列表',
     ],
@@ -715,7 +1247,7 @@ function buildProfessionalBrief(market, homeTeam, awayTeam, judgement, scoreline
   }
 }
 
-function buildDeepThinkingPlan({ grade, expertAnswer, plays, scenarios, riskControls, judgement, scoreline, newsItems }) {
+function buildDeepThinkingPlan({ grade, expertAnswer, plays, scenarios, riskControls, judgement, scoreline, newsItems, context }) {
   const scorePlay = plays.find((play) => play.playType === '比分' && play.priority === '主方案') ?? plays[0]
   const resultPlay = plays.find((play) => play.playType === '胜平负')
   const totalPlay = plays.find((play) => play.playType === '总进球')
@@ -729,7 +1261,9 @@ function buildDeepThinkingPlan({ grade, expertAnswer, plays, scenarios, riskCont
         (100 - judgement.risk) * 0.24 +
         (scoreline.bestPick?.probability ?? 0) * 180 +
         (grade === '重点核验' ? 8 : grade === '小额分散' ? 3 : grade === '只核验不追高' ? -6 : -14) -
-        (newsRisk ? 5 : 0),
+        (newsRisk ? 5 : 0) +
+        (context?.adjustment?.confidenceDelta ?? 0) -
+        (context?.adjustment?.riskDelta ?? 0) * 0.4,
     ),
     15,
     92,
@@ -808,9 +1342,18 @@ function buildDeepThinkingPlan({ grade, expertAnswer, plays, scenarios, riskCont
     reasoningSummary: [
       `模型最集中比分：${expertAnswer.recommendedScore}；备选：${expertAnswer.secondaryScores.slice(0, 2).join(' / ') || '不扩展'}。`,
       `胜平负方向：${expertAnswer.marketDirection}；总进球校验：${expertAnswer.totalGoals}。`,
+      context
+        ? `近5场：${context.home.trendNote}；${context.away.trendNote}`
+        : '近5场数据暂未接入。',
+      context
+        ? `天气/地理：${context.weather.summary} ${context.geography.travelEdge}`
+        : '天气和地理信息待核验。',
+      context
+        ? `古法低权重校验：${context.divination.summary}`
+        : '古法校验未参与本次评分。',
       `主要风险：${hotRisk?.label ?? '赔率'}为${hotRisk?.level ?? '中'}，${scoreRisk?.label ?? '比分方差'}为${scoreRisk?.level ?? '中'}。`,
       scenarios[0] ? `基准剧本：${scenarios[0].scorePath}` : '等待更多情景数据。',
-    ],
+    ].slice(0, 6),
     noBuyRules: [
       `中国体彩比分赔率低于 ${scorePlay?.minOdds ?? '建议门槛'} 时不买。`,
       resultPlay ? `胜平负 ${resultPlay.selection} 低于 ${resultPlay.minOdds} 时不买。` : '胜平负赔率不可核验时不买。',
@@ -918,13 +1461,13 @@ function buildScenarios(scoreline, favoriteName, winnerSide, totalBand) {
   return scenarios.slice(0, 4)
 }
 
-function buildRiskControls(market, judgement, scoreline, favorite) {
+function buildRiskControls(market, judgement, scoreline, favorite, context = null) {
   const favoriteMarket = market.moneyline.find((item) => item.side === favorite?.side)
   const favoriteMove = Math.abs(favoriteMarket?.movement ?? 0)
   const bestScoreProbability = scoreline.bestPick?.probability ?? 0
   const topTwoGap = (scoreline.candidates[0]?.probability ?? 0) - (scoreline.candidates[1]?.probability ?? 0)
 
-  return [
+  const controls = [
     {
       label: '赔率压缩',
       level: favoriteMove >= 6 ? '高' : favoriteMove >= 3 ? '中' : '低',
@@ -949,6 +1492,28 @@ function buildRiskControls(market, judgement, scoreline, favorite) {
       detail: `当前风险指数 ${judgement.risk}/100；超过中档时只做核验，不扩大组合。`,
     },
   ]
+
+  if (context) {
+    controls.push(
+      {
+        label: '天气地理',
+        level: context.weather.riskLevel,
+        detail: `${context.weather.summary} ${context.geography.summary}`,
+      },
+      {
+        label: '伤病首发',
+        level: Math.max(context.home.injuries.riskScore, context.away.injuries.riskScore) > 45 ? '高' : Math.max(context.home.injuries.riskScore, context.away.injuries.riskScore) > 24 ? '中' : '低',
+        detail: `${context.home.injuries.note} ${context.away.injuries.note}`,
+      },
+      {
+        label: '占卜只作校验',
+        level: '低',
+        detail: `${context.divination.method}，权重 ${context.divination.weight}；若与盘口相反，只用于提醒不要加码。`,
+      },
+    )
+  }
+
+  return controls
 }
 
 function professionalGrade(rankScore, judgement) {
@@ -1219,7 +1784,7 @@ function factorial(number) {
   return value
 }
 
-function buildJudgement(market, event, newsItems) {
+function buildJudgement(market, event, newsItems, context = null) {
   if (!market) {
     return {
       confidence: 42,
@@ -1244,8 +1809,13 @@ function buildJudgement(market, event, newsItems) {
   const drawRisk = drawProbability > 0.27 ? 66 : 42
   const moveRisk = Math.min(85, Math.abs(lineMove) * 7 + 38)
   const scheduleRisk = new Date(event.date).getTime() - now.getTime() < 5 * 60 * 60 * 1000 ? 62 : 48
-  const risk = Math.round((priceRisk + drawRisk + moveRisk + scheduleRisk + newsHeat) / 5)
-  const confidence = clamp(Math.round(48 + favoriteProbability * 38 + Math.max(lineMove, 0) * 1.2 - risk * 0.12), 38, 84)
+  const contextRiskDelta = context?.adjustment?.riskDelta ?? 0
+  const risk = clamp(Math.round((priceRisk + drawRisk + moveRisk + scheduleRisk + newsHeat) / 5 + contextRiskDelta), 28, 92)
+  const confidence = clamp(
+    Math.round(48 + favoriteProbability * 38 + Math.max(lineMove, 0) * 1.2 - risk * 0.12 + (context?.adjustment?.confidenceDelta ?? 0)),
+    34,
+    88,
+  )
 
   let tier = '观望'
   let stake = '只做观察，不主动加码'
@@ -1300,6 +1870,28 @@ function buildJudgement(market, event, newsItems) {
         tone: newsHeat > 8 ? 'watch' : 'good',
         note: newsHeat > 8 ? '近期新闻包含阵容或纪律风险词' : '最新新闻未触发高风险词',
       },
+      ...(context
+        ? [
+            {
+              label: '近5场实况',
+              value: Math.round((context.home.formScore + context.away.formScore) / 2),
+              tone: Math.abs(context.home.formScore - context.away.formScore) > 18 ? 'good' : 'watch',
+              note: `${context.home.trendNote} ${context.away.trendNote}`,
+            },
+            {
+              label: '天气地理',
+              value: context.weather.riskLevel === '高' ? 72 : context.weather.riskLevel === '中' ? 52 : 32,
+              tone: context.weather.riskLevel === '高' ? 'bad' : context.weather.riskLevel === '中' ? 'watch' : 'good',
+              note: `${context.weather.summary} ${context.geography.travelEdge}`,
+            },
+            {
+              label: '古法校验',
+              value: Math.round(50 + (context.divination.delta ?? 0) * 8),
+              tone: context.divination.lean === 'neutral' ? 'watch' : 'good',
+              note: `${context.divination.method}；${context.divination.summary}`,
+            },
+          ]
+        : []),
     ],
   }
 }
@@ -1358,6 +1950,75 @@ function round(value, digits = 0) {
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value))
+}
+
+function buildContextSource(id, name, ok, tried) {
+  return {
+    id,
+    name,
+    status: ok > 0 ? (ok === tried ? 'ok' : 'warn') : 'warn',
+    url: id === 'open-meteo-weather' ? 'https://open-meteo.com/' : 'https://www.espn.com/soccer/',
+    lastCheckedAt: checkedAt,
+    detail: tried > 0 ? `${ok}/${tried} 项成功` : '未触发',
+  }
+}
+
+function formatShortDate(iso) {
+  return new Intl.DateTimeFormat('zh-CN', {
+    timeZone: TIMEZONE,
+    month: '2-digit',
+    day: '2-digit',
+  }).format(new Date(iso))
+}
+
+function haversineKm(from, to) {
+  const radius = 6371
+  const dLat = toRadians(to.lat - from.lat)
+  const dLon = toRadians(to.lon - from.lon)
+  const lat1 = toRadians(from.lat)
+  const lat2 = toRadians(to.lat)
+  const value =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2) ** 2
+  return 2 * radius * Math.asin(Math.sqrt(value))
+}
+
+function toRadians(value) {
+  return (value * Math.PI) / 180
+}
+
+function stringScore(value) {
+  return String(value)
+    .split('')
+    .reduce((sum, char) => sum + char.charCodeAt(0), 0)
+}
+
+function positiveModulo(value, mod) {
+  return ((value % mod) + mod) % mod
+}
+
+function elementHarmony(dayElement, teamElement) {
+  if (!dayElement || !teamElement || teamElement === '中') return 0
+  if (dayElement === teamElement) return 2
+  const generates = new Map([
+    ['木', '火'],
+    ['火', '土'],
+    ['土', '金'],
+    ['金', '水'],
+    ['水', '木'],
+  ])
+  const controls = new Map([
+    ['木', '土'],
+    ['土', '水'],
+    ['水', '火'],
+    ['火', '金'],
+    ['金', '木'],
+  ])
+  if (generates.get(dayElement) === teamElement) return 1
+  if (generates.get(teamElement) === dayElement) return 0.5
+  if (controls.get(dayElement) === teamElement) return -1.5
+  if (controls.get(teamElement) === dayElement) return -0.5
+  return 0
 }
 
 async function fetchJson(url, init) {

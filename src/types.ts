@@ -57,6 +57,112 @@ export interface ModelJudgement {
   factors: ModelFactor[]
 }
 
+export interface RecentMatch {
+  date: string
+  opponent: string
+  opponentZhName: string
+  result: 'W' | 'D' | 'L'
+  score: string
+  goalsFor: number
+  goalsAgainst: number
+  homeAway: string
+  competition: string
+  note: string
+}
+
+export interface InjuryItem {
+  player: string
+  status: string
+  detail: string
+}
+
+export interface InjuryContext {
+  status: string
+  riskScore: number
+  items: InjuryItem[]
+  relatedNews: string[]
+  note: string
+  sourceUrl: string
+}
+
+export interface PlayerSignal {
+  label: string
+  player: string
+  value: string
+  position: string
+}
+
+export interface TeamContext {
+  formString: string
+  recentMatches: RecentMatch[]
+  sampleSize: number
+  formScore: number
+  goalsForAvg: number | null
+  goalsAgainstAvg: number | null
+  trendNote: string
+  sourceUrl: string
+  injuries: InjuryContext
+  playerSignals: PlayerSignal[]
+}
+
+export interface WeatherContext {
+  status: string
+  venueName: string
+  city: string
+  latitude?: number
+  longitude?: number
+  roofLikely: boolean
+  temperatureC: number | null
+  precipitationProbability: number | null
+  windKph: number | null
+  humidity: number | null
+  riskLevel: '低' | '中' | '高'
+  summary: string
+}
+
+export interface GeographyContext {
+  homeRegion: string
+  awayRegion: string
+  homeClimate: string
+  awayClimate: string
+  homeElement: string
+  awayElement: string
+  homeDistanceKm: number | null
+  awayDistanceKm: number | null
+  distanceEdgeKm: number
+  travelEdge: string
+  summary: string
+}
+
+export interface DivinationContext {
+  method: string
+  homeSymbol: string
+  awaySymbol: string
+  dayElement: string
+  lean: 'home' | 'away' | 'neutral'
+  delta: number
+  weight: string
+  summary: string
+}
+
+export interface ContextAdjustment {
+  homeGoalDiffDelta: number
+  totalGoalsDelta: number
+  confidenceDelta: number
+  riskDelta: number
+  notes: string[]
+}
+
+export interface MatchContext {
+  home: TeamContext
+  away: TeamContext
+  weather: WeatherContext
+  geography: GeographyContext
+  divination: DivinationContext
+  adjustment: ContextAdjustment
+  note: string
+}
+
 export interface ResultProbability {
   label: string
   side: 'home' | 'draw' | 'away'
@@ -189,6 +295,7 @@ export interface MatchBrief {
   away: Team
   score?: string
   market: MarketSnapshot | null
+  context: MatchContext
   judgement: ModelJudgement
   scoreline: ScorelineAnalysis
   professional: ProfessionalBrief
