@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-06-23T05:07:28.248Z",
-  "generatedAtChina": "06/23 13:07",
+  "generatedAt": "2026-06-23T05:14:45.669Z",
+  "generatedAtChina": "06/23 13:14",
   "targetDateChina": "2026-06-23",
   "timezone": "Asia/Shanghai",
   "summary": {
     "headline": "未来 54 小时跟踪 8 场世界杯比赛",
     "note": "系统将公开赛程、新闻和海外市场赔率转为概率视图，再给出谨慎的体彩核验方向。所有判断只作信息分析，不保证盈利。",
     "trackedMatches": 8,
-    "healthySources": 8,
-    "updateMode": "本地脚本"
+    "healthySources": 9,
+    "updateMode": "GitHub 定时"
   },
   "sources": [
     {
@@ -16,7 +16,7 @@
       "name": "FIFA 官方赛程",
       "status": "ok",
       "url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/match-schedule-fixtures-results-teams-stadiums",
-      "lastCheckedAt": "2026-06-23T05:07:28.248Z",
+      "lastCheckedAt": "2026-06-23T05:14:45.669Z",
       "detail": "官方页面可访问"
     },
     {
@@ -24,7 +24,7 @@
       "name": "ESPN 赛程 20260622",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260622",
-      "lastCheckedAt": "2026-06-23T05:07:28.248Z",
+      "lastCheckedAt": "2026-06-23T05:14:45.669Z",
       "detail": "4 场比赛"
     },
     {
@@ -32,7 +32,7 @@
       "name": "ESPN 赛程 20260623",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260623",
-      "lastCheckedAt": "2026-06-23T05:07:28.248Z",
+      "lastCheckedAt": "2026-06-23T05:14:45.669Z",
       "detail": "4 场比赛"
     },
     {
@@ -40,7 +40,7 @@
       "name": "ESPN 赛程 20260624",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260624",
-      "lastCheckedAt": "2026-06-23T05:07:28.248Z",
+      "lastCheckedAt": "2026-06-23T05:14:45.669Z",
       "detail": "6 场比赛"
     },
     {
@@ -48,7 +48,7 @@
       "name": "ESPN 赛程 20260625",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260625",
-      "lastCheckedAt": "2026-06-23T05:07:28.248Z",
+      "lastCheckedAt": "2026-06-23T05:14:45.669Z",
       "detail": "6 场比赛"
     },
     {
@@ -56,7 +56,7 @@
       "name": "ESPN 世界杯新闻",
       "status": "ok",
       "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/news",
-      "lastCheckedAt": "2026-06-23T05:07:28.248Z",
+      "lastCheckedAt": "2026-06-23T05:14:45.669Z",
       "detail": "6 条新闻"
     },
     {
@@ -64,7 +64,7 @@
       "name": "The Odds API",
       "status": "skipped",
       "url": "https://the-odds-api.com/",
-      "lastCheckedAt": "2026-06-23T05:07:28.248Z",
+      "lastCheckedAt": "2026-06-23T05:14:45.669Z",
       "detail": "未设置 THE_ODDS_API_KEY"
     },
     {
@@ -72,31 +72,31 @@
       "name": "中国体彩网竞彩",
       "status": "warn",
       "url": "https://www.sporttery.cn/jc/",
-      "lastCheckedAt": "2026-06-23T05:07:28.248Z",
-      "detail": "HTTP 403"
+      "lastCheckedAt": "2026-06-23T05:14:45.669Z",
+      "detail": "HTTP 567"
     },
     {
       "id": "espn-team-schedules",
       "name": "ESPN 球队近 5 场",
       "status": "ok",
       "url": "https://www.espn.com/soccer/",
-      "lastCheckedAt": "2026-06-23T05:07:28.248Z",
+      "lastCheckedAt": "2026-06-23T05:14:45.669Z",
       "detail": "16/16 项成功"
     },
     {
       "id": "espn-injuries",
       "name": "ESPN 伤病名单",
-      "status": "warn",
+      "status": "ok",
       "url": "https://www.espn.com/soccer/",
-      "lastCheckedAt": "2026-06-23T05:07:28.248Z",
-      "detail": "15/16 项成功"
+      "lastCheckedAt": "2026-06-23T05:14:45.669Z",
+      "detail": "16/16 项成功"
     },
     {
       "id": "open-meteo-weather",
       "name": "Open-Meteo 天气",
       "status": "ok",
       "url": "https://open-meteo.com/",
-      "lastCheckedAt": "2026-06-23T05:07:28.248Z",
+      "lastCheckedAt": "2026-06-23T05:14:45.669Z",
       "detail": "8/8 项成功"
     }
   ],
@@ -607,12 +607,12 @@
           {
             "label": "小球",
             "side": "under",
-            "american": "-160",
-            "decimal": 1.63,
-            "impliedProbability": 0.6153846153846154,
+            "american": "-155",
+            "decimal": 1.65,
+            "impliedProbability": 0.6078431372549019,
             "normalizedProbability": null,
             "line": "u3.5",
-            "movement": -2.1
+            "movement": -2.9
           }
         ],
         "spread": [
@@ -637,7 +637,7 @@
             "movement": 12
           }
         ],
-        "updatedAt": "2026-06-23T05:07:28.248Z"
+        "updatedAt": "2026-06-23T05:14:45.669Z"
       },
       "context": {
         "home": {
@@ -1485,7 +1485,7 @@
             "movement": -11.1
           }
         ],
-        "updatedAt": "2026-06-23T05:07:28.248Z"
+        "updatedAt": "2026-06-23T05:14:45.669Z"
       },
       "context": {
         "home": {
@@ -1559,11 +1559,11 @@
           "trendNote": "近 5 场 5 胜 0 平，场均 3.4-0。",
           "sourceUrl": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams/448/schedule",
           "injuries": {
-            "status": "伤病接口不可用",
-            "riskScore": 20,
+            "status": "ESPN 未列出明确伤病",
+            "riskScore": 0,
             "items": [],
             "relatedNews": [],
-            "note": "伤病接口失败：fetch failed；按新闻风险词保守处理。",
+            "note": "公开伤病源未给出明确缺阵，仍需赛前首发核验。",
             "sourceUrl": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams/448/injuries"
           },
           "playerSignals": [
@@ -1703,11 +1703,11 @@
           "homeGoalDiffDelta": 0.34,
           "totalGoalsDelta": -0.01,
           "confidenceDelta": 0,
-          "riskDelta": 10,
+          "riskDelta": 8,
           "notes": [
             "近况差修正 +0.34 球。",
             "天气/节奏修正 -0.01 总进球。",
-            "伤病与天气风险使风险指数 +10。",
+            "伤病与天气风险使风险指数 +8。",
             "古法取象 ≤3%，只作文化辅助：取象双方差距很小，不改变主模型。日时五行取 金。"
           ]
         },
@@ -1715,7 +1715,7 @@
       },
       "judgement": {
         "confidence": 80,
-        "risk": 62,
+        "risk": 60,
         "tier": "避免追高",
         "lean": "英格兰 是明显热门，但赔率已经很薄",
         "stake": "热门方向回报偏低，最多极小额娱乐",
@@ -1984,7 +1984,7 @@
         ]
       },
       "professional": {
-        "rankScore": 52,
+        "rankScore": 53,
         "grade": "只核验不追高",
         "headline": "英格兰 热度高，首看比分 3-0 与总进球交叉核验",
         "finalAdvice": "不建议重仓胜平负。优先看 3-0（主胜） 是否达到 ≥ 10.50，再用 总进球 3/4/5 辅助判断；达不到门槛就放弃。",
@@ -1992,7 +1992,7 @@
         "deepThinking": {
           "label": "深度推演层",
           "conclusion": "最合适买法：只核验 3-0（主胜），官方赔率达标才小额；不追 英格兰 主胜。",
-          "confidenceScore": 56,
+          "confidenceScore": 57,
           "purchasePlan": [
             {
               "label": "主票",
@@ -2134,7 +2134,7 @@
           },
           {
             "label": "赔率过热",
-            "score": 62,
+            "score": 60,
             "tone": "bad",
             "evidence": "热门方向赔率偏薄，优先核验比分/总进球，不追低赔。"
           },
@@ -2142,7 +2142,7 @@
             "label": "新闻与阵容",
             "score": 42,
             "tone": "good",
-            "evidence": "英格兰: 伤病接口失败：fetch failed；按新闻风险词保守处理。 加纳: 公开伤病源未给出明确缺阵，仍需赛前首发核验。"
+            "evidence": "英格兰: 公开伤病源未给出明确缺阵，仍需赛前首发核验。 加纳: 公开伤病源未给出明确缺阵，仍需赛前首发核验。"
           },
           {
             "label": "近5场与球员",
@@ -2182,7 +2182,7 @@
           {
             "label": "综合风险",
             "level": "中",
-            "detail": "当前风险指数 62/100；超过中档时只做核验，不扩大组合。"
+            "detail": "当前风险指数 60/100；超过中档时只做核验，不扩大组合。"
           },
           {
             "label": "天气地理",
@@ -2192,7 +2192,7 @@
           {
             "label": "伤病首发",
             "level": "低",
-            "detail": "伤病接口失败：fetch failed；按新闻风险词保守处理。 公开伤病源未给出明确缺阵，仍需赛前首发核验。"
+            "detail": "公开伤病源未给出明确缺阵，仍需赛前首发核验。 公开伤病源未给出明确缺阵，仍需赛前首发核验。"
           },
           {
             "label": "占卜只作校验",
@@ -2315,25 +2315,25 @@
           {
             "label": "巴拿马",
             "side": "spreadHome",
-            "american": "-155",
-            "decimal": 1.65,
-            "impliedProbability": 0.6078431372549019,
+            "american": "-175",
+            "decimal": 1.57,
+            "impliedProbability": 0.6363636363636364,
             "normalizedProbability": null,
             "line": "+1.5",
-            "movement": 20
+            "movement": 22.8
           },
           {
             "label": "克罗地亚",
             "side": "spreadAway",
-            "american": "+125",
-            "decimal": 2.25,
-            "impliedProbability": 0.4444444444444444,
+            "american": "+140",
+            "decimal": 2.4,
+            "impliedProbability": 0.4166666666666667,
             "normalizedProbability": null,
             "line": "-1.5",
-            "movement": -23.3
+            "movement": -26.1
           }
         ],
-        "updatedAt": "2026-06-23T05:07:28.248Z"
+        "updatedAt": "2026-06-23T05:14:45.669Z"
       },
       "context": {
         "home": {
@@ -3180,7 +3180,7 @@
             "movement": -25.3
           }
         ],
-        "updatedAt": "2026-06-23T05:07:28.248Z"
+        "updatedAt": "2026-06-23T05:14:45.669Z"
       },
       "context": {
         "home": {
@@ -4027,7 +4027,7 @@
             "movement": 10.7
           }
         ],
-        "updatedAt": "2026-06-23T05:07:28.248Z"
+        "updatedAt": "2026-06-23T05:14:45.669Z"
       },
       "context": {
         "home": {
@@ -4867,7 +4867,7 @@
             "movement": 3.9
           }
         ],
-        "updatedAt": "2026-06-23T05:07:28.248Z"
+        "updatedAt": "2026-06-23T05:14:45.669Z"
       },
       "context": {
         "home": {
@@ -5738,7 +5738,7 @@
             "movement": 8.7
           }
         ],
-        "updatedAt": "2026-06-23T05:07:28.248Z"
+        "updatedAt": "2026-06-23T05:14:45.669Z"
       },
       "context": {
         "home": {
