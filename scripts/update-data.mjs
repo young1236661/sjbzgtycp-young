@@ -808,14 +808,18 @@ function buildContextAdjustment(homeContext, awayContext, weather, geography, di
   const divinationEdge = divination.lean === 'home' ? divination.delta * 0.25 : divination.lean === 'away' ? divination.delta * 0.25 : 0
   const weatherRisk = weather.riskLevel === '高' ? 8 : weather.riskLevel === '中' ? 4 : 0
   const formReliability = Math.min(homeContext.sampleSize, awayContext.sampleSize) >= 3 ? 1 : 0.55
+  const weatherTempoDrag =
+    (weather.riskLevel === '高' ? 0.14 : weather.riskLevel === '中' ? 0.06 : 0) +
+    ((weather.precipitationProbability ?? 0) >= 35 ? 0.08 : 0) +
+    ((weather.humidity ?? 0) >= 80 && weather.riskLevel === '高' ? 0.06 : 0) +
+    ((weather.windKph ?? 0) >= 24 ? 0.05 : 0)
   const homeGoalDiffDelta = clamp(round(formEdge * 0.012 * formReliability + injuryEdge * 0.006 + travelEdge * 0.08 + divinationEdge * 0.03, 2), -0.34, 0.34)
   const totalGoalsDelta = clamp(
     round(
-      ((homeContext.goalsForAvg ?? 1.2) + (awayContext.goalsForAvg ?? 1.2) - 2.6) * 0.09 -
-        (weather.riskLevel === '高' ? 0.14 : weather.riskLevel === '中' ? 0.06 : 0),
+      ((homeContext.goalsForAvg ?? 1.2) + (awayContext.goalsForAvg ?? 1.2) - 2.6) * 0.09 - weatherTempoDrag,
       2,
     ),
-    -0.22,
+    -0.34,
     0.24,
   )
   const confidenceDelta = clamp(Math.round(Math.abs(formEdge) * 0.08 * formReliability - weatherRisk * 0.35 - Math.max(homeContext.injuries.riskScore, awayContext.injuries.riskScore) * 0.04), -8, 7)
@@ -899,6 +903,10 @@ function buildScorelineAnalysis(market, homeTeam, awayTeam, judgement, newsItems
   const drawProbability = resultProbabilities.find((item) => item.side === 'draw')?.probability ?? 0.26
   const awayProbability = resultProbabilities.find((item) => item.side === 'away')?.probability ?? 0.33
   const baseTotalExpectedGoals = estimateTotalGoals(market)
+  const favoriteSide = homeProbability >= awayProbability ? 'home' : 'away'
+  const spreadSignal = favoriteSpreadSignal(market, favoriteSide)
+  const totalSignal = totalMarketSignal(market)
+  const stalemateSignal = favoriteStalemateSignal(homeProbability, awayProbability, drawProbability, context)
   const totalExpectedGoals = clamp(
     round(calibrateTotalGoals(baseTotalExpectedGoals, homeProbability, awayProbability, drawProbability, market) + (context?.adjustment?.totalGoalsDelta ?? 0), 2),
     1.55,
@@ -935,7 +943,8 @@ function buildScorelineAnalysis(market, homeTeam, awayTeam, judgement, newsItems
         totalExpectedGoals,
         resultProbabilities,
         judgement,
-        context
+        context,
+        market
       )
 
       rawScores.push({
@@ -979,7 +988,8 @@ function buildScorelineAnalysis(market, homeTeam, awayTeam, judgement, newsItems
           totalExpectedGoals,
           judgement,
           item.tailMultiplier,
-          context
+          context,
+          market
         ),
       }
     })
@@ -994,8 +1004,8 @@ function buildScorelineAnalysis(market, homeTeam, awayTeam, judgement, newsItems
     .filter((item) => item.probability >= 0.018)
     .sort(
       (left, right) =>
-        scoreCandidateRank(right, resultStrength, context, totalExpectedGoals) -
-        scoreCandidateRank(left, resultStrength, context, totalExpectedGoals),
+        scoreCandidateRank(right, resultStrength, context, totalExpectedGoals, market) -
+        scoreCandidateRank(left, resultStrength, context, totalExpectedGoals, market),
     )
     .slice(0, 9)
     .map((item, index) => ({
@@ -1029,6 +1039,15 @@ function buildScorelineAnalysis(market, homeTeam, awayTeam, judgement, newsItems
         ? [
             `复盘校准：保留总进球 ${totalExpectedGoals.toFixed(2)} 不变，仅把主场弱势方的一球贡献修正 ${goalShareAdjustment > 0 ? '+' : ''}${goalShareAdjustment}。`,
           ]
+        : []),
+      ...(totalSignal.line <= 2.5 && totalSignal.underProbability >= 0.55
+        ? ['复盘校准：大小球盘口偏小，降低 3+ 进球扩张，优先保留 1-0 / 2-0 / 1-1。']
+        : []),
+      ...(spreadSignal.favoriteCoverProbability !== null && spreadSignal.favoriteCoverProbability < 0.46
+        ? ['复盘校准：让球盘口不支持热门穿盘，比分排序优先保留一球小胜路径。']
+        : []),
+      ...(stalemateSignal >= 3
+        ? ['复盘校准：高湿/降水环境下增加 0-0、1-0 等闷局防守权重。']
         : []),
       ...(context?.adjustment?.notes?.slice(0, 2) ?? []),
       'expectedValue 只有抓到中国体彩官方比分赔率后才会填充；当前显示的是盈亏平衡与建议最低赔率。',
@@ -1649,8 +1668,9 @@ function totalMarketSignal(market) {
   const overRaw = over?.impliedProbability ?? null
   const underRaw = under?.impliedProbability ?? null
   const overProbability = overRaw !== null && underRaw !== null ? overRaw / (overRaw + underRaw) : 0.5
+  const underProbability = overRaw !== null && underRaw !== null ? underRaw / (overRaw + underRaw) : 0.5
 
-  return { line, overProbability }
+  return { line, overProbability, underProbability }
 }
 
 function invertPoissonOverLine(probability, line) {
@@ -1682,9 +1702,11 @@ function estimateGoalDifference(homeProbability, awayProbability, drawProbabilit
 }
 
 function calibrateTotalGoals(baseMean, homeProbability, awayProbability, drawProbability, market) {
-  const { line, overProbability } = totalMarketSignal(market)
+  const { line, overProbability, underProbability } = totalMarketSignal(market)
   const favoriteProbability = Math.max(homeProbability, awayProbability)
   const winGap = Math.abs(homeProbability - awayProbability)
+  const favoriteSide = homeProbability >= awayProbability ? 'home' : 'away'
+  const spreadSignal = favoriteSpreadSignal(market, favoriteSide)
   let boost = 0
 
   if (baseMean >= 2.65) boost += 0.08
@@ -1695,8 +1717,47 @@ function calibrateTotalGoals(baseMean, homeProbability, awayProbability, drawPro
   if (drawProbability <= 0.22) boost += 0.05
   if (overProbability >= 0.56) boost += 0.06
   if (line >= 3) boost += 0.08
+  if (line >= 3.5 && favoriteProbability >= 0.8) boost += 0.08
+  if (line <= 2.5 && underProbability >= 0.55) boost -= 0.12
+  if (line <= 2.5 && underProbability >= 0.58) boost -= 0.06
+  if (spreadSignal.favoriteCoverProbability !== null && spreadSignal.favoriteCoverProbability < 0.46 && favoriteProbability < 0.72) boost -= 0.12
+  if (spreadSignal.favoriteCoverProbability !== null && spreadSignal.favoriteCoverProbability < 0.43) boost -= 0.08
 
   return round(clamp(baseMean + boost, 1.7, 4.55), 2)
+}
+
+function favoriteSpreadSignal(market, favoriteSide) {
+  const favoriteSpread = market.spread.find((item) => item.side === (favoriteSide === 'home' ? 'spreadHome' : 'spreadAway'))
+  const underdogSpread = market.spread.find((item) => item.side === (favoriteSide === 'home' ? 'spreadAway' : 'spreadHome'))
+  const favoriteRaw = favoriteSpread?.impliedProbability ?? null
+  const underdogRaw = underdogSpread?.impliedProbability ?? null
+  const favoriteCoverProbability =
+    favoriteRaw !== null && underdogRaw !== null ? favoriteRaw / (favoriteRaw + underdogRaw) : null
+  const favoriteSpreadLine = parseFloat(String(favoriteSpread?.line ?? '0').replace(/[^\d.-]/g, '')) || 0
+
+  return {
+    favoriteCoverProbability: favoriteCoverProbability === null ? null : round(favoriteCoverProbability, 4),
+    favoriteSpreadLine,
+  }
+}
+
+function favoriteStalemateSignal(homeProbability, awayProbability, drawProbability, context) {
+  const favoriteProbability = Math.max(homeProbability, awayProbability)
+  if (!context || favoriteProbability < 0.72) return 0
+
+  const favoriteContext = homeProbability >= awayProbability ? context.home : context.away
+  const underdogContext = homeProbability >= awayProbability ? context.away : context.home
+  const weather = context.weather ?? {}
+  let signal = 0
+
+  if (weather.riskLevel === '高') signal += 1
+  if ((weather.precipitationProbability ?? 0) >= 35) signal += 1
+  if ((weather.humidity ?? 0) >= 80) signal += 1
+  if (drawProbability >= 0.12) signal += 1
+  if ((underdogContext?.goalsForAvg ?? 1.2) <= 0.8) signal += 1
+  if ((favoriteContext?.goalsAgainstAvg ?? 1.2) <= 0.4) signal += 1
+
+  return signal
 }
 
 function calibrateGoalDifference(baseDiff, homeProbability, awayProbability, drawProbability) {
@@ -1784,7 +1845,7 @@ function homeUnderdogConsolationSignal(homeGoals, awayGoals, homeWin, awayWin, d
   return 0
 }
 
-function scoreTailMultiplier(homeGoals, awayGoals, totalExpectedGoals, resultProbabilities, judgement, context = null) {
+function scoreTailMultiplier(homeGoals, awayGoals, totalExpectedGoals, resultProbabilities, judgement, context = null, market = null) {
   const result = scoreResult(homeGoals, awayGoals)
   const homeWin = resultProbabilities.find((item) => item.side === 'home')?.probability ?? 0
   const awayWin = resultProbabilities.find((item) => item.side === 'away')?.probability ?? 0
@@ -1792,6 +1853,8 @@ function scoreTailMultiplier(homeGoals, awayGoals, totalExpectedGoals, resultPro
   const favoriteSide = homeWin >= awayWin ? 'home' : 'away'
   const favoriteResult = favoriteSide === 'home' ? '主胜' : '客胜'
   const favoriteProbability = Math.max(homeWin, awayWin)
+  const spreadSignal = market ? favoriteSpreadSignal(market, favoriteSide) : { favoriteCoverProbability: null }
+  const stalemateSignal = favoriteStalemateSignal(homeWin, awayWin, draw, context)
   const favoriteGoals = favoriteSide === 'home' ? homeGoals : awayGoals
   const underdogGoals = favoriteSide === 'home' ? awayGoals : homeGoals
   const favoriteMargin = favoriteGoals - underdogGoals
@@ -1810,6 +1873,16 @@ function scoreTailMultiplier(homeGoals, awayGoals, totalExpectedGoals, resultPro
   }
   if (judgement.tier === '避免追高' && favoriteProbability >= 0.65 && result === favoriteResult && favoriteGoals >= 3) {
     multiplier -= 0.04
+  }
+  if (spreadSignal.favoriteCoverProbability !== null && spreadSignal.favoriteCoverProbability < 0.46 && result === favoriteResult) {
+    if (favoriteMargin === 1) multiplier += underdogGoals === 0 ? 0.16 : 0.1
+    if (favoriteMargin >= 2 && favoriteProbability < 0.72) multiplier -= 0.14
+    if (totalGoals >= 3 && favoriteProbability < 0.72) multiplier -= 0.08
+  }
+  if (stalemateSignal >= 3) {
+    if (result === '平局' && totalGoals === 0) multiplier += Math.min(0.28, stalemateSignal * 0.05)
+    if (totalGoals <= 1) multiplier += Math.min(0.16, stalemateSignal * 0.03)
+    if (result === favoriteResult && totalGoals >= 3) multiplier -= Math.min(0.14, stalemateSignal * 0.025)
   }
 
   const consolationSignal = homeUnderdogConsolationSignal(
@@ -1831,7 +1904,7 @@ function uncertaintyMultiplier(risk, newsRisk) {
   return round(1.06 + risk / 500 + (newsRisk ? 0.04 : 0), 2)
 }
 
-function scoreCandidateRank(item, resultStrength, context = null, totalExpectedGoals = null) {
+function scoreCandidateRank(item, resultStrength, context = null, totalExpectedGoals = null, market = null) {
   const resultWeight = 0.85 + (resultStrength[item.result] ?? 0.25)
   const [homeGoals, awayGoals] = item.score.split('-').map(Number)
   const totalGoals = homeGoals + awayGoals
@@ -1842,6 +1915,14 @@ function scoreCandidateRank(item, resultStrength, context = null, totalExpectedG
   const homeWinStrength = resultStrength[scoreResult(1, 0)] ?? 0
   const drawStrength = resultStrength[scoreResult(0, 0)] ?? 0
   const awayWinStrength = resultStrength[scoreResult(0, 1)] ?? 0
+  const favoriteSide = homeWinStrength >= awayWinStrength ? 'home' : 'away'
+  const favoriteResult = favoriteSide === 'home' ? scoreResult(1, 0) : scoreResult(0, 1)
+  const favoriteGoals = favoriteSide === 'home' ? homeGoals : awayGoals
+  const underdogGoals = favoriteSide === 'home' ? awayGoals : homeGoals
+  const favoriteMargin = favoriteGoals - underdogGoals
+  const favoriteProbability = Math.max(homeWinStrength, awayWinStrength)
+  const spreadSignal = market ? favoriteSpreadSignal(market, favoriteSide) : { favoriteCoverProbability: null }
+  const stalemateSignal = favoriteStalemateSignal(homeWinStrength, awayWinStrength, drawStrength, context)
   const consolationSignal = homeUnderdogConsolationSignal(
     homeGoals,
     awayGoals,
@@ -1857,9 +1938,31 @@ function scoreCandidateRank(item, resultStrength, context = null, totalExpectedG
       : consolationSignal < 0
         ? 1 - Math.min(0.1, Math.abs(consolationSignal) * 0.025)
         : 1
+  const spreadLift =
+    spreadSignal.favoriteCoverProbability !== null &&
+    spreadSignal.favoriteCoverProbability < 0.46 &&
+    item.result === favoriteResult
+      ? favoriteMargin === 1
+        ? underdogGoals === 0
+          ? 1.18
+          : 1.1
+        : favoriteMargin >= 2 && favoriteProbability < 0.72
+          ? 0.9
+          : 1
+      : 1
+  const stalemateLift =
+    stalemateSignal >= 3
+      ? item.result === scoreResult(0, 0) && totalGoals === 0
+        ? 1 + Math.min(0.26, stalemateSignal * 0.045)
+        : totalGoals <= 1
+          ? 1 + Math.min(0.12, stalemateSignal * 0.025)
+          : item.result === favoriteResult && totalGoals >= 3
+            ? 1 - Math.min(0.12, stalemateSignal * 0.02)
+            : 1
+      : 1
   const oddsPenalty = item.fairOdds > 85 ? 0.82 : item.fairOdds > 55 ? 0.9 : item.fairOdds > 34 ? 0.97 : 1
 
-  return item.probability * resultWeight * highScoreLift * marginLift * tailLift * consolationLift * oddsPenalty
+  return item.probability * resultWeight * highScoreLift * marginLift * tailLift * consolationLift * spreadLift * stalemateLift * oddsPenalty
 }
 
 function scoreReason(
@@ -1872,6 +1975,7 @@ function scoreReason(
   judgement,
   tailMultiplier = 1,
   context = null,
+  market = null,
 ) {
   const result = scoreResult(homeGoals, awayGoals)
   const homeWin = resultProbabilities.find((item) => item.side === 'home')?.probability ?? 0
@@ -1879,6 +1983,13 @@ function scoreReason(
   const draw = resultProbabilities.find((item) => item.side === 'draw')?.probability ?? 0
   const totalGoals = homeGoals + awayGoals
   const tempo = totalExpectedGoals >= 2.85 ? '进球环境偏开放' : totalExpectedGoals <= 2.25 ? '进球环境偏谨慎' : '进球环境中性'
+  const favoriteSide = homeWin >= awayWin ? 'home' : 'away'
+  const favoriteResult = favoriteSide === 'home' ? '主胜' : '客胜'
+  const favoriteGoals = favoriteSide === 'home' ? homeGoals : awayGoals
+  const underdogGoals = favoriteSide === 'home' ? awayGoals : homeGoals
+  const favoriteMargin = favoriteGoals - underdogGoals
+  const spreadSignal = market ? favoriteSpreadSignal(market, favoriteSide) : { favoriteCoverProbability: null }
+  const stalemateSignal = favoriteStalemateSignal(homeWin, awayWin, draw, context)
   const consolationSignal = homeUnderdogConsolationSignal(
     homeGoals,
     awayGoals,
@@ -1889,7 +2000,14 @@ function scoreReason(
     context,
   )
   const calibrationText =
-    consolationSignal > 0
+    stalemateSignal >= 3 && totalGoals <= 1
+      ? '复盘校准加入天气闷局权重，低比分不再被进攻均值完全挤出。'
+      : spreadSignal.favoriteCoverProbability !== null &&
+          spreadSignal.favoriteCoverProbability < 0.46 &&
+          result === favoriteResult &&
+          favoriteMargin === 1
+        ? '复盘校准参考让球盘口，热门方一球小胜路径已上调。'
+        : consolationSignal > 0
       ? '复盘校准上调弱势主队一球贡献，说明这个比分比零封路径更值得核验。'
       : consolationSignal < 0
         ? '复盘校准下调热门方零封路径，防止模型过度相信 0 进球。'
