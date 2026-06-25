@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-25T03:29:49.482Z",
-  "generatedAtChina": "06/25 11:29",
+  "generatedAt": "2026-06-25T04:51:25.533Z",
+  "generatedAtChina": "06/25 12:51",
   "targetDateChina": "2026-06-25",
   "timezone": "Asia/Shanghai",
   "summary": {
@@ -16,7 +16,7 @@
       "name": "FIFA 官方赛程",
       "status": "ok",
       "url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/match-schedule-fixtures-results-teams-stadiums",
-      "lastCheckedAt": "2026-06-25T03:29:49.482Z",
+      "lastCheckedAt": "2026-06-25T04:51:25.533Z",
       "detail": "官方页面可访问"
     },
     {
@@ -24,7 +24,7 @@
       "name": "ESPN 赛程 20260624",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260624",
-      "lastCheckedAt": "2026-06-25T03:29:49.482Z",
+      "lastCheckedAt": "2026-06-25T04:51:25.533Z",
       "detail": "6 场比赛"
     },
     {
@@ -32,7 +32,7 @@
       "name": "ESPN 赛程 20260625",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260625",
-      "lastCheckedAt": "2026-06-25T03:29:49.482Z",
+      "lastCheckedAt": "2026-06-25T04:51:25.533Z",
       "detail": "6 场比赛"
     },
     {
@@ -40,7 +40,7 @@
       "name": "ESPN 赛程 20260626",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260626",
-      "lastCheckedAt": "2026-06-25T03:29:49.482Z",
+      "lastCheckedAt": "2026-06-25T04:51:25.533Z",
       "detail": "6 场比赛"
     },
     {
@@ -48,7 +48,7 @@
       "name": "ESPN 赛程 20260627",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260627",
-      "lastCheckedAt": "2026-06-25T03:29:49.482Z",
+      "lastCheckedAt": "2026-06-25T04:51:25.533Z",
       "detail": "6 场比赛"
     },
     {
@@ -56,7 +56,7 @@
       "name": "ESPN 世界杯新闻",
       "status": "ok",
       "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/news",
-      "lastCheckedAt": "2026-06-25T03:29:49.482Z",
+      "lastCheckedAt": "2026-06-25T04:51:25.533Z",
       "detail": "6 条新闻"
     },
     {
@@ -64,7 +64,7 @@
       "name": "The Odds API",
       "status": "skipped",
       "url": "https://the-odds-api.com/",
-      "lastCheckedAt": "2026-06-25T03:29:49.482Z",
+      "lastCheckedAt": "2026-06-25T04:51:25.533Z",
       "detail": "未设置 THE_ODDS_API_KEY"
     },
     {
@@ -72,7 +72,7 @@
       "name": "中国体彩网竞彩",
       "status": "warn",
       "url": "https://www.sporttery.cn/jc/",
-      "lastCheckedAt": "2026-06-25T03:29:49.482Z",
+      "lastCheckedAt": "2026-06-25T04:51:25.533Z",
       "detail": "HTTP 403"
     },
     {
@@ -80,7 +80,7 @@
       "name": "ESPN 球队近 5 场",
       "status": "ok",
       "url": "https://www.espn.com/soccer/",
-      "lastCheckedAt": "2026-06-25T03:29:49.482Z",
+      "lastCheckedAt": "2026-06-25T04:51:25.533Z",
       "detail": "16/16 项成功"
     },
     {
@@ -88,7 +88,7 @@
       "name": "ESPN 伤病名单",
       "status": "ok",
       "url": "https://www.espn.com/soccer/",
-      "lastCheckedAt": "2026-06-25T03:29:49.482Z",
+      "lastCheckedAt": "2026-06-25T04:51:25.533Z",
       "detail": "16/16 项成功"
     },
     {
@@ -96,833 +96,61 @@
       "name": "Open-Meteo 天气",
       "status": "ok",
       "url": "https://open-meteo.com/",
-      "lastCheckedAt": "2026-06-25T03:29:49.482Z",
+      "lastCheckedAt": "2026-06-25T04:51:25.533Z",
       "detail": "8/8 项成功"
     }
   ],
   "news": [
     {
-      "id": "49171713",
-      "title": "Herculez Gomez: This was a perfect group phase for Mexico",
-      "summary": "Herculez Gomez: This was a perfect group phase for Mexico",
-      "url": "https://www.espn.com/video/clip/_/id/49171713/was-perfect-group-phase-mexico",
-      "publishedAt": "2026-06-25T03:21:03Z",
+      "id": "49172354",
+      "title": "South Africa make history",
+      "summary": "Thapelo Maseko was the hero for Bafana Bafana in their 1-0 win against South Korea, scoring the winner that saw the team advance to the World Cup knockout stage for the first time.",
+      "url": "https://www.espn.com/video/clip/_/id/49172354/south-africa-make-history",
+      "publishedAt": "2026-06-25T04:46:37Z",
       "impact": "新闻"
     },
     {
-      "id": "48957098",
-      "title": "Group A at the 2026 World Cup: Teams, records, stats to know",
-      "summary": "Group A at the 2026 World Cup features Mexico, South Africa, South Korea and Czechia. Find out more about their history at the World Cup.",
-      "url": "https://www.espn.com/soccer/story/_/id/48957098/group-2026-world-cup-teams-records-stats-know-mexico-south-korea-czechia-south-africa",
-      "publishedAt": "2026-06-25T03:16:09Z",
+      "id": "49172230",
+      "title": "South Korea on brink of WC exit after 'wrong' Son gamble",
+      "summary": "South Korea coach Hong Myung-Bo had jaws dropping when he chose to leave out captain Son Heung-Min from his first XI for Wednesday's Group A decider against South Africa -- the first time since 2010 Son had not started a World Cup game.",
+      "url": "https://www.espn.com/soccer/story/_/id/49172230/south-korea-brink-wc-exit-wrong-son-gamble",
+      "publishedAt": "2026-06-25T04:31:58Z",
       "impact": "新闻"
     },
     {
-      "id": "49171009",
-      "title": "Morocco are moving on at World Cup, but time for them to step up",
-      "summary": "We've not yet seen the full scope of what Morocco can do at this World Cup, but Wednesday's win over Haiti was a hint at their serious potential.",
-      "url": "https://www.espn.com/soccer/story/_/id/49171009/morocco-haiti-world-cup-analysis-reaction",
-      "publishedAt": "2026-06-25T03:14:29Z",
+      "id": "49171930",
+      "title": "South Korea's shock Son Heung-Min gamble backfires spectacularly",
+      "summary": "South Korean fans were left stunned when it was confirmed that Son Heung-Min wasn't starting against South Africa. Now, after a shock 1-0 loss, the inquest will begin.",
+      "url": "https://www.espn.com/soccer/story/_/id/49171930/south-koreas-shock-son-heung-min-gamble-backfires-spectacularly",
+      "publishedAt": "2026-06-25T04:14:24Z",
       "impact": "新闻"
     },
     {
-      "id": "49156126",
-      "title": "Mexico complete perfect group record to send Czechia out",
-      "summary": "Goals from Chavez, Quinones and Fidalgo saw Mexico eliminate Czechia from the World Cup.",
-      "url": "http://www.espn.com/soccer/report/_/gameId/760467",
-      "publishedAt": "2026-06-25T03:16:48Z",
+      "id": "49172114",
+      "title": "Klinsmann: It would be nonsense not starting USMNT stars on yellows",
+      "summary": "Klinsmann: It would be nonsense not starting USMNT stars on yellows",
+      "url": "https://www.espn.com/video/clip/_/id/49172114/nonsense-not-starting-usmnt-stars-yellows",
+      "publishedAt": "2026-06-25T04:08:22Z",
       "impact": "新闻"
     },
     {
-      "id": "49162159",
-      "title": "World Cup Daily updates: South Africa shock Korea, Brazil smash Scotland",
-      "summary": "Wednesday saw six games across Groups A, B, and C determine who finished first and second, and which nations will still have a chance to qualify as one of the best third-place teams.",
-      "url": "https://www.espn.com/soccer/story/_/id/49162159/world-cup-daily-messi-turns-39-midnight-workout-three-groups-decided",
-      "publishedAt": "2026-06-25T03:24:10Z",
+      "id": "49169240",
+      "title": "FIFA World Cup 2026 stats: Vinicius Jr. joins Ronaldo with 5, Neymar joins Pele with 4; Alajbegovic breaks Mbappe's WC record",
+      "summary": "ESPN's By The Numbers brings you best stats from the World Cup action on June 24.",
+      "url": "https://www.espn.com/soccer/story/_/id/49169240/fifa-world-cup-2026-stats-vinicius-joins-ronaldo-5-neymar-joins-pele-4-alajbegovic-breaks-kylian-mbappe-record",
+      "publishedAt": "2026-06-25T04:06:58Z",
+      "impact": "赛程"
+    },
+    {
+      "id": "49031236",
+      "title": "2026 World Cup: How teams can advance to the knockout rounds",
+      "summary": "Who can secure qualification before the group stage ends, and whose World Cup dreams could be shattered? Here's what you need to know.",
+      "url": "https://www.espn.com/soccer/story/_/id/49031236/2026-world-cup-group-stage-clinching-scenarios-knockout-rounds-elimination",
+      "publishedAt": "2026-06-25T03:55:53Z",
       "impact": "形势"
-    },
-    {
-      "id": "49170209",
-      "title": "No Bafana, no party! South Africa stun South Korea to advance to FIFA World Cup R32",
-      "summary": "South Africa, against all expectations, pulled off a 1-0 win against South Korea in Monterrey on Wednesday, gathering all three points they needed to advance to the round of 32 at the FIFA World Cup.",
-      "url": "https://www.espn.com/espn/story/_/id/49170209/no-bafana-no-party-south-africa-stun-south-korea-advance-fifa-world-cup-r32",
-      "publishedAt": "2026-06-25T03:11:04Z",
-      "impact": "新闻"
     }
   ],
   "matches": [
-    {
-      "id": "760467",
-      "name": "Mexico at Czechia",
-      "group": "FIFA World Cup, Group A",
-      "status": "FT",
-      "kickoffUtc": "2026-06-25T01:00Z",
-      "kickoffChina": "06/25 09:00",
-      "venue": "Estadio Banorte, Mexico City",
-      "home": {
-        "id": "450",
-        "name": "Czechia",
-        "zhName": "Czechia",
-        "abbreviation": "CZE",
-        "logo": "https://a.espncdn.com/i/teamlogos/countries/500/cze.png",
-        "form": "LDLWW",
-        "record": "0-1-2"
-      },
-      "away": {
-        "id": "203",
-        "name": "Mexico",
-        "zhName": "墨西哥",
-        "abbreviation": "MEX",
-        "logo": "https://a.espncdn.com/i/teamlogos/countries/500/mex.png",
-        "form": "WWWWW",
-        "record": "3-0-0"
-      },
-      "score": "0-3",
-      "market": null,
-      "context": {
-        "home": {
-          "formString": "WWDWD",
-          "recentMatches": [
-            {
-              "date": "11/20",
-              "opponent": "Georgia",
-              "opponentZhName": "Georgia",
-              "result": "W",
-              "score": "2-1",
-              "goalsFor": 2,
-              "goalsAgainst": 1,
-              "homeAway": "主",
-              "competition": "UEFA Nations League",
-              "note": "主场 W 2-1 vs Georgia"
-            },
-            {
-              "date": "11/18",
-              "opponent": "Gibraltar",
-              "opponentZhName": "Gibraltar",
-              "result": "W",
-              "score": "6-0",
-              "goalsFor": 6,
-              "goalsAgainst": 0,
-              "homeAway": "主",
-              "competition": "WCQ - UEFA",
-              "note": "主场 W 6-0 vs Gibraltar"
-            },
-            {
-              "date": "11/17",
-              "opponent": "Albania",
-              "opponentZhName": "Albania",
-              "result": "D",
-              "score": "0-0",
-              "goalsFor": 0,
-              "goalsAgainst": 0,
-              "homeAway": "客",
-              "competition": "UEFA Nations League",
-              "note": "客场 D 0-0 vs Albania"
-            },
-            {
-              "date": "11/14",
-              "opponent": "San Marino",
-              "opponentZhName": "San Marino",
-              "result": "W",
-              "score": "1-0",
-              "goalsFor": 1,
-              "goalsAgainst": 0,
-              "homeAway": "主",
-              "competition": "Men's International Friendly",
-              "note": "主场 W 1-0 vs San Marino"
-            },
-            {
-              "date": "10/15",
-              "opponent": "Ukraine",
-              "opponentZhName": "Ukraine",
-              "result": "D",
-              "score": "1-1",
-              "goalsFor": 1,
-              "goalsAgainst": 1,
-              "homeAway": "客",
-              "competition": "UEFA Nations League",
-              "note": "客场 D 1-1 vs Ukraine"
-            }
-          ],
-          "sampleSize": 5,
-          "formScore": 88,
-          "goalsForAvg": 2,
-          "goalsAgainstAvg": 0.4,
-          "trendNote": "近 5 场 3 胜 2 平，场均 2-0.4。",
-          "sourceUrl": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams/450/schedule",
-          "injuries": {
-            "status": "ESPN 未列出明确伤病",
-            "riskScore": 0,
-            "items": [],
-            "relatedNews": [
-              "Group A at the 2026 World Cup: Teams, records, stats to know",
-              "Mexico complete perfect group record to send Czechia out"
-            ],
-            "note": "公开伤病源未给出明确缺阵，仍需赛前首发核验。",
-            "sourceUrl": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams/450/injuries"
-          },
-          "playerSignals": []
-        },
-        "away": {
-          "formString": "LDDLD",
-          "recentMatches": [
-            {
-              "date": "11/19",
-              "opponent": "Paraguay",
-              "opponentZhName": "Paraguay",
-              "result": "L",
-              "score": "1-2",
-              "goalsFor": 1,
-              "goalsAgainst": 2,
-              "homeAway": "主",
-              "competition": "Men's International Friendly",
-              "note": "主场 L 1-2 vs Paraguay"
-            },
-            {
-              "date": "11/16",
-              "opponent": "Uruguay",
-              "opponentZhName": "乌拉圭",
-              "result": "D",
-              "score": "0-0",
-              "goalsFor": 0,
-              "goalsAgainst": 0,
-              "homeAway": "主",
-              "competition": "Men's International Friendly",
-              "note": "主场 D 0-0 vs 乌拉圭"
-            },
-            {
-              "date": "10/15",
-              "opponent": "Ecuador",
-              "opponentZhName": "厄瓜多尔",
-              "result": "D",
-              "score": "1-1",
-              "goalsFor": 1,
-              "goalsAgainst": 1,
-              "homeAway": "主",
-              "competition": "Men's International Friendly",
-              "note": "主场 D 1-1 vs 厄瓜多尔"
-            },
-            {
-              "date": "10/12",
-              "opponent": "Colombia",
-              "opponentZhName": "哥伦比亚",
-              "result": "L",
-              "score": "0-4",
-              "goalsFor": 0,
-              "goalsAgainst": 4,
-              "homeAway": "主",
-              "competition": "Men's International Friendly",
-              "note": "主场 L 0-4 vs 哥伦比亚"
-            },
-            {
-              "date": "09/10",
-              "opponent": "South Korea",
-              "opponentZhName": "South Korea",
-              "result": "D",
-              "score": "2-2",
-              "goalsFor": 2,
-              "goalsAgainst": 2,
-              "homeAway": "主",
-              "competition": "Men's International Friendly",
-              "note": "主场 D 2-2 vs South Korea"
-            }
-          ],
-          "sampleSize": 5,
-          "formScore": 49,
-          "goalsForAvg": 0.8,
-          "goalsAgainstAvg": 1.8,
-          "trendNote": "近 5 场 0 胜 3 平，场均 0.8-1.8。",
-          "sourceUrl": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams/203/schedule",
-          "injuries": {
-            "status": "ESPN 未列出明确伤病",
-            "riskScore": 0,
-            "items": [],
-            "relatedNews": [
-              "Herculez Gomez: This was a perfect group phase for Mexico",
-              "Group A at the 2026 World Cup: Teams, records, stats to know"
-            ],
-            "note": "公开伤病源未给出明确缺阵，仍需赛前首发核验。",
-            "sourceUrl": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams/203/injuries"
-          },
-          "playerSignals": []
-        },
-        "weather": {
-          "status": "小时预报已读取",
-          "venueName": "Estadio Banorte",
-          "city": "Mexico City, Mexico City",
-          "latitude": 19.42847,
-          "longitude": -99.12766,
-          "roofLikely": false,
-          "temperatureC": 15.7,
-          "precipitationProbability": 95,
-          "windKph": 1.5,
-          "humidity": 86,
-          "riskLevel": "高",
-          "summary": "16°C，降水 95%，风 2 km/h，湿度 86%。露天影响按正常权重计入。"
-        },
-        "geography": {
-          "homeRegion": "未知",
-          "awayRegion": "未知",
-          "homeClimate": "未知",
-          "awayClimate": "未知",
-          "homeElement": "中",
-          "awayElement": "中",
-          "homeDistanceKm": null,
-          "awayDistanceKm": null,
-          "distanceEdgeKm": 0,
-          "travelEdge": "旅行距离差不大",
-          "summary": "Czechia 来自未知地区，墨西哥 来自未知地区；旅行距离差不大。"
-        },
-        "divination": {
-          "method": "梅花易数取数 + 五行方位取象 + 干支时气简化校验",
-          "homeSymbol": "兑(金)",
-          "awaySymbol": "乾(金)",
-          "dayElement": "火",
-          "lean": "neutral",
-          "delta": 0,
-          "weight": "≤3%，只作文化辅助",
-          "summary": "取象双方差距很小，不改变主模型。日时五行取 火。"
-        },
-        "adjustment": {
-          "homeGoalDiffDelta": 0.34,
-          "totalGoalsDelta": -0.26,
-          "confidenceDelta": 0,
-          "riskDelta": 8,
-          "notes": [
-            "近况差修正 +0.34 球。",
-            "天气/节奏修正 -0.26 总进球。",
-            "伤病与天气风险使风险指数 +8。",
-            "古法取象 ≤3%，只作文化辅助：取象双方差距很小，不改变主模型。日时五行取 火。"
-          ]
-        },
-        "note": "近况、球员、伤病、天气和地理因素进入主模型；古法占卜仅作低权重文化校验，不覆盖可验证事实。"
-      },
-      "judgement": {
-        "confidence": 42,
-        "risk": 72,
-        "tier": "观望",
-        "lean": "等待官方赔率",
-        "stake": "不建议提前下注",
-        "guidance": "缺少可验证赔率时，只记录赛程和新闻，不做具体方向。",
-        "avoid": "不要根据社交媒体热度或单条消息提前加码。",
-        "factors": [
-          {
-            "label": "市场强度",
-            "value": 0,
-            "tone": "watch",
-            "note": "暂无市场赔率"
-          },
-          {
-            "label": "赔率移动",
-            "value": 0,
-            "tone": "watch",
-            "note": "暂无开盘/临盘对比"
-          },
-          {
-            "label": "平局噪音",
-            "value": 0,
-            "tone": "watch",
-            "note": "暂无胜平负概率"
-          },
-          {
-            "label": "新闻热度",
-            "value": 0,
-            "tone": "watch",
-            "note": "暂无新闻特征"
-          }
-        ]
-      },
-      "scoreline": {
-        "model": "等待赔率后生成比分分布",
-        "homeExpectedGoals": 0,
-        "awayExpectedGoals": 0,
-        "totalExpectedGoals": 0,
-        "resultProbabilities": [],
-        "bestPick": null,
-        "candidates": [],
-        "avoid": [],
-        "notes": [
-          "缺少可验证赔率时，不生成比分建议。"
-        ]
-      },
-      "professional": {
-        "rankScore": 35,
-        "grade": "观望",
-        "headline": "等待赔率恢复后再判断",
-        "finalAdvice": "缺少足够市场数据时，不建议给出购买方向。",
-        "stakingPlan": "本场跳过，保留预算。",
-        "deepThinking": {
-          "label": "深度推演层",
-          "conclusion": "数据不足，本场最合适的买法是放弃。",
-          "confidenceScore": 25,
-          "purchasePlan": [
-            {
-              "label": "最终动作",
-              "selection": "放弃本场",
-              "allocation": "0%",
-              "minOdds": "等待官方赔率",
-              "action": "放弃",
-              "rationale": "缺少可验证赔率和比分分布时，无法判断赔率是否补偿风险。"
-            }
-          ],
-          "reasoningSummary": [
-            "赔率、盘口和比分分布缺口过大。",
-            "没有足够数据时，保留预算比猜比分更重要。"
-          ],
-          "noBuyRules": [
-            "任一关键数据源不可用时不买。",
-            "中国体彩未开售或停售时不买。"
-          ],
-          "updateSensitivity": "等待赔率源恢复后重新计算。"
-        },
-        "expertAnswer": {
-          "verdict": "观望，不给出购买答案",
-          "recommendedScore": "不选比分",
-          "secondaryScores": [],
-          "marketDirection": "等待赔率",
-          "totalGoals": "等待盘口",
-          "buyCondition": "至少恢复胜平负、总进球和比分概率后再判断。",
-          "passCondition": "数据源不可核验时直接放弃本场。",
-          "stakeCeiling": "0%",
-          "confidenceBand": "低"
-        },
-        "primary": null,
-        "plays": [
-          {
-            "playType": "回避",
-            "selection": "暂无推荐",
-            "priority": "不建议",
-            "confidence": 35,
-            "budgetShare": "0%",
-            "minOdds": "等待官方赔率",
-            "expectedValueNote": "数据不足，不计算期望。",
-            "reason": "没有可验证赔率时，模型无法判断赔率是否补偿风险。",
-            "noBetIf": "赔率源或中国体彩官方信息不可核验。"
-          }
-        ],
-        "scenarios": [
-          {
-            "title": "数据缺口剧本",
-            "probability": "无法估计",
-            "scorePath": "赔率与比分分布不足",
-            "action": "只记录赛程，不做任何购买建议。"
-          }
-        ],
-        "signals": [],
-        "riskControls": [
-          {
-            "label": "数据完整性",
-            "level": "高",
-            "detail": "没有可验证赔率，所有具体比分都缺少期望值基础。"
-          }
-        ],
-        "checklist": [
-          "等待赛前官方赔率",
-          "确认比赛开售状态",
-          "确认首发阵容"
-        ],
-        "downgradeTriggers": [
-          "任一关键数据源不可用"
-        ]
-      },
-      "sporttery": {
-        "status": "需赛前核验",
-        "officialUrl": "https://www.sporttery.cn/jc/",
-        "markets": [
-          "胜平负",
-          "让球胜平负",
-          "总进球",
-          "比分"
-        ],
-        "note": "海外市场盘口与竞彩官方赔率、开售状态、让球设定可能不同。购买前请用中国体彩网或销售终端核验最终赔率和截止时间。"
-      }
-    },
-    {
-      "id": "760466",
-      "name": "South Korea at South Africa",
-      "group": "FIFA World Cup, Group A",
-      "status": "FT",
-      "kickoffUtc": "2026-06-25T01:00Z",
-      "kickoffChina": "06/25 09:00",
-      "venue": "Estadio BBVA, Guadalupe",
-      "home": {
-        "id": "467",
-        "name": "South Africa",
-        "zhName": "South Africa",
-        "abbreviation": "RSA",
-        "logo": "https://a.espncdn.com/i/teamlogos/countries/500/rsa.png",
-        "form": "WDLWD",
-        "record": "1-1-1"
-      },
-      "away": {
-        "id": "451",
-        "name": "South Korea",
-        "zhName": "South Korea",
-        "abbreviation": "KOR",
-        "logo": "https://a.espncdn.com/i/teamlogos/countries/500/kors.png",
-        "form": "LLWWW",
-        "record": "1-0-2"
-      },
-      "score": "1-0",
-      "market": null,
-      "context": {
-        "home": {
-          "formString": "WLWWW",
-          "recentMatches": [
-            {
-              "date": "12/30",
-              "opponent": "Zimbabwe",
-              "opponentZhName": "Zimbabwe",
-              "result": "W",
-              "score": "3-2",
-              "goalsFor": 3,
-              "goalsAgainst": 2,
-              "homeAway": "客",
-              "competition": "Africa Cup of Nations",
-              "note": "客场 W 3-2 vs Zimbabwe"
-            },
-            {
-              "date": "12/26",
-              "opponent": "Egypt",
-              "opponentZhName": "埃及",
-              "result": "L",
-              "score": "0-1",
-              "goalsFor": 0,
-              "goalsAgainst": 1,
-              "homeAway": "客",
-              "competition": "Africa Cup of Nations",
-              "note": "客场 L 0-1 vs 埃及"
-            },
-            {
-              "date": "12/23",
-              "opponent": "Angola",
-              "opponentZhName": "Angola",
-              "result": "W",
-              "score": "2-1",
-              "goalsFor": 2,
-              "goalsAgainst": 1,
-              "homeAway": "主",
-              "competition": "Africa Cup of Nations",
-              "note": "主场 W 2-1 vs Angola"
-            },
-            {
-              "date": "11/15",
-              "opponent": "Zambia",
-              "opponentZhName": "Zambia",
-              "result": "W",
-              "score": "3-1",
-              "goalsFor": 3,
-              "goalsAgainst": 1,
-              "homeAway": "主",
-              "competition": "Men's International Friendly",
-              "note": "主场 W 3-1 vs Zambia"
-            },
-            {
-              "date": "10/15",
-              "opponent": "Rwanda",
-              "opponentZhName": "Rwanda",
-              "result": "W",
-              "score": "3-0",
-              "goalsFor": 3,
-              "goalsAgainst": 0,
-              "homeAway": "主",
-              "competition": "WCQ - CAF",
-              "note": "主场 W 3-0 vs Rwanda"
-            }
-          ],
-          "sampleSize": 5,
-          "formScore": 88,
-          "goalsForAvg": 2.2,
-          "goalsAgainstAvg": 1,
-          "trendNote": "近 5 场 4 胜 0 平，场均 2.2-1。",
-          "sourceUrl": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams/467/schedule",
-          "injuries": {
-            "status": "ESPN 未列出明确伤病",
-            "riskScore": 0,
-            "items": [],
-            "relatedNews": [
-              "Group A at the 2026 World Cup: Teams, records, stats to know",
-              "World Cup Daily updates: South Africa shock Korea, Brazil smash Scotland"
-            ],
-            "note": "公开伤病源未给出明确缺阵，仍需赛前首发核验。",
-            "sourceUrl": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams/467/injuries"
-          },
-          "playerSignals": []
-        },
-        "away": {
-          "formString": "DWWWW",
-          "recentMatches": [
-            {
-              "date": "11/19",
-              "opponent": "Palestine",
-              "opponentZhName": "Palestine",
-              "result": "D",
-              "score": "1-1",
-              "goalsFor": 1,
-              "goalsAgainst": 1,
-              "homeAway": "客",
-              "competition": "WCQ - AFC",
-              "note": "客场 D 1-1 vs Palestine"
-            },
-            {
-              "date": "11/18",
-              "opponent": "Ghana",
-              "opponentZhName": "加纳",
-              "result": "W",
-              "score": "1-0",
-              "goalsFor": 1,
-              "goalsAgainst": 0,
-              "homeAway": "主",
-              "competition": "Men's International Friendly",
-              "note": "主场 W 1-0 vs 加纳"
-            },
-            {
-              "date": "11/14",
-              "opponent": "Bolivia",
-              "opponentZhName": "Bolivia",
-              "result": "W",
-              "score": "2-0",
-              "goalsFor": 2,
-              "goalsAgainst": 0,
-              "homeAway": "主",
-              "competition": "Men's International Friendly",
-              "note": "主场 W 2-0 vs Bolivia"
-            },
-            {
-              "date": "11/14",
-              "opponent": "Kuwait",
-              "opponentZhName": "Kuwait",
-              "result": "W",
-              "score": "3-1",
-              "goalsFor": 3,
-              "goalsAgainst": 1,
-              "homeAway": "客",
-              "competition": "WCQ - AFC",
-              "note": "客场 W 3-1 vs Kuwait"
-            },
-            {
-              "date": "10/15",
-              "opponent": "Iraq",
-              "opponentZhName": "伊拉克",
-              "result": "W",
-              "score": "3-2",
-              "goalsFor": 3,
-              "goalsAgainst": 2,
-              "homeAway": "主",
-              "competition": "WCQ - AFC",
-              "note": "主场 W 3-2 vs 伊拉克"
-            }
-          ],
-          "sampleSize": 5,
-          "formScore": 88,
-          "goalsForAvg": 2,
-          "goalsAgainstAvg": 0.8,
-          "trendNote": "近 5 场 4 胜 1 平，场均 2-0.8。",
-          "sourceUrl": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams/451/schedule",
-          "injuries": {
-            "status": "ESPN 未列出明确伤病",
-            "riskScore": 0,
-            "items": [],
-            "relatedNews": [
-              "Group A at the 2026 World Cup: Teams, records, stats to know",
-              "No Bafana, no party! South Africa stun South Korea to advance to FIFA World Cup R32"
-            ],
-            "note": "公开伤病源未给出明确缺阵，仍需赛前首发核验。",
-            "sourceUrl": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams/451/injuries"
-          },
-          "playerSignals": []
-        },
-        "weather": {
-          "status": "小时预报已读取",
-          "venueName": "Estadio BBVA",
-          "city": "Guadalupe, Nuevo León",
-          "latitude": 25.67678,
-          "longitude": -100.25646,
-          "roofLikely": false,
-          "temperatureC": 31.3,
-          "precipitationProbability": 0,
-          "windKph": 17.6,
-          "humidity": 49,
-          "riskLevel": "高",
-          "summary": "31°C，降水 0%，风 18 km/h，湿度 49%。露天影响按正常权重计入。"
-        },
-        "geography": {
-          "homeRegion": "未知",
-          "awayRegion": "未知",
-          "homeClimate": "未知",
-          "awayClimate": "未知",
-          "homeElement": "中",
-          "awayElement": "中",
-          "homeDistanceKm": null,
-          "awayDistanceKm": null,
-          "distanceEdgeKm": 0,
-          "travelEdge": "旅行距离差不大",
-          "summary": "South Africa 来自未知地区，South Korea 来自未知地区；旅行距离差不大。"
-        },
-        "divination": {
-          "method": "梅花易数取数 + 五行方位取象 + 干支时气简化校验",
-          "homeSymbol": "离(火)",
-          "awaySymbol": "震(木)",
-          "dayElement": "火",
-          "lean": "neutral",
-          "delta": 0,
-          "weight": "≤3%，只作文化辅助",
-          "summary": "取象双方差距很小，不改变主模型。日时五行取 火。"
-        },
-        "adjustment": {
-          "homeGoalDiffDelta": 0,
-          "totalGoalsDelta": 0,
-          "confidenceDelta": -3,
-          "riskDelta": 8,
-          "notes": [
-            "近况差修正 0 球。",
-            "天气/节奏修正 0 总进球。",
-            "伤病与天气风险使风险指数 +8。",
-            "古法取象 ≤3%，只作文化辅助：取象双方差距很小，不改变主模型。日时五行取 火。"
-          ]
-        },
-        "note": "近况、球员、伤病、天气和地理因素进入主模型；古法占卜仅作低权重文化校验，不覆盖可验证事实。"
-      },
-      "judgement": {
-        "confidence": 42,
-        "risk": 72,
-        "tier": "观望",
-        "lean": "等待官方赔率",
-        "stake": "不建议提前下注",
-        "guidance": "缺少可验证赔率时，只记录赛程和新闻，不做具体方向。",
-        "avoid": "不要根据社交媒体热度或单条消息提前加码。",
-        "factors": [
-          {
-            "label": "市场强度",
-            "value": 0,
-            "tone": "watch",
-            "note": "暂无市场赔率"
-          },
-          {
-            "label": "赔率移动",
-            "value": 0,
-            "tone": "watch",
-            "note": "暂无开盘/临盘对比"
-          },
-          {
-            "label": "平局噪音",
-            "value": 0,
-            "tone": "watch",
-            "note": "暂无胜平负概率"
-          },
-          {
-            "label": "新闻热度",
-            "value": 0,
-            "tone": "watch",
-            "note": "暂无新闻特征"
-          }
-        ]
-      },
-      "scoreline": {
-        "model": "等待赔率后生成比分分布",
-        "homeExpectedGoals": 0,
-        "awayExpectedGoals": 0,
-        "totalExpectedGoals": 0,
-        "resultProbabilities": [],
-        "bestPick": null,
-        "candidates": [],
-        "avoid": [],
-        "notes": [
-          "缺少可验证赔率时，不生成比分建议。"
-        ]
-      },
-      "professional": {
-        "rankScore": 35,
-        "grade": "观望",
-        "headline": "等待赔率恢复后再判断",
-        "finalAdvice": "缺少足够市场数据时，不建议给出购买方向。",
-        "stakingPlan": "本场跳过，保留预算。",
-        "deepThinking": {
-          "label": "深度推演层",
-          "conclusion": "数据不足，本场最合适的买法是放弃。",
-          "confidenceScore": 25,
-          "purchasePlan": [
-            {
-              "label": "最终动作",
-              "selection": "放弃本场",
-              "allocation": "0%",
-              "minOdds": "等待官方赔率",
-              "action": "放弃",
-              "rationale": "缺少可验证赔率和比分分布时，无法判断赔率是否补偿风险。"
-            }
-          ],
-          "reasoningSummary": [
-            "赔率、盘口和比分分布缺口过大。",
-            "没有足够数据时，保留预算比猜比分更重要。"
-          ],
-          "noBuyRules": [
-            "任一关键数据源不可用时不买。",
-            "中国体彩未开售或停售时不买。"
-          ],
-          "updateSensitivity": "等待赔率源恢复后重新计算。"
-        },
-        "expertAnswer": {
-          "verdict": "观望，不给出购买答案",
-          "recommendedScore": "不选比分",
-          "secondaryScores": [],
-          "marketDirection": "等待赔率",
-          "totalGoals": "等待盘口",
-          "buyCondition": "至少恢复胜平负、总进球和比分概率后再判断。",
-          "passCondition": "数据源不可核验时直接放弃本场。",
-          "stakeCeiling": "0%",
-          "confidenceBand": "低"
-        },
-        "primary": null,
-        "plays": [
-          {
-            "playType": "回避",
-            "selection": "暂无推荐",
-            "priority": "不建议",
-            "confidence": 35,
-            "budgetShare": "0%",
-            "minOdds": "等待官方赔率",
-            "expectedValueNote": "数据不足，不计算期望。",
-            "reason": "没有可验证赔率时，模型无法判断赔率是否补偿风险。",
-            "noBetIf": "赔率源或中国体彩官方信息不可核验。"
-          }
-        ],
-        "scenarios": [
-          {
-            "title": "数据缺口剧本",
-            "probability": "无法估计",
-            "scorePath": "赔率与比分分布不足",
-            "action": "只记录赛程，不做任何购买建议。"
-          }
-        ],
-        "signals": [],
-        "riskControls": [
-          {
-            "label": "数据完整性",
-            "level": "高",
-            "detail": "没有可验证赔率，所有具体比分都缺少期望值基础。"
-          }
-        ],
-        "checklist": [
-          "等待赛前官方赔率",
-          "确认比赛开售状态",
-          "确认首发阵容"
-        ],
-        "downgradeTriggers": [
-          "任一关键数据源不可用"
-        ]
-      },
-      "sporttery": {
-        "status": "需赛前核验",
-        "officialUrl": "https://www.sporttery.cn/jc/",
-        "markets": [
-          "胜平负",
-          "让球胜平负",
-          "总进球",
-          "比分"
-        ],
-        "note": "海外市场盘口与竞彩官方赔率、开售状态、让球设定可能不同。购买前请用中国体彩网或销售终端核验最终赔率和截止时间。"
-      }
-    },
     {
       "id": "760473",
       "name": "Ivory Coast at Curaçao",
@@ -957,12 +185,12 @@
           {
             "label": "库拉索",
             "side": "home",
-            "american": "+1700",
-            "decimal": 18,
-            "impliedProbability": 0.05555555555555555,
-            "normalizedProbability": 0.053425518541797605,
+            "american": "+1800",
+            "decimal": 19,
+            "impliedProbability": 0.05263157894736842,
+            "normalizedProbability": 0.05075636942675159,
             "line": null,
-            "movement": -5.6
+            "movement": -5.8
           },
           {
             "label": "平局",
@@ -970,7 +198,7 @@
             "american": "+750",
             "decimal": 8.5,
             "impliedProbability": 0.11764705882352941,
-            "normalizedProbability": 0.11313639220615963,
+            "normalizedProbability": 0.11345541401273886,
             "line": null,
             "movement": -7.3
           },
@@ -980,7 +208,7 @@
             "american": "-650",
             "decimal": 1.15,
             "impliedProbability": 0.8666666666666667,
-            "normalizedProbability": 0.8334380892520427,
+            "normalizedProbability": 0.8357882165605096,
             "line": null,
             "movement": 11.7
           }
@@ -1011,25 +239,25 @@
           {
             "label": "库拉索",
             "side": "spreadHome",
-            "american": "-155",
-            "decimal": 1.65,
-            "impliedProbability": 0.6078431372549019,
+            "american": "-150",
+            "decimal": 1.67,
+            "impliedProbability": 0.6,
             "normalizedProbability": null,
             "line": "+2.5",
-            "movement": 6.2
+            "movement": 5.5
           },
           {
             "label": "科特迪瓦",
             "side": "spreadAway",
-            "american": "+120",
-            "decimal": 2.2,
-            "impliedProbability": 0.45454545454545453,
+            "american": "+115",
+            "decimal": 2.15,
+            "impliedProbability": 0.46511627906976744,
             "normalizedProbability": null,
             "line": "-2.5",
-            "movement": -8
+            "movement": -7
           }
         ],
-        "updatedAt": "2026-06-25T03:29:49.482Z"
+        "updatedAt": "2026-06-25T04:51:25.533Z"
       },
       "context": {
         "home": {
@@ -1213,12 +441,12 @@
           "latitude": 39.95238,
           "longitude": -75.16362,
           "roofLikely": false,
-          "temperatureC": 30.3,
+          "temperatureC": 30.8,
           "precipitationProbability": 2,
-          "windKph": 13.2,
-          "humidity": 33,
+          "windKph": 12.8,
+          "humidity": 31,
           "riskLevel": "中",
-          "summary": "30°C，降水 2%，风 13 km/h，湿度 33%。露天影响按正常权重计入。"
+          "summary": "31°C，降水 2%，风 13 km/h，湿度 31%。露天影响按正常权重计入。"
         },
         "geography": {
           "homeRegion": "未知",
@@ -1268,9 +496,9 @@
         "factors": [
           {
             "label": "市场强度",
-            "value": 83,
+            "value": 84,
             "tone": "watch",
-            "note": "科特迪瓦 去水后约 83%"
+            "note": "科特迪瓦 去水后约 84%"
           },
           {
             "label": "赔率移动",
@@ -1300,7 +528,7 @@
             "label": "天气地理",
             "value": 52,
             "tone": "watch",
-            "note": "30°C，降水 2%，风 13 km/h，湿度 33%。露天影响按正常权重计入。 旅行距离差不大"
+            "note": "31°C，降水 2%，风 13 km/h，湿度 31%。露天影响按正常权重计入。 旅行距离差不大"
           },
           {
             "label": "古法校验",
@@ -1312,166 +540,166 @@
       },
       "scoreline": {
         "model": "胜平负去水概率 + 大小球盘口 + 进攻尾部/弱势主队一球校准 Poisson 比分分布",
-        "homeExpectedGoals": 0.38,
-        "awayExpectedGoals": 2.87,
-        "totalExpectedGoals": 3.25,
+        "homeExpectedGoals": 0.41,
+        "awayExpectedGoals": 2.92,
+        "totalExpectedGoals": 3.33,
         "resultProbabilities": [
           {
             "label": "库拉索",
             "side": "home",
-            "probability": 0.0534
+            "probability": 0.0508
           },
           {
             "label": "平局",
             "side": "draw",
-            "probability": 0.1131
+            "probability": 0.1135
           },
           {
             "label": "科特迪瓦",
             "side": "away",
-            "probability": 0.8334
+            "probability": 0.8358
           }
         ],
         "bestPick": {
           "score": "0-3",
           "result": "客胜",
-          "probability": 0.1581,
-          "baseProbability": 0.1528,
+          "probability": 0.1531,
+          "baseProbability": 0.1485,
           "tailMultiplier": 1.31,
-          "fairOdds": 6.32,
-          "suggestedMinOdds": 7.4,
+          "fairOdds": 6.53,
+          "suggestedMinOdds": 7.64,
           "officialOdds": null,
           "expectedValue": null,
           "expectedValueAtSuggestedOdds": 0.17,
           "grade": "首选核验",
-          "reason": "科特迪瓦 胜面约 83%，两球以上优势；比分区间贴近市场总进球。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。"
+          "reason": "科特迪瓦 胜面约 84%，两球以上优势；比分区间贴近市场总进球。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。"
         },
         "candidates": [
           {
             "score": "0-3",
             "result": "客胜",
-            "probability": 0.1581,
-            "baseProbability": 0.1528,
+            "probability": 0.1531,
+            "baseProbability": 0.1485,
             "tailMultiplier": 1.31,
-            "fairOdds": 6.32,
-            "suggestedMinOdds": 7.4,
+            "fairOdds": 6.53,
+            "suggestedMinOdds": 7.64,
             "officialOdds": null,
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.17,
             "grade": "首选核验",
-            "reason": "科特迪瓦 胜面约 83%，两球以上优势；比分区间贴近市场总进球。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。"
+            "reason": "科特迪瓦 胜面约 84%，两球以上优势；比分区间贴近市场总进球。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。"
           },
           {
             "score": "0-4",
             "result": "客胜",
-            "probability": 0.1325,
-            "baseProbability": 0.1096,
+            "probability": 0.1305,
+            "baseProbability": 0.1084,
             "tailMultiplier": 1.53,
-            "fairOdds": 7.55,
-            "suggestedMinOdds": 8.83,
+            "fairOdds": 7.66,
+            "suggestedMinOdds": 8.97,
             "officialOdds": null,
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.17,
             "grade": "备选",
-            "reason": "科特迪瓦 胜面约 83%，两球以上优势；比分偏大，需要更高官方赔率补偿风险。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。"
+            "reason": "科特迪瓦 胜面约 84%，两球以上优势；比分偏大，需要更高官方赔率补偿风险。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。"
           },
           {
             "score": "0-2",
             "result": "客胜",
-            "probability": 0.1413,
-            "baseProbability": 0.1597,
+            "probability": 0.1344,
+            "baseProbability": 0.1526,
             "tailMultiplier": 1.12,
-            "fairOdds": 7.08,
-            "suggestedMinOdds": 8.28,
+            "fairOdds": 7.44,
+            "suggestedMinOdds": 8.7,
             "officialOdds": null,
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.17,
             "grade": "备选",
-            "reason": "科特迪瓦 胜面约 83%，两球以上优势；比分区间贴近市场总进球。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。"
+            "reason": "科特迪瓦 胜面约 84%，两球以上优势；比分区间贴近市场总进球。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。"
           },
           {
             "score": "0-1",
             "result": "客胜",
-            "probability": 0.0932,
-            "baseProbability": 0.1113,
+            "probability": 0.0872,
+            "baseProbability": 0.1045,
             "tailMultiplier": 1.06,
-            "fairOdds": 10.73,
-            "suggestedMinOdds": 12.55,
+            "fairOdds": 11.47,
+            "suggestedMinOdds": 13.43,
             "officialOdds": null,
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.17,
             "grade": "备选",
-            "reason": "科特迪瓦 胜面约 83%，一球小胜；低比分，对临场节奏和首发依赖更强。复盘校准参考让球盘口，热门方一球小胜路径已上调。热门过热时只核验，不追低赔。"
+            "reason": "科特迪瓦 胜面约 84%，一球小胜；低比分，对临场节奏和首发依赖更强。复盘校准参考让球盘口，热门方一球小胜路径已上调。热门过热时只核验，不追低赔。"
           },
           {
             "score": "0-5",
             "result": "客胜",
-            "probability": 0.0761,
-            "baseProbability": 0.0629,
+            "probability": 0.0762,
+            "baseProbability": 0.0633,
             "tailMultiplier": 1.53,
-            "fairOdds": 13.15,
-            "suggestedMinOdds": 15.38,
+            "fairOdds": 13.12,
+            "suggestedMinOdds": 15.35,
             "officialOdds": null,
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.17,
             "grade": "备选",
-            "reason": "科特迪瓦 胜面约 83%，两球以上优势；比分偏大，需要更高官方赔率补偿风险。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。"
+            "reason": "科特迪瓦 胜面约 84%，两球以上优势；比分偏大，需要更高官方赔率补偿风险。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。"
           },
           {
             "score": "1-3",
             "result": "客胜",
-            "probability": 0.0647,
-            "baseProbability": 0.0581,
+            "probability": 0.0675,
+            "baseProbability": 0.0609,
             "tailMultiplier": 1.41,
-            "fairOdds": 15.46,
-            "suggestedMinOdds": 18.09,
+            "fairOdds": 14.81,
+            "suggestedMinOdds": 17.32,
             "officialOdds": null,
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.17,
             "grade": "备选",
-            "reason": "科特迪瓦 胜面约 83%，两球以上优势；比分偏大，需要更高官方赔率补偿风险。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。"
+            "reason": "科特迪瓦 胜面约 84%，两球以上优势；比分偏大，需要更高官方赔率补偿风险。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。"
           },
           {
             "score": "1-2",
             "result": "客胜",
-            "probability": 0.0566,
-            "baseProbability": 0.0607,
+            "probability": 0.0581,
+            "baseProbability": 0.0626,
             "tailMultiplier": 1.18,
-            "fairOdds": 17.68,
-            "suggestedMinOdds": 20.68,
+            "fairOdds": 17.22,
+            "suggestedMinOdds": 20.15,
             "officialOdds": null,
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.17,
             "grade": "备选",
-            "reason": "科特迪瓦 胜面约 83%，一球小胜；比分区间贴近市场总进球。复盘校准参考让球盘口，热门方一球小胜路径已上调。热门过热时只核验，不追低赔。"
+            "reason": "科特迪瓦 胜面约 84%，一球小胜；比分区间贴近市场总进球。复盘校准参考让球盘口，热门方一球小胜路径已上调。热门过热时只核验，不追低赔。"
           },
           {
             "score": "1-4",
             "result": "客胜",
-            "probability": 0.0504,
-            "baseProbability": 0.0417,
+            "probability": 0.0535,
+            "baseProbability": 0.0445,
             "tailMultiplier": 1.53,
-            "fairOdds": 19.86,
-            "suggestedMinOdds": 23.24,
+            "fairOdds": 18.69,
+            "suggestedMinOdds": 21.87,
             "officialOdds": null,
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.17,
             "grade": "备选",
-            "reason": "科特迪瓦 胜面约 83%，两球以上优势；比分偏大，需要更高官方赔率补偿风险。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。"
+            "reason": "科特迪瓦 胜面约 84%，两球以上优势；比分偏大，需要更高官方赔率补偿风险。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。"
           },
           {
             "score": "0-6",
             "result": "客胜",
-            "probability": 0.0364,
-            "baseProbability": 0.0301,
+            "probability": 0.0371,
+            "baseProbability": 0.0308,
             "tailMultiplier": 1.53,
-            "fairOdds": 27.49,
-            "suggestedMinOdds": 32.16,
+            "fairOdds": 26.96,
+            "suggestedMinOdds": 31.55,
             "officialOdds": null,
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.17,
             "grade": "备选",
-            "reason": "科特迪瓦 胜面约 83%，两球以上优势；比分偏大，需要更高官方赔率补偿风险。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。"
+            "reason": "科特迪瓦 胜面约 84%，两球以上优势；比分偏大，需要更高官方赔率补偿风险。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。"
           }
         ],
         "avoid": [
@@ -1481,8 +709,8 @@
             "probability": 0,
             "baseProbability": 0,
             "tailMultiplier": 1.02,
-            "fairOdds": 36833.32,
-            "suggestedMinOdds": 43094.99,
+            "fairOdds": 29573.1,
+            "suggestedMinOdds": 34600.53,
             "officialOdds": null,
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.17,
@@ -1495,8 +723,8 @@
             "probability": 0,
             "baseProbability": 0,
             "tailMultiplier": 1.53,
-            "fairOdds": 31636.67,
-            "suggestedMinOdds": 37014.9,
+            "fairOdds": 22900.29,
+            "suggestedMinOdds": 26793.34,
             "officialOdds": null,
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.17,
@@ -1509,8 +737,8 @@
             "probability": 0,
             "baseProbability": 0,
             "tailMultiplier": 1.02,
-            "fairOdds": 484648.99,
-            "suggestedMinOdds": 567039.32,
+            "fairOdds": 360647.55,
+            "suggestedMinOdds": 421957.63,
             "officialOdds": null,
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.17,
@@ -1520,7 +748,7 @@
         ],
         "notes": [
           "比分玩法方差很大，候选只适合小额娱乐或赛前核验。",
-          "本版把总进球从基础 2.80 校准到 3.25，并对强弱分明场景的 3+ 进球比分做尾部上调。",
+          "本版把总进球从基础 2.80 校准到 3.33，并对强弱分明场景的 3+ 进球比分做尾部上调。",
           "复盘校准：让球盘口不支持热门穿盘，比分排序优先保留一球小胜路径。",
           "近况差修正 -0.34 球。",
           "天气/节奏修正 -0.02 总进球。",
@@ -1529,23 +757,23 @@
         ]
       },
       "professional": {
-        "rankScore": 67,
+        "rankScore": 66,
         "grade": "只核验不追高",
         "headline": "科特迪瓦 热度高，首看比分 0-3 与总进球交叉核验",
-        "finalAdvice": "不建议重仓胜平负。优先看 0-3（客胜） 是否达到 ≥ 7.40，再用 总进球 2/3/4 辅助判断；达不到门槛就放弃。",
+        "finalAdvice": "不建议重仓胜平负。优先看 0-3（客胜） 是否达到 ≥ 7.64，再用 总进球 3/4/5 辅助判断；达不到门槛就放弃。",
         "stakingPlan": "本场最多使用当日预算 6%-10%，只在赔率达标时小额尝试。",
         "deepThinking": {
           "label": "深度推演层",
           "conclusion": "最合适买法：只核验 0-3（客胜），官方赔率达标才小额；不追 科特迪瓦 客胜。",
-          "confidenceScore": 74,
+          "confidenceScore": 73,
           "purchasePlan": [
             {
               "label": "主票",
               "selection": "0-3（客胜）",
               "allocation": "本场预算 15%-25%",
-              "minOdds": "≥ 7.40",
+              "minOdds": "≥ 7.64",
               "action": "只看不买",
-              "rationale": "首选比分概率 16%，盈亏线 6.32，低于门槛不买。"
+              "rationale": "首选比分概率 15%，盈亏线 6.53，低于门槛不买。"
             },
             {
               "label": "低方差票",
@@ -1557,7 +785,7 @@
             },
             {
               "label": "节奏校验",
-              "selection": "总进球 2/3/4",
+              "selection": "总进球 3/4/5",
               "allocation": "本场预算 10%-20%",
               "minOdds": "以官方组合赔率核验",
               "action": "小额防守",
@@ -1574,14 +802,14 @@
           ],
           "reasoningSummary": [
             "模型最集中比分：0-3（客胜）；备选：0-4（客胜） / 0-2（客胜）。",
-            "胜平负方向：科特迪瓦 客胜；总进球校验：总进球 2/3/4。",
+            "胜平负方向：科特迪瓦 客胜；总进球校验：总进球 3/4/5。",
             "近5场：近 5 场 1 胜 1 平，场均 1.4-3.2。；近 5 场 3 胜 1 平，场均 1.6-0.8。",
-            "天气/地理：30°C，降水 2%，风 13 km/h，湿度 33%。露天影响按正常权重计入。 旅行距离差不大",
+            "天气/地理：31°C，降水 2%，风 13 km/h，湿度 31%。露天影响按正常权重计入。 旅行距离差不大",
             "古法低权重校验：取象双方差距很小，不改变主模型。日时五行取 木。",
             "主要风险：赔率压缩为高，比分方差为低。"
           ],
           "noBuyRules": [
-            "中国体彩比分赔率低于 ≥ 7.40 时不买。",
+            "中国体彩比分赔率低于 ≥ 7.64 时不买。",
             "胜平负 科特迪瓦 客胜 低于 ≥ 1.32 时不买。",
             "首发出现核心前锋、门将或中卫明显轮换时不买。",
             "临场 30 分钟内热门方向继续大幅降赔时不追。",
@@ -1590,7 +818,7 @@
           "updateSensitivity": "对降赔最敏感，只要官方赔率低于门槛就直接放弃。"
         },
         "expertAnswer": {
-          "verdict": "答案是先看 0-3（客胜），但只在官方赔率达到 ≥ 7.40 以上时小额核验。",
+          "verdict": "答案是先看 0-3（客胜），但只在官方赔率达到 ≥ 7.64 以上时小额核验。",
           "recommendedScore": "0-3（客胜）",
           "secondaryScores": [
             "0-4（客胜）",
@@ -1598,8 +826,8 @@
             "0-1（客胜）"
           ],
           "marketDirection": "科特迪瓦 客胜",
-          "totalGoals": "总进球 2/3/4",
-          "buyCondition": "必须同时满足：比分赔率 ≥ 7.40、胜平负方向 ≥ 1.32、首发无明显轮换。",
+          "totalGoals": "总进球 3/4/5",
+          "buyCondition": "必须同时满足：比分赔率 ≥ 7.64、胜平负方向 ≥ 1.32、首发无明显轮换。",
           "passCondition": "任一核心条件不满足就放弃；不要因为“看起来稳”而放大金额，强弱分明的比赛也有轮换和爆冷风险。",
           "stakeCeiling": "本场最多使用当日预算 6%-10%，只在赔率达标时小额尝试。",
           "confidenceBand": "中低：市场过热时宁可放弃"
@@ -1608,74 +836,74 @@
           "playType": "比分",
           "selection": "0-3（客胜）",
           "priority": "主方案",
-          "confidence": 75,
+          "confidence": 74,
           "budgetShare": "单场预算 3%-6%",
-          "minOdds": "≥ 7.40",
-          "expectedValueNote": "模型概率 16%，盈亏线 6.32；官方赔率低于门槛则放弃。",
-          "reason": "科特迪瓦 胜面约 83%，两球以上优势；比分区间贴近市场总进球。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。",
-          "noBetIf": "中国体彩该比分赔率低于 7.40，或赛前首发显示明显轮换。"
+          "minOdds": "≥ 7.64",
+          "expectedValueNote": "模型概率 15%，盈亏线 6.53；官方赔率低于门槛则放弃。",
+          "reason": "科特迪瓦 胜面约 84%，两球以上优势；比分区间贴近市场总进球。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。",
+          "noBetIf": "中国体彩该比分赔率低于 7.64，或赛前首发显示明显轮换。"
         },
         "plays": [
           {
             "playType": "比分",
             "selection": "0-3（客胜）",
             "priority": "主方案",
-            "confidence": 75,
+            "confidence": 74,
             "budgetShare": "单场预算 3%-6%",
-            "minOdds": "≥ 7.40",
-            "expectedValueNote": "模型概率 16%，盈亏线 6.32；官方赔率低于门槛则放弃。",
-            "reason": "科特迪瓦 胜面约 83%，两球以上优势；比分区间贴近市场总进球。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。",
-            "noBetIf": "中国体彩该比分赔率低于 7.40，或赛前首发显示明显轮换。"
+            "minOdds": "≥ 7.64",
+            "expectedValueNote": "模型概率 15%，盈亏线 6.53；官方赔率低于门槛则放弃。",
+            "reason": "科特迪瓦 胜面约 84%，两球以上优势；比分区间贴近市场总进球。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。",
+            "noBetIf": "中国体彩该比分赔率低于 7.64，或赛前首发显示明显轮换。"
           },
           {
             "playType": "胜平负",
             "selection": "科特迪瓦 客胜",
             "priority": "防守",
-            "confidence": 83,
+            "confidence": 84,
             "budgetShare": "仅核验，不主动追",
             "minOdds": "≥ 1.32",
-            "expectedValueNote": "去水概率 83%，低于建议赔率时性价比不足。",
+            "expectedValueNote": "去水概率 84%，低于建议赔率时性价比不足。",
             "reason": "科特迪瓦 胜面很高，但胜平负通常容易被压低，重点看官方赔率是否还有补偿。",
             "noBetIf": "官方胜平负赔率明显低于门槛，或临场赔率短时间大幅下压。"
           },
           {
             "playType": "总进球",
-            "selection": "总进球 2/3/4",
+            "selection": "总进球 3/4/5",
             "priority": "备选",
-            "confidence": 63,
+            "confidence": 57,
             "budgetShare": "单场预算 4%-8%",
             "minOdds": "以官方组合赔率核验",
-            "expectedValueNote": "模型总进球均值 3.25，只适合与比分方向交叉验证。",
-            "reason": "总进球环境中性偏开放，2-4 球区间比单点比分更稳。",
+            "expectedValueNote": "模型总进球均值 3.33，只适合与比分方向交叉验证。",
+            "reason": "进球环境偏开放，但高总进球波动更大，只适合小额配合比分方向。",
             "noBetIf": "首发防守倾向或天气/场地导致节奏判断与模型相反。"
           }
         ],
         "scenarios": [
           {
             "title": "基准剧本",
-            "probability": "16%",
+            "probability": "15%",
             "scorePath": "科特迪瓦 客胜，比分落在 0-3 附近。",
             "action": "只核验 0-3，不追更偏的高比分。"
           },
           {
             "title": "进球节奏剧本",
-            "probability": "3.25 xG",
-            "scorePath": "总进球主区间是 总进球 2/3/4。",
+            "probability": "3.33 xG",
+            "scorePath": "总进球主区间是 总进球 3/4/5。",
             "action": "比分和总进球方向冲突时，以放弃为优先。"
           }
         ],
         "signals": [
           {
             "label": "市场主方向",
-            "score": 83,
+            "score": 84,
             "tone": "watch",
-            "evidence": "科特迪瓦 去水后约 83%，当前判断为 客胜 主方向。"
+            "evidence": "科特迪瓦 去水后约 84%，当前判断为 客胜 主方向。"
           },
           {
             "label": "比分集中度",
-            "score": 158,
+            "score": 153,
             "tone": "good",
-            "evidence": "首选比分 0-3 概率约 16%，盈亏线 6.32。"
+            "evidence": "首选比分 0-3 概率约 15%，盈亏线 6.53。"
           },
           {
             "label": "赔率过热",
@@ -1699,7 +927,7 @@
             "label": "天气/地理",
             "score": 52,
             "tone": "watch",
-            "evidence": "30°C，降水 2%，风 13 km/h，湿度 33%。露天影响按正常权重计入。 库拉索 来自未知地区，科特迪瓦 来自未知地区；旅行距离差不大。"
+            "evidence": "31°C，降水 2%，风 13 km/h，湿度 31%。露天影响按正常权重计入。 库拉索 来自未知地区，科特迪瓦 来自未知地区；旅行距离差不大。"
           },
           {
             "label": "古法占卜低权重",
@@ -1717,12 +945,12 @@
           {
             "label": "比分方差",
             "level": "低",
-            "detail": "首选比分模型概率约 16%，比分玩法天然高方差，金额必须明显低于胜平负。"
+            "detail": "首选比分模型概率约 15%，比分玩法天然高方差，金额必须明显低于胜平负。"
           },
           {
             "label": "候选分歧",
             "level": "中",
-            "detail": "前两名比分差距约 3%，差距越小越不适合单点重仓。"
+            "detail": "前两名比分差距约 2%，差距越小越不适合单点重仓。"
           },
           {
             "label": "综合风险",
@@ -1732,7 +960,7 @@
           {
             "label": "天气地理",
             "level": "中",
-            "detail": "30°C，降水 2%，风 13 km/h，湿度 33%。露天影响按正常权重计入。 库拉索 来自未知地区，科特迪瓦 来自未知地区；旅行距离差不大。"
+            "detail": "31°C，降水 2%，风 13 km/h，湿度 31%。露天影响按正常权重计入。 库拉索 来自未知地区，科特迪瓦 来自未知地区；旅行距离差不大。"
           },
           {
             "label": "伤病首发",
@@ -1746,10 +974,10 @@
           }
         ],
         "checklist": [
-          "中国体彩比分 0-3（客胜） 官方赔率是否 ≥ 7.40",
+          "中国体彩比分 0-3（客胜） 官方赔率是否 ≥ 7.64",
           "胜平负 科特迪瓦 客胜 是否达到 ≥ 1.32",
           "近5场实况是否仍支持：DLWLL vs DLWWW",
-          "天气地理是否冲突：30°C，降水 2%，风 13 km/h，湿度 33%。露天影响按正常权重计入。",
+          "天气地理是否冲突：31°C，降水 2%，风 13 km/h，湿度 31%。露天影响按正常权重计入。",
           "赛前 30 分钟确认首发、门将、核心前锋和中卫组合",
           "停售前确认赔率没有突然下压，且比赛仍在竞彩开售列表"
         ],
@@ -1801,37 +1029,37 @@
       "score": "0-0",
       "market": {
         "provider": "DraftKings",
-        "details": "GER -185",
+        "details": "GER -190",
         "moneyline": [
           {
             "label": "厄瓜多尔",
             "side": "home",
-            "american": "+425",
-            "decimal": 5.25,
-            "impliedProbability": 0.19047619047619047,
-            "normalizedProbability": 0.1817638266068759,
+            "american": "+450",
+            "decimal": 5.5,
+            "impliedProbability": 0.18181818181818182,
+            "normalizedProbability": 0.17464511767959195,
             "line": null,
-            "movement": -1
+            "movement": -1.8
           },
           {
             "label": "平局",
             "side": "draw",
-            "american": "+380",
-            "decimal": 4.8,
-            "impliedProbability": 0.20833333333333334,
-            "normalizedProbability": 0.19880418535127053,
+            "american": "+390",
+            "decimal": 4.9,
+            "impliedProbability": 0.20408163265306123,
+            "normalizedProbability": 0.19603023413015425,
             "line": null,
-            "movement": -4.2
+            "movement": -4.6
           },
           {
             "label": "德国",
             "side": "away",
-            "american": "-185",
-            "decimal": 1.54,
-            "impliedProbability": 0.6491228070175439,
-            "normalizedProbability": 0.6194319880418534,
+            "american": "-190",
+            "decimal": 1.53,
+            "impliedProbability": 0.6551724137931034,
+            "normalizedProbability": 0.6293246481902538,
             "line": null,
-            "movement": 4.9
+            "movement": 5.5
           }
         ],
         "total": [
@@ -1860,25 +1088,25 @@
           {
             "label": "厄瓜多尔",
             "side": "spreadHome",
-            "american": "-185",
-            "decimal": 1.54,
-            "impliedProbability": 0.6491228070175439,
+            "american": "-175",
+            "decimal": 1.57,
+            "impliedProbability": 0.6363636363636364,
             "normalizedProbability": null,
             "line": "+1.5",
-            "movement": 18.4
+            "movement": 17.1
           },
           {
             "label": "德国",
             "side": "spreadAway",
-            "american": "+145",
-            "decimal": 2.45,
-            "impliedProbability": 0.40816326530612246,
+            "american": "+140",
+            "decimal": 2.4,
+            "impliedProbability": 0.4166666666666667,
             "normalizedProbability": null,
             "line": "-1.5",
-            "movement": -20.7
+            "movement": -19.9
           }
         ],
-        "updatedAt": "2026-06-25T03:29:49.482Z"
+        "updatedAt": "2026-06-25T04:51:25.533Z"
       },
       "context": {
         "home": {
@@ -2062,12 +1290,12 @@
           "latitude": 40.83399,
           "longitude": -74.09709,
           "roofLikely": false,
-          "temperatureC": 29.4,
+          "temperatureC": 29.3,
           "precipitationProbability": 6,
-          "windKph": 16.6,
-          "humidity": 35,
+          "windKph": 15.6,
+          "humidity": 36,
           "riskLevel": "中",
-          "summary": "29°C，降水 6%，风 17 km/h，湿度 35%。露天影响按正常权重计入。"
+          "summary": "29°C，降水 6%，风 16 km/h，湿度 36%。露天影响按正常权重计入。"
         },
         "geography": {
           "homeRegion": "未知",
@@ -2107,8 +1335,8 @@
         "note": "近况、球员、伤病、天气和地理因素进入主模型；古法占卜仅作低权重文化校验，不覆盖可验证事实。"
       },
       "judgement": {
-        "confidence": 71,
-        "risk": 47,
+        "confidence": 72,
+        "risk": 48,
         "tier": "小额娱乐",
         "lean": "可小额关注 德国 方向",
         "stake": "建议控制在单场预算 15%-25%",
@@ -2117,15 +1345,15 @@
         "factors": [
           {
             "label": "市场强度",
-            "value": 62,
+            "value": 63,
             "tone": "good",
-            "note": "德国 去水后约 62%"
+            "note": "德国 去水后约 63%"
           },
           {
             "label": "赔率移动",
-            "value": 49,
+            "value": 55,
             "tone": "watch",
-            "note": "热门方向隐含概率变化 +4.9%"
+            "note": "热门方向隐含概率变化 +5.5%"
           },
           {
             "label": "平局噪音",
@@ -2149,7 +1377,7 @@
             "label": "天气地理",
             "value": 52,
             "tone": "watch",
-            "note": "29°C，降水 6%，风 17 km/h，湿度 35%。露天影响按正常权重计入。 旅行距离差不大"
+            "note": "29°C，降水 6%，风 16 km/h，湿度 36%。露天影响按正常权重计入。 旅行距离差不大"
           },
           {
             "label": "古法校验",
@@ -2161,166 +1389,166 @@
       },
       "scoreline": {
         "model": "胜平负去水概率 + 大小球盘口 + 进攻尾部/弱势主队一球校准 Poisson 比分分布",
-        "homeExpectedGoals": 1.24,
-        "awayExpectedGoals": 2.17,
+        "homeExpectedGoals": 1.18,
+        "awayExpectedGoals": 2.23,
         "totalExpectedGoals": 3.41,
         "resultProbabilities": [
           {
             "label": "厄瓜多尔",
             "side": "home",
-            "probability": 0.1818
+            "probability": 0.1746
           },
           {
             "label": "平局",
             "side": "draw",
-            "probability": 0.1988
+            "probability": 0.196
           },
           {
             "label": "德国",
             "side": "away",
-            "probability": 0.6194
+            "probability": 0.6293
           }
         ],
         "bestPick": {
           "score": "1-2",
           "result": "客胜",
-          "probability": 0.1122,
-          "baseProbability": 0.0965,
+          "probability": 0.1129,
+          "baseProbability": 0.0969,
           "tailMultiplier": 1.25,
-          "fairOdds": 8.91,
-          "suggestedMinOdds": 10.25,
+          "fairOdds": 8.85,
+          "suggestedMinOdds": 10.27,
           "officialOdds": null,
           "expectedValue": null,
-          "expectedValueAtSuggestedOdds": 0.15,
+          "expectedValueAtSuggestedOdds": 0.16,
           "grade": "首选核验",
-          "reason": "德国 胜面约 62%，一球小胜；比分区间贴近市场总进球。复盘校准参考让球盘口，热门方一球小胜路径已上调。"
+          "reason": "德国 胜面约 63%，一球小胜；比分区间贴近市场总进球。复盘校准参考让球盘口，热门方一球小胜路径已上调。"
         },
         "candidates": [
           {
             "score": "1-2",
             "result": "客胜",
-            "probability": 0.1122,
-            "baseProbability": 0.0965,
+            "probability": 0.1129,
+            "baseProbability": 0.0969,
             "tailMultiplier": 1.25,
-            "fairOdds": 8.91,
-            "suggestedMinOdds": 10.25,
+            "fairOdds": 8.85,
+            "suggestedMinOdds": 10.27,
             "officialOdds": null,
             "expectedValue": null,
-            "expectedValueAtSuggestedOdds": 0.15,
+            "expectedValueAtSuggestedOdds": 0.16,
             "grade": "首选核验",
-            "reason": "德国 胜面约 62%，一球小胜；比分区间贴近市场总进球。复盘校准参考让球盘口，热门方一球小胜路径已上调。"
+            "reason": "德国 胜面约 63%，一球小胜；比分区间贴近市场总进球。复盘校准参考让球盘口，热门方一球小胜路径已上调。"
           },
           {
             "score": "1-3",
             "result": "客胜",
-            "probability": 0.0798,
-            "baseProbability": 0.0698,
+            "probability": 0.0826,
+            "baseProbability": 0.0721,
             "tailMultiplier": 1.23,
-            "fairOdds": 12.52,
-            "suggestedMinOdds": 14.4,
+            "fairOdds": 12.11,
+            "suggestedMinOdds": 14.04,
             "officialOdds": null,
             "expectedValue": null,
-            "expectedValueAtSuggestedOdds": 0.15,
+            "expectedValueAtSuggestedOdds": 0.16,
             "grade": "备选",
-            "reason": "德国 胜面约 62%，两球以上优势；比分偏大，需要更高官方赔率补偿风险。复盘校准上调弱势主队一球贡献，说明这个比分比零封路径更值得核验。"
+            "reason": "德国 胜面约 63%，两球以上优势；比分偏大，需要更高官方赔率补偿风险。复盘校准上调弱势主队一球贡献，说明这个比分比零封路径更值得核验。"
           },
           {
             "score": "0-1",
             "result": "客胜",
-            "probability": 0.0707,
-            "baseProbability": 0.0717,
+            "probability": 0.0728,
+            "baseProbability": 0.0737,
             "tailMultiplier": 1.06,
-            "fairOdds": 14.14,
-            "suggestedMinOdds": 16.26,
+            "fairOdds": 13.74,
+            "suggestedMinOdds": 15.94,
             "officialOdds": null,
             "expectedValue": null,
-            "expectedValueAtSuggestedOdds": 0.15,
+            "expectedValueAtSuggestedOdds": 0.16,
             "grade": "备选",
-            "reason": "德国 胜面约 62%，一球小胜；低比分，对临场节奏和首发依赖更强。复盘校准参考让球盘口，热门方一球小胜路径已上调。"
-          },
-          {
-            "score": "2-3",
-            "result": "客胜",
-            "probability": 0.0483,
-            "baseProbability": 0.0433,
-            "tailMultiplier": 1.2,
-            "fairOdds": 20.71,
-            "suggestedMinOdds": 23.81,
-            "officialOdds": null,
-            "expectedValue": null,
-            "expectedValueAtSuggestedOdds": 0.15,
-            "grade": "备选",
-            "reason": "德国 胜面约 62%，一球小胜；比分偏大，需要更高官方赔率补偿风险。复盘校准参考让球盘口，热门方一球小胜路径已上调。"
+            "reason": "德国 胜面约 63%，一球小胜；低比分，对临场节奏和首发依赖更强。复盘校准参考让球盘口，热门方一球小胜路径已上调。"
           },
           {
             "score": "0-2",
             "result": "客胜",
-            "probability": 0.0644,
-            "baseProbability": 0.0778,
+            "probability": 0.0681,
+            "baseProbability": 0.0822,
             "tailMultiplier": 0.89,
-            "fairOdds": 15.52,
-            "suggestedMinOdds": 17.85,
+            "fairOdds": 14.67,
+            "suggestedMinOdds": 17.02,
             "officialOdds": null,
             "expectedValue": null,
-            "expectedValueAtSuggestedOdds": 0.15,
+            "expectedValueAtSuggestedOdds": 0.16,
             "grade": "备选",
-            "reason": "德国 胜面约 62%，两球以上优势；比分区间贴近市场总进球。复盘校准下调热门方零封路径，防止模型过度相信 0 进球。"
+            "reason": "德国 胜面约 63%，两球以上优势；比分区间贴近市场总进球。复盘校准下调热门方零封路径，防止模型过度相信 0 进球。"
+          },
+          {
+            "score": "2-3",
+            "result": "客胜",
+            "probability": 0.0475,
+            "baseProbability": 0.0425,
+            "tailMultiplier": 1.2,
+            "fairOdds": 21.03,
+            "suggestedMinOdds": 24.4,
+            "officialOdds": null,
+            "expectedValue": null,
+            "expectedValueAtSuggestedOdds": 0.16,
+            "grade": "备选",
+            "reason": "德国 胜面约 63%，一球小胜；比分偏大，需要更高官方赔率补偿风险。复盘校准参考让球盘口，热门方一球小胜路径已上调。"
+          },
+          {
+            "score": "1-4",
+            "result": "客胜",
+            "probability": 0.0461,
+            "baseProbability": 0.0402,
+            "tailMultiplier": 1.23,
+            "fairOdds": 21.71,
+            "suggestedMinOdds": 25.19,
+            "officialOdds": null,
+            "expectedValue": null,
+            "expectedValueAtSuggestedOdds": 0.16,
+            "grade": "备选",
+            "reason": "德国 胜面约 63%，两球以上优势；比分偏大，需要更高官方赔率补偿风险。复盘校准上调弱势主队一球贡献，说明这个比分比零封路径更值得核验。"
           },
           {
             "score": "1-1",
             "result": "平局",
-            "probability": 0.0761,
-            "baseProbability": 0.0889,
+            "probability": 0.0745,
+            "baseProbability": 0.0869,
             "tailMultiplier": 0.92,
-            "fairOdds": 13.14,
-            "suggestedMinOdds": 15.11,
+            "fairOdds": 13.41,
+            "suggestedMinOdds": 15.56,
             "officialOdds": null,
             "expectedValue": null,
-            "expectedValueAtSuggestedOdds": 0.15,
+            "expectedValueAtSuggestedOdds": 0.16,
             "grade": "备选",
             "reason": "进球环境偏开放，平局概率约 20%，厄瓜多尔 与 德国 的胜负差距不宜过度放大。"
           },
           {
             "score": "2-2",
             "result": "平局",
-            "probability": 0.0657,
-            "baseProbability": 0.0598,
+            "probability": 0.0629,
+            "baseProbability": 0.0572,
             "tailMultiplier": 1.18,
-            "fairOdds": 15.23,
-            "suggestedMinOdds": 17.52,
+            "fairOdds": 15.9,
+            "suggestedMinOdds": 18.44,
             "officialOdds": null,
             "expectedValue": null,
-            "expectedValueAtSuggestedOdds": 0.15,
+            "expectedValueAtSuggestedOdds": 0.16,
             "grade": "备选",
             "reason": "进球环境偏开放，平局概率约 20%，厄瓜多尔 与 德国 的胜负差距不宜过度放大。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。"
           },
           {
-            "score": "1-4",
-            "result": "客胜",
-            "probability": 0.0433,
-            "baseProbability": 0.0379,
-            "tailMultiplier": 1.23,
-            "fairOdds": 23.09,
-            "suggestedMinOdds": 26.55,
-            "officialOdds": null,
-            "expectedValue": null,
-            "expectedValueAtSuggestedOdds": 0.15,
-            "grade": "备选",
-            "reason": "德国 胜面约 62%，两球以上优势；比分偏大，需要更高官方赔率补偿风险。复盘校准上调弱势主队一球贡献，说明这个比分比零封路径更值得核验。"
-          },
-          {
             "score": "0-3",
             "result": "客胜",
-            "probability": 0.0466,
-            "baseProbability": 0.0563,
+            "probability": 0.0507,
+            "baseProbability": 0.0611,
             "tailMultiplier": 0.89,
-            "fairOdds": 21.46,
-            "suggestedMinOdds": 24.68,
+            "fairOdds": 19.74,
+            "suggestedMinOdds": 22.9,
             "officialOdds": null,
             "expectedValue": null,
-            "expectedValueAtSuggestedOdds": 0.15,
+            "expectedValueAtSuggestedOdds": 0.16,
             "grade": "备选",
-            "reason": "德国 胜面约 62%，两球以上优势；比分区间贴近市场总进球。复盘校准下调热门方零封路径，防止模型过度相信 0 进球。"
+            "reason": "德国 胜面约 63%，两球以上优势；比分区间贴近市场总进球。复盘校准下调热门方零封路径，防止模型过度相信 0 进球。"
           }
         ],
         "avoid": [
@@ -2330,11 +1558,11 @@
             "probability": 0,
             "baseProbability": 0,
             "tailMultiplier": 1.18,
-            "fairOdds": 37653.47,
-            "suggestedMinOdds": 43301.49,
+            "fairOdds": 42973.13,
+            "suggestedMinOdds": 49848.83,
             "officialOdds": null,
             "expectedValue": null,
-            "expectedValueAtSuggestedOdds": 0.15,
+            "expectedValueAtSuggestedOdds": 0.16,
             "grade": "回避",
             "reason": "概率过低，除非官方赔率极端偏高，否则不适合作为主要比分方向。"
           },
@@ -2344,25 +1572,25 @@
             "probability": 0.0001,
             "baseProbability": 0.0001,
             "tailMultiplier": 1.2,
-            "fairOdds": 7652.02,
-            "suggestedMinOdds": 8799.82,
+            "fairOdds": 8310.53,
+            "suggestedMinOdds": 9640.21,
             "officialOdds": null,
             "expectedValue": null,
-            "expectedValueAtSuggestedOdds": 0.15,
+            "expectedValueAtSuggestedOdds": 0.16,
             "grade": "回避",
             "reason": "概率过低，除非官方赔率极端偏高，否则不适合作为主要比分方向。"
           },
           {
-            "score": "6-5",
+            "score": "6-0",
             "result": "主胜",
             "probability": 0.0001,
             "baseProbability": 0.0001,
             "tailMultiplier": 1.18,
-            "fairOdds": 13618,
-            "suggestedMinOdds": 15660.7,
+            "fairOdds": 7339.96,
+            "suggestedMinOdds": 8514.35,
             "officialOdds": null,
             "expectedValue": null,
-            "expectedValueAtSuggestedOdds": 0.15,
+            "expectedValueAtSuggestedOdds": 0.16,
             "grade": "回避",
             "reason": "概率过低，除非官方赔率极端偏高，否则不适合作为主要比分方向。"
           }
@@ -2393,15 +1621,15 @@
               "label": "主票",
               "selection": "1-2（客胜）",
               "allocation": "本场预算 25%-35%",
-              "minOdds": "≥ 10.25",
+              "minOdds": "≥ 10.27",
               "action": "买入核验",
-              "rationale": "首选比分概率 11%，盈亏线 8.91，低于门槛不买。"
+              "rationale": "首选比分概率 11%，盈亏线 8.85，低于门槛不买。"
             },
             {
               "label": "低方差票",
               "selection": "德国 客胜",
               "allocation": "本场预算 25%-35%",
-              "minOdds": "≥ 1.76",
+              "minOdds": "≥ 1.74",
               "action": "买入核验",
               "rationale": "胜平负只用于降低比分玩法方差，赔率被压低时不参与。"
             },
@@ -2418,13 +1646,13 @@
             "模型最集中比分：1-2（客胜）；备选：1-3（客胜） / 0-1（客胜）。",
             "胜平负方向：德国 客胜；总进球校验：总进球 3/4/5。",
             "近5场：近 5 场 3 胜 2 平，场均 1.4-0。；近 5 场 4 胜 1 平，场均 3.4-0.2。",
-            "天气/地理：29°C，降水 6%，风 17 km/h，湿度 35%。露天影响按正常权重计入。 旅行距离差不大",
+            "天气/地理：29°C，降水 6%，风 16 km/h，湿度 36%。露天影响按正常权重计入。 旅行距离差不大",
             "古法低权重校验：取象双方差距很小，不改变主模型。日时五行取 木。",
             "主要风险：赔率压缩为中，比分方差为中。"
           ],
           "noBuyRules": [
-            "中国体彩比分赔率低于 ≥ 10.25 时不买。",
-            "胜平负 德国 客胜 低于 ≥ 1.76 时不买。",
+            "中国体彩比分赔率低于 ≥ 10.27 时不买。",
+            "胜平负 德国 客胜 低于 ≥ 1.74 时不买。",
             "首发出现核心前锋、门将或中卫明显轮换时不买。",
             "临场 30 分钟内热门方向继续大幅降赔时不追。",
             "中国体彩未开售、停售或让球口径变化时不买。"
@@ -2437,11 +1665,11 @@
           "secondaryScores": [
             "1-3（客胜）",
             "0-1（客胜）",
-            "2-3（客胜）"
+            "0-2（客胜）"
           ],
           "marketDirection": "德国 客胜",
           "totalGoals": "总进球 3/4/5",
-          "buyCondition": "必须同时满足：比分赔率 ≥ 10.25、胜平负方向 ≥ 1.76、首发无明显轮换。",
+          "buyCondition": "必须同时满足：比分赔率 ≥ 10.27、胜平负方向 ≥ 1.74、首发无明显轮换。",
           "passCondition": "任一核心条件不满足就放弃；不要串太多场，避免一个冷门毁掉整组判断。",
           "stakeCeiling": "本场最多使用当日预算 10%-16%，分成 2 个以内方向。",
           "confidenceBand": "中等：用小额分散而不是重仓单点"
@@ -2452,10 +1680,10 @@
           "priority": "主方案",
           "confidence": 68,
           "budgetShare": "单场预算 5%-9%",
-          "minOdds": "≥ 10.25",
-          "expectedValueNote": "模型概率 11%，盈亏线 8.91；官方赔率低于门槛则放弃。",
-          "reason": "德国 胜面约 62%，一球小胜；比分区间贴近市场总进球。复盘校准参考让球盘口，热门方一球小胜路径已上调。",
-          "noBetIf": "中国体彩该比分赔率低于 10.25，或赛前首发显示明显轮换。"
+          "minOdds": "≥ 10.27",
+          "expectedValueNote": "模型概率 11%，盈亏线 8.85；官方赔率低于门槛则放弃。",
+          "reason": "德国 胜面约 63%，一球小胜；比分区间贴近市场总进球。复盘校准参考让球盘口，热门方一球小胜路径已上调。",
+          "noBetIf": "中国体彩该比分赔率低于 10.27，或赛前首发显示明显轮换。"
         },
         "plays": [
           {
@@ -2464,19 +1692,19 @@
             "priority": "主方案",
             "confidence": 68,
             "budgetShare": "单场预算 5%-9%",
-            "minOdds": "≥ 10.25",
-            "expectedValueNote": "模型概率 11%，盈亏线 8.91；官方赔率低于门槛则放弃。",
-            "reason": "德国 胜面约 62%，一球小胜；比分区间贴近市场总进球。复盘校准参考让球盘口，热门方一球小胜路径已上调。",
-            "noBetIf": "中国体彩该比分赔率低于 10.25，或赛前首发显示明显轮换。"
+            "minOdds": "≥ 10.27",
+            "expectedValueNote": "模型概率 11%，盈亏线 8.85；官方赔率低于门槛则放弃。",
+            "reason": "德国 胜面约 63%，一球小胜；比分区间贴近市场总进球。复盘校准参考让球盘口，热门方一球小胜路径已上调。",
+            "noBetIf": "中国体彩该比分赔率低于 10.27，或赛前首发显示明显轮换。"
           },
           {
             "playType": "胜平负",
             "selection": "德国 客胜",
             "priority": "备选",
-            "confidence": 62,
+            "confidence": 63,
             "budgetShare": "单场预算 8%-15%",
-            "minOdds": "≥ 1.76",
-            "expectedValueNote": "去水概率 62%，低于建议赔率时性价比不足。",
+            "minOdds": "≥ 1.74",
+            "expectedValueNote": "去水概率 63%，低于建议赔率时性价比不足。",
             "reason": "德国 是市场主方向，可作为比分玩法之外的低方差核验项。",
             "noBetIf": "官方胜平负赔率明显低于门槛，或临场赔率短时间大幅下压。"
           },
@@ -2501,7 +1729,7 @@
           },
           {
             "title": "僵持剧本",
-            "probability": "8%",
+            "probability": "7%",
             "scorePath": "若上半场节奏慢，比分可能滑向 1-1。",
             "action": "平局只做防守，不把它升级成主方案。"
           },
@@ -2515,19 +1743,19 @@
         "signals": [
           {
             "label": "市场主方向",
-            "score": 62,
+            "score": 63,
             "tone": "good",
-            "evidence": "德国 去水后约 62%，当前判断为 客胜 主方向。"
+            "evidence": "德国 去水后约 63%，当前判断为 客胜 主方向。"
           },
           {
             "label": "比分集中度",
-            "score": 112,
+            "score": 113,
             "tone": "watch",
-            "evidence": "首选比分 1-2 概率约 11%，盈亏线 8.91。"
+            "evidence": "首选比分 1-2 概率约 11%，盈亏线 8.85。"
           },
           {
             "label": "赔率过热",
-            "score": 47,
+            "score": 48,
             "tone": "good",
             "evidence": "市场热度尚可，但仍需赛前赔率确认。"
           },
@@ -2547,7 +1775,7 @@
             "label": "天气/地理",
             "score": 52,
             "tone": "watch",
-            "evidence": "29°C，降水 6%，风 17 km/h，湿度 35%。露天影响按正常权重计入。 厄瓜多尔 来自未知地区，德国 来自未知地区；旅行距离差不大。"
+            "evidence": "29°C，降水 6%，风 16 km/h，湿度 36%。露天影响按正常权重计入。 厄瓜多尔 来自未知地区，德国 来自未知地区；旅行距离差不大。"
           },
           {
             "label": "古法占卜低权重",
@@ -2575,12 +1803,12 @@
           {
             "label": "综合风险",
             "level": "中",
-            "detail": "当前风险指数 47/100；超过中档时只做核验，不扩大组合。"
+            "detail": "当前风险指数 48/100；超过中档时只做核验，不扩大组合。"
           },
           {
             "label": "天气地理",
             "level": "中",
-            "detail": "29°C，降水 6%，风 17 km/h，湿度 35%。露天影响按正常权重计入。 厄瓜多尔 来自未知地区，德国 来自未知地区；旅行距离差不大。"
+            "detail": "29°C，降水 6%，风 16 km/h，湿度 36%。露天影响按正常权重计入。 厄瓜多尔 来自未知地区，德国 来自未知地区；旅行距离差不大。"
           },
           {
             "label": "伤病首发",
@@ -2594,10 +1822,10 @@
           }
         ],
         "checklist": [
-          "中国体彩比分 1-2（客胜） 官方赔率是否 ≥ 10.25",
-          "胜平负 德国 客胜 是否达到 ≥ 1.76",
+          "中国体彩比分 1-2（客胜） 官方赔率是否 ≥ 10.27",
+          "胜平负 德国 客胜 是否达到 ≥ 1.74",
           "近5场实况是否仍支持：WWWDD vs DWWWW",
-          "天气地理是否冲突：29°C，降水 6%，风 17 km/h，湿度 35%。露天影响按正常权重计入。",
+          "天气地理是否冲突：29°C，降水 6%，风 16 km/h，湿度 36%。露天影响按正常权重计入。",
           "赛前 30 分钟确认首发、门将、核心前锋和中卫组合",
           "停售前确认赔率没有突然下压，且比赛仍在竞彩开售列表"
         ],
@@ -2657,7 +1885,7 @@
             "american": "-115",
             "decimal": 1.87,
             "impliedProbability": 0.5348837209302325,
-            "normalizedProbability": 0.5124160260158891,
+            "normalizedProbability": 0.5149073327961322,
             "line": null,
             "movement": 4.7
           },
@@ -2667,53 +1895,53 @@
             "american": "+255",
             "decimal": 3.55,
             "impliedProbability": 0.28169014084507044,
-            "normalizedProbability": 0.26985779692202366,
+            "normalizedProbability": 0.27116981396489515,
             "line": null,
             "movement": -0.4
           },
           {
             "label": "瑞典",
             "side": "away",
-            "american": "+340",
-            "decimal": 4.4,
-            "impliedProbability": 0.22727272727272727,
-            "normalizedProbability": 0.21772617706208727,
+            "american": "+350",
+            "decimal": 4.5,
+            "impliedProbability": 0.2222222222222222,
+            "normalizedProbability": 0.2139228532389728,
             "line": null,
-            "movement": -4.3
+            "movement": -4.8
           }
         ],
         "total": [
           {
             "label": "大球",
             "side": "over",
-            "american": "-130",
-            "decimal": 1.77,
-            "impliedProbability": 0.5652173913043478,
+            "american": "-120",
+            "decimal": 1.83,
+            "impliedProbability": 0.5454545454545454,
             "normalizedProbability": null,
             "line": "o2.5",
-            "movement": 7.7
+            "movement": 5.8
           },
           {
             "label": "小球",
             "side": "under",
-            "american": "+105",
-            "decimal": 2.05,
-            "impliedProbability": 0.4878048780487805,
+            "american": "-105",
+            "decimal": 1.95,
+            "impliedProbability": 0.5121951219512195,
             "normalizedProbability": null,
             "line": "u2.5",
-            "movement": -7.7
+            "movement": -5.3
           }
         ],
         "spread": [
           {
             "label": "日本",
             "side": "spreadHome",
-            "american": "-120",
-            "decimal": 1.83,
-            "impliedProbability": 0.5454545454545454,
+            "american": "-125",
+            "decimal": 1.8,
+            "impliedProbability": 0.5555555555555556,
             "normalizedProbability": null,
             "line": "-0.5",
-            "movement": 3.3
+            "movement": 4.3
           },
           {
             "label": "瑞典",
@@ -2726,7 +1954,7 @@
             "movement": -5.3
           }
         ],
-        "updatedAt": "2026-06-25T03:29:49.482Z"
+        "updatedAt": "2026-06-25T04:51:25.533Z"
       },
       "context": {
         "home": {
@@ -2955,8 +2183,8 @@
         "note": "近况、球员、伤病、天气和地理因素进入主模型；古法占卜仅作低权重文化校验，不覆盖可验证事实。"
       },
       "judgement": {
-        "confidence": 67,
-        "risk": 46,
+        "confidence": 66,
+        "risk": 51,
         "tier": "小额娱乐",
         "lean": "可小额关注 日本 方向",
         "stake": "建议控制在单场预算 15%-25%",
@@ -2978,7 +2206,7 @@
           {
             "label": "平局噪音",
             "value": 27,
-            "tone": "good",
+            "tone": "bad",
             "note": "平局去水后约 27%"
           },
           {
@@ -3009,37 +2237,37 @@
       },
       "scoreline": {
         "model": "胜平负去水概率 + 大小球盘口 + 进攻尾部/弱势主队一球校准 Poisson 比分分布",
-        "homeExpectedGoals": 1.85,
-        "awayExpectedGoals": 1.23,
-        "totalExpectedGoals": 3.08,
+        "homeExpectedGoals": 1.81,
+        "awayExpectedGoals": 1.18,
+        "totalExpectedGoals": 2.99,
         "resultProbabilities": [
           {
             "label": "日本",
             "side": "home",
-            "probability": 0.5124
+            "probability": 0.5149
           },
           {
             "label": "平局",
             "side": "draw",
-            "probability": 0.2699
+            "probability": 0.2712
           },
           {
             "label": "瑞典",
             "side": "away",
-            "probability": 0.2177
+            "probability": 0.2139
           }
         ],
         "bestPick": {
           "score": "2-1",
           "result": "主胜",
-          "probability": 0.0981,
-          "baseProbability": 0.0967,
+          "probability": 0.1023,
+          "baseProbability": 0.0972,
           "tailMultiplier": 1.08,
-          "fairOdds": 10.2,
-          "suggestedMinOdds": 11.73,
+          "fairOdds": 9.77,
+          "suggestedMinOdds": 11.33,
           "officialOdds": null,
           "expectedValue": null,
-          "expectedValueAtSuggestedOdds": 0.15,
+          "expectedValueAtSuggestedOdds": 0.16,
           "grade": "首选核验",
           "reason": "日本 胜面约 51%，一球小胜；比分区间贴近市场总进球。"
         },
@@ -3047,128 +2275,128 @@
           {
             "score": "2-1",
             "result": "主胜",
-            "probability": 0.0981,
-            "baseProbability": 0.0967,
+            "probability": 0.1023,
+            "baseProbability": 0.0972,
             "tailMultiplier": 1.08,
-            "fairOdds": 10.2,
-            "suggestedMinOdds": 11.73,
+            "fairOdds": 9.77,
+            "suggestedMinOdds": 11.33,
             "officialOdds": null,
             "expectedValue": null,
-            "expectedValueAtSuggestedOdds": 0.15,
+            "expectedValueAtSuggestedOdds": 0.16,
             "grade": "首选核验",
             "reason": "日本 胜面约 51%，一球小胜；比分区间贴近市场总进球。"
           },
           {
             "score": "1-1",
             "result": "平局",
-            "probability": 0.0982,
-            "baseProbability": 0.1046,
+            "probability": 0.1047,
+            "baseProbability": 0.1074,
             "tailMultiplier": 1,
-            "fairOdds": 10.19,
-            "suggestedMinOdds": 11.72,
+            "fairOdds": 9.55,
+            "suggestedMinOdds": 11.08,
             "officialOdds": null,
             "expectedValue": null,
-            "expectedValueAtSuggestedOdds": 0.15,
+            "expectedValueAtSuggestedOdds": 0.16,
             "grade": "备选",
             "reason": "进球环境偏开放，平局概率约 27%，日本 与 瑞典 的胜负差距不宜过度放大。"
           },
           {
             "score": "2-0",
             "result": "主胜",
-            "probability": 0.0738,
-            "baseProbability": 0.0786,
+            "probability": 0.0803,
+            "baseProbability": 0.0824,
             "tailMultiplier": 1,
-            "fairOdds": 13.55,
-            "suggestedMinOdds": 15.58,
+            "fairOdds": 12.45,
+            "suggestedMinOdds": 14.44,
             "officialOdds": null,
             "expectedValue": null,
-            "expectedValueAtSuggestedOdds": 0.15,
+            "expectedValueAtSuggestedOdds": 0.16,
             "grade": "备选",
             "reason": "日本 胜面约 51%，两球以上优势；比分区间贴近市场总进球。"
           },
           {
-            "score": "3-1",
-            "result": "主胜",
-            "probability": 0.0661,
-            "baseProbability": 0.0597,
-            "tailMultiplier": 1.18,
-            "fairOdds": 15.14,
-            "suggestedMinOdds": 17.41,
-            "officialOdds": null,
-            "expectedValue": null,
-            "expectedValueAtSuggestedOdds": 0.15,
-            "grade": "备选",
-            "reason": "日本 胜面约 51%，两球以上优势；比分偏大，需要更高官方赔率补偿风险。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。"
-          },
-          {
             "score": "1-0",
             "result": "主胜",
-            "probability": 0.0718,
-            "baseProbability": 0.085,
+            "probability": 0.0799,
+            "baseProbability": 0.091,
             "tailMultiplier": 0.9,
-            "fairOdds": 13.92,
-            "suggestedMinOdds": 16.01,
+            "fairOdds": 12.52,
+            "suggestedMinOdds": 14.53,
             "officialOdds": null,
             "expectedValue": null,
-            "expectedValueAtSuggestedOdds": 0.15,
+            "expectedValueAtSuggestedOdds": 0.16,
             "grade": "备选",
             "reason": "日本 胜面约 51%，一球小胜；低比分，对临场节奏和首发依赖更强。尾部校准下调，需防模型把罕见路径估得过高。"
           },
           {
-            "score": "2-2",
-            "result": "平局",
-            "probability": 0.0659,
-            "baseProbability": 0.0595,
-            "tailMultiplier": 1.18,
-            "fairOdds": 15.18,
-            "suggestedMinOdds": 17.45,
+            "score": "3-1",
+            "result": "主胜",
+            "probability": 0.0617,
+            "baseProbability": 0.0586,
+            "tailMultiplier": 1.08,
+            "fairOdds": 16.2,
+            "suggestedMinOdds": 18.79,
             "officialOdds": null,
             "expectedValue": null,
-            "expectedValueAtSuggestedOdds": 0.15,
+            "expectedValueAtSuggestedOdds": 0.16,
             "grade": "备选",
-            "reason": "进球环境偏开放，平局概率约 27%，日本 与 瑞典 的胜负差距不宜过度放大。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。"
+            "reason": "日本 胜面约 51%，两球以上优势；比分偏大，需要更高官方赔率补偿风险。"
           },
           {
             "score": "3-0",
             "result": "主胜",
-            "probability": 0.0492,
-            "baseProbability": 0.0485,
+            "probability": 0.0523,
+            "baseProbability": 0.0497,
             "tailMultiplier": 1.08,
-            "fairOdds": 20.34,
-            "suggestedMinOdds": 23.39,
+            "fairOdds": 19.11,
+            "suggestedMinOdds": 22.17,
             "officialOdds": null,
             "expectedValue": null,
-            "expectedValueAtSuggestedOdds": 0.15,
+            "expectedValueAtSuggestedOdds": 0.16,
             "grade": "备选",
             "reason": "日本 胜面约 51%，两球以上优势；比分区间贴近市场总进球。"
           },
           {
             "score": "1-2",
             "result": "客胜",
-            "probability": 0.0652,
-            "baseProbability": 0.0643,
+            "probability": 0.0667,
+            "baseProbability": 0.0634,
             "tailMultiplier": 1.08,
-            "fairOdds": 15.34,
-            "suggestedMinOdds": 17.64,
+            "fairOdds": 14.99,
+            "suggestedMinOdds": 17.39,
             "officialOdds": null,
             "expectedValue": null,
-            "expectedValueAtSuggestedOdds": 0.15,
+            "expectedValueAtSuggestedOdds": 0.16,
             "grade": "备选",
-            "reason": "瑞典 胜面约 22%，一球小胜；比分区间贴近市场总进球。"
+            "reason": "瑞典 胜面约 21%，一球小胜；比分区间贴近市场总进球。"
           },
           {
-            "score": "3-2",
-            "result": "主胜",
-            "probability": 0.0406,
-            "baseProbability": 0.0367,
-            "tailMultiplier": 1.18,
-            "fairOdds": 24.61,
-            "suggestedMinOdds": 28.3,
+            "score": "2-2",
+            "result": "平局",
+            "probability": 0.0604,
+            "baseProbability": 0.0573,
+            "tailMultiplier": 1.08,
+            "fairOdds": 16.56,
+            "suggestedMinOdds": 19.21,
             "officialOdds": null,
             "expectedValue": null,
-            "expectedValueAtSuggestedOdds": 0.15,
+            "expectedValueAtSuggestedOdds": 0.16,
             "grade": "备选",
-            "reason": "日本 胜面约 51%，一球小胜；比分偏大，需要更高官方赔率补偿风险。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。"
+            "reason": "进球环境偏开放，平局概率约 27%，日本 与 瑞典 的胜负差距不宜过度放大。"
+          },
+          {
+            "score": "0-1",
+            "result": "客胜",
+            "probability": 0.0521,
+            "baseProbability": 0.0593,
+            "tailMultiplier": 0.9,
+            "fairOdds": 19.21,
+            "suggestedMinOdds": 22.28,
+            "officialOdds": null,
+            "expectedValue": null,
+            "expectedValueAtSuggestedOdds": 0.16,
+            "grade": "备选",
+            "reason": "瑞典 胜面约 21%，一球小胜；低比分，对临场节奏和首发依赖更强。尾部校准下调，需防模型把罕见路径估得过高。"
           }
         ],
         "avoid": [
@@ -3177,12 +2405,26 @@
             "result": "客胜",
             "probability": 0,
             "baseProbability": 0,
-            "tailMultiplier": 1.18,
-            "fairOdds": 22621.61,
-            "suggestedMinOdds": 26014.86,
+            "tailMultiplier": 1.08,
+            "fairOdds": 31116.07,
+            "suggestedMinOdds": 36094.65,
             "officialOdds": null,
             "expectedValue": null,
-            "expectedValueAtSuggestedOdds": 0.15,
+            "expectedValueAtSuggestedOdds": 0.16,
+            "grade": "回避",
+            "reason": "概率过低，除非官方赔率极端偏高，否则不适合作为主要比分方向。"
+          },
+          {
+            "score": "6-5",
+            "result": "主胜",
+            "probability": 0,
+            "baseProbability": 0,
+            "tailMultiplier": 1.08,
+            "fairOdds": 20285.62,
+            "suggestedMinOdds": 23531.32,
+            "officialOdds": null,
+            "expectedValue": null,
+            "expectedValueAtSuggestedOdds": 0.16,
             "grade": "回避",
             "reason": "概率过低，除非官方赔率极端偏高，否则不适合作为主要比分方向。"
           },
@@ -3191,33 +2433,19 @@
             "result": "平局",
             "probability": 0,
             "baseProbability": 0,
-            "tailMultiplier": 1.18,
-            "fairOdds": 73367.4,
-            "suggestedMinOdds": 84372.51,
+            "tailMultiplier": 1.08,
+            "fairOdds": 103147.21,
+            "suggestedMinOdds": 119650.76,
             "officialOdds": null,
             "expectedValue": null,
-            "expectedValueAtSuggestedOdds": 0.15,
-            "grade": "回避",
-            "reason": "概率过低，除非官方赔率极端偏高，否则不适合作为主要比分方向。"
-          },
-          {
-            "score": "4-6",
-            "result": "客胜",
-            "probability": 0.0001,
-            "baseProbability": 0.0001,
-            "tailMultiplier": 1.18,
-            "fairOdds": 8370,
-            "suggestedMinOdds": 9625.5,
-            "officialOdds": null,
-            "expectedValue": null,
-            "expectedValueAtSuggestedOdds": 0.15,
+            "expectedValueAtSuggestedOdds": 0.16,
             "grade": "回避",
             "reason": "概率过低，除非官方赔率极端偏高，否则不适合作为主要比分方向。"
           }
         ],
         "notes": [
           "比分玩法方差很大，候选只适合小额娱乐或赛前核验。",
-          "本版把总进球从基础 2.83 校准到 3.08，并对强弱分明场景的 3+ 进球比分做尾部上调。",
+          "本版把总进球从基础 2.74 校准到 2.99，并对强弱分明场景的 3+ 进球比分做尾部上调。",
           "近况差修正 0 球。",
           "天气/节奏修正 +0.17 总进球。",
           "expectedValue 只有抓到中国体彩官方比分赔率后才会填充；当前显示的是盈亏平衡与建议最低赔率。",
@@ -3225,7 +2453,7 @@
         ]
       },
       "professional": {
-        "rankScore": 56,
+        "rankScore": 55,
         "grade": "观望",
         "headline": "信息优势不足，等待官方赔率与首发后再判断",
         "finalAdvice": "不要串太多场，避免一个冷门毁掉整组判断。 当前不适合主动购买，等待官方赔率和首发。",
@@ -3233,7 +2461,7 @@
         "deepThinking": {
           "label": "深度推演层",
           "conclusion": "最合适买法：不买。本场保留预算。",
-          "confidenceScore": 45,
+          "confidenceScore": 44,
           "purchasePlan": [
             {
               "label": "最终动作",
@@ -3253,7 +2481,7 @@
             "主要风险：赔率压缩为中，比分方差为中。"
           ],
           "noBuyRules": [
-            "中国体彩比分赔率低于 ≥ 11.73 时不买。",
+            "中国体彩比分赔率低于 ≥ 11.33 时不买。",
             "胜平负 日本 主胜 低于 ≥ 2.13 时不买。",
             "首发出现核心前锋、门将或中卫明显轮换时不买。",
             "临场 30 分钟内热门方向继续大幅降赔时不追。",
@@ -3267,11 +2495,11 @@
           "secondaryScores": [
             "1-1（平局）",
             "2-0（主胜）",
-            "3-1（主胜）"
+            "1-0（主胜）"
           ],
           "marketDirection": "日本 主胜",
           "totalGoals": "总进球 2/3/4",
-          "buyCondition": "必须同时满足：比分赔率 ≥ 11.73、胜平负方向 ≥ 2.13、首发无明显轮换；若平局赔率给足，可用 1-1 平局防守 做极小防守。",
+          "buyCondition": "必须同时满足：比分赔率 ≥ 11.33、胜平负方向 ≥ 2.13、首发无明显轮换；若平局赔率给足，可用 1-1 平局防守 做极小防守。",
           "passCondition": "任一核心条件不满足就放弃；不要串太多场，避免一个冷门毁掉整组判断。",
           "stakeCeiling": "保留预算。建议控制在单场预算 15%-25%",
           "confidenceBand": "低：不进入购买清单"
@@ -3282,10 +2510,10 @@
           "priority": "主方案",
           "confidence": 66,
           "budgetShare": "单场预算 5%-9%",
-          "minOdds": "≥ 11.73",
-          "expectedValueNote": "模型概率 10%，盈亏线 10.20；官方赔率低于门槛则放弃。",
+          "minOdds": "≥ 11.33",
+          "expectedValueNote": "模型概率 10%，盈亏线 9.77；官方赔率低于门槛则放弃。",
           "reason": "日本 胜面约 51%，一球小胜；比分区间贴近市场总进球。",
-          "noBetIf": "中国体彩该比分赔率低于 11.73，或赛前首发显示明显轮换。"
+          "noBetIf": "中国体彩该比分赔率低于 11.33，或赛前首发显示明显轮换。"
         },
         "plays": [
           {
@@ -3294,10 +2522,10 @@
             "priority": "主方案",
             "confidence": 66,
             "budgetShare": "单场预算 5%-9%",
-            "minOdds": "≥ 11.73",
-            "expectedValueNote": "模型概率 10%，盈亏线 10.20；官方赔率低于门槛则放弃。",
+            "minOdds": "≥ 11.33",
+            "expectedValueNote": "模型概率 10%，盈亏线 9.77；官方赔率低于门槛则放弃。",
             "reason": "日本 胜面约 51%，一球小胜；比分区间贴近市场总进球。",
-            "noBetIf": "中国体彩该比分赔率低于 11.73，或赛前首发显示明显轮换。"
+            "noBetIf": "中国体彩该比分赔率低于 11.33，或赛前首发显示明显轮换。"
           },
           {
             "playType": "胜平负",
@@ -3317,7 +2545,7 @@
             "confidence": 63,
             "budgetShare": "单场预算 4%-8%",
             "minOdds": "以官方组合赔率核验",
-            "expectedValueNote": "模型总进球均值 3.08，只适合与比分方向交叉验证。",
+            "expectedValueNote": "模型总进球均值 2.99，只适合与比分方向交叉验证。",
             "reason": "总进球环境中性偏开放，2-4 球区间比单点比分更稳。",
             "noBetIf": "首发防守倾向或天气/场地导致节奏判断与模型相反。"
           },
@@ -3327,7 +2555,7 @@
             "priority": "防守",
             "confidence": 61,
             "budgetShare": "单场预算 2%-4%",
-            "minOdds": "≥ 11.72",
+            "minOdds": "≥ 11.08",
             "expectedValueNote": "平局去水概率 27%，只作为防守小票，不扩大金额。",
             "reason": "平局噪音不低，若官方赔率给足，可用最集中平局比分小额防守。",
             "noBetIf": "平局比分赔率低于门槛，或双方首发明显偏进攻导致总进球环境上移。"
@@ -3354,7 +2582,7 @@
           },
           {
             "title": "进球节奏剧本",
-            "probability": "3.08 xG",
+            "probability": "2.99 xG",
             "scorePath": "总进球主区间是 总进球 2/3/4。",
             "action": "比分和总进球方向冲突时，以放弃为优先。"
           }
@@ -3368,13 +2596,13 @@
           },
           {
             "label": "比分集中度",
-            "score": 98,
+            "score": 102,
             "tone": "watch",
-            "evidence": "首选比分 2-1 概率约 10%，盈亏线 10.20。"
+            "evidence": "首选比分 2-1 概率约 10%，盈亏线 9.77。"
           },
           {
             "label": "赔率过热",
-            "score": 46,
+            "score": 51,
             "tone": "good",
             "evidence": "市场热度尚可，但仍需赛前赔率确认。"
           },
@@ -3422,7 +2650,7 @@
           {
             "label": "综合风险",
             "level": "中",
-            "detail": "当前风险指数 46/100；超过中档时只做核验，不扩大组合。"
+            "detail": "当前风险指数 51/100；超过中档时只做核验，不扩大组合。"
           },
           {
             "label": "天气地理",
@@ -3441,7 +2669,7 @@
           }
         ],
         "checklist": [
-          "中国体彩比分 2-1（主胜） 官方赔率是否 ≥ 11.73",
+          "中国体彩比分 2-1（主胜） 官方赔率是否 ≥ 11.33",
           "胜平负 日本 主胜 是否达到 ≥ 2.13",
           "近5场实况是否仍支持：WWWWD vs WDWLW",
           "天气地理是否冲突：34°C，降水 1%，风 22 km/h，湿度 40%。场馆可能有顶棚，天气权重下调。",
@@ -3496,17 +2724,17 @@
       "score": "0-0",
       "market": {
         "provider": "DraftKings",
-        "details": "NED -1000",
+        "details": "NED -1100",
         "moneyline": [
           {
             "label": "突尼斯",
             "side": "home",
-            "american": "+2200",
-            "decimal": 23,
-            "impliedProbability": 0.043478260869565216,
-            "normalizedProbability": 0.041666666666666664,
+            "american": "+2500",
+            "decimal": 26,
+            "impliedProbability": 0.038461538461538464,
+            "normalizedProbability": 0.03676880222841226,
             "line": null,
-            "movement": -12.3
+            "movement": -12.8
           },
           {
             "label": "平局",
@@ -3514,66 +2742,66 @@
             "american": "+1000",
             "decimal": 11,
             "impliedProbability": 0.09090909090909091,
-            "normalizedProbability": 0.08712121212121213,
+            "normalizedProbability": 0.08690807799442897,
             "line": null,
             "movement": -14.7
           },
           {
             "label": "荷兰",
             "side": "away",
-            "american": "-1000",
-            "decimal": 1.1,
-            "impliedProbability": 0.9090909090909091,
-            "normalizedProbability": 0.8712121212121212,
+            "american": "-1100",
+            "decimal": 1.09,
+            "impliedProbability": 0.9166666666666666,
+            "normalizedProbability": 0.8763231197771587,
             "line": null,
-            "movement": 27.3
+            "movement": 28
           }
         ],
         "total": [
           {
             "label": "大球",
             "side": "over",
-            "american": "+105",
-            "decimal": 2.05,
-            "impliedProbability": 0.4878048780487805,
+            "american": "+100",
+            "decimal": 2,
+            "impliedProbability": 0.5,
             "normalizedProbability": null,
             "line": "o3.5",
-            "movement": -3.6
+            "movement": -2.4
           },
           {
             "label": "小球",
             "side": "under",
-            "american": "-130",
-            "decimal": 1.77,
-            "impliedProbability": 0.5652173913043478,
+            "american": "-125",
+            "decimal": 1.8,
+            "impliedProbability": 0.5555555555555556,
             "normalizedProbability": null,
             "line": "u3.5",
-            "movement": 3
+            "movement": 2.1
           }
         ],
         "spread": [
           {
             "label": "突尼斯",
             "side": "spreadHome",
-            "american": "-115",
-            "decimal": 1.87,
-            "impliedProbability": 0.5348837209302325,
-            "normalizedProbability": null,
-            "line": "+2.5",
-            "movement": 11.8
-          },
-          {
-            "label": "荷兰",
-            "side": "spreadAway",
             "american": "-110",
             "decimal": 1.91,
             "impliedProbability": 0.5238095238095238,
             "normalizedProbability": null,
+            "line": "+2.5",
+            "movement": 10.7
+          },
+          {
+            "label": "荷兰",
+            "side": "spreadAway",
+            "american": "-115",
+            "decimal": 1.87,
+            "impliedProbability": 0.5348837209302325,
+            "normalizedProbability": null,
             "line": "-2.5",
-            "movement": -13.7
+            "movement": -12.6
           }
         ],
-        "updatedAt": "2026-06-25T03:29:49.482Z"
+        "updatedAt": "2026-06-25T04:51:25.533Z"
       },
       "context": {
         "home": {
@@ -3812,15 +3040,15 @@
         "factors": [
           {
             "label": "市场强度",
-            "value": 87,
+            "value": 88,
             "tone": "watch",
-            "note": "荷兰 去水后约 87%"
+            "note": "荷兰 去水后约 88%"
           },
           {
             "label": "赔率移动",
-            "value": 273,
+            "value": 280,
             "tone": "watch",
-            "note": "热门方向隐含概率变化 +27.3%"
+            "note": "热门方向隐含概率变化 +28%"
           },
           {
             "label": "平局噪音",
@@ -3857,30 +3085,30 @@
       "scoreline": {
         "model": "胜平负去水概率 + 大小球盘口 + 进攻尾部/弱势主队一球校准 Poisson 比分分布",
         "homeExpectedGoals": 0.46,
-        "awayExpectedGoals": 2.77,
-        "totalExpectedGoals": 3.23,
+        "awayExpectedGoals": 2.79,
+        "totalExpectedGoals": 3.25,
         "resultProbabilities": [
           {
             "label": "突尼斯",
             "side": "home",
-            "probability": 0.0417
+            "probability": 0.0368
           },
           {
             "label": "平局",
             "side": "draw",
-            "probability": 0.0871
+            "probability": 0.0869
           },
           {
             "label": "荷兰",
             "side": "away",
-            "probability": 0.8712
+            "probability": 0.8763
           }
         ],
         "bestPick": {
           "score": "0-3",
           "result": "客胜",
           "probability": 0.1437,
-          "baseProbability": 0.1401,
+          "baseProbability": 0.1403,
           "tailMultiplier": 1.24,
           "fairOdds": 6.96,
           "suggestedMinOdds": 8.21,
@@ -3888,14 +3116,14 @@
           "expectedValue": null,
           "expectedValueAtSuggestedOdds": 0.18,
           "grade": "首选核验",
-          "reason": "荷兰 胜面约 87%，两球以上优势；比分区间贴近市场总进球。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。"
+          "reason": "荷兰 胜面约 88%，两球以上优势；比分区间贴近市场总进球。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。"
         },
         "candidates": [
           {
             "score": "0-3",
             "result": "客胜",
             "probability": 0.1437,
-            "baseProbability": 0.1401,
+            "baseProbability": 0.1403,
             "tailMultiplier": 1.24,
             "fairOdds": 6.96,
             "suggestedMinOdds": 8.21,
@@ -3903,55 +3131,55 @@
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.18,
             "grade": "首选核验",
-            "reason": "荷兰 胜面约 87%，两球以上优势；比分区间贴近市场总进球。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。"
+            "reason": "荷兰 胜面约 88%，两球以上优势；比分区间贴近市场总进球。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。"
           },
           {
             "score": "0-2",
             "result": "客胜",
-            "probability": 0.1406,
-            "baseProbability": 0.1518,
+            "probability": 0.1396,
+            "baseProbability": 0.1509,
             "tailMultiplier": 1.12,
-            "fairOdds": 7.11,
-            "suggestedMinOdds": 8.39,
+            "fairOdds": 7.16,
+            "suggestedMinOdds": 8.45,
             "officialOdds": null,
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.18,
             "grade": "备选",
-            "reason": "荷兰 胜面约 87%，两球以上优势；比分区间贴近市场总进球。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。"
+            "reason": "荷兰 胜面约 88%，两球以上优势；比分区间贴近市场总进球。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。"
           },
           {
             "score": "0-4",
             "result": "客胜",
-            "probability": 0.1172,
-            "baseProbability": 0.097,
+            "probability": 0.118,
+            "baseProbability": 0.0979,
             "tailMultiplier": 1.46,
-            "fairOdds": 8.53,
-            "suggestedMinOdds": 10.07,
+            "fairOdds": 8.47,
+            "suggestedMinOdds": 10,
             "officialOdds": null,
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.18,
             "grade": "备选",
-            "reason": "荷兰 胜面约 87%，两球以上优势；比分偏大，需要更高官方赔率补偿风险。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。"
+            "reason": "荷兰 胜面约 88%，两球以上优势；比分偏大，需要更高官方赔率补偿风险。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。"
           },
           {
             "score": "0-1",
             "result": "客胜",
-            "probability": 0.0897,
-            "baseProbability": 0.1096,
+            "probability": 0.0885,
+            "baseProbability": 0.1082,
             "tailMultiplier": 0.99,
-            "fairOdds": 11.14,
-            "suggestedMinOdds": 13.15,
+            "fairOdds": 11.31,
+            "suggestedMinOdds": 13.34,
             "officialOdds": null,
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.18,
             "grade": "备选",
-            "reason": "荷兰 胜面约 87%，一球小胜；低比分，对临场节奏和首发依赖更强。复盘校准加入天气闷局权重，低比分不再被进攻均值完全挤出。热门过热时只核验，不追低赔。"
+            "reason": "荷兰 胜面约 88%，一球小胜；低比分，对临场节奏和首发依赖更强。复盘校准加入天气闷局权重，低比分不再被进攻均值完全挤出。热门过热时只核验，不追低赔。"
           },
           {
             "score": "1-3",
             "result": "客胜",
-            "probability": 0.0714,
-            "baseProbability": 0.0645,
+            "probability": 0.0715,
+            "baseProbability": 0.0646,
             "tailMultiplier": 1.34,
             "fairOdds": 14,
             "suggestedMinOdds": 16.52,
@@ -3959,63 +3187,63 @@
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.18,
             "grade": "备选",
-            "reason": "荷兰 胜面约 87%，两球以上优势；比分偏大，需要更高官方赔率补偿风险。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。"
+            "reason": "荷兰 胜面约 88%，两球以上优势；比分偏大，需要更高官方赔率补偿风险。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。"
           },
           {
             "score": "0-5",
             "result": "客胜",
-            "probability": 0.0649,
-            "baseProbability": 0.0538,
+            "probability": 0.0659,
+            "baseProbability": 0.0546,
             "tailMultiplier": 1.46,
-            "fairOdds": 15.4,
-            "suggestedMinOdds": 18.17,
+            "fairOdds": 15.18,
+            "suggestedMinOdds": 17.91,
             "officialOdds": null,
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.18,
             "grade": "备选",
-            "reason": "荷兰 胜面约 87%，两球以上优势；比分偏大，需要更高官方赔率补偿风险。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。"
+            "reason": "荷兰 胜面约 88%，两球以上优势；比分偏大，需要更高官方赔率补偿风险。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。"
           },
           {
             "score": "1-4",
             "result": "客胜",
-            "probability": 0.0539,
-            "baseProbability": 0.0446,
+            "probability": 0.0543,
+            "baseProbability": 0.045,
             "tailMultiplier": 1.46,
-            "fairOdds": 18.55,
-            "suggestedMinOdds": 21.89,
+            "fairOdds": 18.42,
+            "suggestedMinOdds": 21.73,
             "officialOdds": null,
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.18,
             "grade": "备选",
-            "reason": "荷兰 胜面约 87%，两球以上优势；比分偏大，需要更高官方赔率补偿风险。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。"
+            "reason": "荷兰 胜面约 88%，两球以上优势；比分偏大，需要更高官方赔率补偿风险。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。"
           },
           {
             "score": "1-2",
             "result": "客胜",
-            "probability": 0.0583,
-            "baseProbability": 0.0698,
+            "probability": 0.0579,
+            "baseProbability": 0.0694,
             "tailMultiplier": 1.01,
-            "fairOdds": 17.15,
-            "suggestedMinOdds": 20.23,
+            "fairOdds": 17.27,
+            "suggestedMinOdds": 20.38,
             "officialOdds": null,
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.18,
             "grade": "备选",
-            "reason": "荷兰 胜面约 87%，一球小胜；比分区间贴近市场总进球。热门过热时只核验，不追低赔。"
+            "reason": "荷兰 胜面约 88%，一球小胜；比分区间贴近市场总进球。热门过热时只核验，不追低赔。"
           },
           {
             "score": "0-6",
             "result": "客胜",
-            "probability": 0.03,
-            "baseProbability": 0.0248,
+            "probability": 0.0306,
+            "baseProbability": 0.0254,
             "tailMultiplier": 1.46,
-            "fairOdds": 33.36,
-            "suggestedMinOdds": 39.37,
+            "fairOdds": 32.65,
+            "suggestedMinOdds": 38.53,
             "officialOdds": null,
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.18,
             "grade": "备选",
-            "reason": "荷兰 胜面约 87%，两球以上优势；比分偏大，需要更高官方赔率补偿风险。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。"
+            "reason": "荷兰 胜面约 88%，两球以上优势；比分偏大，需要更高官方赔率补偿风险。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。"
           }
         ],
         "avoid": [
@@ -4025,8 +3253,8 @@
             "probability": 0,
             "baseProbability": 0,
             "tailMultiplier": 1.02,
-            "fairOdds": 174563.87,
-            "suggestedMinOdds": 205985.37,
+            "fairOdds": 178366.35,
+            "suggestedMinOdds": 210472.29,
             "officialOdds": null,
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.18,
@@ -4039,8 +3267,8 @@
             "probability": 0,
             "baseProbability": 0,
             "tailMultiplier": 1.02,
-            "fairOdds": 63019.45,
-            "suggestedMinOdds": 74362.95,
+            "fairOdds": 63930.59,
+            "suggestedMinOdds": 75438.1,
             "officialOdds": null,
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.18,
@@ -4053,8 +3281,8 @@
             "probability": 0,
             "baseProbability": 0,
             "tailMultiplier": 1.02,
-            "fairOdds": 45501.41,
-            "suggestedMinOdds": 53691.66,
+            "fairOdds": 45828.38,
+            "suggestedMinOdds": 54077.49,
             "officialOdds": null,
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.18,
@@ -4064,7 +3292,7 @@
         ],
         "notes": [
           "比分玩法方差很大，候选只适合小额娱乐或赛前核验。",
-          "本版把总进球从基础 2.85 校准到 3.23，并对强弱分明场景的 3+ 进球比分做尾部上调。",
+          "本版把总进球从基础 2.87 校准到 3.25，并对强弱分明场景的 3+ 进球比分做尾部上调。",
           "复盘校准：高湿/降水环境下增加 0-0、1-0 等闷局防守权重。",
           "近况差修正 -0.12 球。",
           "天气/节奏修正 -0.17 总进球。",
@@ -4095,7 +3323,7 @@
               "label": "低方差票",
               "selection": "荷兰 客胜",
               "allocation": "只看赔率，不主动追",
-              "minOdds": "≥ 1.27",
+              "minOdds": "≥ 1.26",
               "action": "只看不买",
               "rationale": "胜平负只用于降低比分玩法方差，赔率被压低时不参与。"
             },
@@ -4111,7 +3339,7 @@
               "label": "平局防守",
               "selection": "荷兰 客胜",
               "allocation": "本场预算 5%-8%",
-              "minOdds": "≥ 1.27",
+              "minOdds": "≥ 1.26",
               "action": "小额防守",
               "rationale": "只在平局噪音偏高且官方赔率给足时使用。"
             }
@@ -4126,7 +3354,7 @@
           ],
           "noBuyRules": [
             "中国体彩比分赔率低于 ≥ 8.21 时不买。",
-            "胜平负 荷兰 客胜 低于 ≥ 1.27 时不买。",
+            "胜平负 荷兰 客胜 低于 ≥ 1.26 时不买。",
             "首发出现核心前锋、门将或中卫明显轮换时不买。",
             "临场 30 分钟内热门方向继续大幅降赔时不追。",
             "中国体彩未开售、停售或让球口径变化时不买。"
@@ -4143,7 +3371,7 @@
           ],
           "marketDirection": "荷兰 客胜",
           "totalGoals": "总进球 2/3/4",
-          "buyCondition": "必须同时满足：比分赔率 ≥ 8.21、胜平负方向 ≥ 1.27、首发无明显轮换。",
+          "buyCondition": "必须同时满足：比分赔率 ≥ 8.21、胜平负方向 ≥ 1.26、首发无明显轮换。",
           "passCondition": "任一核心条件不满足就放弃；不要因为“看起来稳”而放大金额，强弱分明的比赛也有轮换和爆冷风险。",
           "stakeCeiling": "本场最多使用当日预算 6%-10%，只在赔率达标时小额尝试。",
           "confidenceBand": "中低：市场过热时宁可放弃"
@@ -4156,7 +3384,7 @@
           "budgetShare": "单场预算 3%-6%",
           "minOdds": "≥ 8.21",
           "expectedValueNote": "模型概率 14%，盈亏线 6.96；官方赔率低于门槛则放弃。",
-          "reason": "荷兰 胜面约 87%，两球以上优势；比分区间贴近市场总进球。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。",
+          "reason": "荷兰 胜面约 88%，两球以上优势；比分区间贴近市场总进球。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。",
           "noBetIf": "中国体彩该比分赔率低于 8.21，或赛前首发显示明显轮换。"
         },
         "plays": [
@@ -4168,17 +3396,17 @@
             "budgetShare": "单场预算 3%-6%",
             "minOdds": "≥ 8.21",
             "expectedValueNote": "模型概率 14%，盈亏线 6.96；官方赔率低于门槛则放弃。",
-            "reason": "荷兰 胜面约 87%，两球以上优势；比分区间贴近市场总进球。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。",
+            "reason": "荷兰 胜面约 88%，两球以上优势；比分区间贴近市场总进球。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。",
             "noBetIf": "中国体彩该比分赔率低于 8.21，或赛前首发显示明显轮换。"
           },
           {
             "playType": "胜平负",
             "selection": "荷兰 客胜",
             "priority": "防守",
-            "confidence": 87,
+            "confidence": 88,
             "budgetShare": "仅核验，不主动追",
-            "minOdds": "≥ 1.27",
-            "expectedValueNote": "去水概率 87%，低于建议赔率时性价比不足。",
+            "minOdds": "≥ 1.26",
+            "expectedValueNote": "去水概率 88%，低于建议赔率时性价比不足。",
             "reason": "荷兰 胜面很高，但胜平负通常容易被压低，重点看官方赔率是否还有补偿。",
             "noBetIf": "官方胜平负赔率明显低于门槛，或临场赔率短时间大幅下压。"
           },
@@ -4189,7 +3417,7 @@
             "confidence": 63,
             "budgetShare": "单场预算 4%-8%",
             "minOdds": "以官方组合赔率核验",
-            "expectedValueNote": "模型总进球均值 3.23，只适合与比分方向交叉验证。",
+            "expectedValueNote": "模型总进球均值 3.25，只适合与比分方向交叉验证。",
             "reason": "总进球环境中性偏开放，2-4 球区间比单点比分更稳。",
             "noBetIf": "首发防守倾向或天气/场地导致节奏判断与模型相反。"
           }
@@ -4203,7 +3431,7 @@
           },
           {
             "title": "进球节奏剧本",
-            "probability": "3.23 xG",
+            "probability": "3.25 xG",
             "scorePath": "总进球主区间是 总进球 2/3/4。",
             "action": "比分和总进球方向冲突时，以放弃为优先。"
           }
@@ -4211,9 +3439,9 @@
         "signals": [
           {
             "label": "市场主方向",
-            "score": 87,
+            "score": 88,
             "tone": "watch",
-            "evidence": "荷兰 去水后约 87%，当前判断为 客胜 主方向。"
+            "evidence": "荷兰 去水后约 88%，当前判断为 客胜 主方向。"
           },
           {
             "label": "比分集中度",
@@ -4291,7 +3519,7 @@
         ],
         "checklist": [
           "中国体彩比分 0-3（客胜） 官方赔率是否 ≥ 8.21",
-          "胜平负 荷兰 客胜 是否达到 ≥ 1.27",
+          "胜平负 荷兰 客胜 是否达到 ≥ 1.26",
           "近5场实况是否仍支持：DLWWD vs DWWDL",
           "天气地理是否冲突：22°C，降水 37%，风 15 km/h，湿度 89%。露天影响按正常权重计入。",
           "赛前 30 分钟确认首发、门将、核心前锋和中卫组合",
@@ -4422,7 +3650,7 @@
             "movement": 8.8
           }
         ],
-        "updatedAt": "2026-06-25T03:29:49.482Z"
+        "updatedAt": "2026-06-25T04:51:25.533Z"
       },
       "context": {
         "home": {
@@ -5217,17 +4445,17 @@
       "score": "0-0",
       "market": {
         "provider": "DraftKings",
-        "details": "USA -110",
+        "details": "USA -115",
         "moneyline": [
           {
             "label": "Türkiye",
             "side": "home",
-            "american": "+260",
-            "decimal": 3.6,
-            "impliedProbability": 0.2777777777777778,
-            "normalizedProbability": 0.2656915386039622,
+            "american": "+275",
+            "decimal": 3.75,
+            "impliedProbability": 0.26666666666666666,
+            "normalizedProbability": 0.25507288313379395,
             "line": null,
-            "movement": -7.9
+            "movement": -9
           },
           {
             "label": "平局",
@@ -5235,66 +4463,66 @@
             "american": "+310",
             "decimal": 4.1,
             "impliedProbability": 0.24390243902439024,
-            "normalizedProbability": 0.23329013145713756,
+            "normalizedProbability": 0.23329836871993348,
             "line": null,
             "movement": -4.6
           },
           {
             "label": "美国",
             "side": "away",
-            "american": "-110",
-            "decimal": 1.91,
-            "impliedProbability": 0.5238095238095238,
-            "normalizedProbability": 0.5010183299389002,
+            "american": "-115",
+            "decimal": 1.87,
+            "impliedProbability": 0.5348837209302325,
+            "normalizedProbability": 0.5116287481462727,
             "line": null,
-            "movement": 12.4
+            "movement": 13.5
           }
         ],
         "total": [
           {
             "label": "大球",
             "side": "over",
-            "american": "-140",
-            "decimal": 1.71,
-            "impliedProbability": 0.5833333333333334,
+            "american": "-145",
+            "decimal": 1.69,
+            "impliedProbability": 0.5918367346938775,
             "normalizedProbability": null,
             "line": "o2.5",
-            "movement": 7.1
+            "movement": 8
           },
           {
             "label": "小球",
             "side": "under",
-            "american": "+115",
-            "decimal": 2.15,
-            "impliedProbability": 0.46511627906976744,
+            "american": "+120",
+            "decimal": 2.2,
+            "impliedProbability": 0.45454545454545453,
             "normalizedProbability": null,
             "line": "u2.5",
-            "movement": -9
+            "movement": -10.1
           }
         ],
         "spread": [
           {
             "label": "Türkiye",
             "side": "spreadHome",
-            "american": "-110",
-            "decimal": 1.91,
-            "impliedProbability": 0.5238095238095238,
+            "american": "-105",
+            "decimal": 1.95,
+            "impliedProbability": 0.5121951219512195,
             "normalizedProbability": null,
             "line": "+0.5",
-            "movement": -13.1
+            "movement": -14.3
           },
           {
             "label": "美国",
             "side": "spreadAway",
-            "american": "-115",
-            "decimal": 1.87,
-            "impliedProbability": 0.5348837209302325,
+            "american": "-120",
+            "decimal": 1.83,
+            "impliedProbability": 0.5454545454545454,
             "normalizedProbability": null,
             "line": "-0.5",
-            "movement": 10.9
+            "movement": 12
           }
         ],
-        "updatedAt": "2026-06-25T03:29:49.482Z"
+        "updatedAt": "2026-06-25T04:51:25.533Z"
       },
       "context": {
         "home": {
@@ -5523,7 +4751,7 @@
         "note": "近况、球员、伤病、天气和地理因素进入主模型；古法占卜仅作低权重文化校验，不覆盖可验证事实。"
       },
       "judgement": {
-        "confidence": 75,
+        "confidence": 77,
         "risk": 49,
         "tier": "小额娱乐",
         "lean": "可小额关注 美国 方向",
@@ -5533,15 +4761,15 @@
         "factors": [
           {
             "label": "市场强度",
-            "value": 50,
+            "value": 51,
             "tone": "good",
-            "note": "美国 去水后约 50%"
+            "note": "美国 去水后约 51%"
           },
           {
             "label": "赔率移动",
-            "value": 124,
+            "value": 135,
             "tone": "watch",
-            "note": "热门方向隐含概率变化 +12.4%"
+            "note": "热门方向隐含概率变化 +13.5%"
           },
           {
             "label": "平局噪音",
@@ -5577,14 +4805,14 @@
       },
       "scoreline": {
         "model": "胜平负去水概率 + 大小球盘口 + 进攻尾部/弱势主队一球校准 Poisson 比分分布",
-        "homeExpectedGoals": 1.25,
-        "awayExpectedGoals": 1.86,
-        "totalExpectedGoals": 3.11,
+        "homeExpectedGoals": 1.34,
+        "awayExpectedGoals": 1.97,
+        "totalExpectedGoals": 3.31,
         "resultProbabilities": [
           {
             "label": "Türkiye",
             "side": "home",
-            "probability": 0.2657
+            "probability": 0.2551
           },
           {
             "label": "平局",
@@ -5594,46 +4822,60 @@
           {
             "label": "美国",
             "side": "away",
-            "probability": 0.501
+            "probability": 0.5116
           }
         ],
         "bestPick": {
           "score": "1-2",
           "result": "客胜",
-          "probability": 0.0976,
-          "baseProbability": 0.0964,
+          "probability": 0.0952,
+          "baseProbability": 0.0949,
           "tailMultiplier": 1.08,
-          "fairOdds": 10.25,
-          "suggestedMinOdds": 11.88,
+          "fairOdds": 10.51,
+          "suggestedMinOdds": 12.19,
           "officialOdds": null,
           "expectedValue": null,
           "expectedValueAtSuggestedOdds": 0.16,
           "grade": "首选核验",
-          "reason": "美国 胜面约 50%，一球小胜；比分区间贴近市场总进球。"
+          "reason": "美国 胜面约 51%，一球小胜；比分区间贴近市场总进球。"
         },
         "candidates": [
           {
             "score": "1-2",
             "result": "客胜",
-            "probability": 0.0976,
-            "baseProbability": 0.0964,
+            "probability": 0.0952,
+            "baseProbability": 0.0949,
             "tailMultiplier": 1.08,
-            "fairOdds": 10.25,
-            "suggestedMinOdds": 11.88,
+            "fairOdds": 10.51,
+            "suggestedMinOdds": 12.19,
             "officialOdds": null,
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.16,
             "grade": "首选核验",
-            "reason": "美国 胜面约 50%，一球小胜；比分区间贴近市场总进球。"
+            "reason": "美国 胜面约 51%，一球小胜；比分区间贴近市场总进球。"
+          },
+          {
+            "score": "1-3",
+            "result": "客胜",
+            "probability": 0.0683,
+            "baseProbability": 0.0624,
+            "tailMultiplier": 1.18,
+            "fairOdds": 14.64,
+            "suggestedMinOdds": 16.99,
+            "officialOdds": null,
+            "expectedValue": null,
+            "expectedValueAtSuggestedOdds": 0.16,
+            "grade": "备选",
+            "reason": "美国 胜面约 51%，两球以上优势；比分偏大，需要更高官方赔率补偿风险。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。"
           },
           {
             "score": "1-1",
             "result": "平局",
-            "probability": 0.0972,
-            "baseProbability": 0.1037,
+            "probability": 0.0895,
+            "baseProbability": 0.0964,
             "tailMultiplier": 1,
-            "fairOdds": 10.29,
-            "suggestedMinOdds": 11.94,
+            "fairOdds": 11.18,
+            "suggestedMinOdds": 12.96,
             "officialOdds": null,
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.16,
@@ -5641,55 +4883,27 @@
             "reason": "进球环境偏开放，平局概率约 23%，Türkiye 与 美国 的胜负差距不宜过度放大。"
           },
           {
-            "score": "1-3",
-            "result": "客胜",
-            "probability": 0.0661,
-            "baseProbability": 0.0598,
-            "tailMultiplier": 1.18,
-            "fairOdds": 15.12,
-            "suggestedMinOdds": 17.54,
-            "officialOdds": null,
-            "expectedValue": null,
-            "expectedValueAtSuggestedOdds": 0.16,
-            "grade": "备选",
-            "reason": "美国 胜面约 50%，两球以上优势；比分偏大，需要更高官方赔率补偿风险。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。"
-          },
-          {
             "score": "0-2",
             "result": "客胜",
-            "probability": 0.0723,
-            "baseProbability": 0.0772,
+            "probability": 0.0658,
+            "baseProbability": 0.0709,
             "tailMultiplier": 1,
-            "fairOdds": 13.83,
-            "suggestedMinOdds": 16.04,
+            "fairOdds": 15.2,
+            "suggestedMinOdds": 17.64,
             "officialOdds": null,
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.16,
             "grade": "备选",
-            "reason": "美国 胜面约 50%，两球以上优势；比分区间贴近市场总进球。"
-          },
-          {
-            "score": "0-1",
-            "result": "客胜",
-            "probability": 0.07,
-            "baseProbability": 0.083,
-            "tailMultiplier": 0.9,
-            "fairOdds": 14.29,
-            "suggestedMinOdds": 16.58,
-            "officialOdds": null,
-            "expectedValue": null,
-            "expectedValueAtSuggestedOdds": 0.16,
-            "grade": "备选",
-            "reason": "美国 胜面约 50%，一球小胜；低比分，对临场节奏和首发依赖更强。尾部校准下调，需防模型把罕见路径估得过高。"
+            "reason": "美国 胜面约 51%，两球以上优势；比分区间贴近市场总进球。"
           },
           {
             "score": "2-2",
             "result": "平局",
-            "probability": 0.0667,
-            "baseProbability": 0.0603,
+            "probability": 0.0697,
+            "baseProbability": 0.0636,
             "tailMultiplier": 1.18,
-            "fairOdds": 15,
-            "suggestedMinOdds": 17.4,
+            "fairOdds": 14.35,
+            "suggestedMinOdds": 16.65,
             "officialOdds": null,
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.16,
@@ -5697,71 +4911,71 @@
             "reason": "进球环境偏开放，平局概率约 23%，Türkiye 与 美国 的胜负差距不宜过度放大。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。"
           },
           {
-            "score": "2-1",
-            "result": "主胜",
-            "probability": 0.0656,
-            "baseProbability": 0.0648,
-            "tailMultiplier": 1.08,
-            "fairOdds": 15.25,
-            "suggestedMinOdds": 17.68,
+            "score": "0-1",
+            "result": "客胜",
+            "probability": 0.0601,
+            "baseProbability": 0.0719,
+            "tailMultiplier": 0.9,
+            "fairOdds": 16.64,
+            "suggestedMinOdds": 19.3,
             "officialOdds": null,
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.16,
             "grade": "备选",
-            "reason": "Türkiye 胜面约 27%，一球小胜；比分区间贴近市场总进球。"
+            "reason": "美国 胜面约 51%，一球小胜；低比分，对临场节奏和首发依赖更强。尾部校准下调，需防模型把罕见路径估得过高。"
+          },
+          {
+            "score": "2-1",
+            "result": "主胜",
+            "probability": 0.0647,
+            "baseProbability": 0.0646,
+            "tailMultiplier": 1.08,
+            "fairOdds": 15.45,
+            "suggestedMinOdds": 17.92,
+            "officialOdds": null,
+            "expectedValue": null,
+            "expectedValueAtSuggestedOdds": 0.16,
+            "grade": "备选",
+            "reason": "Türkiye 胜面约 26%，一球小胜；比分区间贴近市场总进球。"
           },
           {
             "score": "0-3",
             "result": "客胜",
-            "probability": 0.0484,
-            "baseProbability": 0.0478,
+            "probability": 0.0466,
+            "baseProbability": 0.0465,
             "tailMultiplier": 1.08,
-            "fairOdds": 20.66,
-            "suggestedMinOdds": 23.96,
+            "fairOdds": 21.44,
+            "suggestedMinOdds": 24.87,
             "officialOdds": null,
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.16,
             "grade": "备选",
-            "reason": "美国 胜面约 50%，两球以上优势；比分区间贴近市场总进球。"
+            "reason": "美国 胜面约 51%，两球以上优势；比分区间贴近市场总进球。"
           },
           {
             "score": "2-3",
             "result": "客胜",
-            "probability": 0.0413,
-            "baseProbability": 0.0374,
+            "probability": 0.0458,
+            "baseProbability": 0.0418,
             "tailMultiplier": 1.18,
-            "fairOdds": 24.2,
-            "suggestedMinOdds": 28.07,
+            "fairOdds": 21.86,
+            "suggestedMinOdds": 25.35,
             "officialOdds": null,
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.16,
             "grade": "备选",
-            "reason": "美国 胜面约 50%，一球小胜；比分偏大，需要更高官方赔率补偿风险。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。"
+            "reason": "美国 胜面约 51%，一球小胜；比分偏大，需要更高官方赔率补偿风险。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。"
           }
         ],
         "avoid": [
-          {
-            "score": "6-5",
-            "result": "主胜",
-            "probability": 0,
-            "baseProbability": 0,
-            "tailMultiplier": 1.18,
-            "fairOdds": 20628.62,
-            "suggestedMinOdds": 23929.2,
-            "officialOdds": null,
-            "expectedValue": null,
-            "expectedValueAtSuggestedOdds": 0.16,
-            "grade": "回避",
-            "reason": "概率过低，除非官方赔率极端偏高，否则不适合作为主要比分方向。"
-          },
           {
             "score": "6-6",
             "result": "平局",
             "probability": 0,
             "baseProbability": 0,
             "tailMultiplier": 1.18,
-            "fairOdds": 66543.94,
-            "suggestedMinOdds": 77190.97,
+            "fairOdds": 38303.54,
+            "suggestedMinOdds": 44432.11,
             "officialOdds": null,
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.16,
@@ -5774,8 +4988,22 @@
             "probability": 0.0001,
             "baseProbability": 0.0001,
             "tailMultiplier": 1.18,
-            "fairOdds": 13863.32,
-            "suggestedMinOdds": 16081.45,
+            "fairOdds": 8554.46,
+            "suggestedMinOdds": 9923.17,
+            "officialOdds": null,
+            "expectedValue": null,
+            "expectedValueAtSuggestedOdds": 0.16,
+            "grade": "回避",
+            "reason": "概率过低，除非官方赔率极端偏高，否则不适合作为主要比分方向。"
+          },
+          {
+            "score": "6-5",
+            "result": "主胜",
+            "probability": 0.0001,
+            "baseProbability": 0.0001,
+            "tailMultiplier": 1.18,
+            "fairOdds": 12576.33,
+            "suggestedMinOdds": 14588.54,
             "officialOdds": null,
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.16,
@@ -5785,7 +5013,7 @@
         ],
         "notes": [
           "比分玩法方差很大，候选只适合小额娱乐或赛前核验。",
-          "本版把总进球从基础 2.91 校准到 3.11，并对强弱分明场景的 3+ 进球比分做尾部上调。",
+          "本版把总进球从基础 2.95 校准到 3.31，并对强弱分明场景的 3+ 进球比分做尾部上调。",
           "近况差修正 -0.1 球。",
           "天气/节奏修正 +0.12 总进球。",
           "expectedValue 只有抓到中国体彩官方比分赔率后才会填充；当前显示的是盈亏平衡与建议最低赔率。",
@@ -5793,35 +5021,35 @@
         ]
       },
       "professional": {
-        "rankScore": 60,
+        "rankScore": 61,
         "grade": "小额分散",
-        "headline": "可小额分散，围绕 1-2 与 3.1 球环境展开",
+        "headline": "可小额分散，围绕 1-2 与 3.3 球环境展开",
         "finalAdvice": "只做小额娱乐，比分、胜平负、总进球不要同时放大金额；任一核心条件不满足就降级为观望。",
         "stakingPlan": "本场最多使用当日预算 10%-16%，分成 2 个以内方向。",
         "deepThinking": {
           "label": "深度推演层",
-          "conclusion": "最合适买法：小额分散，首看 1-2（客胜），再用 美国 客胜 和 总进球 2/3/4 交叉确认。",
+          "conclusion": "最合适买法：小额分散，首看 1-2（客胜），再用 美国 客胜 和 总进球 3/4/5 交叉确认。",
           "confidenceScore": 65,
           "purchasePlan": [
             {
               "label": "主票",
               "selection": "1-2（客胜）",
               "allocation": "本场预算 25%-35%",
-              "minOdds": "≥ 11.88",
+              "minOdds": "≥ 12.19",
               "action": "买入核验",
-              "rationale": "首选比分概率 10%，盈亏线 10.25，低于门槛不买。"
+              "rationale": "首选比分概率 10%，盈亏线 10.51，低于门槛不买。"
             },
             {
               "label": "低方差票",
               "selection": "美国 客胜",
               "allocation": "本场预算 25%-35%",
-              "minOdds": "≥ 2.18",
+              "minOdds": "≥ 2.14",
               "action": "买入核验",
               "rationale": "胜平负只用于降低比分玩法方差，赔率被压低时不参与。"
             },
             {
               "label": "节奏校验",
-              "selection": "总进球 2/3/4",
+              "selection": "总进球 3/4/5",
               "allocation": "本场预算 10%-20%",
               "minOdds": "以官方组合赔率核验",
               "action": "小额防守",
@@ -5831,22 +5059,22 @@
               "label": "平局防守",
               "selection": "1-1 平局防守",
               "allocation": "本场预算 5%-8%",
-              "minOdds": "≥ 11.94",
+              "minOdds": "≥ 12.96",
               "action": "小额防守",
               "rationale": "只在平局噪音偏高且官方赔率给足时使用。"
             }
           ],
           "reasoningSummary": [
-            "模型最集中比分：1-2（客胜）；备选：1-1（平局） / 1-3（客胜）。",
-            "胜平负方向：美国 客胜；总进球校验：总进球 2/3/4。",
+            "模型最集中比分：1-2（客胜）；备选：1-3（客胜） / 1-1（平局）。",
+            "胜平负方向：美国 客胜；总进球校验：总进球 3/4/5。",
             "近5场：近 5 场 2 胜 2 平，场均 1.8-1.2。；近 5 场 4 胜 1 平，场均 2.8-1.2。",
             "天气/地理：18°C，降水 0%，风 12 km/h，湿度 82%。场馆可能有顶棚，天气权重下调。 旅行距离差不大",
             "古法低权重校验：取象双方差距很小，不改变主模型。日时五行取 金。",
             "主要风险：赔率压缩为高，比分方差为中。"
           ],
           "noBuyRules": [
-            "中国体彩比分赔率低于 ≥ 11.88 时不买。",
-            "胜平负 美国 客胜 低于 ≥ 2.18 时不买。",
+            "中国体彩比分赔率低于 ≥ 12.19 时不买。",
+            "胜平负 美国 客胜 低于 ≥ 2.14 时不买。",
             "首发出现核心前锋、门将或中卫明显轮换时不买。",
             "临场 30 分钟内热门方向继续大幅降赔时不追。",
             "中国体彩未开售、停售或让球口径变化时不买。"
@@ -5854,16 +5082,16 @@
           "updateSensitivity": "对赔率、首发和新闻中等敏感，适合小额而非重仓。"
         },
         "expertAnswer": {
-          "verdict": "答案是以 1-2（客胜） 为首选，美国 客胜 与 总进球 2/3/4 只做交叉验证。",
+          "verdict": "答案是以 1-2（客胜） 为首选，美国 客胜 与 总进球 3/4/5 只做交叉验证。",
           "recommendedScore": "1-2（客胜）",
           "secondaryScores": [
-            "1-1（平局）",
             "1-3（客胜）",
+            "1-1（平局）",
             "0-2（客胜）"
           ],
           "marketDirection": "美国 客胜",
-          "totalGoals": "总进球 2/3/4",
-          "buyCondition": "必须同时满足：比分赔率 ≥ 11.88、胜平负方向 ≥ 2.18、首发无明显轮换；若平局赔率给足，可用 1-1 平局防守 做极小防守。",
+          "totalGoals": "总进球 3/4/5",
+          "buyCondition": "必须同时满足：比分赔率 ≥ 12.19、胜平负方向 ≥ 2.14、首发无明显轮换；若平局赔率给足，可用 1-1 平局防守 做极小防守。",
           "passCondition": "任一核心条件不满足就放弃；不要串太多场，避免一个冷门毁掉整组判断。",
           "stakeCeiling": "本场最多使用当日预算 10%-16%，分成 2 个以内方向。",
           "confidenceBand": "中等：用小额分散而不是重仓单点"
@@ -5872,45 +5100,45 @@
           "playType": "比分",
           "selection": "1-2（客胜）",
           "priority": "主方案",
-          "confidence": 66,
+          "confidence": 65,
           "budgetShare": "单场预算 5%-9%",
-          "minOdds": "≥ 11.88",
-          "expectedValueNote": "模型概率 10%，盈亏线 10.25；官方赔率低于门槛则放弃。",
-          "reason": "美国 胜面约 50%，一球小胜；比分区间贴近市场总进球。",
-          "noBetIf": "中国体彩该比分赔率低于 11.88，或赛前首发显示明显轮换。"
+          "minOdds": "≥ 12.19",
+          "expectedValueNote": "模型概率 10%，盈亏线 10.51；官方赔率低于门槛则放弃。",
+          "reason": "美国 胜面约 51%，一球小胜；比分区间贴近市场总进球。",
+          "noBetIf": "中国体彩该比分赔率低于 12.19，或赛前首发显示明显轮换。"
         },
         "plays": [
           {
             "playType": "比分",
             "selection": "1-2（客胜）",
             "priority": "主方案",
-            "confidence": 66,
+            "confidence": 65,
             "budgetShare": "单场预算 5%-9%",
-            "minOdds": "≥ 11.88",
-            "expectedValueNote": "模型概率 10%，盈亏线 10.25；官方赔率低于门槛则放弃。",
-            "reason": "美国 胜面约 50%，一球小胜；比分区间贴近市场总进球。",
-            "noBetIf": "中国体彩该比分赔率低于 11.88，或赛前首发显示明显轮换。"
+            "minOdds": "≥ 12.19",
+            "expectedValueNote": "模型概率 10%，盈亏线 10.51；官方赔率低于门槛则放弃。",
+            "reason": "美国 胜面约 51%，一球小胜；比分区间贴近市场总进球。",
+            "noBetIf": "中国体彩该比分赔率低于 12.19，或赛前首发显示明显轮换。"
           },
           {
             "playType": "胜平负",
             "selection": "美国 客胜",
             "priority": "备选",
-            "confidence": 50,
+            "confidence": 51,
             "budgetShare": "单场预算 8%-15%",
-            "minOdds": "≥ 2.18",
-            "expectedValueNote": "去水概率 50%，低于建议赔率时性价比不足。",
+            "minOdds": "≥ 2.14",
+            "expectedValueNote": "去水概率 51%，低于建议赔率时性价比不足。",
             "reason": "美国 是市场主方向，可作为比分玩法之外的低方差核验项。",
             "noBetIf": "官方胜平负赔率明显低于门槛，或临场赔率短时间大幅下压。"
           },
           {
             "playType": "总进球",
-            "selection": "总进球 2/3/4",
+            "selection": "总进球 3/4/5",
             "priority": "备选",
-            "confidence": 63,
+            "confidence": 57,
             "budgetShare": "单场预算 4%-8%",
             "minOdds": "以官方组合赔率核验",
-            "expectedValueNote": "模型总进球均值 3.11，只适合与比分方向交叉验证。",
-            "reason": "总进球环境中性偏开放，2-4 球区间比单点比分更稳。",
+            "expectedValueNote": "模型总进球均值 3.31，只适合与比分方向交叉验证。",
+            "reason": "进球环境偏开放，但高总进球波动更大，只适合小额配合比分方向。",
             "noBetIf": "首发防守倾向或天气/场地导致节奏判断与模型相反。"
           },
           {
@@ -5919,7 +5147,7 @@
             "priority": "防守",
             "confidence": 57,
             "budgetShare": "单场预算 2%-4%",
-            "minOdds": "≥ 11.94",
+            "minOdds": "≥ 12.96",
             "expectedValueNote": "平局去水概率 23%，只作为防守小票，不扩大金额。",
             "reason": "平局噪音不低，若官方赔率给足，可用最集中平局比分小额防守。",
             "noBetIf": "平局比分赔率低于门槛，或双方首发明显偏进攻导致总进球环境上移。"
@@ -5934,35 +5162,35 @@
           },
           {
             "title": "僵持剧本",
-            "probability": "10%",
+            "probability": "9%",
             "scorePath": "若上半场节奏慢，比分可能滑向 1-1。",
             "action": "平局只做防守，不把它升级成主方案。"
           },
           {
             "title": "冷门剧本",
-            "probability": "7%",
+            "probability": "6%",
             "scorePath": "若热门方首发轮换或早段失球，风险比分是 2-1。",
             "action": "冷门只作为风险提醒，不主动追高赔率。"
           },
           {
             "title": "进球节奏剧本",
-            "probability": "3.11 xG",
-            "scorePath": "总进球主区间是 总进球 2/3/4。",
+            "probability": "3.31 xG",
+            "scorePath": "总进球主区间是 总进球 3/4/5。",
             "action": "比分和总进球方向冲突时，以放弃为优先。"
           }
         ],
         "signals": [
           {
             "label": "市场主方向",
-            "score": 50,
+            "score": 51,
             "tone": "good",
-            "evidence": "美国 去水后约 50%，当前判断为 客胜 主方向。"
+            "evidence": "美国 去水后约 51%，当前判断为 客胜 主方向。"
           },
           {
             "label": "比分集中度",
-            "score": 98,
+            "score": 95,
             "tone": "watch",
-            "evidence": "首选比分 1-2 概率约 10%，盈亏线 10.25。"
+            "evidence": "首选比分 1-2 概率约 10%，盈亏线 10.51。"
           },
           {
             "label": "赔率过热",
@@ -6008,8 +5236,8 @@
           },
           {
             "label": "候选分歧",
-            "level": "高",
-            "detail": "前两名比分差距约 0%，差距越小越不适合单点重仓。"
+            "level": "中",
+            "detail": "前两名比分差距约 3%，差距越小越不适合单点重仓。"
           },
           {
             "label": "综合风险",
@@ -6033,10 +5261,1711 @@
           }
         ],
         "checklist": [
-          "中国体彩比分 1-2（客胜） 官方赔率是否 ≥ 11.88",
-          "胜平负 美国 客胜 是否达到 ≥ 2.18",
+          "中国体彩比分 1-2（客胜） 官方赔率是否 ≥ 12.19",
+          "胜平负 美国 客胜 是否达到 ≥ 2.14",
           "近5场实况是否仍支持：LDDWW vs WWWWD",
           "天气地理是否冲突：18°C，降水 0%，风 12 km/h，湿度 82%。场馆可能有顶棚，天气权重下调。",
+          "赛前 30 分钟确认首发、门将、核心前锋和中卫组合",
+          "停售前确认赔率没有突然下压，且比赛仍在竞彩开售列表"
+        ],
+        "downgradeTriggers": [
+          "官方比分赔率低于建议最低赔率",
+          "热门方向 30 分钟内继续大幅降赔",
+          "主力前锋/门将/核心中卫缺阵或明显轮换",
+          "临场天气、红牌停赛、战意信息与当前模型假设冲突"
+        ]
+      },
+      "sporttery": {
+        "status": "需赛前核验",
+        "officialUrl": "https://www.sporttery.cn/jc/",
+        "markets": [
+          "胜平负",
+          "让球胜平负",
+          "总进球",
+          "比分"
+        ],
+        "note": "海外市场盘口与竞彩官方赔率、开售状态、让球设定可能不同。购买前请用中国体彩网或销售终端核验最终赔率和截止时间。"
+      }
+    },
+    {
+      "id": "760475",
+      "name": "France at Norway",
+      "group": "FIFA World Cup, Group I",
+      "status": "Scheduled",
+      "kickoffUtc": "2026-06-26T19:00Z",
+      "kickoffChina": "06/27 03:00",
+      "venue": "Gillette Stadium, Foxborough, Massachusetts",
+      "home": {
+        "id": "464",
+        "name": "Norway",
+        "zhName": "挪威",
+        "abbreviation": "NOR",
+        "logo": "https://a.espncdn.com/i/teamlogos/countries/500/nor.png",
+        "form": "WWDWD",
+        "record": "2-0-0"
+      },
+      "away": {
+        "id": "478",
+        "name": "France",
+        "zhName": "法国",
+        "abbreviation": "FRA",
+        "logo": "https://a.espncdn.com/i/teamlogos/countries/500/fra.png",
+        "form": "WWWLW",
+        "record": "2-0-0"
+      },
+      "score": "0-0",
+      "market": {
+        "provider": "DraftKings",
+        "details": "FRA -155",
+        "moneyline": [
+          {
+            "label": "挪威",
+            "side": "home",
+            "american": "+380",
+            "decimal": 4.8,
+            "impliedProbability": 0.20833333333333334,
+            "normalizedProbability": 0.19965833867179159,
+            "line": null,
+            "movement": 0.4
+          },
+          {
+            "label": "平局",
+            "side": "draw",
+            "american": "+340",
+            "decimal": 4.4,
+            "impliedProbability": 0.22727272727272727,
+            "normalizedProbability": 0.21780909673286353,
+            "line": null,
+            "movement": -3.2
+          },
+          {
+            "label": "法国",
+            "side": "away",
+            "american": "-155",
+            "decimal": 1.65,
+            "impliedProbability": 0.6078431372549019,
+            "normalizedProbability": 0.5825325645953449,
+            "line": null,
+            "movement": 2.5
+          }
+        ],
+        "total": [
+          {
+            "label": "大球",
+            "side": "over",
+            "american": "-150",
+            "decimal": 1.67,
+            "impliedProbability": 0.6,
+            "normalizedProbability": null,
+            "line": "o2.5",
+            "movement": 8.8
+          },
+          {
+            "label": "小球",
+            "side": "under",
+            "american": "+120",
+            "decimal": 2.2,
+            "impliedProbability": 0.45454545454545453,
+            "normalizedProbability": null,
+            "line": "u2.5",
+            "movement": -9.1
+          }
+        ],
+        "spread": [
+          {
+            "label": "挪威",
+            "side": "spreadHome",
+            "american": "+130",
+            "decimal": 2.3,
+            "impliedProbability": 0.43478260869565216,
+            "normalizedProbability": null,
+            "line": "+0.5",
+            "movement": -4.1
+          },
+          {
+            "label": "法国",
+            "side": "spreadAway",
+            "american": "-160",
+            "decimal": 1.63,
+            "impliedProbability": 0.6153846153846154,
+            "normalizedProbability": null,
+            "line": "-0.5",
+            "movement": 0.8
+          }
+        ],
+        "updatedAt": "2026-06-25T04:51:25.533Z"
+      },
+      "context": {
+        "home": {
+          "formString": "WWWWD",
+          "recentMatches": [
+            {
+              "date": "11/18",
+              "opponent": "Kazakhstan",
+              "opponentZhName": "Kazakhstan",
+              "result": "W",
+              "score": "5-0",
+              "goalsFor": 5,
+              "goalsAgainst": 0,
+              "homeAway": "主",
+              "competition": "UEFA Nations League",
+              "note": "主场 W 5-0 vs Kazakhstan"
+            },
+            {
+              "date": "11/17",
+              "opponent": "Italy",
+              "opponentZhName": "意大利",
+              "result": "W",
+              "score": "4-1",
+              "goalsFor": 4,
+              "goalsAgainst": 1,
+              "homeAway": "客",
+              "competition": "WCQ - UEFA",
+              "note": "客场 W 4-1 vs 意大利"
+            },
+            {
+              "date": "11/15",
+              "opponent": "Slovenia",
+              "opponentZhName": "Slovenia",
+              "result": "W",
+              "score": "4-1",
+              "goalsFor": 4,
+              "goalsAgainst": 1,
+              "homeAway": "客",
+              "competition": "UEFA Nations League",
+              "note": "客场 W 4-1 vs Slovenia"
+            },
+            {
+              "date": "11/14",
+              "opponent": "Estonia",
+              "opponentZhName": "Estonia",
+              "result": "W",
+              "score": "4-1",
+              "goalsFor": 4,
+              "goalsAgainst": 1,
+              "homeAway": "主",
+              "competition": "WCQ - UEFA",
+              "note": "主场 W 4-1 vs Estonia"
+            },
+            {
+              "date": "10/15",
+              "opponent": "New Zealand",
+              "opponentZhName": "新西兰",
+              "result": "D",
+              "score": "1-1",
+              "goalsFor": 1,
+              "goalsAgainst": 1,
+              "homeAway": "主",
+              "competition": "Men's International Friendly",
+              "note": "主场 D 1-1 vs 新西兰"
+            }
+          ],
+          "sampleSize": 5,
+          "formScore": 88,
+          "goalsForAvg": 3.6,
+          "goalsAgainstAvg": 0.8,
+          "trendNote": "近 5 场 4 胜 1 平，场均 3.6-0.8。",
+          "sourceUrl": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams/464/schedule",
+          "injuries": {
+            "status": "ESPN 未列出明确伤病",
+            "riskScore": 0,
+            "items": [],
+            "relatedNews": [],
+            "note": "公开伤病源未给出明确缺阵，仍需赛前首发核验。",
+            "sourceUrl": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams/464/injuries"
+          },
+          "playerSignals": [
+            {
+              "label": "Goals",
+              "player": "Erling Haaland",
+              "value": "4",
+              "position": "F"
+            }
+          ]
+        },
+        "away": {
+          "formString": "WWDWW",
+          "recentMatches": [
+            {
+              "date": "11/18",
+              "opponent": "Italy",
+              "opponentZhName": "意大利",
+              "result": "W",
+              "score": "3-1",
+              "goalsFor": 3,
+              "goalsAgainst": 1,
+              "homeAway": "客",
+              "competition": "UEFA Nations League",
+              "note": "客场 W 3-1 vs 意大利"
+            },
+            {
+              "date": "11/17",
+              "opponent": "Azerbaijan",
+              "opponentZhName": "Azerbaijan",
+              "result": "W",
+              "score": "3-1",
+              "goalsFor": 3,
+              "goalsAgainst": 1,
+              "homeAway": "客",
+              "competition": "WCQ - UEFA",
+              "note": "客场 W 3-1 vs Azerbaijan"
+            },
+            {
+              "date": "11/15",
+              "opponent": "Israel",
+              "opponentZhName": "Israel",
+              "result": "D",
+              "score": "0-0",
+              "goalsFor": 0,
+              "goalsAgainst": 0,
+              "homeAway": "主",
+              "competition": "UEFA Nations League",
+              "note": "主场 D 0-0 vs Israel"
+            },
+            {
+              "date": "11/14",
+              "opponent": "Ukraine",
+              "opponentZhName": "Ukraine",
+              "result": "W",
+              "score": "4-0",
+              "goalsFor": 4,
+              "goalsAgainst": 0,
+              "homeAway": "主",
+              "competition": "WCQ - UEFA",
+              "note": "主场 W 4-0 vs Ukraine"
+            },
+            {
+              "date": "10/15",
+              "opponent": "Belgium",
+              "opponentZhName": "比利时",
+              "result": "W",
+              "score": "2-1",
+              "goalsFor": 2,
+              "goalsAgainst": 1,
+              "homeAway": "客",
+              "competition": "UEFA Nations League",
+              "note": "客场 W 2-1 vs 比利时"
+            }
+          ],
+          "sampleSize": 5,
+          "formScore": 88,
+          "goalsForAvg": 2.4,
+          "goalsAgainstAvg": 0.6,
+          "trendNote": "近 5 场 4 胜 1 平，场均 2.4-0.6。",
+          "sourceUrl": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams/478/schedule",
+          "injuries": {
+            "status": "ESPN 未列出明确伤病",
+            "riskScore": 0,
+            "items": [],
+            "relatedNews": [],
+            "note": "公开伤病源未给出明确缺阵，仍需赛前首发核验。",
+            "sourceUrl": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams/478/injuries"
+          },
+          "playerSignals": [
+            {
+              "label": "Goals",
+              "player": "Kylian Mbappé",
+              "value": "4",
+              "position": "F"
+            }
+          ]
+        },
+        "weather": {
+          "status": "小时预报已读取",
+          "venueName": "Gillette Stadium",
+          "city": "Foxborough, Massachusetts",
+          "latitude": 42.06538,
+          "longitude": -71.24783,
+          "roofLikely": false,
+          "temperatureC": 25.2,
+          "precipitationProbability": 23,
+          "windKph": 15.5,
+          "humidity": 67,
+          "riskLevel": "低",
+          "summary": "25°C，降水 23%，风 16 km/h，湿度 67%。露天影响按正常权重计入。"
+        },
+        "geography": {
+          "homeRegion": "北欧",
+          "awayRegion": "西欧",
+          "homeClimate": "冷凉海洋",
+          "awayClimate": "温带海洋",
+          "homeElement": "水",
+          "awayElement": "金",
+          "homeDistanceKm": 5653,
+          "awayDistanceKm": 5562,
+          "distanceEdgeKm": -91,
+          "travelEdge": "旅行距离差不大",
+          "summary": "挪威 来自北欧，法国 来自西欧；旅行距离差不大。"
+        },
+        "divination": {
+          "method": "梅花易数取数 + 五行方位取象 + 干支时气简化校验",
+          "homeSymbol": "坤(土)",
+          "awaySymbol": "巽(木)",
+          "dayElement": "木",
+          "lean": "neutral",
+          "delta": 0,
+          "weight": "≤3%，只作文化辅助",
+          "summary": "取象双方差距很小，不改变主模型。日时五行取 木。"
+        },
+        "adjustment": {
+          "homeGoalDiffDelta": 0,
+          "totalGoalsDelta": 0.24,
+          "confidenceDelta": 0,
+          "riskDelta": 0,
+          "notes": [
+            "近况差修正 0 球。",
+            "天气/节奏修正 +0.24 总进球。",
+            "伤病与天气风险使风险指数 0。",
+            "古法取象 ≤3%，只作文化辅助：取象双方差距很小，不改变主模型。日时五行取 木。"
+          ]
+        },
+        "note": "近况、球员、伤病、天气和地理因素进入主模型；古法占卜仅作低权重文化校验，不覆盖可验证事实。"
+      },
+      "judgement": {
+        "confidence": 68,
+        "risk": 39,
+        "tier": "小额娱乐",
+        "lean": "可小额关注 法国 方向",
+        "stake": "建议控制在单场预算 15%-25%",
+        "guidance": "市场热门有一定支撑，但仍需等中国体彩最终赔率；若赔率继续下压，宁可放弃而不是追价。",
+        "avoid": "不要串太多场，避免一个冷门毁掉整组判断。",
+        "factors": [
+          {
+            "label": "市场强度",
+            "value": 58,
+            "tone": "good",
+            "note": "法国 去水后约 58%"
+          },
+          {
+            "label": "赔率移动",
+            "value": 25,
+            "tone": "good",
+            "note": "热门方向隐含概率变化 +2.5%"
+          },
+          {
+            "label": "平局噪音",
+            "value": 22,
+            "tone": "good",
+            "note": "平局去水后约 22%"
+          },
+          {
+            "label": "新闻热度",
+            "value": 5,
+            "tone": "good",
+            "note": "最新新闻未触发高风险词"
+          },
+          {
+            "label": "近5场实况",
+            "value": 88,
+            "tone": "watch",
+            "note": "近 5 场 4 胜 1 平，场均 3.6-0.8。 近 5 场 4 胜 1 平，场均 2.4-0.6。"
+          },
+          {
+            "label": "天气地理",
+            "value": 32,
+            "tone": "good",
+            "note": "25°C，降水 23%，风 16 km/h，湿度 67%。露天影响按正常权重计入。 旅行距离差不大"
+          },
+          {
+            "label": "古法校验",
+            "value": 50,
+            "tone": "watch",
+            "note": "梅花易数取数 + 五行方位取象 + 干支时气简化校验；取象双方差距很小，不改变主模型。日时五行取 木。"
+          }
+        ]
+      },
+      "scoreline": {
+        "model": "胜平负去水概率 + 大小球盘口 + 进攻尾部/弱势主队一球校准 Poisson 比分分布",
+        "homeExpectedGoals": 1.6,
+        "awayExpectedGoals": 2.04,
+        "totalExpectedGoals": 3.64,
+        "resultProbabilities": [
+          {
+            "label": "挪威",
+            "side": "home",
+            "probability": 0.1997
+          },
+          {
+            "label": "平局",
+            "side": "draw",
+            "probability": 0.2178
+          },
+          {
+            "label": "法国",
+            "side": "away",
+            "probability": 0.5825
+          }
+        ],
+        "bestPick": {
+          "score": "1-2",
+          "result": "客胜",
+          "probability": 0.0968,
+          "baseProbability": 0.0874,
+          "tailMultiplier": 1.26,
+          "fairOdds": 10.33,
+          "suggestedMinOdds": 11.77,
+          "officialOdds": null,
+          "expectedValue": null,
+          "expectedValueAtSuggestedOdds": 0.14,
+          "grade": "首选核验",
+          "reason": "法国 胜面约 58%，一球小胜；比分区间贴近市场总进球。复盘校准上调弱势主队一球贡献，说明这个比分比零封路径更值得核验。"
+        },
+        "candidates": [
+          {
+            "score": "1-2",
+            "result": "客胜",
+            "probability": 0.0968,
+            "baseProbability": 0.0874,
+            "tailMultiplier": 1.26,
+            "fairOdds": 10.33,
+            "suggestedMinOdds": 11.77,
+            "officialOdds": null,
+            "expectedValue": null,
+            "expectedValueAtSuggestedOdds": 0.14,
+            "grade": "首选核验",
+            "reason": "法国 胜面约 58%，一球小胜；比分区间贴近市场总进球。复盘校准上调弱势主队一球贡献，说明这个比分比零封路径更值得核验。"
+          },
+          {
+            "score": "1-3",
+            "result": "客胜",
+            "probability": 0.0773,
+            "baseProbability": 0.0594,
+            "tailMultiplier": 1.48,
+            "fairOdds": 12.93,
+            "suggestedMinOdds": 14.74,
+            "officialOdds": null,
+            "expectedValue": null,
+            "expectedValueAtSuggestedOdds": 0.14,
+            "grade": "备选",
+            "reason": "法国 胜面约 58%，两球以上优势；比分偏大，需要更高官方赔率补偿风险。复盘校准上调弱势主队一球贡献，说明这个比分比零封路径更值得核验。"
+          },
+          {
+            "score": "2-2",
+            "result": "平局",
+            "probability": 0.0725,
+            "baseProbability": 0.0699,
+            "tailMultiplier": 1.18,
+            "fairOdds": 13.78,
+            "suggestedMinOdds": 15.71,
+            "officialOdds": null,
+            "expectedValue": null,
+            "expectedValueAtSuggestedOdds": 0.14,
+            "grade": "备选",
+            "reason": "进球环境偏开放，平局概率约 22%，挪威 与 法国 的胜负差距不宜过度放大。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。"
+          },
+          {
+            "score": "1-4",
+            "result": "客胜",
+            "probability": 0.0394,
+            "baseProbability": 0.0303,
+            "tailMultiplier": 1.48,
+            "fairOdds": 25.35,
+            "suggestedMinOdds": 28.9,
+            "officialOdds": null,
+            "expectedValue": null,
+            "expectedValueAtSuggestedOdds": 0.14,
+            "grade": "备选",
+            "reason": "法国 胜面约 58%，两球以上优势；比分偏大，需要更高官方赔率补偿风险。复盘校准上调弱势主队一球贡献，说明这个比分比零封路径更值得核验。"
+          },
+          {
+            "score": "2-3",
+            "result": "客胜",
+            "probability": 0.0493,
+            "baseProbability": 0.0475,
+            "tailMultiplier": 1.18,
+            "fairOdds": 20.27,
+            "suggestedMinOdds": 23.11,
+            "officialOdds": null,
+            "expectedValue": null,
+            "expectedValueAtSuggestedOdds": 0.14,
+            "grade": "备选",
+            "reason": "法国 胜面约 58%，一球小胜；比分偏大，需要更高官方赔率补偿风险。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。"
+          },
+          {
+            "score": "1-1",
+            "result": "平局",
+            "probability": 0.0693,
+            "baseProbability": 0.0857,
+            "tailMultiplier": 0.92,
+            "fairOdds": 14.43,
+            "suggestedMinOdds": 16.45,
+            "officialOdds": null,
+            "expectedValue": null,
+            "expectedValueAtSuggestedOdds": 0.14,
+            "grade": "备选",
+            "reason": "进球环境偏开放，平局概率约 22%，挪威 与 法国 的胜负差距不宜过度放大。"
+          },
+          {
+            "score": "2-1",
+            "result": "主胜",
+            "probability": 0.0651,
+            "baseProbability": 0.0686,
+            "tailMultiplier": 1.08,
+            "fairOdds": 15.36,
+            "suggestedMinOdds": 17.51,
+            "officialOdds": null,
+            "expectedValue": null,
+            "expectedValueAtSuggestedOdds": 0.14,
+            "grade": "备选",
+            "reason": "挪威 胜面约 20%，一球小胜；比分区间贴近市场总进球。"
+          },
+          {
+            "score": "0-2",
+            "result": "客胜",
+            "probability": 0.048,
+            "baseProbability": 0.0546,
+            "tailMultiplier": 1,
+            "fairOdds": 20.82,
+            "suggestedMinOdds": 23.74,
+            "officialOdds": null,
+            "expectedValue": null,
+            "expectedValueAtSuggestedOdds": 0.14,
+            "grade": "备选",
+            "reason": "法国 胜面约 58%，两球以上优势；比分区间贴近市场总进球。复盘校准下调热门方零封路径，防止模型过度相信 0 进球。"
+          },
+          {
+            "score": "0-1",
+            "result": "客胜",
+            "probability": 0.0424,
+            "baseProbability": 0.0536,
+            "tailMultiplier": 0.9,
+            "fairOdds": 23.6,
+            "suggestedMinOdds": 26.9,
+            "officialOdds": null,
+            "expectedValue": null,
+            "expectedValueAtSuggestedOdds": 0.14,
+            "grade": "备选",
+            "reason": "法国 胜面约 58%，一球小胜；低比分，对临场节奏和首发依赖更强。尾部校准下调，需防模型把罕见路径估得过高。"
+          }
+        ],
+        "avoid": [
+          {
+            "score": "6-6",
+            "result": "平局",
+            "probability": 0.0001,
+            "baseProbability": 0.0001,
+            "tailMultiplier": 1.18,
+            "fairOdds": 15739.73,
+            "suggestedMinOdds": 17943.29,
+            "officialOdds": null,
+            "expectedValue": null,
+            "expectedValueAtSuggestedOdds": 0.14,
+            "grade": "回避",
+            "reason": "概率过低，除非官方赔率极端偏高，否则不适合作为主要比分方向。"
+          },
+          {
+            "score": "5-6",
+            "result": "客胜",
+            "probability": 0.0002,
+            "baseProbability": 0.0002,
+            "tailMultiplier": 1.18,
+            "fairOdds": 4197.26,
+            "suggestedMinOdds": 4784.88,
+            "officialOdds": null,
+            "expectedValue": null,
+            "expectedValueAtSuggestedOdds": 0.14,
+            "grade": "回避",
+            "reason": "概率过低，除非官方赔率极端偏高，否则不适合作为主要比分方向。"
+          },
+          {
+            "score": "6-5",
+            "result": "主胜",
+            "probability": 0.0002,
+            "baseProbability": 0.0002,
+            "tailMultiplier": 1.18,
+            "fairOdds": 5351.51,
+            "suggestedMinOdds": 6100.72,
+            "officialOdds": null,
+            "expectedValue": null,
+            "expectedValueAtSuggestedOdds": 0.14,
+            "grade": "回避",
+            "reason": "概率过低，除非官方赔率极端偏高，否则不适合作为主要比分方向。"
+          }
+        ],
+        "notes": [
+          "比分玩法方差很大，候选只适合小额娱乐或赛前核验。",
+          "本版把总进球从基础 2.97 校准到 3.64，并对强弱分明场景的 3+ 进球比分做尾部上调。",
+          "复盘校准：保留总进球 3.64 不变，仅把主场弱势方的一球贡献修正 +0.36。",
+          "近况差修正 0 球。",
+          "天气/节奏修正 +0.24 总进球。",
+          "expectedValue 只有抓到中国体彩官方比分赔率后才会填充；当前显示的是盈亏平衡与建议最低赔率。",
+          "最新新闻未触发高风险词，但仍需赛前核验首发。"
+        ]
+      },
+      "professional": {
+        "rankScore": 61,
+        "grade": "小额分散",
+        "headline": "可小额分散，围绕 1-2 与 3.6 球环境展开",
+        "finalAdvice": "只做小额娱乐，比分、胜平负、总进球不要同时放大金额；任一核心条件不满足就降级为观望。",
+        "stakingPlan": "本场最多使用当日预算 10%-16%，分成 2 个以内方向。",
+        "deepThinking": {
+          "label": "深度推演层",
+          "conclusion": "最合适买法：小额分散，首看 1-2（客胜），再用 法国 客胜 和 总进球 3/4/5 交叉确认。",
+          "confidenceScore": 66,
+          "purchasePlan": [
+            {
+              "label": "主票",
+              "selection": "1-2（客胜）",
+              "allocation": "本场预算 25%-35%",
+              "minOdds": "≥ 11.77",
+              "action": "买入核验",
+              "rationale": "首选比分概率 10%，盈亏线 10.33，低于门槛不买。"
+            },
+            {
+              "label": "低方差票",
+              "selection": "法国 客胜",
+              "allocation": "本场预算 25%-35%",
+              "minOdds": "≥ 1.86",
+              "action": "买入核验",
+              "rationale": "胜平负只用于降低比分玩法方差，赔率被压低时不参与。"
+            },
+            {
+              "label": "节奏校验",
+              "selection": "总进球 3/4/5",
+              "allocation": "本场预算 10%-20%",
+              "minOdds": "以官方组合赔率核验",
+              "action": "小额防守",
+              "rationale": "总进球用于校验比分区间，不作为扩大投注的理由。"
+            }
+          ],
+          "reasoningSummary": [
+            "模型最集中比分：1-2（客胜）；备选：1-3（客胜） / 2-2（平局）。",
+            "胜平负方向：法国 客胜；总进球校验：总进球 3/4/5。",
+            "近5场：近 5 场 4 胜 1 平，场均 3.6-0.8。；近 5 场 4 胜 1 平，场均 2.4-0.6。",
+            "天气/地理：25°C，降水 23%，风 16 km/h，湿度 67%。露天影响按正常权重计入。 旅行距离差不大",
+            "古法低权重校验：取象双方差距很小，不改变主模型。日时五行取 木。",
+            "主要风险：赔率压缩为低，比分方差为中。"
+          ],
+          "noBuyRules": [
+            "中国体彩比分赔率低于 ≥ 11.77 时不买。",
+            "胜平负 法国 客胜 低于 ≥ 1.86 时不买。",
+            "首发出现核心前锋、门将或中卫明显轮换时不买。",
+            "临场 30 分钟内热门方向继续大幅降赔时不追。",
+            "中国体彩未开售、停售或让球口径变化时不买。"
+          ],
+          "updateSensitivity": "对赔率、首发和新闻中等敏感，适合小额而非重仓。"
+        },
+        "expertAnswer": {
+          "verdict": "答案是以 1-2（客胜） 为首选，法国 客胜 与 总进球 3/4/5 只做交叉验证。",
+          "recommendedScore": "1-2（客胜）",
+          "secondaryScores": [
+            "1-3（客胜）",
+            "2-2（平局）",
+            "1-4（客胜）"
+          ],
+          "marketDirection": "法国 客胜",
+          "totalGoals": "总进球 3/4/5",
+          "buyCondition": "必须同时满足：比分赔率 ≥ 11.77、胜平负方向 ≥ 1.86、首发无明显轮换。",
+          "passCondition": "任一核心条件不满足就放弃；不要串太多场，避免一个冷门毁掉整组判断。",
+          "stakeCeiling": "本场最多使用当日预算 10%-16%，分成 2 个以内方向。",
+          "confidenceBand": "中等：用小额分散而不是重仓单点"
+        },
+        "primary": {
+          "playType": "比分",
+          "selection": "1-2（客胜）",
+          "priority": "主方案",
+          "confidence": 67,
+          "budgetShare": "单场预算 5%-9%",
+          "minOdds": "≥ 11.77",
+          "expectedValueNote": "模型概率 10%，盈亏线 10.33；官方赔率低于门槛则放弃。",
+          "reason": "法国 胜面约 58%，一球小胜；比分区间贴近市场总进球。复盘校准上调弱势主队一球贡献，说明这个比分比零封路径更值得核验。",
+          "noBetIf": "中国体彩该比分赔率低于 11.77，或赛前首发显示明显轮换。"
+        },
+        "plays": [
+          {
+            "playType": "比分",
+            "selection": "1-2（客胜）",
+            "priority": "主方案",
+            "confidence": 67,
+            "budgetShare": "单场预算 5%-9%",
+            "minOdds": "≥ 11.77",
+            "expectedValueNote": "模型概率 10%，盈亏线 10.33；官方赔率低于门槛则放弃。",
+            "reason": "法国 胜面约 58%，一球小胜；比分区间贴近市场总进球。复盘校准上调弱势主队一球贡献，说明这个比分比零封路径更值得核验。",
+            "noBetIf": "中国体彩该比分赔率低于 11.77，或赛前首发显示明显轮换。"
+          },
+          {
+            "playType": "胜平负",
+            "selection": "法国 客胜",
+            "priority": "备选",
+            "confidence": 58,
+            "budgetShare": "单场预算 8%-15%",
+            "minOdds": "≥ 1.86",
+            "expectedValueNote": "去水概率 58%，低于建议赔率时性价比不足。",
+            "reason": "法国 是市场主方向，可作为比分玩法之外的低方差核验项。",
+            "noBetIf": "官方胜平负赔率明显低于门槛，或临场赔率短时间大幅下压。"
+          },
+          {
+            "playType": "总进球",
+            "selection": "总进球 3/4/5",
+            "priority": "备选",
+            "confidence": 57,
+            "budgetShare": "单场预算 4%-8%",
+            "minOdds": "以官方组合赔率核验",
+            "expectedValueNote": "模型总进球均值 3.64，只适合与比分方向交叉验证。",
+            "reason": "进球环境偏开放，但高总进球波动更大，只适合小额配合比分方向。",
+            "noBetIf": "首发防守倾向或天气/场地导致节奏判断与模型相反。"
+          }
+        ],
+        "scenarios": [
+          {
+            "title": "基准剧本",
+            "probability": "10%",
+            "scorePath": "法国 客胜，比分落在 1-2 附近。",
+            "action": "只核验 1-2，不追更偏的高比分。"
+          },
+          {
+            "title": "僵持剧本",
+            "probability": "7%",
+            "scorePath": "若上半场节奏慢，比分可能滑向 2-2。",
+            "action": "平局只做防守，不把它升级成主方案。"
+          },
+          {
+            "title": "冷门剧本",
+            "probability": "7%",
+            "scorePath": "若热门方首发轮换或早段失球，风险比分是 2-1。",
+            "action": "冷门只作为风险提醒，不主动追高赔率。"
+          },
+          {
+            "title": "进球节奏剧本",
+            "probability": "3.64 xG",
+            "scorePath": "总进球主区间是 总进球 3/4/5。",
+            "action": "比分和总进球方向冲突时，以放弃为优先。"
+          }
+        ],
+        "signals": [
+          {
+            "label": "市场主方向",
+            "score": 58,
+            "tone": "good",
+            "evidence": "法国 去水后约 58%，当前判断为 客胜 主方向。"
+          },
+          {
+            "label": "比分集中度",
+            "score": 97,
+            "tone": "watch",
+            "evidence": "首选比分 1-2 概率约 10%，盈亏线 10.33。"
+          },
+          {
+            "label": "赔率过热",
+            "score": 39,
+            "tone": "good",
+            "evidence": "市场热度尚可，但仍需赛前赔率确认。"
+          },
+          {
+            "label": "新闻与阵容",
+            "score": 42,
+            "tone": "good",
+            "evidence": "挪威: 公开伤病源未给出明确缺阵，仍需赛前首发核验。 法国: 公开伤病源未给出明确缺阵，仍需赛前首发核验。"
+          },
+          {
+            "label": "近5场与球员",
+            "score": 88,
+            "tone": "watch",
+            "evidence": "挪威 近 5 场 4 胜 1 平，场均 3.6-0.8。 法国 近 5 场 4 胜 1 平，场均 2.4-0.6。"
+          },
+          {
+            "label": "天气/地理",
+            "score": 35,
+            "tone": "good",
+            "evidence": "25°C，降水 23%，风 16 km/h，湿度 67%。露天影响按正常权重计入。 挪威 来自北欧，法国 来自西欧；旅行距离差不大。"
+          },
+          {
+            "label": "古法占卜低权重",
+            "score": 50,
+            "tone": "watch",
+            "evidence": "坤(土) vs 巽(木)；取象双方差距很小，不改变主模型。日时五行取 木。"
+          }
+        ],
+        "riskControls": [
+          {
+            "label": "赔率压缩",
+            "level": "低",
+            "detail": "盘口变化尚可接受，但仍要以中国体彩最终赔率为准。"
+          },
+          {
+            "label": "比分方差",
+            "level": "中",
+            "detail": "首选比分模型概率约 10%，比分玩法天然高方差，金额必须明显低于胜平负。"
+          },
+          {
+            "label": "候选分歧",
+            "level": "中",
+            "detail": "前两名比分差距约 2%，差距越小越不适合单点重仓。"
+          },
+          {
+            "label": "综合风险",
+            "level": "低",
+            "detail": "当前风险指数 39/100；超过中档时只做核验，不扩大组合。"
+          },
+          {
+            "label": "天气地理",
+            "level": "低",
+            "detail": "25°C，降水 23%，风 16 km/h，湿度 67%。露天影响按正常权重计入。 挪威 来自北欧，法国 来自西欧；旅行距离差不大。"
+          },
+          {
+            "label": "伤病首发",
+            "level": "低",
+            "detail": "公开伤病源未给出明确缺阵，仍需赛前首发核验。 公开伤病源未给出明确缺阵，仍需赛前首发核验。"
+          },
+          {
+            "label": "占卜只作校验",
+            "level": "低",
+            "detail": "梅花易数取数 + 五行方位取象 + 干支时气简化校验，权重 ≤3%，只作文化辅助；若与盘口相反，只用于提醒不要加码。"
+          }
+        ],
+        "checklist": [
+          "中国体彩比分 1-2（客胜） 官方赔率是否 ≥ 11.77",
+          "胜平负 法国 客胜 是否达到 ≥ 1.86",
+          "近5场实况是否仍支持：WWWWD vs WWDWW",
+          "天气地理是否冲突：25°C，降水 23%，风 16 km/h，湿度 67%。露天影响按正常权重计入。",
+          "赛前 30 分钟确认首发、门将、核心前锋和中卫组合",
+          "停售前确认赔率没有突然下压，且比赛仍在竞彩开售列表"
+        ],
+        "downgradeTriggers": [
+          "官方比分赔率低于建议最低赔率",
+          "热门方向 30 分钟内继续大幅降赔",
+          "主力前锋/门将/核心中卫缺阵或明显轮换",
+          "临场天气、红牌停赛、战意信息与当前模型假设冲突"
+        ]
+      },
+      "sporttery": {
+        "status": "需赛前核验",
+        "officialUrl": "https://www.sporttery.cn/jc/",
+        "markets": [
+          "胜平负",
+          "让球胜平负",
+          "总进球",
+          "比分"
+        ],
+        "note": "海外市场盘口与竞彩官方赔率、开售状态、让球设定可能不同。购买前请用中国体彩网或销售终端核验最终赔率和截止时间。"
+      }
+    },
+    {
+      "id": "760474",
+      "name": "Iraq at Senegal",
+      "group": "FIFA World Cup, Group I",
+      "status": "Scheduled",
+      "kickoffUtc": "2026-06-26T19:00Z",
+      "kickoffChina": "06/27 03:00",
+      "venue": "BMO Field, Toronto",
+      "home": {
+        "id": "654",
+        "name": "Senegal",
+        "zhName": "塞内加尔",
+        "abbreviation": "SEN",
+        "logo": "https://a.espncdn.com/i/teamlogos/countries/500/sen.png",
+        "form": "LLDLW",
+        "record": "0-0-2"
+      },
+      "away": {
+        "id": "4375",
+        "name": "Iraq",
+        "zhName": "伊拉克",
+        "abbreviation": "IRQ",
+        "logo": "https://a.espncdn.com/i/teamlogos/countries/500/irq.png",
+        "form": "LLLDW",
+        "record": "0-0-2"
+      },
+      "score": "0-0",
+      "market": {
+        "provider": "DraftKings",
+        "details": "SEN -450",
+        "moneyline": [
+          {
+            "label": "塞内加尔",
+            "side": "home",
+            "american": "-450",
+            "decimal": 1.22,
+            "impliedProbability": 0.8181818181818182,
+            "normalizedProbability": 0.783419689119171,
+            "line": null,
+            "movement": 15.2
+          },
+          {
+            "label": "平局",
+            "side": "draw",
+            "american": "+600",
+            "decimal": 7,
+            "impliedProbability": 0.14285714285714285,
+            "normalizedProbability": 0.13678756476683937,
+            "line": null,
+            "movement": -9
+          },
+          {
+            "label": "伊拉克",
+            "side": "away",
+            "american": "+1100",
+            "decimal": 12,
+            "impliedProbability": 0.08333333333333333,
+            "normalizedProbability": 0.07979274611398963,
+            "line": null,
+            "movement": -7.1
+          }
+        ],
+        "total": [
+          {
+            "label": "大球",
+            "side": "over",
+            "american": "+130",
+            "decimal": 2.3,
+            "impliedProbability": 0.43478260869565216,
+            "normalizedProbability": null,
+            "line": "o3.5",
+            "movement": -8.9
+          },
+          {
+            "label": "小球",
+            "side": "under",
+            "american": "-160",
+            "decimal": 1.63,
+            "impliedProbability": 0.6153846153846154,
+            "normalizedProbability": null,
+            "line": "u3.5",
+            "movement": 8.1
+          }
+        ],
+        "spread": [
+          {
+            "label": "塞内加尔",
+            "side": "spreadHome",
+            "american": "-155",
+            "decimal": 1.65,
+            "impliedProbability": 0.6078431372549019,
+            "normalizedProbability": null,
+            "line": "-1.5",
+            "movement": 18.2
+          },
+          {
+            "label": "伊拉克",
+            "side": "spreadAway",
+            "american": "+120",
+            "decimal": 2.2,
+            "impliedProbability": 0.45454545454545453,
+            "normalizedProbability": null,
+            "line": "+1.5",
+            "movement": -20.1
+          }
+        ],
+        "updatedAt": "2026-06-25T04:51:25.533Z"
+      },
+      "context": {
+        "home": {
+          "formString": "WDWWL",
+          "recentMatches": [
+            {
+              "date": "12/31",
+              "opponent": "Benin",
+              "opponentZhName": "Benin",
+              "result": "W",
+              "score": "3-0",
+              "goalsFor": 3,
+              "goalsAgainst": 0,
+              "homeAway": "客",
+              "competition": "Africa Cup of Nations",
+              "note": "客场 W 3-0 vs Benin"
+            },
+            {
+              "date": "12/27",
+              "opponent": "Congo DR",
+              "opponentZhName": "刚果民主共和国",
+              "result": "D",
+              "score": "1-1",
+              "goalsFor": 1,
+              "goalsAgainst": 1,
+              "homeAway": "主",
+              "competition": "Africa Cup of Nations",
+              "note": "主场 D 1-1 vs 刚果民主共和国"
+            },
+            {
+              "date": "12/23",
+              "opponent": "Botswana",
+              "opponentZhName": "Botswana",
+              "result": "W",
+              "score": "3-0",
+              "goalsFor": 3,
+              "goalsAgainst": 0,
+              "homeAway": "主",
+              "competition": "Africa Cup of Nations",
+              "note": "主场 W 3-0 vs Botswana"
+            },
+            {
+              "date": "11/18",
+              "opponent": "Kenya",
+              "opponentZhName": "Kenya",
+              "result": "W",
+              "score": "8-0",
+              "goalsFor": 8,
+              "goalsAgainst": 0,
+              "homeAway": "主",
+              "competition": "Men's International Friendly",
+              "note": "主场 W 8-0 vs Kenya"
+            },
+            {
+              "date": "11/16",
+              "opponent": "Brazil",
+              "opponentZhName": "巴西",
+              "result": "L",
+              "score": "0-2",
+              "goalsFor": 0,
+              "goalsAgainst": 2,
+              "homeAway": "客",
+              "competition": "Men's International Friendly",
+              "note": "客场 L 0-2 vs 巴西"
+            }
+          ],
+          "sampleSize": 5,
+          "formScore": 88,
+          "goalsForAvg": 3,
+          "goalsAgainstAvg": 0.6,
+          "trendNote": "近 5 场 3 胜 1 平，场均 3-0.6。",
+          "sourceUrl": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams/654/schedule",
+          "injuries": {
+            "status": "ESPN 未列出明确伤病",
+            "riskScore": 0,
+            "items": [],
+            "relatedNews": [],
+            "note": "公开伤病源未给出明确缺阵，仍需赛前首发核验。",
+            "sourceUrl": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams/654/injuries"
+          },
+          "playerSignals": [
+            {
+              "label": "Goals",
+              "player": "Ismaïla Sarr",
+              "value": "2",
+              "position": "F"
+            }
+          ]
+        },
+        "away": {
+          "formString": "LLWWW",
+          "recentMatches": [
+            {
+              "date": "12/28",
+              "opponent": "Saudi Arabia",
+              "opponentZhName": "沙特阿拉伯",
+              "result": "L",
+              "score": "1-3",
+              "goalsFor": 1,
+              "goalsAgainst": 3,
+              "homeAway": "主",
+              "competition": "Arabian Gulf Cup",
+              "note": "主场 L 1-3 vs 沙特阿拉伯"
+            },
+            {
+              "date": "12/26",
+              "opponent": "Bahrain",
+              "opponentZhName": "Bahrain",
+              "result": "L",
+              "score": "0-2",
+              "goalsFor": 0,
+              "goalsAgainst": 2,
+              "homeAway": "客",
+              "competition": "Arabian Gulf Cup",
+              "note": "客场 L 0-2 vs Bahrain"
+            },
+            {
+              "date": "12/22",
+              "opponent": "Yemen",
+              "opponentZhName": "Yemen",
+              "result": "W",
+              "score": "1-0",
+              "goalsFor": 1,
+              "goalsAgainst": 0,
+              "homeAway": "主",
+              "competition": "Arabian Gulf Cup",
+              "note": "主场 W 1-0 vs Yemen"
+            },
+            {
+              "date": "11/20",
+              "opponent": "Oman",
+              "opponentZhName": "Oman",
+              "result": "W",
+              "score": "1-0",
+              "goalsFor": 1,
+              "goalsAgainst": 0,
+              "homeAway": "客",
+              "competition": "WCQ - AFC",
+              "note": "客场 W 1-0 vs Oman"
+            },
+            {
+              "date": "11/19",
+              "opponent": "United Arab Emirates",
+              "opponentZhName": "United Arab Emirates",
+              "result": "W",
+              "score": "2-1",
+              "goalsFor": 2,
+              "goalsAgainst": 1,
+              "homeAway": "主",
+              "competition": "WCQ - AFC",
+              "note": "主场 W 2-1 vs United Arab Emirates"
+            }
+          ],
+          "sampleSize": 5,
+          "formScore": 75,
+          "goalsForAvg": 1,
+          "goalsAgainstAvg": 1.2,
+          "trendNote": "近 5 场 3 胜 0 平，场均 1-1.2。",
+          "sourceUrl": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams/4375/schedule",
+          "injuries": {
+            "status": "ESPN 未列出明确伤病",
+            "riskScore": 0,
+            "items": [],
+            "relatedNews": [],
+            "note": "公开伤病源未给出明确缺阵，仍需赛前首发核验。",
+            "sourceUrl": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams/4375/injuries"
+          },
+          "playerSignals": [
+            {
+              "label": "Goals",
+              "player": "Aymen Hussein",
+              "value": "1",
+              "position": "F"
+            }
+          ]
+        },
+        "weather": {
+          "status": "小时预报已读取",
+          "venueName": "BMO Field",
+          "city": "Toronto, Ontario",
+          "latitude": 43.70643,
+          "longitude": -79.39864,
+          "roofLikely": false,
+          "temperatureC": 23.9,
+          "precipitationProbability": 6,
+          "windKph": 13.5,
+          "humidity": 61,
+          "riskLevel": "低",
+          "summary": "24°C，降水 6%，风 14 km/h，湿度 61%。露天影响按正常权重计入。"
+        },
+        "geography": {
+          "homeRegion": "西非",
+          "awayRegion": "西亚",
+          "homeClimate": "热带草原",
+          "awayClimate": "干热大陆",
+          "homeElement": "火",
+          "awayElement": "火",
+          "homeDistanceKm": 6642,
+          "awayDistanceKm": 9729,
+          "distanceEdgeKm": 3087,
+          "travelEdge": "塞内加尔 旅行距离少约 3100 km",
+          "summary": "塞内加尔 来自西非，伊拉克 来自西亚；塞内加尔 旅行距离少约 3100 km。"
+        },
+        "divination": {
+          "method": "梅花易数取数 + 五行方位取象 + 干支时气简化校验",
+          "homeSymbol": "坤(土)",
+          "awaySymbol": "离(火)",
+          "dayElement": "木",
+          "lean": "away",
+          "delta": -1.5,
+          "weight": "≤3%，只作文化辅助",
+          "summary": "取象略偏伊拉克，只作为低权重校验；日时五行取 木。"
+        },
+        "adjustment": {
+          "homeGoalDiffDelta": 0.2,
+          "totalGoalsDelta": 0.13,
+          "confidenceDelta": 1,
+          "riskDelta": 0,
+          "notes": [
+            "近况差修正 +0.2 球。",
+            "天气/节奏修正 +0.13 总进球。",
+            "伤病与天气风险使风险指数 0。",
+            "古法取象 ≤3%，只作文化辅助：取象略偏伊拉克，只作为低权重校验；日时五行取 木。"
+          ]
+        },
+        "note": "近况、球员、伤病、天气和地理因素进入主模型；古法占卜仅作低权重文化校验，不覆盖可验证事实。"
+      },
+      "judgement": {
+        "confidence": 88,
+        "risk": 52,
+        "tier": "避免追高",
+        "lean": "塞内加尔 是明显热门，但赔率已经很薄",
+        "stake": "热门方向回报偏低，最多极小额娱乐",
+        "guidance": "如果中国体彩主胜/客胜赔率被压得过低，性价比会下降；更适合核验让球和总进球，不适合重仓胜平负。",
+        "avoid": "不要因为“看起来稳”而放大金额，强弱分明的比赛也有轮换和爆冷风险。",
+        "factors": [
+          {
+            "label": "市场强度",
+            "value": 78,
+            "tone": "watch",
+            "note": "塞内加尔 去水后约 78%"
+          },
+          {
+            "label": "赔率移动",
+            "value": 152,
+            "tone": "watch",
+            "note": "热门方向隐含概率变化 +15.2%"
+          },
+          {
+            "label": "平局噪音",
+            "value": 14,
+            "tone": "good",
+            "note": "平局去水后约 14%"
+          },
+          {
+            "label": "新闻热度",
+            "value": 5,
+            "tone": "good",
+            "note": "最新新闻未触发高风险词"
+          },
+          {
+            "label": "近5场实况",
+            "value": 82,
+            "tone": "watch",
+            "note": "近 5 场 3 胜 1 平，场均 3-0.6。 近 5 场 3 胜 0 平，场均 1-1.2。"
+          },
+          {
+            "label": "天气地理",
+            "value": 32,
+            "tone": "good",
+            "note": "24°C，降水 6%，风 14 km/h，湿度 61%。露天影响按正常权重计入。 塞内加尔 旅行距离少约 3100 km"
+          },
+          {
+            "label": "古法校验",
+            "value": 38,
+            "tone": "good",
+            "note": "梅花易数取数 + 五行方位取象 + 干支时气简化校验；取象略偏伊拉克，只作为低权重校验；日时五行取 木。"
+          }
+        ]
+      },
+      "scoreline": {
+        "model": "胜平负去水概率 + 大小球盘口 + 进攻尾部/弱势主队一球校准 Poisson 比分分布",
+        "homeExpectedGoals": 2.68,
+        "awayExpectedGoals": 0.71,
+        "totalExpectedGoals": 3.39,
+        "resultProbabilities": [
+          {
+            "label": "塞内加尔",
+            "side": "home",
+            "probability": 0.7834
+          },
+          {
+            "label": "平局",
+            "side": "draw",
+            "probability": 0.1368
+          },
+          {
+            "label": "伊拉克",
+            "side": "away",
+            "probability": 0.0798
+          }
+        ],
+        "bestPick": {
+          "score": "3-0",
+          "result": "主胜",
+          "probability": 0.1163,
+          "baseProbability": 0.1081,
+          "tailMultiplier": 1.31,
+          "fairOdds": 8.59,
+          "suggestedMinOdds": 9.97,
+          "officialOdds": null,
+          "expectedValue": null,
+          "expectedValueAtSuggestedOdds": 0.16,
+          "grade": "首选核验",
+          "reason": "塞内加尔 胜面约 78%，两球以上优势；比分区间贴近市场总进球。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。"
+        },
+        "candidates": [
+          {
+            "score": "3-0",
+            "result": "主胜",
+            "probability": 0.1163,
+            "baseProbability": 0.1081,
+            "tailMultiplier": 1.31,
+            "fairOdds": 8.59,
+            "suggestedMinOdds": 9.97,
+            "officialOdds": null,
+            "expectedValue": null,
+            "expectedValueAtSuggestedOdds": 0.16,
+            "grade": "首选核验",
+            "reason": "塞内加尔 胜面约 78%，两球以上优势；比分区间贴近市场总进球。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。"
+          },
+          {
+            "score": "2-0",
+            "result": "主胜",
+            "probability": 0.1114,
+            "baseProbability": 0.1211,
+            "tailMultiplier": 1.12,
+            "fairOdds": 8.98,
+            "suggestedMinOdds": 10.42,
+            "officialOdds": null,
+            "expectedValue": null,
+            "expectedValueAtSuggestedOdds": 0.16,
+            "grade": "备选",
+            "reason": "塞内加尔 胜面约 78%，两球以上优势；比分区间贴近市场总进球。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。"
+          },
+          {
+            "score": "4-0",
+            "result": "主胜",
+            "probability": 0.091,
+            "baseProbability": 0.0725,
+            "tailMultiplier": 1.53,
+            "fairOdds": 10.98,
+            "suggestedMinOdds": 12.74,
+            "officialOdds": null,
+            "expectedValue": null,
+            "expectedValueAtSuggestedOdds": 0.16,
+            "grade": "备选",
+            "reason": "塞内加尔 胜面约 78%，两球以上优势；比分偏大，需要更高官方赔率补偿风险。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。"
+          },
+          {
+            "score": "3-1",
+            "result": "主胜",
+            "probability": 0.0889,
+            "baseProbability": 0.0768,
+            "tailMultiplier": 1.41,
+            "fairOdds": 11.25,
+            "suggestedMinOdds": 13.05,
+            "officialOdds": null,
+            "expectedValue": null,
+            "expectedValueAtSuggestedOdds": 0.16,
+            "grade": "备选",
+            "reason": "塞内加尔 胜面约 78%，两球以上优势；比分偏大，需要更高官方赔率补偿风险。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。"
+          },
+          {
+            "score": "2-1",
+            "result": "主胜",
+            "probability": 0.0762,
+            "baseProbability": 0.0859,
+            "tailMultiplier": 1.08,
+            "fairOdds": 13.12,
+            "suggestedMinOdds": 15.22,
+            "officialOdds": null,
+            "expectedValue": null,
+            "expectedValueAtSuggestedOdds": 0.16,
+            "grade": "备选",
+            "reason": "塞内加尔 胜面约 78%，一球小胜；比分区间贴近市场总进球。热门过热时只核验，不追低赔。"
+          },
+          {
+            "score": "4-1",
+            "result": "主胜",
+            "probability": 0.0646,
+            "baseProbability": 0.0514,
+            "tailMultiplier": 1.53,
+            "fairOdds": 15.47,
+            "suggestedMinOdds": 17.95,
+            "officialOdds": null,
+            "expectedValue": null,
+            "expectedValueAtSuggestedOdds": 0.16,
+            "grade": "备选",
+            "reason": "塞内加尔 胜面约 78%，两球以上优势；比分偏大，需要更高官方赔率补偿风险。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。"
+          },
+          {
+            "score": "1-0",
+            "result": "主胜",
+            "probability": 0.0668,
+            "baseProbability": 0.0903,
+            "tailMultiplier": 0.9,
+            "fairOdds": 14.98,
+            "suggestedMinOdds": 17.37,
+            "officialOdds": null,
+            "expectedValue": null,
+            "expectedValueAtSuggestedOdds": 0.16,
+            "grade": "备选",
+            "reason": "塞内加尔 胜面约 78%，一球小胜；低比分，对临场节奏和首发依赖更强。尾部校准下调，需防模型把罕见路径估得过高。热门过热时只核验，不追低赔。"
+          },
+          {
+            "score": "5-0",
+            "result": "主胜",
+            "probability": 0.0488,
+            "baseProbability": 0.0388,
+            "tailMultiplier": 1.53,
+            "fairOdds": 20.49,
+            "suggestedMinOdds": 23.77,
+            "officialOdds": null,
+            "expectedValue": null,
+            "expectedValueAtSuggestedOdds": 0.16,
+            "grade": "备选",
+            "reason": "塞内加尔 胜面约 78%，两球以上优势；比分偏大，需要更高官方赔率补偿风险。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。"
+          },
+          {
+            "score": "5-1",
+            "result": "主胜",
+            "probability": 0.0346,
+            "baseProbability": 0.0276,
+            "tailMultiplier": 1.53,
+            "fairOdds": 28.86,
+            "suggestedMinOdds": 33.48,
+            "officialOdds": null,
+            "expectedValue": null,
+            "expectedValueAtSuggestedOdds": 0.16,
+            "grade": "备选",
+            "reason": "塞内加尔 胜面约 78%，两球以上优势；比分偏大，需要更高官方赔率补偿风险。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。"
+          }
+        ],
+        "avoid": [
+          {
+            "score": "0-5",
+            "result": "客胜",
+            "probability": 0,
+            "baseProbability": 0.0001,
+            "tailMultiplier": 1.02,
+            "fairOdds": 23553.35,
+            "suggestedMinOdds": 27321.89,
+            "officialOdds": null,
+            "expectedValue": null,
+            "expectedValueAtSuggestedOdds": 0.16,
+            "grade": "回避",
+            "reason": "概率过低，除非官方赔率极端偏高，否则不适合作为主要比分方向。"
+          },
+          {
+            "score": "0-6",
+            "result": "客胜",
+            "probability": 0,
+            "baseProbability": 0,
+            "tailMultiplier": 1.02,
+            "fairOdds": 199042.43,
+            "suggestedMinOdds": 230889.22,
+            "officialOdds": null,
+            "expectedValue": null,
+            "expectedValueAtSuggestedOdds": 0.16,
+            "grade": "回避",
+            "reason": "概率过低，除非官方赔率极端偏高，否则不适合作为主要比分方向。"
+          },
+          {
+            "score": "1-6",
+            "result": "客胜",
+            "probability": 0,
+            "baseProbability": 0,
+            "tailMultiplier": 1.02,
+            "fairOdds": 74269.56,
+            "suggestedMinOdds": 86152.69,
+            "officialOdds": null,
+            "expectedValue": null,
+            "expectedValueAtSuggestedOdds": 0.16,
+            "grade": "回避",
+            "reason": "概率过低，除非官方赔率极端偏高，否则不适合作为主要比分方向。"
+          }
+        ],
+        "notes": [
+          "比分玩法方差很大，候选只适合小额娱乐或赛前核验。",
+          "本版把总进球从基础 2.79 校准到 3.39，并对强弱分明场景的 3+ 进球比分做尾部上调。",
+          "近况差修正 +0.2 球。",
+          "天气/节奏修正 +0.13 总进球。",
+          "expectedValue 只有抓到中国体彩官方比分赔率后才会填充；当前显示的是盈亏平衡与建议最低赔率。",
+          "最新新闻未触发高风险词，但仍需赛前核验首发。"
+        ]
+      },
+      "professional": {
+        "rankScore": 64,
+        "grade": "只核验不追高",
+        "headline": "塞内加尔 热度高，首看比分 3-0 与总进球交叉核验",
+        "finalAdvice": "不建议重仓胜平负。优先看 3-0（主胜） 是否达到 ≥ 9.97，再用 总进球 3/4/5 辅助判断；达不到门槛就放弃。",
+        "stakingPlan": "本场最多使用当日预算 6%-10%，只在赔率达标时小额尝试。",
+        "deepThinking": {
+          "label": "深度推演层",
+          "conclusion": "最合适买法：只核验 3-0（主胜），官方赔率达标才小额；不追 塞内加尔 主胜。",
+          "confidenceScore": 68,
+          "purchasePlan": [
+            {
+              "label": "主票",
+              "selection": "3-0（主胜）",
+              "allocation": "本场预算 15%-25%",
+              "minOdds": "≥ 9.97",
+              "action": "只看不买",
+              "rationale": "首选比分概率 12%，盈亏线 8.59，低于门槛不买。"
+            },
+            {
+              "label": "低方差票",
+              "selection": "塞内加尔 主胜",
+              "allocation": "只看赔率，不主动追",
+              "minOdds": "≥ 1.40",
+              "action": "只看不买",
+              "rationale": "胜平负只用于降低比分玩法方差，赔率被压低时不参与。"
+            },
+            {
+              "label": "节奏校验",
+              "selection": "总进球 3/4/5",
+              "allocation": "本场预算 10%-20%",
+              "minOdds": "以官方组合赔率核验",
+              "action": "小额防守",
+              "rationale": "总进球用于校验比分区间，不作为扩大投注的理由。"
+            },
+            {
+              "label": "平局防守",
+              "selection": "塞内加尔 主胜",
+              "allocation": "本场预算 5%-8%",
+              "minOdds": "≥ 1.40",
+              "action": "小额防守",
+              "rationale": "只在平局噪音偏高且官方赔率给足时使用。"
+            }
+          ],
+          "reasoningSummary": [
+            "模型最集中比分：3-0（主胜）；备选：2-0（主胜） / 4-0（主胜）。",
+            "胜平负方向：塞内加尔 主胜；总进球校验：总进球 3/4/5。",
+            "近5场：近 5 场 3 胜 1 平，场均 3-0.6。；近 5 场 3 胜 0 平，场均 1-1.2。",
+            "天气/地理：24°C，降水 6%，风 14 km/h，湿度 61%。露天影响按正常权重计入。 塞内加尔 旅行距离少约 3100 km",
+            "古法低权重校验：取象略偏伊拉克，只作为低权重校验；日时五行取 木。",
+            "主要风险：赔率压缩为高，比分方差为中。"
+          ],
+          "noBuyRules": [
+            "中国体彩比分赔率低于 ≥ 9.97 时不买。",
+            "胜平负 塞内加尔 主胜 低于 ≥ 1.40 时不买。",
+            "首发出现核心前锋、门将或中卫明显轮换时不买。",
+            "临场 30 分钟内热门方向继续大幅降赔时不追。",
+            "中国体彩未开售、停售或让球口径变化时不买。"
+          ],
+          "updateSensitivity": "对降赔最敏感，只要官方赔率低于门槛就直接放弃。"
+        },
+        "expertAnswer": {
+          "verdict": "答案是先看 3-0（主胜），但只在官方赔率达到 ≥ 9.97 以上时小额核验。",
+          "recommendedScore": "3-0（主胜）",
+          "secondaryScores": [
+            "2-0（主胜）",
+            "4-0（主胜）",
+            "3-1（主胜）"
+          ],
+          "marketDirection": "塞内加尔 主胜",
+          "totalGoals": "总进球 3/4/5",
+          "buyCondition": "必须同时满足：比分赔率 ≥ 9.97、胜平负方向 ≥ 1.40、首发无明显轮换。",
+          "passCondition": "任一核心条件不满足就放弃；不要因为“看起来稳”而放大金额，强弱分明的比赛也有轮换和爆冷风险。",
+          "stakeCeiling": "本场最多使用当日预算 6%-10%，只在赔率达标时小额尝试。",
+          "confidenceBand": "中低：市场过热时宁可放弃"
+        },
+        "primary": {
+          "playType": "比分",
+          "selection": "3-0（主胜）",
+          "priority": "主方案",
+          "confidence": 69,
+          "budgetShare": "单场预算 3%-6%",
+          "minOdds": "≥ 9.97",
+          "expectedValueNote": "模型概率 12%，盈亏线 8.59；官方赔率低于门槛则放弃。",
+          "reason": "塞内加尔 胜面约 78%，两球以上优势；比分区间贴近市场总进球。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。",
+          "noBetIf": "中国体彩该比分赔率低于 9.97，或赛前首发显示明显轮换。"
+        },
+        "plays": [
+          {
+            "playType": "比分",
+            "selection": "3-0（主胜）",
+            "priority": "主方案",
+            "confidence": 69,
+            "budgetShare": "单场预算 3%-6%",
+            "minOdds": "≥ 9.97",
+            "expectedValueNote": "模型概率 12%，盈亏线 8.59；官方赔率低于门槛则放弃。",
+            "reason": "塞内加尔 胜面约 78%，两球以上优势；比分区间贴近市场总进球。进攻尾部校准已上调，说明该高进球路径不是单纯搏冷。热门过热时只核验，不追低赔。",
+            "noBetIf": "中国体彩该比分赔率低于 9.97，或赛前首发显示明显轮换。"
+          },
+          {
+            "playType": "胜平负",
+            "selection": "塞内加尔 主胜",
+            "priority": "防守",
+            "confidence": 78,
+            "budgetShare": "仅核验，不主动追",
+            "minOdds": "≥ 1.40",
+            "expectedValueNote": "去水概率 78%，低于建议赔率时性价比不足。",
+            "reason": "塞内加尔 胜面很高，但胜平负通常容易被压低，重点看官方赔率是否还有补偿。",
+            "noBetIf": "官方胜平负赔率明显低于门槛，或临场赔率短时间大幅下压。"
+          },
+          {
+            "playType": "总进球",
+            "selection": "总进球 3/4/5",
+            "priority": "备选",
+            "confidence": 57,
+            "budgetShare": "单场预算 4%-8%",
+            "minOdds": "以官方组合赔率核验",
+            "expectedValueNote": "模型总进球均值 3.39，只适合与比分方向交叉验证。",
+            "reason": "进球环境偏开放，但高总进球波动更大，只适合小额配合比分方向。",
+            "noBetIf": "首发防守倾向或天气/场地导致节奏判断与模型相反。"
+          }
+        ],
+        "scenarios": [
+          {
+            "title": "基准剧本",
+            "probability": "12%",
+            "scorePath": "塞内加尔 主胜，比分落在 3-0 附近。",
+            "action": "只核验 3-0，不追更偏的高比分。"
+          },
+          {
+            "title": "进球节奏剧本",
+            "probability": "3.39 xG",
+            "scorePath": "总进球主区间是 总进球 3/4/5。",
+            "action": "比分和总进球方向冲突时，以放弃为优先。"
+          }
+        ],
+        "signals": [
+          {
+            "label": "市场主方向",
+            "score": 78,
+            "tone": "watch",
+            "evidence": "塞内加尔 去水后约 78%，当前判断为 主胜 主方向。"
+          },
+          {
+            "label": "比分集中度",
+            "score": 116,
+            "tone": "watch",
+            "evidence": "首选比分 3-0 概率约 12%，盈亏线 8.59。"
+          },
+          {
+            "label": "赔率过热",
+            "score": 52,
+            "tone": "bad",
+            "evidence": "热门方向赔率偏薄，优先核验比分/总进球，不追低赔。"
+          },
+          {
+            "label": "新闻与阵容",
+            "score": 42,
+            "tone": "good",
+            "evidence": "塞内加尔: 公开伤病源未给出明确缺阵，仍需赛前首发核验。 伊拉克: 公开伤病源未给出明确缺阵，仍需赛前首发核验。"
+          },
+          {
+            "label": "近5场与球员",
+            "score": 82,
+            "tone": "watch",
+            "evidence": "塞内加尔 近 5 场 3 胜 1 平，场均 3-0.6。 伊拉克 近 5 场 3 胜 0 平，场均 1-1.2。"
+          },
+          {
+            "label": "天气/地理",
+            "score": 35,
+            "tone": "good",
+            "evidence": "24°C，降水 6%，风 14 km/h，湿度 61%。露天影响按正常权重计入。 塞内加尔 来自西非，伊拉克 来自西亚；塞内加尔 旅行距离少约 3100 km。"
+          },
+          {
+            "label": "古法占卜低权重",
+            "score": 38,
+            "tone": "watch",
+            "evidence": "坤(土) vs 离(火)；取象略偏伊拉克，只作为低权重校验；日时五行取 木。"
+          }
+        ],
+        "riskControls": [
+          {
+            "label": "赔率压缩",
+            "level": "高",
+            "detail": "热门方向短时间变化较大，必须等临场官方赔率确认，不追下压后的低回报。"
+          },
+          {
+            "label": "比分方差",
+            "level": "中",
+            "detail": "首选比分模型概率约 12%，比分玩法天然高方差，金额必须明显低于胜平负。"
+          },
+          {
+            "label": "候选分歧",
+            "level": "高",
+            "detail": "前两名比分差距约 0%，差距越小越不适合单点重仓。"
+          },
+          {
+            "label": "综合风险",
+            "level": "中",
+            "detail": "当前风险指数 52/100；超过中档时只做核验，不扩大组合。"
+          },
+          {
+            "label": "天气地理",
+            "level": "低",
+            "detail": "24°C，降水 6%，风 14 km/h，湿度 61%。露天影响按正常权重计入。 塞内加尔 来自西非，伊拉克 来自西亚；塞内加尔 旅行距离少约 3100 km。"
+          },
+          {
+            "label": "伤病首发",
+            "level": "低",
+            "detail": "公开伤病源未给出明确缺阵，仍需赛前首发核验。 公开伤病源未给出明确缺阵，仍需赛前首发核验。"
+          },
+          {
+            "label": "占卜只作校验",
+            "level": "低",
+            "detail": "梅花易数取数 + 五行方位取象 + 干支时气简化校验，权重 ≤3%，只作文化辅助；若与盘口相反，只用于提醒不要加码。"
+          }
+        ],
+        "checklist": [
+          "中国体彩比分 3-0（主胜） 官方赔率是否 ≥ 9.97",
+          "胜平负 塞内加尔 主胜 是否达到 ≥ 1.40",
+          "近5场实况是否仍支持：WDWWL vs LLWWW",
+          "天气地理是否冲突：24°C，降水 6%，风 14 km/h，湿度 61%。露天影响按正常权重计入。",
           "赛前 30 分钟确认首发、门将、核心前锋和中卫组合",
           "停售前确认赔率没有突然下压，且比赛仍在竞彩开售列表"
         ],
