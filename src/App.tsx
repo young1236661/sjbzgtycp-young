@@ -639,7 +639,21 @@ function ContextIntelPanel({ match }: { match: MatchBrief }) {
             <span>{match.home.zhName}: {context.divination.homeSymbol}</span>
             <span>{match.away.zhName}: {context.divination.awaySymbol}</span>
             <span>日时五行: {context.divination.dayElement}</span>
+            {context.divination.hourBranch && context.divination.hourElement ? (
+              <span>时辰: {context.divination.hourBranch}时 · {context.divination.hourElement}</span>
+            ) : null}
+            {context.divination.weatherElement ? <span>天气五行: {context.divination.weatherElement}</span> : null}
+            {typeof context.divination.homeFortune === 'number' && typeof context.divination.awayFortune === 'number' ? (
+              <span>运势分: {match.home.zhName} {context.divination.homeFortune} / {match.away.zhName} {context.divination.awayFortune}</span>
+            ) : null}
           </div>
+          {context.divination.breakdown && context.divination.breakdown.length > 0 ? (
+            <ul className="divination-breakdown">
+              {context.divination.breakdown.slice(0, 4).map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          ) : null}
         </article>
       </div>
       <div className="context-note">{context.note}</div>

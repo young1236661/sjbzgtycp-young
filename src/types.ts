@@ -139,6 +139,15 @@ export interface DivinationContext {
   homeSymbol: string
   awaySymbol: string
   dayElement: string
+  hourBranch?: string
+  hourElement?: string
+  weatherElement?: string
+  homeNameElement?: string
+  awayNameElement?: string
+  homeFortune?: number
+  awayFortune?: number
+  relationNote?: string
+  breakdown?: string[]
   lean: 'home' | 'away' | 'neutral'
   delta: number
   weight: string

@@ -45,6 +45,19 @@ const countryProfiles = new Map([
   ['Iraq', { zhName: '伊拉克', lat: 33.31, lon: 44.36, region: '西亚', climate: '干热大陆', element: '火' }],
   ['Norway', { zhName: '挪威', lat: 59.91, lon: 10.75, region: '北欧', climate: '冷凉海洋', element: '水' }],
   ['Senegal', { zhName: '塞内加尔', lat: 14.69, lon: -17.45, region: '西非', climate: '热带草原', element: '火' }],
+  ['Paraguay', { zhName: '巴拉圭', lat: -25.26, lon: -57.58, region: '南美内陆', climate: '亚热带草原', element: '木' }],
+  ['Australia', { zhName: '澳大利亚', lat: -35.28, lon: 149.13, region: '大洋洲大陆', climate: '干热/温带海洋', element: '火' }],
+  ['Türkiye', { zhName: '土耳其', lat: 39.93, lon: 32.86, region: '欧亚交界', climate: '地中海/大陆', element: '土' }],
+  ['Turkey', { zhName: '土耳其', lat: 39.93, lon: 32.86, region: '欧亚交界', climate: '地中海/大陆', element: '土' }],
+  ['United States', { zhName: '美国', lat: 38.9, lon: -77.04, region: '北美大陆', climate: '多气候带', element: '金' }],
+  ['Cape Verde', { zhName: '佛得角', lat: 14.92, lon: -23.51, region: '西非大西洋群岛', climate: '海岛干热', element: '水' }],
+  ['Saudi Arabia', { zhName: '沙特阿拉伯', lat: 24.71, lon: 46.67, region: '阿拉伯半岛', climate: '沙漠干热', element: '火' }],
+  ['Uruguay', { zhName: '乌拉圭', lat: -34.9, lon: -56.16, region: '南美东南岸', climate: '温带湿润', element: '水' }],
+  ['Spain', { zhName: '西班牙', lat: 40.42, lon: -3.7, region: '西南欧伊比利亚', climate: '地中海', element: '火' }],
+  ['Egypt', { zhName: '埃及', lat: 30.04, lon: 31.24, region: '北非尼罗河', climate: '沙漠/河谷', element: '土' }],
+  ['Iran', { zhName: '伊朗', lat: 35.69, lon: 51.39, region: '西亚高原', climate: '干燥高原', element: '土' }],
+  ['New Zealand', { zhName: '新西兰', lat: -41.29, lon: 174.78, region: '南太平洋海岛', climate: '温带海洋', element: '水' }],
+  ['Belgium', { zhName: '比利时', lat: 50.85, lon: 4.35, region: '西欧低地', climate: '温带海洋', element: '金' }],
   ['Jordan', { zhName: '约旦', lat: 31.95, lon: 35.93, region: '西亚', climate: '干燥半干旱', element: '土' }],
   ['Algeria', { zhName: '阿尔及利亚', lat: 36.75, lon: 3.06, region: '北非', climate: '地中海/沙漠', element: '土' }],
   ['Portugal', { zhName: '葡萄牙', lat: 38.72, lon: -9.14, region: '西南欧', climate: '地中海海洋', element: '金' }],
@@ -87,6 +100,9 @@ const teamNames = new Map([
   ['Colombia', '哥伦比亚'],
   ['Congo DR', '刚果民主共和国'],
   ['DR Congo', '刚果民主共和国'],
+  ['Paraguay', '巴拉圭'],
+  ['Australia', '澳大利亚'],
+  ['Türkiye', '土耳其'],
   ['Turkey', '土耳其'],
   ['Haiti', '海地'],
   ['Japan', '日本'],
@@ -431,7 +447,7 @@ async function buildMatchContext(event, competition, homeTeam, awayTeam, homeCom
     playerSignals: extractPlayerSignals(awayCompetitor),
   }
   const geography = buildGeographyContext(homeTeam, awayTeam, weather)
-  const divination = buildDivinationContext(event, homeTeam, awayTeam, geography)
+  const divination = buildDivinationContext(event, homeTeam, awayTeam, geography, weather)
   const adjustment = buildContextAdjustment(homeContext, awayContext, weather, geography, divination)
 
   return {
@@ -811,8 +827,9 @@ function buildGeographyContext(homeTeam, awayTeam, weather) {
   }
 }
 
-function buildDivinationContext(event, homeTeam, awayTeam, geography) {
+function buildDivinationContext(event, homeTeam, awayTeam, geography, weather) {
   const kickoff = new Date(event.date)
+  const chinaParts = chinaDateParts(event.date)
   const seed =
     Number(event.id ?? 0) +
     kickoff.getUTCFullYear() +
@@ -826,24 +843,63 @@ function buildDivinationContext(event, homeTeam, awayTeam, geography) {
   const fiveElements = ['木', '火', '土', '金', '水']
   const homeIndex = positiveModulo(seed, 8)
   const awayIndex = positiveModulo(seed * 3 + stringScore(awayTeam.name), 8)
-  const dayElement = fiveElements[positiveModulo(kickoff.getUTCDate() + kickoff.getUTCHours(), 5)]
-  const homeHarmony = elementHarmony(dayElement, geography.homeElement) + elementHarmony(trigramElements[homeIndex], geography.homeElement)
-  const awayHarmony = elementHarmony(dayElement, geography.awayElement) + elementHarmony(trigramElements[awayIndex], geography.awayElement)
-  const delta = clamp(homeHarmony - awayHarmony, -3, 3)
-  const lean = Math.abs(delta) <= 1 ? 'neutral' : delta > 0 ? 'home' : 'away'
+  const homeTrigramElement = trigramElements[homeIndex]
+  const awayTrigramElement = trigramElements[awayIndex]
+  const dayElement = fiveElements[positiveModulo(chinaParts.year + chinaParts.month * 2 + chinaParts.day * 3, 5)]
+  const hour = hourBranchContext(chinaParts.hour)
+  const weatherElement = weatherElementContext(weather)
+  const homeNameElement = fiveElements[positiveModulo(stringScore(homeTeam.zhName || homeTeam.name), 5)]
+  const awayNameElement = fiveElements[positiveModulo(stringScore(awayTeam.zhName || awayTeam.name), 5)]
+  const relationEdge =
+    elementDuelEdge(geography.homeElement, geography.awayElement) + elementDuelEdge(homeNameElement, awayNameElement) * 0.35
+  const homeFortune = round(
+    weightedElementHarmony(dayElement, geography.homeElement, 0.9) +
+      weightedElementHarmony(hour.element, geography.homeElement, 0.7) +
+      weightedElementHarmony(weatherElement, geography.homeElement, 0.55) +
+      weightedElementHarmony(homeTrigramElement, geography.homeElement, 0.7) +
+      weightedElementHarmony(dayElement, homeNameElement, 0.35) +
+      relationEdge,
+    2,
+  )
+  const awayFortune = round(
+    weightedElementHarmony(dayElement, geography.awayElement, 0.9) +
+      weightedElementHarmony(hour.element, geography.awayElement, 0.7) +
+      weightedElementHarmony(weatherElement, geography.awayElement, 0.55) +
+      weightedElementHarmony(awayTrigramElement, geography.awayElement, 0.7) +
+      weightedElementHarmony(dayElement, awayNameElement, 0.35) -
+      relationEdge,
+    2,
+  )
+  const delta = clamp(round(homeFortune - awayFortune, 2), -4, 4)
+  const lean = Math.abs(delta) <= 0.9 ? 'neutral' : delta > 0 ? 'home' : 'away'
+  const relationNote = elementRelationNote(geography.homeElement, geography.awayElement, homeTeam.zhName, awayTeam.zhName)
 
   return {
-    method: '梅花易数取数 + 五行方位取象 + 干支时气简化校验',
-    homeSymbol: `${trigrams[homeIndex]}(${trigramElements[homeIndex]})`,
-    awaySymbol: `${trigrams[awayIndex]}(${trigramElements[awayIndex]})`,
+    method: '梅花易数取数 + 日时五行 + 天气五行 + 方位生克低权重合参',
+    homeSymbol: `${trigrams[homeIndex]}(${homeTrigramElement})`,
+    awaySymbol: `${trigrams[awayIndex]}(${awayTrigramElement})`,
     dayElement,
+    hourBranch: hour.branch,
+    hourElement: hour.element,
+    weatherElement,
+    homeNameElement,
+    awayNameElement,
+    homeFortune,
+    awayFortune,
+    relationNote,
+    breakdown: [
+      `日五行 ${dayElement}，${hour.branch}时取 ${hour.element}，天气取 ${weatherElement}。`,
+      `${homeTeam.zhName}：地域 ${geography.homeElement}，队名取 ${homeNameElement}，卦象 ${trigrams[homeIndex]}(${homeTrigramElement})，运势 ${homeFortune}。`,
+      `${awayTeam.zhName}：地域 ${geography.awayElement}，队名取 ${awayNameElement}，卦象 ${trigrams[awayIndex]}(${awayTrigramElement})，运势 ${awayFortune}。`,
+      relationNote,
+    ],
     lean,
     delta,
-    weight: '≤3%，只作文化辅助',
+    weight: '≤4%，只作文化辅助',
     summary:
       lean === 'neutral'
-        ? `取象双方差距很小，不改变主模型。日时五行取 ${dayElement}。`
-        : `取象略偏${lean === 'home' ? homeTeam.zhName : awayTeam.zhName}，只作为低权重校验；日时五行取 ${dayElement}。`,
+        ? `五行八卦合参差距很小，不改变主模型。日 ${dayElement}、${hour.branch}时 ${hour.element}、天气 ${weatherElement}。`
+        : `五行八卦合参略偏${lean === 'home' ? homeTeam.zhName : awayTeam.zhName}，只作为低权重校验；日 ${dayElement}、${hour.branch}时 ${hour.element}、天气 ${weatherElement}。`,
   }
 }
 
@@ -851,7 +907,7 @@ function buildContextAdjustment(homeContext, awayContext, weather, geography, di
   const formEdge = homeContext.formScore - awayContext.formScore
   const injuryEdge = awayContext.injuries.riskScore - homeContext.injuries.riskScore
   const travelEdge = clamp((geography.distanceEdgeKm ?? 0) / 4500, -0.9, 0.9)
-  const divinationEdge = divination.lean === 'home' ? divination.delta * 0.25 : divination.lean === 'away' ? divination.delta * 0.25 : 0
+  const divinationEdge = clamp((divination.delta ?? 0) * 0.18, -0.72, 0.72)
   const weatherRisk = weather.riskLevel === '高' ? 8 : weather.riskLevel === '中' ? 4 : 0
   const formReliability = Math.min(homeContext.sampleSize, awayContext.sampleSize) >= 3 ? 1 : 0.55
   const weatherTempoDrag =
@@ -859,7 +915,7 @@ function buildContextAdjustment(homeContext, awayContext, weather, geography, di
     ((weather.precipitationProbability ?? 0) >= 35 ? 0.08 : 0) +
     ((weather.humidity ?? 0) >= 80 && weather.riskLevel === '高' ? 0.06 : 0) +
     ((weather.windKph ?? 0) >= 24 ? 0.05 : 0)
-  const homeGoalDiffDelta = clamp(round(formEdge * 0.012 * formReliability + injuryEdge * 0.006 + travelEdge * 0.08 + divinationEdge * 0.03, 2), -0.34, 0.34)
+  const homeGoalDiffDelta = clamp(round(formEdge * 0.012 * formReliability + injuryEdge * 0.006 + travelEdge * 0.08 + divinationEdge * 0.04, 2), -0.34, 0.34)
   const totalGoalsDelta = clamp(
     round(
       ((homeContext.goalsForAvg ?? 1.2) + (awayContext.goalsForAvg ?? 1.2) - 2.6) * 0.09 - weatherTempoDrag,
@@ -2518,27 +2574,119 @@ function positiveModulo(value, mod) {
   return ((value % mod) + mod) % mod
 }
 
-function elementHarmony(dayElement, teamElement) {
-  if (!dayElement || !teamElement || teamElement === '中') return 0
-  if (dayElement === teamElement) return 2
-  const generates = new Map([
+function chinaDateParts(iso) {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: TIMEZONE,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    hour12: false,
+  }).formatToParts(new Date(iso))
+
+  return {
+    year: Number(parts.find((part) => part.type === 'year')?.value ?? 0),
+    month: Number(parts.find((part) => part.type === 'month')?.value ?? 0),
+    day: Number(parts.find((part) => part.type === 'day')?.value ?? 0),
+    hour: Number(parts.find((part) => part.type === 'hour')?.value ?? 0),
+  }
+}
+
+function hourBranchContext(hour) {
+  const branches = [
+    { branch: '子', element: '水' },
+    { branch: '丑', element: '土' },
+    { branch: '丑', element: '土' },
+    { branch: '寅', element: '木' },
+    { branch: '寅', element: '木' },
+    { branch: '卯', element: '木' },
+    { branch: '卯', element: '木' },
+    { branch: '辰', element: '土' },
+    { branch: '辰', element: '土' },
+    { branch: '巳', element: '火' },
+    { branch: '巳', element: '火' },
+    { branch: '午', element: '火' },
+    { branch: '午', element: '火' },
+    { branch: '未', element: '土' },
+    { branch: '未', element: '土' },
+    { branch: '申', element: '金' },
+    { branch: '申', element: '金' },
+    { branch: '酉', element: '金' },
+    { branch: '酉', element: '金' },
+    { branch: '戌', element: '土' },
+    { branch: '戌', element: '土' },
+    { branch: '亥', element: '水' },
+    { branch: '亥', element: '水' },
+    { branch: '子', element: '水' },
+  ]
+  return branches[clamp(Math.trunc(hour), 0, 23)] ?? { branch: '中', element: '土' }
+}
+
+function weatherElementContext(weather) {
+  const precipitation = weather?.precipitationProbability ?? 0
+  const humidity = weather?.humidity ?? 0
+  const temperature = weather?.temperatureC ?? 22
+  const wind = weather?.windKph ?? 0
+
+  if (precipitation >= 45 || humidity >= 82) return '水'
+  if (temperature >= 30) return '火'
+  if (wind >= 24) return '木'
+  if (humidity <= 38 && precipitation <= 8) return '金'
+  return '土'
+}
+
+function weightedElementHarmony(sourceElement, targetElement, weight) {
+  return elementHarmony(sourceElement, targetElement) * weight
+}
+
+function elementDuelEdge(homeElement, awayElement) {
+  if (!homeElement || !awayElement || homeElement === '中' || awayElement === '中' || homeElement === awayElement) return 0
+  if (generatingElement(homeElement) === awayElement) return -0.25
+  if (generatingElement(awayElement) === homeElement) return 0.25
+  if (controllingElement(homeElement) === awayElement) return 0.55
+  if (controllingElement(awayElement) === homeElement) return -0.55
+  return 0
+}
+
+function elementRelationNote(homeElement, awayElement, homeName, awayName) {
+  if (!homeElement || !awayElement || homeElement === '中' || awayElement === '中') {
+    return '双方地域五行资料不完整，只保留日时与卦象校验。'
+  }
+  if (homeElement === awayElement) return `${homeName} 与 ${awayName} 地域五行同取 ${homeElement}，取象不分高下。`
+  if (generatingElement(homeElement) === awayElement) return `${homeName} ${homeElement} 生 ${awayName} ${awayElement}，取象上主队略有“泄气”之象。`
+  if (generatingElement(awayElement) === homeElement) return `${awayName} ${awayElement} 生 ${homeName} ${homeElement}，取象上主队略受生扶。`
+  if (controllingElement(homeElement) === awayElement) return `${homeName} ${homeElement} 克 ${awayName} ${awayElement}，取象上主队略占克制。`
+  if (controllingElement(awayElement) === homeElement) return `${awayName} ${awayElement} 克 ${homeName} ${homeElement}，取象上客队略占克制。`
+  return '双方五行关系中性，主要看日时和卦象。'
+}
+
+function generatingElement(element) {
+  return new Map([
     ['木', '火'],
     ['火', '土'],
     ['土', '金'],
     ['金', '水'],
     ['水', '木'],
-  ])
-  const controls = new Map([
+  ]).get(element)
+}
+
+function controllingElement(element) {
+  return new Map([
     ['木', '土'],
     ['土', '水'],
     ['水', '火'],
     ['火', '金'],
     ['金', '木'],
-  ])
-  if (generates.get(dayElement) === teamElement) return 1
-  if (generates.get(teamElement) === dayElement) return 0.5
-  if (controls.get(dayElement) === teamElement) return -1.5
-  if (controls.get(teamElement) === dayElement) return -0.5
+  ]).get(element)
+}
+
+function elementHarmony(dayElement, teamElement) {
+  if (!dayElement || !teamElement || teamElement === '中') return 0
+  if (dayElement === teamElement) return 2
+  if (generatingElement(dayElement) === teamElement) return 1
+  if (generatingElement(teamElement) === dayElement) return 0.5
+  if (controllingElement(dayElement) === teamElement) return -1.5
+  if (controllingElement(teamElement) === dayElement) return -0.5
   return 0
 }
 

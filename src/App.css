@@ -903,6 +903,16 @@
   gap: 6px;
 }
 
+.divination-breakdown {
+  display: grid;
+  gap: 5px;
+  margin: 10px 0 0;
+  padding-left: 18px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
 .context-note {
   padding: 10px 12px;
   border-left: 2px solid rgba(20, 133, 101, 0.32);
