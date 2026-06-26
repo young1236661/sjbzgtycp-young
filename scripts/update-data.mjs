@@ -13,6 +13,9 @@ const TEAM_SCHEDULE_URL = 'https://site.web.api.espn.com/apis/site/v2/sports/soc
 const TEAM_INJURY_URL = 'https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams'
 const GEOCODE_URL = 'https://geocoding-api.open-meteo.com/v1/search'
 const WEATHER_URL = 'https://api.open-meteo.com/v1/forecast'
+const NEWS_RISK_PATTERN =
+  /injur|伤|fit|doubt|lineup|squad|starter|starting|rotation|rested|rest|suspend|suspension|red card|yellow|yellows|booking|booked|discipline|停赛|红牌|黄牌|轮换|首发|阵容/i
+const DISCIPLINE_RISK_PATTERN = /red card|yellow|yellows|booking|booked|discipline|suspend|suspension|停赛|红牌|黄牌/i
 
 const contextStats = {
   teamSchedulesTried: 0,
@@ -24,6 +27,16 @@ const contextStats = {
 }
 
 const indoorStadiums = new Set(['AT&T Stadium', 'Mercedes-Benz Stadium', 'SoFi Stadium', 'BC Place', 'State Farm Stadium'])
+
+const teamNewsAliasMap = new Map([
+  ['United States', ['united states', 'usa', 'u.s.', 'usmnt', '美国']],
+  ['Türkiye', ['türkiye', 'turkiye', 'turkey', '土耳其']],
+  ['Turkey', ['türkiye', 'turkiye', 'turkey', '土耳其']],
+  ['Ivory Coast', ['ivory coast', 'cote d’ivoire', "cote d'ivoire", 'côte d’ivoire', 'côte d\'ivoire', '科特迪瓦']],
+  ['Curaçao', ['curaçao', 'curacao', '库拉索']],
+  ['Curacao', ['curaçao', 'curacao', '库拉索']],
+  ['Netherlands', ['netherlands', 'dutch', '荷兰']],
+])
 
 const countryProfiles = new Map([
   ['Argentina', { zhName: '阿根廷', lat: -34.6, lon: -58.38, region: '南美南部', climate: '温带/亚热带', element: '水' }],
@@ -526,19 +539,21 @@ function formScoreFromLetters(form) {
 async function fetchTeamInjuryContext(team, newsItems) {
   contextStats.injuriesTried += 1
   const url = `${TEAM_INJURY_URL}/${encodeURIComponent(team.id)}/injuries`
+  const aliases = teamNewsAliases(team)
   const relatedNews = newsItems
     .filter((item) => {
       const text = `${item.title} ${item.summary}`.toLowerCase()
-      return text.includes(team.name.toLowerCase()) || text.includes(team.zhName.toLowerCase())
+      return aliases.some((alias) => alias && text.includes(alias))
     })
     .slice(0, 2)
-  const newsRisk = relatedNews.some((item) => /injur|伤|fit|doubt|lineup|suspend|red card|停赛|红牌/i.test(`${item.title} ${item.summary}`))
+  const newsRisk = relatedNews.some((item) => hasNewsRisk(`${item.title} ${item.summary}`))
+  const disciplineRisk = relatedNews.some((item) => DISCIPLINE_RISK_PATTERN.test(`${item.title} ${item.summary}`))
 
   try {
     const data = await fetchJson(url)
     contextStats.injuriesOk += 1
     const items = extractInjuryItems(data)
-    const riskScore = clamp(items.length * 18 + (newsRisk ? 16 : 0), 0, 78)
+    const riskScore = clamp(items.length * 18 + (newsRisk ? 16 : 0) + (disciplineRisk ? 10 : 0), 0, 78)
 
     return {
       status: items.length > 0 ? `${items.length} 条伤病/出战信息` : 'ESPN 未列出明确伤病',
@@ -549,7 +564,9 @@ async function fetchTeamInjuryContext(team, newsItems) {
         items.length > 0
           ? items.slice(0, 2).map((item) => `${item.player} ${item.status}`).join('；')
           : newsRisk
-            ? '新闻出现阵容风险词，需等首发确认。'
+            ? disciplineRisk
+              ? '新闻出现黄牌/纪律或轮换风险词，需等首发确认。'
+              : '新闻出现阵容风险词，需等首发确认。'
             : '公开伤病源未给出明确缺阵，仍需赛前首发核验。',
       sourceUrl: url,
     }
@@ -563,6 +580,35 @@ async function fetchTeamInjuryContext(team, newsItems) {
       sourceUrl: url,
     }
   }
+}
+
+function teamNewsAliases(team) {
+  const base = [
+    team.name,
+    team.zhName,
+    team.abbreviation,
+    ...(teamNewsAliasMap.get(team.name) ?? []),
+    ...(teamNewsAliasMap.get(team.zhName) ?? []),
+  ]
+
+  return [...new Set(base.filter(Boolean).map((item) => String(item).toLowerCase()))]
+}
+
+function hasNewsRisk(text) {
+  return NEWS_RISK_PATTERN.test(String(text ?? ''))
+}
+
+function hasMatchNewsRisk(newsItems, homeTeam, awayTeam, limit = 8) {
+  const aliases = [...teamNewsAliases(homeTeam), ...teamNewsAliases(awayTeam)]
+  return newsItems.slice(0, limit).some((item) => {
+    const text = `${item.title} ${item.summary}`.toLowerCase()
+    return hasNewsRisk(text) && aliases.some((alias) => alias && text.includes(alias))
+  })
+}
+
+function contextNewsRisk(context) {
+  if (!context) return false
+  return Math.max(context.home?.injuries?.riskScore ?? 0, context.away?.injuries?.riskScore ?? 0) > 20
 }
 
 function extractInjuryItems(data) {
@@ -912,6 +958,7 @@ function buildScorelineAnalysis(market, homeTeam, awayTeam, judgement, newsItems
     1.55,
     4.65,
   )
+  const drawCompression = drawCompressionSignal(homeProbability, awayProbability, drawProbability, totalExpectedGoals, market)
   const rawGoalDiff =
     calibrateGoalDifference(
       estimateGoalDifference(homeProbability, awayProbability, drawProbability, market),
@@ -925,12 +972,13 @@ function buildScorelineAnalysis(market, homeTeam, awayTeam, judgement, newsItems
     awayProbability,
     drawProbability,
     totalExpectedGoals,
-    context
+    context,
+    market
   )
   const goalShareAdjustment = round(goalDiff - rawGoalDiff, 2)
   const homeExpectedGoals = clamp(round((totalExpectedGoals + goalDiff) / 2, 2), 0.18, 4.8)
   const awayExpectedGoals = clamp(round(totalExpectedGoals - homeExpectedGoals, 2), 0.18, 4.8)
-  const newsRisk = newsItems.slice(0, 5).some((item) => /伤|红牌|fit|injur|red card|lineup/i.test(item.title + item.summary))
+  const newsRisk = hasMatchNewsRisk(newsItems, homeTeam, awayTeam) || contextNewsRisk(context)
   const uncertainty = uncertaintyMultiplier(judgement.risk, newsRisk)
 
   const rawScores = []
@@ -1024,7 +1072,7 @@ function buildScorelineAnalysis(market, homeTeam, awayTeam, judgement, newsItems
     }))
 
   return {
-    model: '胜平负去水概率 + 大小球盘口 + 进攻尾部/弱势主队一球校准 Poisson 比分分布',
+    model: '胜平负去水概率 + 大小球盘口 + 平局压缩/抗热门校准 + Poisson 比分分布',
     homeExpectedGoals,
     awayExpectedGoals,
     totalExpectedGoals,
@@ -1046,6 +1094,14 @@ function buildScorelineAnalysis(market, homeTeam, awayTeam, judgement, newsItems
       ...(spreadSignal.favoriteCoverProbability !== null && spreadSignal.favoriteCoverProbability < 0.46
         ? ['复盘校准：让球盘口不支持热门穿盘，比分排序优先保留一球小胜路径。']
         : []),
+      ...(spreadSignal.favoriteCoverProbability !== null && spreadSignal.favoriteCoverProbability < 0.44
+        ? ['复盘校准：热门让球穿盘信号过弱，降低三球以上大胜，优先核验两球或一球胜。']
+        : []),
+      ...(drawCompression >= 3
+        ? ['复盘校准：平局赔率热且总进球偏低，0-0 / 1-1 不再只是防守票，而是进入主判断层。']
+        : drawCompression >= 1
+          ? ['复盘校准：平局噪音偏高，主胜/客胜比分需要用平局比分对冲。']
+          : []),
       ...(stalemateSignal >= 3
         ? ['复盘校准：高湿/降水环境下增加 0-0、1-0 等闷局防守权重。']
         : []),
@@ -1129,10 +1185,12 @@ function buildProfessionalBrief(market, homeTeam, awayTeam, judgement, scoreline
   }
 
   const resultProbabilities = scoreline.resultProbabilities
-  const favorite = [...resultProbabilities].sort((left, right) => right.probability - left.probability)[0]
-  const favoriteFairOdds = favorite?.probability ? 1 / favorite.probability : null
-  const favoriteSuggestedMinOdds = favoriteFairOdds ? round(favoriteFairOdds * (1.04 + judgement.risk / 900), 2) : null
+  const marketLeader = [...resultProbabilities].sort((left, right) => right.probability - left.probability)[0]
   const bestScore = scoreline.bestPick
+  const resultSide = bestScore.result === '主胜' ? 'home' : bestScore.result === '客胜' ? 'away' : 'draw'
+  const resultDirection = resultProbabilities.find((item) => item.side === resultSide) ?? marketLeader
+  const directionFairOdds = resultDirection?.probability ? 1 / resultDirection.probability : null
+  const directionSuggestedMinOdds = directionFairOdds ? round(directionFairOdds * (1.04 + judgement.risk / 900), 2) : null
   const scoreConcentration = bestScore.probability * 100
   const overheatPenalty = judgement.tier === '避免追高' ? 8 : 0
   const contextConfidence = context?.adjustment?.confidenceDelta ?? 0
@@ -1144,9 +1202,9 @@ function buildProfessionalBrief(market, homeTeam, awayTeam, judgement, scoreline
   )
   const grade = professionalGrade(rankScore, judgement)
   const totalBand = totalGoalsBand(scoreline.totalExpectedGoals)
-  const winnerSide = favorite?.side === 'home' ? '主胜' : favorite?.side === 'away' ? '客胜' : '平局'
-  const favoriteName = favorite?.label ?? '市场主方向'
-  const newsRisk = newsItems.slice(0, 5).some((item) => /伤|红牌|fit|injur|red card|lineup/i.test(item.title + item.summary))
+  const winnerSide = resultDirection?.side === 'home' ? '主胜' : resultDirection?.side === 'away' ? '客胜' : '平局'
+  const favoriteName = resultDirection?.label ?? '市场主方向'
+  const newsRisk = hasMatchNewsRisk(newsItems, homeTeam, awayTeam) || contextNewsRisk(context)
 
   const scorePlay = {
     playType: '比分',
@@ -1162,18 +1220,20 @@ function buildProfessionalBrief(market, homeTeam, awayTeam, judgement, scoreline
 
   const resultPlay = {
     playType: '胜平负',
-    selection: `${favoriteName} ${winnerSide}`,
+    selection: winnerSide === '平局' ? '平局' : `${favoriteName} ${winnerSide}`,
     priority: judgement.tier === '避免追高' ? '防守' : '备选',
-    confidence: clamp(Math.round((favorite?.probability ?? 0.33) * 100), 35, 88),
+    confidence: clamp(Math.round((resultDirection?.probability ?? 0.33) * 100), 35, 88),
     budgetShare: judgement.tier === '避免追高' ? '仅核验，不主动追' : '单场预算 8%-15%',
-    minOdds: favoriteSuggestedMinOdds ? `≥ ${favoriteSuggestedMinOdds.toFixed(2)}` : '等待官方赔率',
-    expectedValueNote: favoriteSuggestedMinOdds
-      ? `去水概率 ${formatPct(favorite.probability)}，低于建议赔率时性价比不足。`
+    minOdds: directionSuggestedMinOdds ? `≥ ${directionSuggestedMinOdds.toFixed(2)}` : '等待官方赔率',
+    expectedValueNote: directionSuggestedMinOdds
+      ? `去水概率 ${formatPct(resultDirection.probability)}，低于建议赔率时性价比不足。`
       : '缺少可计算赔率门槛。',
     reason:
-      judgement.tier === '避免追高'
-        ? `${favoriteName} 胜面很高，但胜平负通常容易被压低，重点看官方赔率是否还有补偿。`
-        : `${favoriteName} 是市场主方向，可作为比分玩法之外的低方差核验项。`,
+      winnerSide === '平局'
+        ? '比分主方案已经转向平局，胜平负也应以平局核验，不再硬跟市场热门。'
+        : judgement.tier === '避免追高'
+          ? `${favoriteName} 胜面很高，但胜平负通常容易被压低，重点看官方赔率是否还有补偿。`
+          : `${favoriteName} 是当前比分推导方向，可作为比分玩法之外的低方差核验项。`,
     noBetIf: '官方胜平负赔率明显低于门槛，或临场赔率短时间大幅下压。',
   }
 
@@ -1193,7 +1253,7 @@ function buildProfessionalBrief(market, homeTeam, awayTeam, judgement, scoreline
   const plays = [scorePlay, resultPlay, totalPlay, hedgePlay].filter(Boolean)
   const expertAnswer = buildExpertAnswer(grade, scorePlay, resultPlay, totalPlay, hedgePlay, judgement, scoreline)
   const scenarios = buildScenarios(scoreline, favoriteName, winnerSide, totalBand)
-  const riskControls = buildRiskControls(market, judgement, scoreline, favorite, context)
+  const riskControls = buildRiskControls(market, judgement, scoreline, marketLeader, context)
   const deepThinking = buildDeepThinkingPlan({
     grade,
     expertAnswer,
@@ -1219,10 +1279,10 @@ function buildProfessionalBrief(market, homeTeam, awayTeam, judgement, scoreline
     scenarios,
     signals: [
       {
-        label: '市场主方向',
-        score: Math.round((favorite?.probability ?? 0) * 100),
-        tone: (favorite?.probability ?? 0) > 0.76 ? 'watch' : 'good',
-        evidence: `${favoriteName} 去水后约 ${formatPct(favorite?.probability ?? 0)}，当前判断为 ${winnerSide} 主方向。`,
+        label: '当前方向',
+        score: Math.round((resultDirection?.probability ?? 0) * 100),
+        tone: (resultDirection?.probability ?? 0) > 0.76 ? 'watch' : 'good',
+        evidence: `${favoriteName} 去水后约 ${formatPct(resultDirection?.probability ?? 0)}，当前判断为 ${winnerSide} 主方向。`,
       },
       {
         label: '比分集中度',
@@ -1294,7 +1354,7 @@ function buildDeepThinkingPlan({ grade, expertAnswer, plays, scenarios, riskCont
   const hedgePlay = plays.find((play) => play.priority === '防守')
   const hotRisk = riskControls.find((risk) => risk.label === '赔率压缩')
   const scoreRisk = riskControls.find((risk) => risk.label === '比分方差')
-  const newsRisk = newsItems.slice(0, 6).some((item) => /伤|红牌|injur|red card|lineup|suspend|doubt/i.test(item.title + item.summary))
+  const newsRisk = contextNewsRisk(context)
   const confidenceScore = clamp(
     Math.round(
       judgement.confidence * 0.46 +
@@ -1781,6 +1841,7 @@ function calibrateHomeUnderdogGoalShare(
   drawProbability,
   totalExpectedGoals,
   context,
+  market = null,
 ) {
   const favoriteProbability = Math.max(homeProbability, awayProbability)
   const homeIsUnderdog = homeProbability < awayProbability
@@ -1796,18 +1857,24 @@ function calibrateHomeUnderdogGoalShare(
   }
 
   const homeGoalsFor = context.home?.goalsForAvg ?? 0
+  const homeGoalsAgainst = context.home?.goalsAgainstAvg ?? 1.2
   const homeDraws = countFormResult(context.home?.formString, 'D')
   const awayGoalsAgainst = context.away?.goalsAgainstAvg ?? 0
+  const spreadSignal = market ? favoriteSpreadSignal(market, 'away') : null
   let pull = 0
 
   if (homeGoalsFor >= 0.95) pull += 0.14
   if (homeGoalsFor >= 1.25) pull += 0.12
+  if (homeGoalsAgainst <= 0.55) pull += 0.1
+  if (homeGoalsAgainst <= 0.2) pull += 0.05
   if (drawProbability >= 0.2) pull += 0.06
   if (homeDraws >= 2) pull += 0.04
   if (awayGoalsAgainst >= 0.35) pull += 0.04
+  if (spreadSignal?.favoriteCoverProbability !== null && spreadSignal?.favoriteCoverProbability < 0.44) pull += 0.12
+  if (context.home?.formScore >= (context.away?.formScore ?? 50) - 10) pull += 0.06
   if ((context.home?.sampleSize ?? 0) < 3 || (context.away?.sampleSize ?? 0) < 3) pull *= 0.65
 
-  return clamp(round(goalDiff + clamp(round(pull, 2), 0, 0.42), 2), -2.85, 2.85)
+  return clamp(round(goalDiff + clamp(round(pull, 2), 0, 0.58), 2), -2.85, 2.85)
 }
 
 function countFormResult(formString, result) {
@@ -1845,6 +1912,76 @@ function homeUnderdogConsolationSignal(homeGoals, awayGoals, homeWin, awayWin, d
   return 0
 }
 
+function drawCompressionSignal(homeProbability, awayProbability, drawProbability, totalExpectedGoals, market) {
+  const favoriteSide = homeProbability >= awayProbability ? 'home' : 'away'
+  const spreadSignal = market ? favoriteSpreadSignal(market, favoriteSide) : { favoriteCoverProbability: null }
+  let signal = 0
+
+  if (drawProbability >= 0.27) signal += 1
+  if (drawProbability >= 0.34) signal += 2
+  if (drawProbability >= Math.max(homeProbability, awayProbability) + 0.04) signal += 1
+  if (totalExpectedGoals <= 2.15) signal += 1
+  if (totalExpectedGoals <= 2.0) signal += 1
+  if (Math.abs(homeProbability - awayProbability) <= 0.18) signal += 1
+  if (spreadSignal.favoriteCoverProbability !== null && spreadSignal.favoriteCoverProbability < 0.46) signal += 1
+
+  return signal
+}
+
+function resilientHomeUnderdogSignal(
+  homeGoals,
+  awayGoals,
+  homeWin,
+  awayWin,
+  draw,
+  totalExpectedGoals,
+  context,
+  market,
+) {
+  if (!context || homeWin >= awayWin || awayWin < 0.5 || awayWin > 0.68 || totalExpectedGoals < 2.35) return 0
+
+  const spreadSignal = market ? favoriteSpreadSignal(market, 'away') : { favoriteCoverProbability: null }
+  const homeGoalsFor = context.home?.goalsForAvg ?? 0
+  const homeGoalsAgainst = context.home?.goalsAgainstAvg ?? 1.2
+  const awayGoalsAgainst = context.away?.goalsAgainstAvg ?? 1.2
+  let signal = 0
+
+  if (spreadSignal.favoriteCoverProbability !== null && spreadSignal.favoriteCoverProbability < 0.46) signal += 1
+  if (spreadSignal.favoriteCoverProbability !== null && spreadSignal.favoriteCoverProbability < 0.42) signal += 1
+  if (homeGoalsFor >= 1.1) signal += 1
+  if (homeGoalsAgainst <= 0.55) signal += 1
+  if (awayGoalsAgainst >= 0.45) signal += 1
+  if (draw >= 0.18) signal += 1
+  if ((context.home?.formScore ?? 50) >= (context.away?.formScore ?? 50) - 10) signal += 1
+  if ((context.away?.injuries?.riskScore ?? 0) > (context.home?.injuries?.riskScore ?? 0) + 10) signal += 1
+
+  if (homeGoals > awayGoals) return signal
+  if (homeGoals === awayGoals) return Math.max(0, signal - 1)
+  if (awayGoals - homeGoals === 1) return -Math.min(3, signal)
+  if (homeGoals === 0 && awayGoals >= 2) return -signal
+  return 0
+}
+
+function strongUnderdogConsolationSignal(homeGoals, awayGoals, homeWin, awayWin, totalExpectedGoals, context) {
+  const favoriteProbability = Math.max(homeWin, awayWin)
+  const homeIsUnderdog = homeWin < awayWin
+
+  if (!context || !homeIsUnderdog || favoriteProbability < 0.72 || totalExpectedGoals < 2.7) return 0
+
+  const underdogGoalsFor = context.home?.goalsForAvg ?? 0
+  const favoriteGoalsAgainst = context.away?.goalsAgainstAvg ?? 1.2
+  const weather = context.weather ?? {}
+  let signal = 0
+
+  if (underdogGoalsFor >= 1.5) signal += 1
+  if (favoriteGoalsAgainst >= 0.45) signal += 1
+  if (weather.riskLevel === '高' || (weather.humidity ?? 0) >= 80 || (weather.precipitationProbability ?? 0) >= 30) signal += 1
+
+  if (homeGoals === 1 && awayGoals > homeGoals) return signal
+  if (homeGoals === 0 && awayGoals >= 2) return -signal
+  return 0
+}
+
 function scoreTailMultiplier(homeGoals, awayGoals, totalExpectedGoals, resultProbabilities, judgement, context = null, market = null) {
   const result = scoreResult(homeGoals, awayGoals)
   const homeWin = resultProbabilities.find((item) => item.side === 'home')?.probability ?? 0
@@ -1855,6 +1992,7 @@ function scoreTailMultiplier(homeGoals, awayGoals, totalExpectedGoals, resultPro
   const favoriteProbability = Math.max(homeWin, awayWin)
   const spreadSignal = market ? favoriteSpreadSignal(market, favoriteSide) : { favoriteCoverProbability: null }
   const stalemateSignal = favoriteStalemateSignal(homeWin, awayWin, draw, context)
+  const drawCompression = drawCompressionSignal(homeWin, awayWin, draw, totalExpectedGoals, market)
   const favoriteGoals = favoriteSide === 'home' ? homeGoals : awayGoals
   const underdogGoals = favoriteSide === 'home' ? awayGoals : homeGoals
   const favoriteMargin = favoriteGoals - underdogGoals
@@ -1879,6 +2017,17 @@ function scoreTailMultiplier(homeGoals, awayGoals, totalExpectedGoals, resultPro
     if (favoriteMargin >= 2 && favoriteProbability < 0.72) multiplier -= 0.14
     if (totalGoals >= 3 && favoriteProbability < 0.72) multiplier -= 0.08
   }
+  if (spreadSignal.favoriteCoverProbability !== null && spreadSignal.favoriteCoverProbability < 0.44 && result === favoriteResult) {
+    if (favoriteMargin === 2) multiplier += 0.1
+    if (favoriteMargin >= 3) multiplier -= 0.16
+  }
+  if (drawCompression >= 3) {
+    if (result === '平局' && totalGoals === 0) multiplier += Math.min(0.42, drawCompression * 0.07)
+    if (result === '平局' && totalGoals === 2) multiplier += Math.min(0.22, drawCompression * 0.04)
+    if (result !== '平局' && totalGoals <= 2 && favoriteProbability < 0.48) multiplier -= Math.min(0.2, drawCompression * 0.035)
+  } else if (drawCompression >= 1 && result === '平局' && totalGoals === 2) {
+    multiplier += 0.08
+  }
   if (stalemateSignal >= 3) {
     if (result === '平局' && totalGoals === 0) multiplier += Math.min(0.28, stalemateSignal * 0.05)
     if (totalGoals <= 1) multiplier += Math.min(0.16, stalemateSignal * 0.03)
@@ -1896,6 +2045,30 @@ function scoreTailMultiplier(homeGoals, awayGoals, totalExpectedGoals, resultPro
   )
   if (consolationSignal > 0) multiplier += Math.min(0.18, consolationSignal * 0.05)
   if (consolationSignal < 0) multiplier -= Math.min(0.12, Math.abs(consolationSignal) * 0.03)
+
+  const resilientSignal = resilientHomeUnderdogSignal(
+    homeGoals,
+    awayGoals,
+    homeWin,
+    awayWin,
+    draw,
+    totalExpectedGoals,
+    context,
+    market,
+  )
+  if (resilientSignal > 0) multiplier += Math.min(0.28, resilientSignal * 0.055)
+  if (resilientSignal < 0) multiplier -= Math.min(0.2, Math.abs(resilientSignal) * 0.04)
+
+  const strongConsolationSignal = strongUnderdogConsolationSignal(
+    homeGoals,
+    awayGoals,
+    homeWin,
+    awayWin,
+    totalExpectedGoals,
+    context,
+  )
+  if (strongConsolationSignal > 0) multiplier += Math.min(0.2, strongConsolationSignal * 0.06)
+  if (strongConsolationSignal < 0) multiplier -= Math.min(0.14, Math.abs(strongConsolationSignal) * 0.04)
 
   return clamp(round(multiplier, 2), 0.72, 1.55)
 }
@@ -1923,6 +2096,7 @@ function scoreCandidateRank(item, resultStrength, context = null, totalExpectedG
   const favoriteProbability = Math.max(homeWinStrength, awayWinStrength)
   const spreadSignal = market ? favoriteSpreadSignal(market, favoriteSide) : { favoriteCoverProbability: null }
   const stalemateSignal = favoriteStalemateSignal(homeWinStrength, awayWinStrength, drawStrength, context)
+  const drawCompression = drawCompressionSignal(homeWinStrength, awayWinStrength, drawStrength, totalExpectedGoals ?? totalGoals, market)
   const consolationSignal = homeUnderdogConsolationSignal(
     homeGoals,
     awayGoals,
@@ -1958,11 +2132,66 @@ function scoreCandidateRank(item, resultStrength, context = null, totalExpectedG
           ? 1 + Math.min(0.12, stalemateSignal * 0.025)
           : item.result === favoriteResult && totalGoals >= 3
             ? 1 - Math.min(0.12, stalemateSignal * 0.02)
-            : 1
+        : 1
       : 1
+  const drawCompressionLift =
+    drawCompression >= 3
+      ? item.result === scoreResult(0, 0) && totalGoals === 0
+        ? 1 + Math.min(0.38, drawCompression * 0.06)
+        : item.result === scoreResult(1, 1) && totalGoals === 2
+          ? 1 + Math.min(0.22, drawCompression * 0.04)
+          : item.result !== scoreResult(0, 0) && totalGoals <= 2 && favoriteProbability < 0.48
+            ? 1 - Math.min(0.16, drawCompression * 0.03)
+            : 1
+      : drawCompression >= 1 && item.result === scoreResult(1, 1) && totalGoals === 2
+        ? 1.08
+        : 1
+  const resilientSignal = resilientHomeUnderdogSignal(
+    homeGoals,
+    awayGoals,
+    homeWinStrength,
+    awayWinStrength,
+    drawStrength,
+    totalExpectedGoals ?? totalGoals,
+    context,
+    market,
+  )
+  const resilientLift =
+    resilientSignal > 0
+      ? 1 + Math.min(0.22, resilientSignal * 0.045)
+      : resilientSignal < 0
+        ? 1 - Math.min(0.16, Math.abs(resilientSignal) * 0.035)
+        : 1
+  const strongConsolationSignal = strongUnderdogConsolationSignal(
+    homeGoals,
+    awayGoals,
+    homeWinStrength,
+    awayWinStrength,
+    totalExpectedGoals ?? totalGoals,
+    context,
+  )
+  const strongConsolationLift =
+    strongConsolationSignal > 0
+      ? 1 + Math.min(0.18, strongConsolationSignal * 0.05)
+      : strongConsolationSignal < 0
+        ? 1 - Math.min(0.12, Math.abs(strongConsolationSignal) * 0.035)
+        : 1
   const oddsPenalty = item.fairOdds > 85 ? 0.82 : item.fairOdds > 55 ? 0.9 : item.fairOdds > 34 ? 0.97 : 1
 
-  return item.probability * resultWeight * highScoreLift * marginLift * tailLift * consolationLift * spreadLift * stalemateLift * oddsPenalty
+  return (
+    item.probability *
+    resultWeight *
+    highScoreLift *
+    marginLift *
+    tailLift *
+    consolationLift *
+    spreadLift *
+    stalemateLift *
+    drawCompressionLift *
+    resilientLift *
+    strongConsolationLift *
+    oddsPenalty
+  )
 }
 
 function scoreReason(
@@ -1990,6 +2219,7 @@ function scoreReason(
   const favoriteMargin = favoriteGoals - underdogGoals
   const spreadSignal = market ? favoriteSpreadSignal(market, favoriteSide) : { favoriteCoverProbability: null }
   const stalemateSignal = favoriteStalemateSignal(homeWin, awayWin, draw, context)
+  const drawCompression = drawCompressionSignal(homeWin, awayWin, draw, totalExpectedGoals, market)
   const consolationSignal = homeUnderdogConsolationSignal(
     homeGoals,
     awayGoals,
@@ -1999,8 +2229,36 @@ function scoreReason(
     totalExpectedGoals,
     context,
   )
+  const resilientSignal = resilientHomeUnderdogSignal(
+    homeGoals,
+    awayGoals,
+    homeWin,
+    awayWin,
+    draw,
+    totalExpectedGoals,
+    context,
+    market,
+  )
+  const strongConsolationSignal = strongUnderdogConsolationSignal(
+    homeGoals,
+    awayGoals,
+    homeWin,
+    awayWin,
+    totalExpectedGoals,
+    context,
+  )
   const calibrationText =
-    stalemateSignal >= 3 && totalGoals <= 1
+    drawCompression >= 3 && result === '平局'
+      ? '复盘校准把平局热度和小总进球纳入主判断，这类比分不能只当防守票。'
+      : resilientSignal > 0
+        ? '复盘校准上调主队抗压/爆冷权重，避免中等客队热门被过度放大。'
+        : resilientSignal < 0
+          ? '复盘校准下调客队中热门的一球路径，因为主队近况或让球信号支持不败。'
+          : strongConsolationSignal > 0
+            ? '复盘校准上调强热门场景下弱队进一球路径，避免过度迷信零封。'
+            : strongConsolationSignal < 0
+              ? '复盘校准下调强热门零封路径，弱队近期进攻和天气条件提示有进球风险。'
+              : stalemateSignal >= 3 && totalGoals <= 1
       ? '复盘校准加入天气闷局权重，低比分不再被进攻均值完全挤出。'
       : spreadSignal.favoriteCoverProbability !== null &&
           spreadSignal.favoriteCoverProbability < 0.46 &&
@@ -2067,7 +2325,7 @@ function buildJudgement(market, event, newsItems, context = null) {
   const favoriteProbability = favorite?.normalizedProbability ?? 0
   const drawProbability = draw?.normalizedProbability ?? 0
   const lineMove = favorite?.movement ?? 0
-  const newsHeat = newsItems.slice(0, 5).some((item) => /伤|红牌|fit|injur|red card|lineup/i.test(item.title + item.summary)) ? 12 : 5
+  const newsHeat = contextNewsRisk(context) ? 12 : 5
   const priceRisk = favoriteProbability > 0.76 ? 78 : favoriteProbability > 0.64 ? 58 : 46
   const drawRisk = drawProbability > 0.27 ? 66 : 42
   const moveRisk = Math.min(85, Math.abs(lineMove) * 7 + 38)
@@ -2183,7 +2441,7 @@ function dedupeEvents(events) {
 function classifyNewsImpact(text) {
   if (/injur|fit|伤|lineup|squad/i.test(text)) return '阵容'
   if (/odds|projection|scenario|path|qualif|出线/i.test(text)) return '形势'
-  if (/red card|suspension|红牌|停赛/i.test(text)) return '纪律'
+  if (DISCIPLINE_RISK_PATTERN.test(text)) return '纪律'
   if (/daily|action|match|比赛/i.test(text)) return '赛程'
   return '新闻'
 }
