@@ -13,6 +13,7 @@ const TEAM_SCHEDULE_URL = 'https://site.web.api.espn.com/apis/site/v2/sports/soc
 const TEAM_INJURY_URL = 'https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams'
 const GEOCODE_URL = 'https://geocoding-api.open-meteo.com/v1/search'
 const WEATHER_URL = 'https://api.open-meteo.com/v1/forecast'
+const TOURNAMENT_START_DATE = '2026-06-11'
 const NEWS_RISK_PATTERN =
   /injur|伤|fit|doubt|lineup|squad|starter|starting|rotation|rested|rest|suspend|suspension|red card|yellow|yellows|booking|booked|discipline|停赛|红牌|黄牌|轮换|首发|阵容/i
 const DISCIPLINE_RISK_PATTERN = /red card|yellow|yellows|booking|booked|discipline|suspend|suspension|停赛|红牌|黄牌/i
@@ -138,9 +139,13 @@ const targetDateChina = formatDateKey(now, 0, '-')
 const sources = []
 
 async function main() {
-  const scoreboardDates = [-1, 0, 1, 2].map((offset) => formatDateKey(now, offset, ''))
+  const scoreboardDates = uniqueDateKeys([
+    ...dateKeysBetween(TOURNAMENT_START_DATE, formatDateKey(now, 0, '-')),
+    ...[-1, 0, 1, 2].map((offset) => formatDateKey(now, offset, '')),
+  ])
   const scoreboards = await Promise.all(scoreboardDates.map(fetchScoreboard))
   const events = dedupeEvents(scoreboards.flatMap((board) => board.events))
+  const tournamentRecords = buildTournamentRecords(events)
   const newsResult = await fetchNews()
   const oddsApiResult = await fetchOddsApi()
   const sportteryResult = await checkSporttery()
@@ -159,7 +164,7 @@ async function main() {
   const modelReview = buildModelReview(recentCompleted)
   activeModelCalibration = modelReview.calibration
 
-  const matches = await Promise.all(upcomingWindow.map((event) => normalizeMatch(event, newsResult.news)))
+  const matches = await Promise.all(upcomingWindow.map((event) => normalizeMatch(event, newsResult.news, tournamentRecords)))
   sources.push(
     fifaResult,
     ...scoreboards.map((board) => board.source),
@@ -191,6 +196,7 @@ async function main() {
     sources,
     news: newsResult.news,
     modelReview,
+    tournament: buildTournamentSummary(tournamentRecords),
     matches,
     bankroll: {
       title: '负责任购彩预算',
@@ -386,7 +392,7 @@ async function checkFifa() {
   }
 }
 
-async function normalizeMatch(event, newsItems) {
+async function normalizeMatch(event, newsItems, tournamentRecords = new Map()) {
   const competition = event.competitions?.[0] ?? {}
   const competitors = competition.competitors ?? []
   const home = competitors.find((item) => item.homeAway === 'home') ?? competitors[0] ?? {}
@@ -394,7 +400,7 @@ async function normalizeMatch(event, newsItems) {
   const normalizedHome = normalizeTeam(home)
   const normalizedAway = normalizeTeam(away)
   const market = normalizeMarket(competition.odds?.[0], home, away)
-  const context = await buildMatchContext(event, competition, normalizedHome, normalizedAway, home, away, newsItems)
+  const context = await buildMatchContext(event, competition, normalizedHome, normalizedAway, home, away, newsItems, tournamentRecords)
   const judgement = buildJudgement(market, event, newsItems, context)
   const scoreline = buildScorelineAnalysis(market, normalizedHome, normalizedAway, judgement, newsItems, context)
   const professional = buildProfessionalBrief(market, normalizedHome, normalizedAway, judgement, scoreline, newsItems, context)
@@ -427,14 +433,154 @@ async function normalizeMatch(event, newsItems) {
   }
 }
 
+function buildTournamentRecords(events) {
+  const records = new Map()
+
+  for (const event of events) {
+    if (!isCompletedEvent(event)) continue
+
+    const competitors = event.competitions?.[0]?.competitors ?? []
+    const home = competitors.find((item) => item.homeAway === 'home') ?? competitors[0] ?? {}
+    const away = competitors.find((item) => item.homeAway === 'away') ?? competitors[1] ?? {}
+    const homeScore = readScore(home.score)
+    const awayScore = readScore(away.score)
+
+    if (homeScore === null || awayScore === null) continue
+
+    addTournamentTeamResult(records, home, away, homeScore, awayScore, event.date)
+    addTournamentTeamResult(records, away, home, awayScore, homeScore, event.date)
+  }
+
+  for (const record of records.values()) finalizeTournamentRecord(record)
+
+  return records
+}
+
+function addTournamentTeamResult(records, own, opponent, goalsFor, goalsAgainst, date) {
+  const name = teamName(own)
+  const key = normalizeTeamKey(name)
+  const record =
+    records.get(key) ??
+    {
+      name,
+      zhName: teamNames.get(name) ?? name,
+      played: 0,
+      wins: 0,
+      draws: 0,
+      losses: 0,
+      goalsFor: 0,
+      goalsAgainst: 0,
+      goalDiff: 0,
+      cleanSheets: 0,
+      failedToScore: 0,
+      bigWins: 0,
+      heavyLosses: 0,
+      matches: [],
+    }
+  const result = goalsFor > goalsAgainst ? 'W' : goalsFor < goalsAgainst ? 'L' : 'D'
+  const opponentName = teamName(opponent)
+
+  record.played += 1
+  record.wins += result === 'W' ? 1 : 0
+  record.draws += result === 'D' ? 1 : 0
+  record.losses += result === 'L' ? 1 : 0
+  record.goalsFor += goalsFor
+  record.goalsAgainst += goalsAgainst
+  record.goalDiff = record.goalsFor - record.goalsAgainst
+  record.cleanSheets += goalsAgainst === 0 ? 1 : 0
+  record.failedToScore += goalsFor === 0 ? 1 : 0
+  record.bigWins += goalsFor - goalsAgainst >= 3 ? 1 : 0
+  record.heavyLosses += goalsAgainst - goalsFor >= 3 ? 1 : 0
+  record.matches.push({
+    date: formatShortDate(date),
+    opponent: teamNames.get(opponentName) ?? opponentName,
+    result,
+    score: `${goalsFor}-${goalsAgainst}`,
+    goalsFor,
+    goalsAgainst,
+  })
+
+  records.set(key, record)
+}
+
+function finalizeTournamentRecord(record) {
+  record.points = record.wins * 3 + record.draws
+  record.goalsForAvg = record.played ? round(record.goalsFor / record.played, 2) : 0
+  record.goalsAgainstAvg = record.played ? round(record.goalsAgainst / record.played, 2) : 0
+  record.formString = record.matches.map((match) => match.result).join('')
+  record.attackScore = clamp(round(46 + record.goalsForAvg * 13 + record.bigWins * 4 - record.failedToScore * 4, 1), 18, 88)
+  record.defenseScore = clamp(round(66 - record.goalsAgainstAvg * 12 + record.cleanSheets * 5 - record.heavyLosses * 6, 1), 18, 88)
+  record.momentumScore = clamp(round(48 + record.wins * 8 + record.draws * 2 - record.losses * 8 + record.goalDiff * 3, 1), 18, 90)
+  record.strengthScore = clamp(
+    round(record.attackScore * 0.32 + record.defenseScore * 0.3 + record.momentumScore * 0.38, 1),
+    18,
+    90,
+  )
+  record.summary =
+    record.played > 0
+      ? `本届 ${record.played} 场 ${record.wins}胜${record.draws}平${record.losses}负，进失球 ${record.goalsFor}-${record.goalsAgainst}，杯赛强度 ${record.strengthScore}。`
+      : '本届暂无已完赛样本。'
+}
+
+function buildTournamentSummary(records) {
+  const teams = [...records.values()].sort((left, right) => right.strengthScore - left.strengthScore)
+
+  return {
+    startDate: TOURNAMENT_START_DATE,
+    trackedTeams: teams.length,
+    topTeams: teams.slice(0, 8).map((team) => ({
+      name: team.zhName,
+      played: team.played,
+      record: `${team.wins}-${team.draws}-${team.losses}`,
+      goals: `${team.goalsFor}-${team.goalsAgainst}`,
+      strengthScore: team.strengthScore,
+    })),
+  }
+}
+
+function tournamentRecordForTeam(records, team) {
+  return records.get(normalizeTeamKey(team.name)) ?? records.get(normalizeTeamKey(team.zhName)) ?? defaultTournamentRecord(team)
+}
+
+function defaultTournamentRecord(team) {
+  return {
+    name: team.name,
+    zhName: team.zhName,
+    played: 0,
+    wins: 0,
+    draws: 0,
+    losses: 0,
+    goalsFor: 0,
+    goalsAgainst: 0,
+    goalDiff: 0,
+    cleanSheets: 0,
+    failedToScore: 0,
+    bigWins: 0,
+    heavyLosses: 0,
+    points: 0,
+    goalsForAvg: 0,
+    goalsAgainstAvg: 0,
+    formString: '',
+    attackScore: 46,
+    defenseScore: 50,
+    momentumScore: 46,
+    strengthScore: 46,
+    matches: [],
+    summary: '本届暂无已完赛样本。',
+  }
+}
+
+function normalizeTeamKey(value) {
+  return String(value ?? '').trim().toLowerCase()
+}
+
 function completedEventsForReview(events) {
   const lower = now.getTime() - 72 * 60 * 60 * 1000
 
   return events
     .filter((event) => {
       const eventTime = new Date(event.date).getTime()
-      const status = String(event.status?.type?.state ?? event.status?.type?.name ?? event.status?.type?.description ?? '').toLowerCase()
-      return Number.isFinite(eventTime) && eventTime >= lower && eventTime < now.getTime() && /post|final|ft|full/.test(status)
+      return Number.isFinite(eventTime) && eventTime >= lower && eventTime < now.getTime() && isCompletedEvent(event)
     })
     .map((event) => {
       const competitors = event.competitions?.[0]?.competitors ?? []
@@ -497,6 +643,11 @@ function scoreParts(score) {
     .filter((value) => Number.isFinite(value))
 }
 
+function isCompletedEvent(event) {
+  const status = String(event.status?.type?.state ?? event.status?.type?.name ?? event.status?.type?.description ?? event.status?.type?.shortDetail ?? '').toLowerCase()
+  return /post|final|ft|full/.test(status)
+}
+
 function normalizeTeam(competitor) {
   const team = competitor.team ?? {}
   const name = team.displayName ?? team.name ?? 'Unknown'
@@ -511,7 +662,7 @@ function normalizeTeam(competitor) {
   }
 }
 
-async function buildMatchContext(event, competition, homeTeam, awayTeam, homeCompetitor, awayCompetitor, newsItems) {
+async function buildMatchContext(event, competition, homeTeam, awayTeam, homeCompetitor, awayCompetitor, newsItems, tournamentRecords = new Map()) {
   const venueName = competition.venue?.fullName ?? ''
   const venueCity = competition.venue?.address?.city ?? ''
   const [homeRecent, awayRecent, homeInjuries, awayInjuries, weather] = await Promise.all([
@@ -524,11 +675,13 @@ async function buildMatchContext(event, competition, homeTeam, awayTeam, homeCom
 
   const homeContext = {
     ...homeRecent,
+    tournament: tournamentRecordForTeam(tournamentRecords, homeTeam),
     injuries: homeInjuries,
     playerSignals: extractPlayerSignals(homeCompetitor),
   }
   const awayContext = {
     ...awayRecent,
+    tournament: tournamentRecordForTeam(tournamentRecords, awayTeam),
     injuries: awayInjuries,
     playerSignals: extractPlayerSignals(awayCompetitor),
   }
@@ -1024,6 +1177,7 @@ function teamHumanProfile(team, ownContext, opponentContext, weather, newsItems)
   const goalsFor = ownContext.goalsForAvg ?? 1.15
   const goalsAgainst = ownContext.goalsAgainstAvg ?? 1.15
   const opponentGoalsAgainst = opponentContext.goalsAgainstAvg ?? 1.15
+  const tournament = ownContext.tournament ?? defaultTournamentRecord(team)
   const injuryRisk = ownContext.injuries?.riskScore ?? 18
   const aliases = teamNewsAliases(team)
   const newsPressure = newsItems.slice(0, 8).some((item) => {
@@ -1036,9 +1190,23 @@ function teamHumanProfile(team, ownContext, opponentContext, weather, newsItems)
   const unbeatenBonus = Math.max(0, wins + draws - losses) * 2.2
   const attackConfidence = clamp((goalsFor - 1.25) * 10 + (goalsFor - opponentGoalsAgainst) * 5, -12, 16)
   const defensiveTrust = clamp((1.15 - goalsAgainst) * 12, -14, 16)
+  const cupMomentum = clamp((tournament.strengthScore - 50) * 0.32 + tournament.goalDiff * 1.8 + tournament.bigWins * 4 - tournament.heavyLosses * 5, -14, 18)
+  const cupCoachSignal = clamp((tournament.defenseScore - 50) * 0.24 + (tournament.attackScore - 50) * 0.16, -10, 14)
   const weatherStress = weather.riskLevel === '高' ? 5 : weather.riskLevel === '中' ? 2 : 0
   const mentality = clamp(
-    round(50 + wins * 5.2 + draws * 1.5 - losses * 4.8 + recentPulse + unbeatenBonus + attackConfidence * 0.55 - injuryRisk * 0.16 - (newsPressure ? 4 : 0), 1),
+    round(
+      50 +
+        wins * 5.2 +
+        draws * 1.5 -
+        losses * 4.8 +
+        recentPulse +
+        unbeatenBonus +
+        attackConfidence * 0.55 +
+        cupMomentum -
+        injuryRisk * 0.16 -
+        (newsPressure ? 4 : 0),
+      1,
+    ),
     24,
     88,
   )
@@ -1048,7 +1216,8 @@ function teamHumanProfile(team, ownContext, opponentContext, weather, newsItems)
         defensiveTrust * 0.9 +
         clamp(12 - marginVolatility * 4.5, -8, 12) +
         clamp(10 - goalVolatility * 2.8, -8, 10) +
-        clamp((goalsFor - goalsAgainst) * 4, -12, 14) -
+        clamp((goalsFor - goalsAgainst) * 4, -12, 14) +
+        cupCoachSignal -
         injuryRisk * 0.12 -
         weatherStress,
       1,
@@ -1062,7 +1231,7 @@ function teamHumanProfile(team, ownContext, opponentContext, weather, newsItems)
     coach,
     pressure: clamp(round(50 + wins * 4 - losses * 5 + (newsPressure ? 9 : 0) + injuryRisk * 0.18, 1), 20, 88),
     volatility: round(marginVolatility + goalVolatility * 0.45, 2),
-    note: `心态 ${mentality}，教练执行 ${coach}；${wins}胜${draws}平${losses}负，伤病/新闻压力 ${newsPressure ? '偏高' : '常规'}。`,
+    note: `心态 ${mentality}，教练执行 ${coach}；近况 ${wins}胜${draws}平${losses}负，本届 ${tournament.wins}胜${tournament.draws}平${tournament.losses}负，伤病/新闻压力 ${newsPressure ? '偏高' : '常规'}。`,
   }
 }
 
@@ -1095,6 +1264,22 @@ function humanTempoAdjustment(humanFactors) {
   return clamp(round(adjustment, 2), -0.08, 0.16)
 }
 
+function tournamentTempoAdjustment(homeTournament, awayTournament) {
+  if (!homeTournament || !awayTournament) return 0
+  const combinedAttack = (homeTournament.attackScore + awayTournament.attackScore) / 2
+  const combinedDefense = (homeTournament.defenseScore + awayTournament.defenseScore) / 2
+  const combinedGoals = (homeTournament.goalsForAvg + awayTournament.goalsForAvg) / 2
+  let adjustment = 0
+
+  if (combinedAttack >= 68) adjustment += 0.08
+  if (combinedGoals >= 2.2) adjustment += 0.06
+  if (combinedDefense >= 66 && combinedAttack < 62) adjustment -= 0.06
+  if (homeTournament.failedToScore + awayTournament.failedToScore >= 2) adjustment -= 0.04
+  if (homeTournament.bigWins + awayTournament.bigWins >= 2) adjustment += 0.05
+
+  return clamp(round(adjustment, 2), -0.1, 0.16)
+}
+
 function humanVolatilityRisk(humanFactors) {
   if (!humanFactors) return 0
   const volatility = Math.max(humanFactors.home.volatility, humanFactors.away.volatility)
@@ -1108,6 +1293,7 @@ function buildContextAdjustment(homeContext, awayContext, weather, geography, di
   const travelEdge = clamp((geography.distanceEdgeKm ?? 0) / 4500, -0.9, 0.9)
   const divinationEdge = clamp((divination.delta ?? 0) * 0.18, -0.72, 0.72)
   const humanEdge = clamp((humanFactors?.edge ?? 0) / 28, -1, 1)
+  const tournamentEdge = clamp(((homeContext.tournament?.strengthScore ?? 46) - (awayContext.tournament?.strengthScore ?? 46)) / 32, -1, 1)
   const weatherRisk = weather.riskLevel === '高' ? 8 : weather.riskLevel === '中' ? 4 : 0
   const formReliability = Math.min(homeContext.sampleSize, awayContext.sampleSize) >= 3 ? 1 : 0.55
   const weatherTempoDrag =
@@ -1116,13 +1302,22 @@ function buildContextAdjustment(homeContext, awayContext, weather, geography, di
     ((weather.humidity ?? 0) >= 80 && weather.riskLevel === '高' ? 0.06 : 0) +
     ((weather.windKph ?? 0) >= 24 ? 0.05 : 0)
   const homeGoalDiffDelta = clamp(
-    round(formEdge * 0.012 * formReliability + injuryEdge * 0.006 + travelEdge * 0.08 + humanEdge * 0.13 + divinationEdge * 0.04, 2),
+    round(
+      formEdge * 0.012 * formReliability +
+        injuryEdge * 0.006 +
+        travelEdge * 0.08 +
+        tournamentEdge * 0.12 +
+        humanEdge * 0.13 +
+        divinationEdge * 0.04,
+      2,
+    ),
     -0.42,
     0.42,
   )
   const totalGoalsDelta = clamp(
     round(
       ((homeContext.goalsForAvg ?? 1.2) + (awayContext.goalsForAvg ?? 1.2) - 2.6) * 0.09 +
+        tournamentTempoAdjustment(homeContext.tournament, awayContext.tournament) +
         humanTempoAdjustment(humanFactors) -
         weatherTempoDrag,
       2,
@@ -1159,6 +1354,7 @@ function buildContextAdjustment(homeContext, awayContext, weather, geography, di
     notes: [
       `近况差修正 ${homeGoalDiffDelta > 0 ? '+' : ''}${homeGoalDiffDelta} 球。`,
       `天气/节奏修正 ${totalGoalsDelta > 0 ? '+' : ''}${totalGoalsDelta} 总进球。`,
+      `本届战绩修正：${homeContext.tournament?.summary ?? '主队暂无'}；${awayContext.tournament?.summary ?? '客队暂无'}。`,
       `伤病与天气风险使风险指数 ${riskDelta > 0 ? '+' : ''}${riskDelta}。`,
       humanFactors?.summary ?? '心态/教练代理：数据不足，未单独修正。',
       `古法取象 ${divination.weight}：${divination.summary}`,
@@ -1725,6 +1921,7 @@ function buildDeepThinkingPlan({ grade, expertAnswer, plays, scenarios, riskCont
     reasoningSummary: [
       `模型最集中比分：${expertAnswer.recommendedScore}；备选：${expertAnswer.secondaryScores.slice(0, 2).join(' / ') || '不扩展'}。`,
       scoreline.strengthProfile?.summary ?? '实力护栏：暂无足够近况数据，只按市场概率保守处理。',
+      context ? `本届杯赛：${context.home.tournament.summary}；${context.away.tournament.summary}` : '本届杯赛战绩暂未接入。',
       context?.humanFactors?.summary ?? '心态/教练代理：暂无足够近况数据，未单独修正。',
       `胜平负方向：${expertAnswer.marketDirection}；总进球校验：${expertAnswer.totalGoals}。`,
       context
@@ -2278,13 +2475,33 @@ function buildStrengthProfile(homeWin, awayWin, context) {
   const awayHealth = clamp(68 - (awayContext.injuries?.riskScore ?? 18) * 0.55, 28, 74)
   const homeHuman = context?.humanFactors?.homeCombined ?? 52
   const awayHuman = context?.humanFactors?.awayCombined ?? 52
+  const homeTournament = context?.home?.tournament?.strengthScore ?? 46
+  const awayTournament = context?.away?.tournament?.strengthScore ?? 46
   const reliability = Math.min(homeContext.sampleSize ?? 0, awayContext.sampleSize ?? 0) >= 3 ? 1 : 0.72
   const homeStrength = round(
-    clamp(homeMarket * 0.54 + (homeContext.formScore ?? 50) * 0.2 * reliability + homeRecent * 0.13 + homeHealth * 0.05 + homeHuman * 0.08, 12, 92),
+    clamp(
+      homeMarket * 0.48 +
+        (homeContext.formScore ?? 50) * 0.17 * reliability +
+        homeRecent * 0.11 +
+        homeTournament * 0.13 +
+        homeHealth * 0.04 +
+        homeHuman * 0.07,
+      12,
+      92,
+    ),
     1,
   )
   const awayStrength = round(
-    clamp(awayMarket * 0.54 + (awayContext.formScore ?? 50) * 0.2 * reliability + awayRecent * 0.13 + awayHealth * 0.05 + awayHuman * 0.08, 12, 92),
+    clamp(
+      awayMarket * 0.48 +
+        (awayContext.formScore ?? 50) * 0.17 * reliability +
+        awayRecent * 0.11 +
+        awayTournament * 0.13 +
+        awayHealth * 0.04 +
+        awayHuman * 0.07,
+      12,
+      92,
+    ),
     1,
   )
   const edge = round(homeStrength - awayStrength, 1)
@@ -2358,6 +2575,12 @@ function scoreStrengthCoherenceMultiplier(
       : humanSide === 'away'
         ? context?.humanFactors?.away
         : null
+  const homeTournament = context?.home?.tournament ?? null
+  const awayTournament = context?.away?.tournament ?? null
+  const tournamentEdge = (homeTournament?.strengthScore ?? 46) - (awayTournament?.strengthScore ?? 46)
+  const tournamentSide = Math.abs(tournamentEdge) < 7 ? 'level' : tournamentEdge > 0 ? 'home' : 'away'
+  const tournamentResult = tournamentSide === 'home' ? scoreResult(1, 0) : tournamentSide === 'away' ? scoreResult(0, 1) : scoreResult(0, 0)
+  const tournamentFavorite = tournamentSide === 'home' ? homeTournament : tournamentSide === 'away' ? awayTournament : null
   let multiplier = 1
 
   if (profile.strongerSide === 'level') {
@@ -2394,6 +2617,13 @@ function scoreStrengthCoherenceMultiplier(
   }
 
   if (draw >= 0.29 && totalExpectedGoals <= 2.25 && result === scoreResult(0, 0)) multiplier += 0.08
+  if (tournamentSide !== 'level') {
+    if (result === tournamentResult) multiplier += Math.min(0.12, Math.abs(tournamentEdge) * 0.004)
+    if (result !== tournamentResult && result !== scoreResult(0, 0)) multiplier -= Math.min(0.12, Math.abs(tournamentEdge) * 0.0035)
+    if (result === tournamentResult && strengthMargin >= 2 && (tournamentFavorite?.bigWins ?? 0) >= 1) multiplier += 0.08
+    if (result === tournamentResult && weakSideGoals === 0 && (tournamentFavorite?.attackScore ?? 50) < 52) multiplier -= 0.08
+    if (result !== tournamentResult && (tournamentFavorite?.heavyLosses ?? 0) === 0 && strengthMargin <= -2) multiplier -= 0.08
+  }
   if (humanSide !== 'level') {
     if (result === humanResult) multiplier += Math.min(0.12, Math.abs(humanEdge) * 0.006)
     if (result !== humanResult && result !== scoreResult(0, 0)) multiplier -= Math.min(0.1, Math.abs(humanEdge) * 0.004)
@@ -3145,6 +3375,22 @@ async function fetchWithTimeout(url, init = {}) {
   } finally {
     clearTimeout(timeout)
   }
+}
+
+function dateKeysBetween(startDate, endDate) {
+  const start = new Date(`${startDate}T00:00:00+08:00`)
+  const end = new Date(`${endDate}T00:00:00+08:00`)
+  const keys = []
+
+  for (const date = new Date(start); date.getTime() <= end.getTime(); date.setDate(date.getDate() + 1)) {
+    keys.push(formatDateKey(date, 0, ''))
+  }
+
+  return keys
+}
+
+function uniqueDateKeys(keys) {
+  return [...new Set(keys.filter(Boolean))]
 }
 
 function formatDateKey(date, offsetDays, separator) {
