@@ -146,6 +146,8 @@ async function main() {
   const scoreboards = await Promise.all(scoreboardDates.map(fetchScoreboard))
   const events = dedupeEvents(scoreboards.flatMap((board) => board.events))
   const tournamentRecords = buildTournamentRecords(events)
+  const groupStandings = buildGroupStandings(events)
+  const knockoutPaths = buildKnockoutPaths(events, tournamentRecords)
   const newsResult = await fetchNews()
   const oddsApiResult = await fetchOddsApi()
   const sportteryResult = await checkSporttery()
@@ -164,7 +166,9 @@ async function main() {
   const modelReview = buildModelReview(recentCompleted)
   activeModelCalibration = modelReview.calibration
 
-  const matches = await Promise.all(upcomingWindow.map((event) => normalizeMatch(event, newsResult.news, tournamentRecords)))
+  const matches = await Promise.all(
+    upcomingWindow.map((event) => normalizeMatch(event, newsResult.news, tournamentRecords, groupStandings, knockoutPaths)),
+  )
   sources.push(
     fifaResult,
     ...scoreboards.map((board) => board.source),
@@ -196,7 +200,11 @@ async function main() {
     sources,
     news: newsResult.news,
     modelReview,
-    tournament: buildTournamentSummary(tournamentRecords),
+    tournament: {
+      ...buildTournamentSummary(tournamentRecords),
+      groups: summarizeGroupStandings(groupStandings),
+      knockoutPaths: summarizeKnockoutPaths(knockoutPaths),
+    },
     matches,
     bankroll: {
       title: '负责任购彩预算',
@@ -392,7 +400,7 @@ async function checkFifa() {
   }
 }
 
-async function normalizeMatch(event, newsItems, tournamentRecords = new Map()) {
+async function normalizeMatch(event, newsItems, tournamentRecords = new Map(), groupStandings = new Map(), knockoutPaths = new Map()) {
   const competition = event.competitions?.[0] ?? {}
   const competitors = competition.competitors ?? []
   const home = competitors.find((item) => item.homeAway === 'home') ?? competitors[0] ?? {}
@@ -400,7 +408,18 @@ async function normalizeMatch(event, newsItems, tournamentRecords = new Map()) {
   const normalizedHome = normalizeTeam(home)
   const normalizedAway = normalizeTeam(away)
   const market = normalizeMarket(competition.odds?.[0], home, away)
-  const context = await buildMatchContext(event, competition, normalizedHome, normalizedAway, home, away, newsItems, tournamentRecords)
+  const context = await buildMatchContext(
+    event,
+    competition,
+    normalizedHome,
+    normalizedAway,
+    home,
+    away,
+    newsItems,
+    tournamentRecords,
+    groupStandings,
+    knockoutPaths,
+  )
   const judgement = buildJudgement(market, event, newsItems, context)
   const scoreline = buildScorelineAnalysis(market, normalizedHome, normalizedAway, judgement, newsItems, context)
   const professional = buildProfessionalBrief(market, normalizedHome, normalizedAway, judgement, scoreline, newsItems, context)
@@ -538,6 +557,172 @@ function buildTournamentSummary(records) {
   }
 }
 
+function buildGroupStandings(events) {
+  const groups = new Map()
+
+  for (const event of events) {
+    const competition = event.competitions?.[0] ?? {}
+    const group = competition.altGameNote ?? ''
+    if (event.season?.slug !== 'group-stage' || !group || !isCompletedEvent(event)) continue
+
+    const competitors = competition.competitors ?? []
+    const home = competitors.find((item) => item.homeAway === 'home') ?? competitors[0] ?? {}
+    const away = competitors.find((item) => item.homeAway === 'away') ?? competitors[1] ?? {}
+    const homeScore = readScore(home.score)
+    const awayScore = readScore(away.score)
+    if (homeScore === null || awayScore === null) continue
+
+    const table = groups.get(group) ?? new Map()
+    applyGroupResult(table, home, homeScore, awayScore)
+    applyGroupResult(table, away, awayScore, homeScore)
+    groups.set(group, table)
+  }
+
+  const result = new Map()
+  for (const [group, table] of groups.entries()) {
+    const teams = [...table.values()].sort(groupStandingSort).map((team, index) => ({
+      ...team,
+      rank: index + 1,
+    }))
+    result.set(group, { group, teams })
+  }
+
+  return result
+}
+
+function applyGroupResult(table, competitor, goalsFor, goalsAgainst) {
+  const name = teamName(competitor)
+  const key = normalizeTeamKey(name)
+  const team =
+    table.get(key) ??
+    {
+      name,
+      zhName: teamNames.get(name) ?? name,
+      played: 0,
+      wins: 0,
+      draws: 0,
+      losses: 0,
+      points: 0,
+      goalsFor: 0,
+      goalsAgainst: 0,
+      goalDiff: 0,
+      rank: 0,
+    }
+  const result = goalsFor > goalsAgainst ? 'W' : goalsFor < goalsAgainst ? 'L' : 'D'
+
+  team.played += 1
+  team.wins += result === 'W' ? 1 : 0
+  team.draws += result === 'D' ? 1 : 0
+  team.losses += result === 'L' ? 1 : 0
+  team.points += result === 'W' ? 3 : result === 'D' ? 1 : 0
+  team.goalsFor += goalsFor
+  team.goalsAgainst += goalsAgainst
+  team.goalDiff = team.goalsFor - team.goalsAgainst
+  table.set(key, team)
+}
+
+function groupStandingSort(left, right) {
+  return (
+    right.points - left.points ||
+    right.goalDiff - left.goalDiff ||
+    right.goalsFor - left.goalsFor ||
+    left.goalsAgainst - right.goalsAgainst ||
+    left.zhName.localeCompare(right.zhName, 'zh-CN')
+  )
+}
+
+function summarizeGroupStandings(groupStandings) {
+  return [...groupStandings.values()].map((group) => ({
+    group: group.group,
+    teams: group.teams.map((team) => ({
+      name: team.zhName,
+      rank: team.rank,
+      record: `${team.wins}-${team.draws}-${team.losses}`,
+      points: team.points,
+      goals: `${team.goalsFor}-${team.goalsAgainst}`,
+    })),
+  }))
+}
+
+function buildKnockoutPaths(events, tournamentRecords) {
+  const roundOf32 = events
+    .filter((event) => event.season?.slug === 'round-of-32')
+    .sort((left, right) => new Date(left.date).getTime() - new Date(right.date).getTime())
+  const paths = new Map()
+
+  for (let index = 0; index < roundOf32.length; index += 2) {
+    const left = roundOf32[index]
+    const right = roundOf32[index + 1]
+    if (!left || !right) continue
+    const leftTeams = teamsFromEvent(left)
+    const rightTeams = teamsFromEvent(right)
+    const leftPool = rightTeams.map((team) => teamPoolStrength(team, tournamentRecords))
+    const rightPool = leftTeams.map((team) => teamPoolStrength(team, tournamentRecords))
+
+    paths.set(String(left.id), buildKnockoutPath(left, leftPool))
+    paths.set(String(right.id), buildKnockoutPath(right, rightPool))
+  }
+
+  return paths
+}
+
+function buildKnockoutPath(event, opponentPool) {
+  const knownPool = opponentPool.filter((item) => !item.placeholder)
+  const maxStrength = knownPool.length ? Math.max(...knownPool.map((item) => item.strengthScore)) : 52
+  const averageStrength = knownPool.length ? round(knownPool.reduce((sum, item) => sum + item.strengthScore, 0) / knownPool.length, 1) : 52
+  const names = opponentPool.map((item) => item.zhName).join(' / ') || '待定'
+
+  return {
+    matchId: String(event.id),
+    stage: event.season?.slug ?? 'round-of-32',
+    nextOpponentPool: opponentPool,
+    maxOpponentStrength: round(maxStrength, 1),
+    averageOpponentStrength: averageStrength,
+    note: `晋级后可能面对 ${names}，对手池最高强度 ${round(maxStrength, 1)}。`,
+  }
+}
+
+function teamsFromEvent(event) {
+  const competitors = event.competitions?.[0]?.competitors ?? []
+  return competitors
+    .map((competitor) => {
+      const name = teamName(competitor)
+      if (!name || /Third Place|Winner|TBD|Group/i.test(name)) {
+        return { name, zhName: name, placeholder: true }
+      }
+      return {
+        name,
+        zhName: teamNames.get(name) ?? name,
+        placeholder: false,
+      }
+    })
+    .filter((team) => team.name)
+}
+
+function teamPoolStrength(team, tournamentRecords) {
+  const record = tournamentRecords.get(normalizeTeamKey(team.name))
+  return {
+    ...team,
+    strengthScore: team.placeholder ? 52 : record?.strengthScore ?? 52,
+    record: team.placeholder || !record ? '待定' : `${record.wins}-${record.draws}-${record.losses}`,
+    goals: team.placeholder || !record ? '待定' : `${record.goalsFor}-${record.goalsAgainst}`,
+  }
+}
+
+function summarizeKnockoutPaths(paths) {
+  return [...paths.values()].map((path) => ({
+    matchId: path.matchId,
+    nextOpponentPool: path.nextOpponentPool.map((team) => ({
+      name: team.zhName,
+      strengthScore: team.strengthScore,
+      record: team.record,
+      goals: team.goals,
+    })),
+    maxOpponentStrength: path.maxOpponentStrength,
+    averageOpponentStrength: path.averageOpponentStrength,
+  }))
+}
+
 function tournamentRecordForTeam(records, team) {
   return records.get(normalizeTeamKey(team.name)) ?? records.get(normalizeTeamKey(team.zhName)) ?? defaultTournamentRecord(team)
 }
@@ -662,7 +847,18 @@ function normalizeTeam(competitor) {
   }
 }
 
-async function buildMatchContext(event, competition, homeTeam, awayTeam, homeCompetitor, awayCompetitor, newsItems, tournamentRecords = new Map()) {
+async function buildMatchContext(
+  event,
+  competition,
+  homeTeam,
+  awayTeam,
+  homeCompetitor,
+  awayCompetitor,
+  newsItems,
+  tournamentRecords = new Map(),
+  groupStandings = new Map(),
+  knockoutPaths = new Map(),
+) {
   const venueName = competition.venue?.fullName ?? ''
   const venueCity = competition.venue?.address?.city ?? ''
   const [homeRecent, awayRecent, homeInjuries, awayInjuries, weather] = await Promise.all([
@@ -688,7 +884,8 @@ async function buildMatchContext(event, competition, homeTeam, awayTeam, homeCom
   const geography = buildGeographyContext(homeTeam, awayTeam, weather)
   const divination = buildDivinationContext(event, homeTeam, awayTeam, geography, weather)
   const humanFactors = buildHumanFactors(homeTeam, awayTeam, homeContext, awayContext, weather, newsItems)
-  const adjustment = buildContextAdjustment(homeContext, awayContext, weather, geography, divination, humanFactors)
+  const advancement = buildAdvancementContext(event, competition, homeTeam, awayTeam, homeContext, awayContext, groupStandings, knockoutPaths)
+  const adjustment = buildContextAdjustment(homeContext, awayContext, weather, geography, divination, humanFactors, advancement)
 
   return {
     home: homeContext,
@@ -697,8 +894,9 @@ async function buildMatchContext(event, competition, homeTeam, awayTeam, homeCom
     geography,
     divination,
     humanFactors,
+    advancement,
     adjustment,
-    note: '近况、球员、伤病、天气和地理因素进入主模型；古法占卜仅作低权重文化校验，不覆盖可验证事实。',
+    note: '近况、球员、伤病、天气、地理、晋级压力与半区对手强度进入主模型；古法占卜仅作低权重文化校验，不覆盖可验证事实。',
   }
 }
 
@@ -1166,6 +1364,149 @@ function buildHumanFactors(homeTeam, awayTeam, homeContext, awayContext, weather
   }
 }
 
+function buildAdvancementContext(event, competition, homeTeam, awayTeam, homeContext, awayContext, groupStandings, knockoutPaths) {
+  const stage = event.season?.slug ?? 'unknown'
+  const stageLabel = competition.altGameNote ?? event.season?.type?.name ?? 'FIFA World Cup'
+
+  if (stage === 'round-of-32') {
+    const path = knockoutPaths.get(String(event.id))
+    const maxOpponentStrength = path?.maxOpponentStrength ?? 52
+    const opponentPressure = maxOpponentStrength >= 74 ? 8 : maxOpponentStrength >= 66 ? 5 : 3
+    const pressureScore = clamp(88 + opponentPressure, 84, 96)
+    const opponentText = path?.nextOpponentPool?.length
+      ? path.nextOpponentPool.map((team) => `${team.zhName}${team.placeholder ? '' : `(${team.strengthScore})`}`).join(' / ')
+      : '待定'
+
+    return {
+      stage,
+      stageLabel: '32强淘汰赛',
+      pressureType: 'knockout',
+      pressureScore,
+      pressureLevel: pressureScore >= 88 ? '高' : '中',
+      homePressure: 90,
+      awayPressure: 90,
+      homeNeed: '输球出局，开局容错率很低。',
+      awayNeed: '输球出局，开局容错率很低。',
+      bracketOpponentStrength: round(maxOpponentStrength, 1),
+      nextOpponentPool: path?.nextOpponentPool ?? [],
+      summary: `32强淘汰赛：输球即出局；晋级后潜在对手 ${opponentText}，对手池最高强度 ${round(maxOpponentStrength, 1)}。模型降低无意义大胜，保留一球差和2-3球区间。`,
+      homeGoalDiffDelta: 0,
+      totalGoalsDelta: maxOpponentStrength >= 70 ? -0.06 : -0.03,
+      riskDelta: opponentPressure,
+      confidenceDelta: -2,
+    }
+  }
+
+  if (stage === 'group-stage') {
+    const group = groupStandings.get(stageLabel)
+    const homeStanding = standingForTeam(group, homeTeam)
+    const awayStanding = standingForTeam(group, awayTeam)
+    const homeProfile = groupPressureProfile(homeStanding, group, homeContext)
+    const awayProfile = groupPressureProfile(awayStanding, group, awayContext)
+    const pressureScore = Math.max(homeProfile.pressure, awayProfile.pressure)
+    const bothMustChase = homeProfile.mode === 'mustWin' && awayProfile.mode === 'mustWin'
+    const hasDrawEnough = homeProfile.mode === 'drawEnough' || awayProfile.mode === 'drawEnough'
+    const hasRotationRisk = homeProfile.mode === 'protectSeed' || awayProfile.mode === 'protectSeed'
+    const pressureEdge = clamp((homeProfile.pressure - awayProfile.pressure) / 100, -1, 1)
+    const totalGoalsDelta = clamp(
+      round((bothMustChase ? 0.08 : 0) + (pressureScore >= 78 ? 0.03 : 0) - (hasDrawEnough ? 0.04 : 0) - (hasRotationRisk ? 0.03 : 0), 2),
+      -0.08,
+      0.13,
+    )
+
+    return {
+      stage,
+      stageLabel,
+      pressureType: 'group',
+      pressureScore,
+      pressureLevel: pressureScore >= 78 ? '高' : pressureScore >= 60 ? '中' : '低',
+      homePressure: homeProfile.pressure,
+      awayPressure: awayProfile.pressure,
+      homeNeed: homeProfile.need,
+      awayNeed: awayProfile.need,
+      bracketOpponentStrength: null,
+      nextOpponentPool: [],
+      summary: `${stageLabel} 末轮形势：${homeTeam.zhName}${homeProfile.need}；${awayTeam.zhName}${awayProfile.need}。压力差会影响开局谨慎和后段追球，小组赛半区对手仍以最终排名为准。`,
+      homeGoalDiffDelta: clamp(round(pressureEdge * 0.07, 2), -0.07, 0.07),
+      totalGoalsDelta,
+      riskDelta: clamp(Math.round((pressureScore - 52) / 8), 0, 7),
+      confidenceDelta: pressureScore >= 82 ? -2 : pressureScore >= 65 ? -1 : 0,
+    }
+  }
+
+  return {
+    stage,
+    stageLabel,
+    pressureType: 'none',
+    pressureScore: 45,
+    pressureLevel: '低',
+    homePressure: 45,
+    awayPressure: 45,
+    homeNeed: '暂无明确晋级压力修正。',
+    awayNeed: '暂无明确晋级压力修正。',
+    bracketOpponentStrength: null,
+    nextOpponentPool: [],
+    summary: '晋级形势暂未形成强修正，按基础实力、近况和市场赔率处理。',
+    homeGoalDiffDelta: 0,
+    totalGoalsDelta: 0,
+    riskDelta: 0,
+    confidenceDelta: 0,
+  }
+}
+
+function standingForTeam(group, team) {
+  if (!group?.teams?.length) return null
+  const keys = new Set([normalizeTeamKey(team.name), normalizeTeamKey(team.zhName)])
+  return group.teams.find((item) => keys.has(normalizeTeamKey(item.name)) || keys.has(normalizeTeamKey(item.zhName))) ?? null
+}
+
+function groupPressureProfile(standing, group, context) {
+  const record = context?.tournament
+  if (!standing) {
+    return {
+      pressure: 55,
+      mode: 'unknown',
+      need: record?.played ? `本届 ${record.points} 分，需赛前核验小组排名。` : '小组排名待核验。',
+    }
+  }
+
+  const rankText = `现第${standing.rank}，${standing.points}分，净胜球${standing.goalDiff >= 0 ? '+' : ''}${standing.goalDiff}`
+  const thirdLinePressure = group?.teams?.length >= 4 && standing.rank === 3
+  if (standing.points >= 6) {
+    return {
+      pressure: 48,
+      mode: 'protectSeed',
+      need: `${rankText}，基本出线，主要争头名与控制消耗。`,
+    }
+  }
+  if (standing.points === 4) {
+    return {
+      pressure: thirdLinePressure ? 68 : 62,
+      mode: 'drawEnough',
+      need: `${rankText}，不败大概率出线，赢球争头名。`,
+    }
+  }
+  if (standing.points === 3) {
+    return {
+      pressure: 80,
+      mode: 'mustWin',
+      need: `${rankText}，赢球基本晋级，平局要看净胜球和第三名排序。`,
+    }
+  }
+  if (standing.points === 1) {
+    return {
+      pressure: 86,
+      mode: 'mustWin',
+      need: `${rankText}，必须赢球并看其他结果。`,
+    }
+  }
+  return {
+    pressure: standing.goalDiff <= -4 ? 70 : 76,
+    mode: 'spoiler',
+    need: `${rankText}，理论上只剩大胜争第三或荣誉战，节奏可能更开放。`,
+  }
+}
+
 function teamHumanProfile(team, ownContext, opponentContext, weather, newsItems) {
   const recent = ownContext.recentMatches ?? []
   const form = ownContext.formString || ''
@@ -1287,13 +1628,14 @@ function humanVolatilityRisk(humanFactors) {
   return clamp(Math.round((volatility - 1.4) * 2.2 + (pressure > 72 ? 2 : 0)), 0, 6)
 }
 
-function buildContextAdjustment(homeContext, awayContext, weather, geography, divination, humanFactors = null) {
+function buildContextAdjustment(homeContext, awayContext, weather, geography, divination, humanFactors = null, advancement = null) {
   const formEdge = homeContext.formScore - awayContext.formScore
   const injuryEdge = awayContext.injuries.riskScore - homeContext.injuries.riskScore
   const travelEdge = clamp((geography.distanceEdgeKm ?? 0) / 4500, -0.9, 0.9)
   const divinationEdge = clamp((divination.delta ?? 0) * 0.18, -0.72, 0.72)
   const humanEdge = clamp((humanFactors?.edge ?? 0) / 28, -1, 1)
   const tournamentEdge = clamp(((homeContext.tournament?.strengthScore ?? 46) - (awayContext.tournament?.strengthScore ?? 46)) / 32, -1, 1)
+  const advancementEdge = clamp(advancement?.homeGoalDiffDelta ?? 0, -0.08, 0.08)
   const weatherRisk = weather.riskLevel === '高' ? 8 : weather.riskLevel === '中' ? 4 : 0
   const formReliability = Math.min(homeContext.sampleSize, awayContext.sampleSize) >= 3 ? 1 : 0.55
   const weatherTempoDrag =
@@ -1308,6 +1650,7 @@ function buildContextAdjustment(homeContext, awayContext, weather, geography, di
         travelEdge * 0.08 +
         tournamentEdge * 0.12 +
         humanEdge * 0.13 +
+        advancementEdge +
         divinationEdge * 0.04,
       2,
     ),
@@ -1316,10 +1659,11 @@ function buildContextAdjustment(homeContext, awayContext, weather, geography, di
   )
   const totalGoalsDelta = clamp(
     round(
-      ((homeContext.goalsForAvg ?? 1.2) + (awayContext.goalsForAvg ?? 1.2) - 2.6) * 0.09 +
+        ((homeContext.goalsForAvg ?? 1.2) + (awayContext.goalsForAvg ?? 1.2) - 2.6) * 0.09 +
         tournamentTempoAdjustment(homeContext.tournament, awayContext.tournament) +
         humanTempoAdjustment(humanFactors) -
-        weatherTempoDrag,
+        weatherTempoDrag +
+        (advancement?.totalGoalsDelta ?? 0),
       2,
     ),
     -0.38,
@@ -1330,7 +1674,8 @@ function buildContextAdjustment(homeContext, awayContext, weather, geography, di
       Math.abs(formEdge) * 0.08 * formReliability +
         Math.abs(humanFactors?.edge ?? 0) * 0.08 -
         weatherRisk * 0.35 -
-        Math.max(homeContext.injuries.riskScore, awayContext.injuries.riskScore) * 0.04,
+        Math.max(homeContext.injuries.riskScore, awayContext.injuries.riskScore) * 0.04 +
+        (advancement?.confidenceDelta ?? 0),
     ),
     -8,
     9,
@@ -1340,7 +1685,8 @@ function buildContextAdjustment(homeContext, awayContext, weather, geography, di
       weatherRisk +
         Math.max(homeContext.injuries.riskScore, awayContext.injuries.riskScore) * 0.08 +
         (formReliability < 1 ? 3 : 0) +
-        humanVolatilityRisk(humanFactors),
+        humanVolatilityRisk(humanFactors) +
+        (advancement?.riskDelta ?? 0),
     ),
     0,
     18,
@@ -1355,6 +1701,7 @@ function buildContextAdjustment(homeContext, awayContext, weather, geography, di
       `近况差修正 ${homeGoalDiffDelta > 0 ? '+' : ''}${homeGoalDiffDelta} 球。`,
       `天气/节奏修正 ${totalGoalsDelta > 0 ? '+' : ''}${totalGoalsDelta} 总进球。`,
       `本届战绩修正：${homeContext.tournament?.summary ?? '主队暂无'}；${awayContext.tournament?.summary ?? '客队暂无'}。`,
+      advancement?.summary ?? '晋级形势：暂无额外修正。',
       `伤病与天气风险使风险指数 ${riskDelta > 0 ? '+' : ''}${riskDelta}。`,
       humanFactors?.summary ?? '心态/教练代理：数据不足，未单独修正。',
       `古法取象 ${divination.weight}：${divination.summary}`,
@@ -1800,6 +2147,12 @@ function buildProfessionalBrief(market, homeTeam, awayTeam, judgement, scoreline
               evidence: `${context.weather.summary} ${context.geography.summary}`,
             },
             {
+              label: '晋级压力',
+              score: context.advancement.pressureScore,
+              tone: context.advancement.pressureLevel === '高' ? 'watch' : 'good',
+              evidence: context.advancement.summary,
+            },
+            {
               label: '古法占卜低权重',
               score: Math.round(50 + context.divination.delta * 8),
               tone: 'watch',
@@ -1922,6 +2275,7 @@ function buildDeepThinkingPlan({ grade, expertAnswer, plays, scenarios, riskCont
       `模型最集中比分：${expertAnswer.recommendedScore}；备选：${expertAnswer.secondaryScores.slice(0, 2).join(' / ') || '不扩展'}。`,
       scoreline.strengthProfile?.summary ?? '实力护栏：暂无足够近况数据，只按市场概率保守处理。',
       context ? `本届杯赛：${context.home.tournament.summary}；${context.away.tournament.summary}` : '本届杯赛战绩暂未接入。',
+      context?.advancement?.summary ?? '晋级形势暂未接入。',
       context?.humanFactors?.summary ?? '心态/教练代理：暂无足够近况数据，未单独修正。',
       `胜平负方向：${expertAnswer.marketDirection}；总进球校验：${expertAnswer.totalGoals}。`,
       context
@@ -1935,7 +2289,7 @@ function buildDeepThinkingPlan({ grade, expertAnswer, plays, scenarios, riskCont
         : '古法校验未参与本次评分。',
       `主要风险：${hotRisk?.label ?? '赔率'}为${hotRisk?.level ?? '中'}，${scoreRisk?.label ?? '比分方差'}为${scoreRisk?.level ?? '中'}。`,
       scenarios[0] ? `基准剧本：${scenarios[0].scorePath}` : '等待更多情景数据。',
-    ].slice(0, 6),
+    ].slice(0, 7),
     noBuyRules: [
       `中国体彩比分赔率低于 ${scorePlay?.minOdds ?? '建议门槛'} 时不买。`,
       resultPlay ? `胜平负 ${resultPlay.selection} 低于 ${resultPlay.minOdds} 时不买。` : '胜平负赔率不可核验时不买。',
@@ -2086,6 +2440,11 @@ function buildRiskControls(market, judgement, scoreline, favorite, context = nul
         label: '伤病首发',
         level: Math.max(context.home.injuries.riskScore, context.away.injuries.riskScore) > 45 ? '高' : Math.max(context.home.injuries.riskScore, context.away.injuries.riskScore) > 24 ? '中' : '低',
         detail: `${context.home.injuries.note} ${context.away.injuries.note}`,
+      },
+      {
+        label: '晋级压力',
+        level: context.advancement.pressureLevel,
+        detail: context.advancement.summary,
       },
       {
         label: '占卜只作校验',
@@ -2581,12 +2940,22 @@ function scoreStrengthCoherenceMultiplier(
   const tournamentSide = Math.abs(tournamentEdge) < 7 ? 'level' : tournamentEdge > 0 ? 'home' : 'away'
   const tournamentResult = tournamentSide === 'home' ? scoreResult(1, 0) : tournamentSide === 'away' ? scoreResult(0, 1) : scoreResult(0, 0)
   const tournamentFavorite = tournamentSide === 'home' ? homeTournament : tournamentSide === 'away' ? awayTournament : null
+  const advancement = context?.advancement ?? null
   let multiplier = 1
 
   if (profile.strongerSide === 'level') {
     if (result === scoreResult(0, 0) || Math.abs(homeGoals - awayGoals) <= 1) multiplier += 0.06
     if (Math.abs(homeGoals - awayGoals) >= 3) multiplier -= 0.14
     if (totalGoals >= 5 && totalExpectedGoals < 3.1) multiplier -= 0.1
+    if (advancement?.pressureType === 'knockout') {
+      if (Math.abs(homeGoals - awayGoals) <= 1 && totalGoals <= 3) multiplier += 0.05
+      if (totalGoals >= 5) multiplier -= 0.08
+    }
+    if (advancement?.pressureType === 'group' && advancement.pressureScore >= 78) {
+      if (totalGoals >= 2 && totalGoals <= 4) multiplier += 0.04
+      if (advancement.homePressure > advancement.awayPressure + 14 && result === scoreResult(1, 0)) multiplier += 0.04
+      if (advancement.awayPressure > advancement.homePressure + 14 && result === scoreResult(0, 1)) multiplier += 0.04
+    }
     return clamp(round(multiplier, 2), 0.74, 1.14)
   }
 
@@ -2633,6 +3002,18 @@ function scoreStrengthCoherenceMultiplier(
     if (result === humanResult && strengthMargin >= 3 && (humanFavorite?.pressure ?? 50) >= 76) {
       multiplier -= 0.06
     }
+  }
+  if (advancement?.pressureType === 'knockout') {
+    if (Math.abs(homeGoals - awayGoals) <= 1 && totalGoals <= 3) multiplier += 0.06
+    if (totalGoals >= 5) multiplier -= 0.08
+    if (advancement.bracketOpponentStrength >= 70 && result === strongerResult && strengthMargin >= 3) multiplier -= 0.06
+  }
+  if (advancement?.pressureType === 'group' && advancement.pressureScore >= 70) {
+    if (advancement.pressureScore >= 78 && totalGoals >= 2 && totalGoals <= 4) multiplier += 0.04
+    if (advancement.homePressure > advancement.awayPressure + 14 && result === scoreResult(1, 0)) multiplier += 0.04
+    if (advancement.awayPressure > advancement.homePressure + 14 && result === scoreResult(0, 1)) multiplier += 0.04
+    if (advancement.homeNeed.includes('基本出线') && homeGoals - awayGoals >= 3) multiplier -= 0.05
+    if (advancement.awayNeed.includes('基本出线') && awayGoals - homeGoals >= 3) multiplier -= 0.05
   }
 
   return clamp(round(multiplier, 2), 0.52, 1.28)

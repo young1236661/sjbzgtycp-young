@@ -92,6 +92,31 @@ export interface PlayerSignal {
   position: string
 }
 
+export interface TournamentTeamRecord {
+  name: string
+  zhName: string
+  played: number
+  wins: number
+  draws: number
+  losses: number
+  goalsFor: number
+  goalsAgainst: number
+  goalDiff: number
+  cleanSheets: number
+  failedToScore: number
+  bigWins: number
+  heavyLosses: number
+  points: number
+  goalsForAvg: number
+  goalsAgainstAvg: number
+  formString: string
+  attackScore: number
+  defenseScore: number
+  momentumScore: number
+  strengthScore: number
+  summary: string
+}
+
 export interface TeamContext {
   formString: string
   recentMatches: RecentMatch[]
@@ -101,6 +126,7 @@ export interface TeamContext {
   goalsAgainstAvg: number | null
   trendNote: string
   sourceUrl: string
+  tournament: TournamentTeamRecord
   injuries: InjuryContext
   playerSignals: PlayerSignal[]
 }
@@ -162,12 +188,60 @@ export interface ContextAdjustment {
   notes: string[]
 }
 
+export interface HumanFactorProfile {
+  mentality: number
+  coach: number
+  pressure: number
+  volatility: number
+  note: string
+}
+
+export interface HumanFactorsContext {
+  home: HumanFactorProfile
+  away: HumanFactorProfile
+  homeCombined: number
+  awayCombined: number
+  edge: number
+  lean: 'home' | 'away' | 'neutral'
+  summary: string
+}
+
+export interface AdvancementOpponent {
+  name: string
+  zhName: string
+  placeholder?: boolean
+  strengthScore: number
+  record?: string
+  goals?: string
+}
+
+export interface AdvancementContext {
+  stage: string
+  stageLabel: string
+  pressureType: 'group' | 'knockout' | 'none'
+  pressureScore: number
+  pressureLevel: '低' | '中' | '高'
+  homePressure: number
+  awayPressure: number
+  homeNeed: string
+  awayNeed: string
+  bracketOpponentStrength: number | null
+  nextOpponentPool: AdvancementOpponent[]
+  summary: string
+  homeGoalDiffDelta: number
+  totalGoalsDelta: number
+  riskDelta: number
+  confidenceDelta: number
+}
+
 export interface MatchContext {
   home: TeamContext
   away: TeamContext
   weather: WeatherContext
   geography: GeographyContext
   divination: DivinationContext
+  humanFactors: HumanFactorsContext
+  advancement: AdvancementContext
   adjustment: ContextAdjustment
   note: string
 }
