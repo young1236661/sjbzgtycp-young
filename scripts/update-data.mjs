@@ -1035,6 +1035,7 @@ function buildScorelineAnalysis(market, homeTeam, awayTeam, judgement, newsItems
   const homeExpectedGoals = clamp(round((totalExpectedGoals + goalDiff) / 2, 2), 0.18, 4.8)
   const awayExpectedGoals = clamp(round(totalExpectedGoals - homeExpectedGoals, 2), 0.18, 4.8)
   const newsRisk = hasMatchNewsRisk(newsItems, homeTeam, awayTeam) || contextNewsRisk(context)
+  const strengthProfile = buildStrengthProfile(homeProbability, awayProbability, context)
   const uncertainty = uncertaintyMultiplier(judgement.risk, newsRisk)
 
   const rawScores = []
@@ -1132,6 +1133,7 @@ function buildScorelineAnalysis(market, homeTeam, awayTeam, judgement, newsItems
     homeExpectedGoals,
     awayExpectedGoals,
     totalExpectedGoals,
+    strengthProfile,
     resultProbabilities,
     bestPick: candidates[0] ?? null,
     candidates,
@@ -1497,6 +1499,7 @@ function buildDeepThinkingPlan({ grade, expertAnswer, plays, scenarios, riskCont
     purchasePlan: purchasePlan.slice(0, 4),
     reasoningSummary: [
       `模型最集中比分：${expertAnswer.recommendedScore}；备选：${expertAnswer.secondaryScores.slice(0, 2).join(' / ') || '不扩展'}。`,
+      scoreline.strengthProfile?.summary ?? '实力护栏：暂无足够近况数据，只按市场概率保守处理。',
       `胜平负方向：${expertAnswer.marketDirection}；总进球校验：${expertAnswer.totalGoals}。`,
       context
         ? `近5场：${context.home.trendNote}；${context.away.trendNote}`
@@ -2038,6 +2041,126 @@ function strongUnderdogConsolationSignal(homeGoals, awayGoals, homeWin, awayWin,
   return 0
 }
 
+function buildStrengthProfile(homeWin, awayWin, context) {
+  const homeContext = context?.home ?? {}
+  const awayContext = context?.away ?? {}
+  const homeMarket = clamp(50 + (homeWin - awayWin) * 82, 12, 88)
+  const awayMarket = clamp(50 + (awayWin - homeWin) * 82, 12, 88)
+  const homeRecent = recentTeamStrength(homeContext, awayContext)
+  const awayRecent = recentTeamStrength(awayContext, homeContext)
+  const homeHealth = clamp(68 - (homeContext.injuries?.riskScore ?? 18) * 0.55, 28, 74)
+  const awayHealth = clamp(68 - (awayContext.injuries?.riskScore ?? 18) * 0.55, 28, 74)
+  const reliability = Math.min(homeContext.sampleSize ?? 0, awayContext.sampleSize ?? 0) >= 3 ? 1 : 0.72
+  const homeStrength = round(
+    clamp(homeMarket * 0.58 + (homeContext.formScore ?? 50) * 0.22 * reliability + homeRecent * 0.14 + homeHealth * 0.06, 12, 90),
+    1,
+  )
+  const awayStrength = round(
+    clamp(awayMarket * 0.58 + (awayContext.formScore ?? 50) * 0.22 * reliability + awayRecent * 0.14 + awayHealth * 0.06, 12, 90),
+    1,
+  )
+  const edge = round(homeStrength - awayStrength, 1)
+  const gap = Math.abs(edge)
+  const strongerSide = Math.abs(edge) < 3 ? 'level' : edge > 0 ? 'home' : 'away'
+  const strongerResult = strongerSide === 'home' ? scoreResult(1, 0) : strongerSide === 'away' ? scoreResult(0, 1) : scoreResult(0, 0)
+  const favoriteProbability = Math.max(homeWin, awayWin)
+
+  return {
+    homeStrength,
+    awayStrength,
+    edge,
+    gap,
+    strongerSide,
+    strongerResult,
+    favoriteProbability: round(favoriteProbability, 4),
+    isClearGap: (gap >= 16 && favoriteProbability >= 0.54) || gap >= 28,
+    isStrongGap: (gap >= 24 && favoriteProbability >= 0.62) || gap >= 36,
+    summary:
+      strongerSide === 'level'
+        ? `实力护栏：综合实力接近（${homeStrength}-${awayStrength}），比分优先保留平局和一球差。`
+        : `实力护栏：${strongerSide === 'home' ? '主队' : '客队'}综合实力 ${homeStrength}-${awayStrength} 领先，冷门比分只进防守层，不抢主推。`,
+  }
+}
+
+function recentTeamStrength(teamContext, opponentContext) {
+  const formScore = teamContext.formScore ?? 50
+  const goalsFor = teamContext.goalsForAvg ?? 1.2
+  const goalsAgainst = teamContext.goalsAgainstAvg ?? 1.2
+  const opponentGoalsAgainst = opponentContext.goalsAgainstAvg ?? 1.2
+  const attackEdge = clamp((goalsFor - 1.25) * 11 + (goalsFor - opponentGoalsAgainst) * 6, -18, 20)
+  const defenseEdge = clamp((1.25 - goalsAgainst) * 10, -14, 18)
+  const samplePenalty = (teamContext.sampleSize ?? 0) < 3 ? 4 : 0
+
+  return clamp(round(formScore * 0.56 + (50 + attackEdge + defenseEdge) * 0.44 - samplePenalty, 1), 18, 88)
+}
+
+function scoreStrengthCoherenceMultiplier(
+  homeGoals,
+  awayGoals,
+  resultProbabilities,
+  context,
+  totalExpectedGoals,
+  market = null,
+) {
+  const homeWin = resultProbabilities.find((item) => item.side === 'home')?.probability ?? 0
+  const awayWin = resultProbabilities.find((item) => item.side === 'away')?.probability ?? 0
+  const draw = resultProbabilities.find((item) => item.side === 'draw')?.probability ?? 0
+  const profile = buildStrengthProfile(homeWin, awayWin, context)
+  const result = scoreResult(homeGoals, awayGoals)
+  const totalGoals = homeGoals + awayGoals
+  const favoriteSide = homeWin >= awayWin ? 'home' : 'away'
+  const favoriteResult = favoriteSide === 'home' ? scoreResult(1, 0) : scoreResult(0, 1)
+  const favoriteGoals = favoriteSide === 'home' ? homeGoals : awayGoals
+  const underdogGoals = favoriteSide === 'home' ? awayGoals : homeGoals
+  const favoriteMargin = favoriteGoals - underdogGoals
+  const favoriteProbability = Math.max(homeWin, awayWin)
+  const spreadSignal = market ? favoriteSpreadSignal(market, favoriteSide) : { favoriteCoverProbability: null }
+  const strongerResult = profile.strongerSide === 'level' ? favoriteResult : profile.strongerResult
+  const strongSideGoals =
+    profile.strongerSide === 'home' ? homeGoals : profile.strongerSide === 'away' ? awayGoals : favoriteGoals
+  const weakSideGoals =
+    profile.strongerSide === 'home' ? awayGoals : profile.strongerSide === 'away' ? homeGoals : underdogGoals
+  const strengthMargin = strongSideGoals - weakSideGoals
+  let multiplier = 1
+
+  if (profile.strongerSide === 'level') {
+    if (result === scoreResult(0, 0) || Math.abs(homeGoals - awayGoals) <= 1) multiplier += 0.06
+    if (Math.abs(homeGoals - awayGoals) >= 3) multiplier -= 0.14
+    if (totalGoals >= 5 && totalExpectedGoals < 3.1) multiplier -= 0.1
+    return clamp(round(multiplier, 2), 0.74, 1.14)
+  }
+
+  if (profile.isClearGap && result !== strongerResult) {
+    multiplier -= result === scoreResult(0, 0) ? 0.1 : 0.2
+    if (profile.isStrongGap) multiplier -= result === scoreResult(0, 0) ? 0.08 : 0.14
+    if (strengthMargin <= -2) multiplier -= 0.18
+  }
+
+  if (result === strongerResult) {
+    if (profile.isClearGap && strengthMargin === 1 && favoriteProbability < 0.7) multiplier += 0.11
+    if (profile.isClearGap && strengthMargin === 2 && favoriteProbability >= 0.62) multiplier += 0.12
+    if (profile.isStrongGap && strengthMargin >= 2 && totalExpectedGoals >= 2.65) multiplier += 0.08
+    if (strengthMargin >= 3 && favoriteProbability < 0.74) multiplier -= 0.12
+    if (strengthMargin >= 3 && spreadSignal.favoriteCoverProbability !== null && spreadSignal.favoriteCoverProbability < 0.45) {
+      multiplier -= 0.14
+    }
+  }
+
+  if (favoriteProbability >= 0.72 && result === favoriteResult && favoriteMargin >= 1) {
+    const favoriteContext = favoriteSide === 'home' ? context?.home : context?.away
+    const underdogContext = favoriteSide === 'home' ? context?.away : context?.home
+    const underdogAttack = underdogContext?.goalsForAvg ?? 1.1
+    const favoriteDefense = favoriteContext?.goalsAgainstAvg ?? 1.1
+
+    if (underdogGoals === 1 && (underdogAttack >= 1.15 || favoriteDefense >= 0.65)) multiplier += 0.08
+    if (underdogGoals === 0 && underdogAttack >= 1.45 && totalExpectedGoals >= 3) multiplier -= 0.08
+  }
+
+  if (draw >= 0.29 && totalExpectedGoals <= 2.25 && result === scoreResult(0, 0)) multiplier += 0.08
+
+  return clamp(round(multiplier, 2), 0.52, 1.28)
+}
+
 function scoreTailMultiplier(homeGoals, awayGoals, totalExpectedGoals, resultProbabilities, judgement, context = null, market = null) {
   const result = scoreResult(homeGoals, awayGoals)
   const homeWin = resultProbabilities.find((item) => item.side === 'home')?.probability ?? 0
@@ -2053,6 +2176,14 @@ function scoreTailMultiplier(homeGoals, awayGoals, totalExpectedGoals, resultPro
   const underdogGoals = favoriteSide === 'home' ? awayGoals : homeGoals
   const favoriteMargin = favoriteGoals - underdogGoals
   const totalGoals = homeGoals + awayGoals
+  const strengthLift = scoreStrengthCoherenceMultiplier(
+    homeGoals,
+    awayGoals,
+    resultProbabilities,
+    context,
+    totalExpectedGoals,
+    market,
+  )
   let multiplier = 1
 
   if (totalExpectedGoals >= 2.75 && totalGoals >= 3) multiplier += 0.08
@@ -2126,7 +2257,7 @@ function scoreTailMultiplier(homeGoals, awayGoals, totalExpectedGoals, resultPro
   if (strongConsolationSignal > 0) multiplier += Math.min(0.2, strongConsolationSignal * 0.06)
   if (strongConsolationSignal < 0) multiplier -= Math.min(0.14, Math.abs(strongConsolationSignal) * 0.04)
 
-  return clamp(round(multiplier, 2), 0.72, 1.55)
+  return clamp(round(multiplier * strengthLift, 2), 0.52, 1.6)
 }
 
 function uncertaintyMultiplier(risk, newsRisk) {
@@ -2232,6 +2363,18 @@ function scoreCandidateRank(item, resultStrength, context = null, totalExpectedG
       : strongConsolationSignal < 0
         ? 1 - Math.min(0.12, Math.abs(strongConsolationSignal) * 0.035)
         : 1
+  const strengthLift = scoreStrengthCoherenceMultiplier(
+    homeGoals,
+    awayGoals,
+    [
+      { side: 'home', probability: homeWinStrength },
+      { side: 'draw', probability: drawStrength },
+      { side: 'away', probability: awayWinStrength },
+    ],
+    context,
+    totalExpectedGoals ?? totalGoals,
+    market,
+  )
   const oddsPenalty = item.fairOdds > 85 ? 0.82 : item.fairOdds > 55 ? 0.9 : item.fairOdds > 34 ? 0.97 : 1
 
   return (
@@ -2246,6 +2389,7 @@ function scoreCandidateRank(item, resultStrength, context = null, totalExpectedG
     drawCompressionLift *
     resilientLift *
     strongConsolationLift *
+    strengthLift *
     oddsPenalty
   )
 }
