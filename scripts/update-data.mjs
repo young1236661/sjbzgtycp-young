@@ -26,6 +26,12 @@ const contextStats = {
   weatherOk: 0,
 }
 
+let activeModelCalibration = {
+  favoriteTailBoost: 0,
+  lowDrawRetention: 0,
+  oneGoalBaseline: 0,
+}
+
 const indoorStadiums = new Set(['AT&T Stadium', 'Mercedes-Benz Stadium', 'SoFi Stadium', 'BC Place', 'State Farm Stadium'])
 
 const teamNewsAliasMap = new Map([
@@ -39,6 +45,10 @@ const teamNewsAliasMap = new Map([
 ])
 
 const countryProfiles = new Map([
+  ['South Africa', { zhName: '南非', lat: -25.75, lon: 28.23, region: '非洲南部高原', climate: '温带/亚热带', element: '土' }],
+  ['Canada', { zhName: '加拿大', lat: 45.42, lon: -75.69, region: '北美北部', climate: '寒温带大陆', element: '水' }],
+  ['Brazil', { zhName: '巴西', lat: -15.78, lon: -47.93, region: '南美东部', climate: '热带/亚热带', element: '木' }],
+  ['Japan', { zhName: '日本', lat: 35.68, lon: 139.76, region: '东亚海岛', climate: '温带季风海洋', element: '水' }],
   ['Argentina', { zhName: '阿根廷', lat: -34.6, lon: -58.38, region: '南美南部', climate: '温带/亚热带', element: '水' }],
   ['Austria', { zhName: '奥地利', lat: 48.21, lon: 16.37, region: '中欧内陆', climate: '温带大陆', element: '土' }],
   ['France', { zhName: '法国', lat: 48.86, lon: 2.35, region: '西欧', climate: '温带海洋', element: '金' }],
@@ -117,6 +127,8 @@ const teamNames = new Map([
   ['Serbia', '塞尔维亚'],
   ['Mexico', '墨西哥'],
   ['Denmark', '丹麦'],
+  ['South Africa', '南非'],
+  ['Canada', '加拿大'],
 ])
 
 const now = new Date()
@@ -143,6 +155,9 @@ async function main() {
     })
     .sort((left, right) => new Date(left.date).getTime() - new Date(right.date).getTime())
     .slice(0, 8)
+  const recentCompleted = completedEventsForReview(events)
+  const modelReview = buildModelReview(recentCompleted)
+  activeModelCalibration = modelReview.calibration
 
   const matches = await Promise.all(upcomingWindow.map((event) => normalizeMatch(event, newsResult.news)))
   sources.push(
@@ -175,6 +190,7 @@ async function main() {
     },
     sources,
     news: newsResult.news,
+    modelReview,
     matches,
     bankroll: {
       title: '负责任购彩预算',
@@ -411,6 +427,76 @@ async function normalizeMatch(event, newsItems) {
   }
 }
 
+function completedEventsForReview(events) {
+  const lower = now.getTime() - 72 * 60 * 60 * 1000
+
+  return events
+    .filter((event) => {
+      const eventTime = new Date(event.date).getTime()
+      const status = String(event.status?.type?.state ?? event.status?.type?.name ?? event.status?.type?.description ?? '').toLowerCase()
+      return Number.isFinite(eventTime) && eventTime >= lower && eventTime < now.getTime() && /post|final|ft|full/.test(status)
+    })
+    .map((event) => {
+      const competitors = event.competitions?.[0]?.competitors ?? []
+      const home = competitors.find((item) => item.homeAway === 'home') ?? competitors[0] ?? {}
+      const away = competitors.find((item) => item.homeAway === 'away') ?? competitors[1] ?? {}
+      const homeScore = readScore(home.score)
+      const awayScore = readScore(away.score)
+      const homeName = teamNames.get(teamName(home)) ?? teamName(home)
+      const awayName = teamNames.get(teamName(away)) ?? teamName(away)
+
+      if (homeScore === null || awayScore === null) return null
+
+      return {
+        id: String(event.id),
+        kickoffChina: formatChinaDateTime(event.date),
+        home: homeName,
+        away: awayName,
+        score: `${homeScore}-${awayScore}`,
+        totalGoals: homeScore + awayScore,
+        result: homeScore > awayScore ? '主胜' : homeScore < awayScore ? '客胜' : '平局',
+      }
+    })
+    .filter(Boolean)
+    .sort((left, right) => new Date(right.kickoffChina).getTime() - new Date(left.kickoffChina).getTime())
+    .slice(0, 8)
+}
+
+function buildModelReview(completedMatches) {
+  const favoritesConverted = completedMatches.filter((match) => match.result !== '平局' && match.totalGoals >= 4).length
+  const lowDraws = completedMatches.filter((match) => match.result === '平局' && match.totalGoals <= 2).length
+  const oneGoalWins = completedMatches.filter((match) => match.result !== '平局' && Math.abs(scoreParts(match.score)[0] - scoreParts(match.score)[1]) === 1).length
+
+  return {
+    title: '赛后复盘校准',
+    completedMatches,
+    lessons: [
+      favoritesConverted >= 2
+        ? '强队一旦早早打开局面，尾部比分需要上调，不能只停留在 1-0 / 2-0。'
+        : '强队大胜样本不多，继续把两球以内胜作为基准，不盲目追大比分。',
+      lowDraws >= 1
+        ? '低总进球和平局热度仍有效，实力接近且节奏慢的比赛保留 0-0 / 1-1。'
+        : '平局没有形成主线样本，低比分平局只做防守层。',
+      oneGoalWins >= 2
+        ? '一球小胜仍是主流落点，强弱不极端时比分优先一球差。'
+        : '一球小胜权重维持，但遇到心理顺风和教练执行稳定的强队，上调穿盘可能。',
+      '本轮新增球员心态、教练执行、抗压稳定性代理指标；文化占卜继续低权重，不覆盖可验证信息。',
+    ],
+    calibration: {
+      favoriteTailBoost: favoritesConverted >= 2 ? 1 : 0,
+      lowDrawRetention: lowDraws >= 1 ? 1 : 0,
+      oneGoalBaseline: oneGoalWins >= 2 ? 1 : 0,
+    },
+  }
+}
+
+function scoreParts(score) {
+  return String(score)
+    .split('-')
+    .map((part) => Number(part))
+    .filter((value) => Number.isFinite(value))
+}
+
 function normalizeTeam(competitor) {
   const team = competitor.team ?? {}
   const name = team.displayName ?? team.name ?? 'Unknown'
@@ -448,7 +534,8 @@ async function buildMatchContext(event, competition, homeTeam, awayTeam, homeCom
   }
   const geography = buildGeographyContext(homeTeam, awayTeam, weather)
   const divination = buildDivinationContext(event, homeTeam, awayTeam, geography, weather)
-  const adjustment = buildContextAdjustment(homeContext, awayContext, weather, geography, divination)
+  const humanFactors = buildHumanFactors(homeTeam, awayTeam, homeContext, awayContext, weather, newsItems)
+  const adjustment = buildContextAdjustment(homeContext, awayContext, weather, geography, divination, humanFactors)
 
   return {
     home: homeContext,
@@ -456,6 +543,7 @@ async function buildMatchContext(event, competition, homeTeam, awayTeam, homeCom
     weather,
     geography,
     divination,
+    humanFactors,
     adjustment,
     note: '近况、球员、伤病、天气和地理因素进入主模型；古法占卜仅作低权重文化校验，不覆盖可验证事实。',
   }
@@ -903,11 +991,123 @@ function buildDivinationContext(event, homeTeam, awayTeam, geography, weather) {
   }
 }
 
-function buildContextAdjustment(homeContext, awayContext, weather, geography, divination) {
+function buildHumanFactors(homeTeam, awayTeam, homeContext, awayContext, weather, newsItems) {
+  const home = teamHumanProfile(homeTeam, homeContext, awayContext, weather, newsItems)
+  const away = teamHumanProfile(awayTeam, awayContext, homeContext, weather, newsItems)
+  const homeCombined = round(home.mentality * 0.52 + home.coach * 0.48, 1)
+  const awayCombined = round(away.mentality * 0.52 + away.coach * 0.48, 1)
+  const edge = round(homeCombined - awayCombined, 1)
+  const lean = Math.abs(edge) < 4 ? 'neutral' : edge > 0 ? 'home' : 'away'
+
+  return {
+    home,
+    away,
+    homeCombined,
+    awayCombined,
+    edge,
+    lean,
+    summary:
+      lean === 'neutral'
+        ? `心态/教练代理：双方接近（${homeCombined}-${awayCombined}），不单独改变主方向。`
+        : `心态/教练代理：${lean === 'home' ? homeTeam.zhName : awayTeam.zhName} ${homeCombined}-${awayCombined} 占优，提升其一球差和顺风扩大比分路径。`,
+  }
+}
+
+function teamHumanProfile(team, ownContext, opponentContext, weather, newsItems) {
+  const recent = ownContext.recentMatches ?? []
+  const form = ownContext.formString || ''
+  const wins = recent.filter((match) => match.result === 'W').length || countFormResult(form, 'W')
+  const draws = recent.filter((match) => match.result === 'D').length || countFormResult(form, 'D')
+  const losses = recent.filter((match) => match.result === 'L').length || countFormResult(form, 'L')
+  const recentTwo = recent.slice(0, 2)
+  const recentPulse = recentTwo.reduce((sum, match, index) => sum + formPulse(match.result) * (index === 0 ? 1 : 0.62), 0)
+  const goalsFor = ownContext.goalsForAvg ?? 1.15
+  const goalsAgainst = ownContext.goalsAgainstAvg ?? 1.15
+  const opponentGoalsAgainst = opponentContext.goalsAgainstAvg ?? 1.15
+  const injuryRisk = ownContext.injuries?.riskScore ?? 18
+  const aliases = teamNewsAliases(team)
+  const newsPressure = newsItems.slice(0, 8).some((item) => {
+    const text = `${item.title} ${item.summary}`.toLowerCase()
+    return hasNewsRisk(text) && aliases.some((alias) => alias && text.includes(alias))
+  })
+  const resultMargins = recent.map((match) => Math.abs(match.goalsFor - match.goalsAgainst))
+  const marginVolatility = resultMargins.length ? standardDeviation(resultMargins) : 0.8
+  const goalVolatility = recent.length ? standardDeviation(recent.map((match) => match.goalsFor + match.goalsAgainst)) : 1.1
+  const unbeatenBonus = Math.max(0, wins + draws - losses) * 2.2
+  const attackConfidence = clamp((goalsFor - 1.25) * 10 + (goalsFor - opponentGoalsAgainst) * 5, -12, 16)
+  const defensiveTrust = clamp((1.15 - goalsAgainst) * 12, -14, 16)
+  const weatherStress = weather.riskLevel === '高' ? 5 : weather.riskLevel === '中' ? 2 : 0
+  const mentality = clamp(
+    round(50 + wins * 5.2 + draws * 1.5 - losses * 4.8 + recentPulse + unbeatenBonus + attackConfidence * 0.55 - injuryRisk * 0.16 - (newsPressure ? 4 : 0), 1),
+    24,
+    88,
+  )
+  const coach = clamp(
+    round(
+      50 +
+        defensiveTrust * 0.9 +
+        clamp(12 - marginVolatility * 4.5, -8, 12) +
+        clamp(10 - goalVolatility * 2.8, -8, 10) +
+        clamp((goalsFor - goalsAgainst) * 4, -12, 14) -
+        injuryRisk * 0.12 -
+        weatherStress,
+      1,
+    ),
+    24,
+    88,
+  )
+
+  return {
+    mentality,
+    coach,
+    pressure: clamp(round(50 + wins * 4 - losses * 5 + (newsPressure ? 9 : 0) + injuryRisk * 0.18, 1), 20, 88),
+    volatility: round(marginVolatility + goalVolatility * 0.45, 2),
+    note: `心态 ${mentality}，教练执行 ${coach}；${wins}胜${draws}平${losses}负，伤病/新闻压力 ${newsPressure ? '偏高' : '常规'}。`,
+  }
+}
+
+function formPulse(result) {
+  if (result === 'W') return 5
+  if (result === 'D') return 1.5
+  if (result === 'L') return -4.5
+  return 0
+}
+
+function standardDeviation(values) {
+  if (!values.length) return 0
+  const mean = values.reduce((sum, value) => sum + value, 0) / values.length
+  const variance = values.reduce((sum, value) => sum + (value - mean) ** 2, 0) / values.length
+  return Math.sqrt(variance)
+}
+
+function humanTempoAdjustment(humanFactors) {
+  if (!humanFactors) return 0
+  const bestMentality = Math.max(humanFactors.home.mentality, humanFactors.away.mentality)
+  const bestCoach = Math.max(humanFactors.home.coach, humanFactors.away.coach)
+  const volatility = Math.max(humanFactors.home.volatility, humanFactors.away.volatility)
+  let adjustment = 0
+
+  if (bestMentality >= 72 && bestCoach >= 60) adjustment += 0.07
+  if (bestMentality >= 80) adjustment += 0.05
+  if (volatility >= 2.2) adjustment += 0.04
+  if (humanFactors.home.coach >= 68 && humanFactors.away.coach >= 68 && volatility < 1.3) adjustment -= 0.05
+
+  return clamp(round(adjustment, 2), -0.08, 0.16)
+}
+
+function humanVolatilityRisk(humanFactors) {
+  if (!humanFactors) return 0
+  const volatility = Math.max(humanFactors.home.volatility, humanFactors.away.volatility)
+  const pressure = Math.max(humanFactors.home.pressure, humanFactors.away.pressure)
+  return clamp(Math.round((volatility - 1.4) * 2.2 + (pressure > 72 ? 2 : 0)), 0, 6)
+}
+
+function buildContextAdjustment(homeContext, awayContext, weather, geography, divination, humanFactors = null) {
   const formEdge = homeContext.formScore - awayContext.formScore
   const injuryEdge = awayContext.injuries.riskScore - homeContext.injuries.riskScore
   const travelEdge = clamp((geography.distanceEdgeKm ?? 0) / 4500, -0.9, 0.9)
   const divinationEdge = clamp((divination.delta ?? 0) * 0.18, -0.72, 0.72)
+  const humanEdge = clamp((humanFactors?.edge ?? 0) / 28, -1, 1)
   const weatherRisk = weather.riskLevel === '高' ? 8 : weather.riskLevel === '中' ? 4 : 0
   const formReliability = Math.min(homeContext.sampleSize, awayContext.sampleSize) >= 3 ? 1 : 0.55
   const weatherTempoDrag =
@@ -915,17 +1115,41 @@ function buildContextAdjustment(homeContext, awayContext, weather, geography, di
     ((weather.precipitationProbability ?? 0) >= 35 ? 0.08 : 0) +
     ((weather.humidity ?? 0) >= 80 && weather.riskLevel === '高' ? 0.06 : 0) +
     ((weather.windKph ?? 0) >= 24 ? 0.05 : 0)
-  const homeGoalDiffDelta = clamp(round(formEdge * 0.012 * formReliability + injuryEdge * 0.006 + travelEdge * 0.08 + divinationEdge * 0.04, 2), -0.34, 0.34)
+  const homeGoalDiffDelta = clamp(
+    round(formEdge * 0.012 * formReliability + injuryEdge * 0.006 + travelEdge * 0.08 + humanEdge * 0.13 + divinationEdge * 0.04, 2),
+    -0.42,
+    0.42,
+  )
   const totalGoalsDelta = clamp(
     round(
-      ((homeContext.goalsForAvg ?? 1.2) + (awayContext.goalsForAvg ?? 1.2) - 2.6) * 0.09 - weatherTempoDrag,
+      ((homeContext.goalsForAvg ?? 1.2) + (awayContext.goalsForAvg ?? 1.2) - 2.6) * 0.09 +
+        humanTempoAdjustment(humanFactors) -
+        weatherTempoDrag,
       2,
     ),
-    -0.34,
-    0.24,
+    -0.38,
+    0.32,
   )
-  const confidenceDelta = clamp(Math.round(Math.abs(formEdge) * 0.08 * formReliability - weatherRisk * 0.35 - Math.max(homeContext.injuries.riskScore, awayContext.injuries.riskScore) * 0.04), -8, 7)
-  const riskDelta = clamp(Math.round(weatherRisk + Math.max(homeContext.injuries.riskScore, awayContext.injuries.riskScore) * 0.08 + (formReliability < 1 ? 3 : 0)), 0, 16)
+  const confidenceDelta = clamp(
+    Math.round(
+      Math.abs(formEdge) * 0.08 * formReliability +
+        Math.abs(humanFactors?.edge ?? 0) * 0.08 -
+        weatherRisk * 0.35 -
+        Math.max(homeContext.injuries.riskScore, awayContext.injuries.riskScore) * 0.04,
+    ),
+    -8,
+    9,
+  )
+  const riskDelta = clamp(
+    Math.round(
+      weatherRisk +
+        Math.max(homeContext.injuries.riskScore, awayContext.injuries.riskScore) * 0.08 +
+        (formReliability < 1 ? 3 : 0) +
+        humanVolatilityRisk(humanFactors),
+    ),
+    0,
+    18,
+  )
 
   return {
     homeGoalDiffDelta,
@@ -936,6 +1160,7 @@ function buildContextAdjustment(homeContext, awayContext, weather, geography, di
       `近况差修正 ${homeGoalDiffDelta > 0 ? '+' : ''}${homeGoalDiffDelta} 球。`,
       `天气/节奏修正 ${totalGoalsDelta > 0 ? '+' : ''}${totalGoalsDelta} 总进球。`,
       `伤病与天气风险使风险指数 ${riskDelta > 0 ? '+' : ''}${riskDelta}。`,
+      humanFactors?.summary ?? '心态/教练代理：数据不足，未单独修正。',
       `古法取象 ${divination.weight}：${divination.summary}`,
     ],
   }
@@ -1500,6 +1725,7 @@ function buildDeepThinkingPlan({ grade, expertAnswer, plays, scenarios, riskCont
     reasoningSummary: [
       `模型最集中比分：${expertAnswer.recommendedScore}；备选：${expertAnswer.secondaryScores.slice(0, 2).join(' / ') || '不扩展'}。`,
       scoreline.strengthProfile?.summary ?? '实力护栏：暂无足够近况数据，只按市场概率保守处理。',
+      context?.humanFactors?.summary ?? '心态/教练代理：暂无足够近况数据，未单独修正。',
       `胜平负方向：${expertAnswer.marketDirection}；总进球校验：${expertAnswer.totalGoals}。`,
       context
         ? `近5场：${context.home.trendNote}；${context.away.trendNote}`
@@ -2050,13 +2276,15 @@ function buildStrengthProfile(homeWin, awayWin, context) {
   const awayRecent = recentTeamStrength(awayContext, homeContext)
   const homeHealth = clamp(68 - (homeContext.injuries?.riskScore ?? 18) * 0.55, 28, 74)
   const awayHealth = clamp(68 - (awayContext.injuries?.riskScore ?? 18) * 0.55, 28, 74)
+  const homeHuman = context?.humanFactors?.homeCombined ?? 52
+  const awayHuman = context?.humanFactors?.awayCombined ?? 52
   const reliability = Math.min(homeContext.sampleSize ?? 0, awayContext.sampleSize ?? 0) >= 3 ? 1 : 0.72
   const homeStrength = round(
-    clamp(homeMarket * 0.58 + (homeContext.formScore ?? 50) * 0.22 * reliability + homeRecent * 0.14 + homeHealth * 0.06, 12, 90),
+    clamp(homeMarket * 0.54 + (homeContext.formScore ?? 50) * 0.2 * reliability + homeRecent * 0.13 + homeHealth * 0.05 + homeHuman * 0.08, 12, 92),
     1,
   )
   const awayStrength = round(
-    clamp(awayMarket * 0.58 + (awayContext.formScore ?? 50) * 0.22 * reliability + awayRecent * 0.14 + awayHealth * 0.06, 12, 90),
+    clamp(awayMarket * 0.54 + (awayContext.formScore ?? 50) * 0.2 * reliability + awayRecent * 0.13 + awayHealth * 0.05 + awayHuman * 0.08, 12, 92),
     1,
   )
   const edge = round(homeStrength - awayStrength, 1)
@@ -2121,6 +2349,15 @@ function scoreStrengthCoherenceMultiplier(
   const weakSideGoals =
     profile.strongerSide === 'home' ? awayGoals : profile.strongerSide === 'away' ? homeGoals : underdogGoals
   const strengthMargin = strongSideGoals - weakSideGoals
+  const humanEdge = context?.humanFactors?.edge ?? 0
+  const humanSide = Math.abs(humanEdge) < 5 ? 'level' : humanEdge > 0 ? 'home' : 'away'
+  const humanResult = humanSide === 'home' ? scoreResult(1, 0) : humanSide === 'away' ? scoreResult(0, 1) : scoreResult(0, 0)
+  const humanFavorite =
+    humanSide === 'home'
+      ? context?.humanFactors?.home
+      : humanSide === 'away'
+        ? context?.humanFactors?.away
+        : null
   let multiplier = 1
 
   if (profile.strongerSide === 'level') {
@@ -2157,6 +2394,16 @@ function scoreStrengthCoherenceMultiplier(
   }
 
   if (draw >= 0.29 && totalExpectedGoals <= 2.25 && result === scoreResult(0, 0)) multiplier += 0.08
+  if (humanSide !== 'level') {
+    if (result === humanResult) multiplier += Math.min(0.12, Math.abs(humanEdge) * 0.006)
+    if (result !== humanResult && result !== scoreResult(0, 0)) multiplier -= Math.min(0.1, Math.abs(humanEdge) * 0.004)
+    if (result === humanResult && strengthMargin >= 2 && (humanFavorite?.mentality ?? 50) >= 72 && (humanFavorite?.coach ?? 50) >= 60) {
+      multiplier += 0.08
+    }
+    if (result === humanResult && strengthMargin >= 3 && (humanFavorite?.pressure ?? 50) >= 76) {
+      multiplier -= 0.06
+    }
+  }
 
   return clamp(round(multiplier, 2), 0.52, 1.28)
 }
@@ -2256,6 +2503,31 @@ function scoreTailMultiplier(homeGoals, awayGoals, totalExpectedGoals, resultPro
   )
   if (strongConsolationSignal > 0) multiplier += Math.min(0.2, strongConsolationSignal * 0.06)
   if (strongConsolationSignal < 0) multiplier -= Math.min(0.14, Math.abs(strongConsolationSignal) * 0.04)
+  if (
+    activeModelCalibration.favoriteTailBoost &&
+    favoriteProbability >= 0.72 &&
+    result === favoriteResult &&
+    favoriteMargin >= 2 &&
+    totalGoals >= 3
+  ) {
+    multiplier += 0.08
+  }
+  if (
+    activeModelCalibration.oneGoalBaseline &&
+    favoriteProbability < 0.66 &&
+    result === favoriteResult &&
+    favoriteMargin === 1
+  ) {
+    multiplier += 0.05
+  }
+  if (
+    activeModelCalibration.lowDrawRetention &&
+    result === '平局' &&
+    totalGoals <= 2 &&
+    draw >= 0.28
+  ) {
+    multiplier += 0.06
+  }
 
   return clamp(round(multiplier * strengthLift, 2), 0.52, 1.6)
 }
@@ -2363,6 +2635,21 @@ function scoreCandidateRank(item, resultStrength, context = null, totalExpectedG
       : strongConsolationSignal < 0
         ? 1 - Math.min(0.12, Math.abs(strongConsolationSignal) * 0.035)
         : 1
+  const reviewLift =
+    activeModelCalibration.favoriteTailBoost &&
+    favoriteProbability >= 0.72 &&
+    item.result === favoriteResult &&
+    favoriteMargin >= 2 &&
+    totalGoals >= 3
+      ? 1.08
+      : activeModelCalibration.oneGoalBaseline &&
+          favoriteProbability < 0.66 &&
+          item.result === favoriteResult &&
+          favoriteMargin === 1
+        ? 1.05
+        : activeModelCalibration.lowDrawRetention && item.result === scoreResult(0, 0) && totalGoals <= 2 && drawStrength >= 0.28
+          ? 1.06
+          : 1
   const strengthLift = scoreStrengthCoherenceMultiplier(
     homeGoals,
     awayGoals,
@@ -2389,6 +2676,7 @@ function scoreCandidateRank(item, resultStrength, context = null, totalExpectedG
     drawCompressionLift *
     resilientLift *
     strongConsolationLift *
+    reviewLift *
     strengthLift *
     oddsPenalty
   )
