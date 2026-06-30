@@ -59,6 +59,7 @@ export interface ModelJudgement {
 
 export interface RecentMatch {
   date: string
+  dateUtc?: string
   opponent: string
   opponentZhName: string
   result: 'W' | 'D' | 'L'
@@ -92,6 +93,16 @@ export interface PlayerSignal {
   position: string
 }
 
+export interface TournamentMatchRecord {
+  date: string
+  dateUtc?: string
+  opponent: string
+  result: 'W' | 'D' | 'L'
+  score: string
+  goalsFor: number
+  goalsAgainst: number
+}
+
 export interface TournamentTeamRecord {
   name: string
   zhName: string
@@ -114,6 +125,7 @@ export interface TournamentTeamRecord {
   defenseScore: number
   momentumScore: number
   strengthScore: number
+  matches: TournamentMatchRecord[]
   summary: string
 }
 
@@ -234,6 +246,39 @@ export interface AdvancementContext {
   confidenceDelta: number
 }
 
+export interface SituationalContext {
+  rest: {
+    homeDays: number | null
+    awayDays: number | null
+    edgeDays: number
+    summary: string
+  }
+  bodyClock: {
+    localHour: number | null
+    homeShiftHours: number | null
+    awayShiftHours: number | null
+    edgeHours: number
+    summary: string
+  }
+  host: {
+    country: string | null
+    homeHost: boolean
+    awayHost: boolean
+    edge: number
+    summary: string
+  }
+  knockoutTempo: {
+    penaltyRisk: number
+    extraTimeRisk: number
+    summary: string
+  }
+  homeGoalDiffDelta: number
+  totalGoalsDelta: number
+  confidenceDelta: number
+  riskDelta: number
+  summary: string
+}
+
 export interface MatchContext {
   home: TeamContext
   away: TeamContext
@@ -242,6 +287,7 @@ export interface MatchContext {
   divination: DivinationContext
   humanFactors: HumanFactorsContext
   advancement: AdvancementContext
+  situational: SituationalContext
   adjustment: ContextAdjustment
   note: string
 }

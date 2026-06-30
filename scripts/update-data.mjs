@@ -53,8 +53,14 @@ const countryProfiles = new Map([
   ['Argentina', { zhName: '阿根廷', lat: -34.6, lon: -58.38, region: '南美南部', climate: '温带/亚热带', element: '水' }],
   ['Austria', { zhName: '奥地利', lat: 48.21, lon: 16.37, region: '中欧内陆', climate: '温带大陆', element: '土' }],
   ['France', { zhName: '法国', lat: 48.86, lon: 2.35, region: '西欧', climate: '温带海洋', element: '金' }],
+  ['Sweden', { zhName: '瑞典', lat: 59.33, lon: 18.07, region: '北欧', climate: '冷凉大陆/海洋', element: '水' }],
   ['Iraq', { zhName: '伊拉克', lat: 33.31, lon: 44.36, region: '西亚', climate: '干热大陆', element: '火' }],
   ['Norway', { zhName: '挪威', lat: 59.91, lon: 10.75, region: '北欧', climate: '冷凉海洋', element: '水' }],
+  ['Ivory Coast', { zhName: '科特迪瓦', lat: 5.35, lon: -4.03, region: '西非几内亚湾', climate: '热带湿热', element: '木' }],
+  ['Mexico', { zhName: '墨西哥', lat: 19.43, lon: -99.13, region: '北美高原', climate: '高原/热带', element: '土' }],
+  ['Ecuador', { zhName: '厄瓜多尔', lat: -0.18, lon: -78.47, region: '南美安第斯', climate: '热带高原', element: '木' }],
+  ['Bosnia-Herzegovina', { zhName: '波黑', lat: 43.86, lon: 18.41, region: '巴尔干半岛', climate: '温带大陆/山地', element: '土' }],
+  ['Bosnia and Herzegovina', { zhName: '波黑', lat: 43.86, lon: 18.41, region: '巴尔干半岛', climate: '温带大陆/山地', element: '土' }],
   ['Senegal', { zhName: '塞内加尔', lat: 14.69, lon: -17.45, region: '西非', climate: '热带草原', element: '火' }],
   ['Paraguay', { zhName: '巴拉圭', lat: -25.26, lon: -57.58, region: '南美内陆', climate: '亚热带草原', element: '木' }],
   ['Australia', { zhName: '澳大利亚', lat: -35.28, lon: 149.13, region: '大洋洲大陆', climate: '干热/温带海洋', element: '火' }],
@@ -90,6 +96,8 @@ const teamNames = new Map([
   ['Curaçao', '库拉索'],
   ['Curacao', '库拉索'],
   ['Ecuador', '厄瓜多尔'],
+  ['Bosnia-Herzegovina', '波黑'],
+  ['Bosnia and Herzegovina', '波黑'],
   ['United States', '美国'],
   ['Brazil', '巴西'],
   ['Argentina', '阿根廷'],
@@ -512,6 +520,7 @@ function addTournamentTeamResult(records, own, opponent, goalsFor, goalsAgainst,
   record.heavyLosses += goalsAgainst - goalsFor >= 3 ? 1 : 0
   record.matches.push({
     date: formatShortDate(date),
+    dateUtc: date,
     opponent: teamNames.get(opponentName) ?? opponentName,
     result,
     score: `${goalsFor}-${goalsAgainst}`,
@@ -895,7 +904,8 @@ async function buildMatchContext(
   const divination = buildDivinationContext(event, homeTeam, awayTeam, geography, weather)
   const humanFactors = buildHumanFactors(homeTeam, awayTeam, homeContext, awayContext, weather, newsItems)
   const advancement = buildAdvancementContext(event, competition, homeTeam, awayTeam, homeContext, awayContext, groupStandings, knockoutPaths)
-  const adjustment = buildContextAdjustment(homeContext, awayContext, weather, geography, divination, humanFactors, advancement)
+  const situational = buildSituationalContext(event, homeTeam, awayTeam, homeContext, awayContext, geography, weather, advancement)
+  const adjustment = buildContextAdjustment(homeContext, awayContext, weather, geography, divination, humanFactors, advancement, situational)
 
   return {
     home: homeContext,
@@ -905,8 +915,9 @@ async function buildMatchContext(
     divination,
     humanFactors,
     advancement,
+    situational,
     adjustment,
-    note: '近况、球员、伤病、天气、地理、晋级压力与半区对手强度进入主模型；古法占卜仅作低权重文化校验，不覆盖可验证事实。',
+    note: '近况、球员、伤病、天气、地理、赛程体能、生物钟、主场环境、晋级压力与半区对手强度进入主模型；古法占卜仅作低权重文化校验，不覆盖可验证事实。',
   }
 }
 
@@ -976,6 +987,7 @@ function normalizeRecentMatch(event, team, cutoff) {
 
   return {
     date: formatShortDate(event.date),
+    dateUtc: event.date,
     opponent: opponent.team?.displayName ?? 'Unknown',
     opponentZhName: teamNames.get(opponent.team?.displayName) ?? opponent.team?.displayName ?? 'Unknown',
     result,
@@ -1517,6 +1529,133 @@ function groupPressureProfile(standing, group, context) {
   }
 }
 
+function buildSituationalContext(event, homeTeam, awayTeam, homeContext, awayContext, geography, weather, advancement) {
+  const kickoff = new Date(event.date)
+  const kickoffMs = kickoff.getTime()
+  const homeProfile = countryProfiles.get(homeTeam.name) ?? countryProfiles.get(homeTeam.zhName)
+  const awayProfile = countryProfiles.get(awayTeam.name) ?? countryProfiles.get(awayTeam.zhName)
+  const venueOffset = Number.isFinite(weather.longitude) ? clamp(Math.round(weather.longitude / 15), -12, 14) : null
+  const localHour = venueOffset === null ? null : positiveModulo(kickoff.getUTCHours() + venueOffset, 24)
+  const homeRestDays = restDaysBeforeKickoff(homeContext, kickoffMs)
+  const awayRestDays = restDaysBeforeKickoff(awayContext, kickoffMs)
+  const homeOffset = profileTimezoneOffset(homeProfile)
+  const awayOffset = profileTimezoneOffset(awayProfile)
+  const homeBodyShift = venueOffset === null || homeOffset === null ? null : Math.abs(timezoneDeltaHours(venueOffset, homeOffset))
+  const awayBodyShift = venueOffset === null || awayOffset === null ? null : Math.abs(timezoneDeltaHours(venueOffset, awayOffset))
+  const restEdgeDays = (homeRestDays ?? 4) - (awayRestDays ?? 4)
+  const bodyClockEdge = (awayBodyShift ?? 4) - (homeBodyShift ?? 4)
+  const hostCountry = venueHostCountry(weather)
+  const homeHost = hostCountry !== null && isHostTeam(homeTeam, hostCountry)
+  const awayHost = hostCountry !== null && isHostTeam(awayTeam, hostCountry)
+  const hostEdge = homeHost ? 1 : awayHost ? -1 : 0
+  const strengthGap = Math.abs((homeContext.tournament?.strengthScore ?? 46) - (awayContext.tournament?.strengthScore ?? 46))
+  const penaltyRisk =
+    advancement?.pressureType === 'knockout'
+      ? clamp(Math.round(82 - strengthGap * 1.4 + (localHour !== null && localHour >= 19 ? 4 : 0)), 36, 86)
+      : 18
+  const shortRestCount = [homeRestDays, awayRestDays].filter((days) => typeof days === 'number' && days < 4).length
+  const maxBodyShift = Math.max(homeBodyShift ?? 0, awayBodyShift ?? 0)
+  const heatAfternoon =
+    localHour !== null &&
+    localHour >= 12 &&
+    localHour <= 17 &&
+    ((weather.temperatureC ?? 22) >= 28 || (weather.humidity ?? 50) >= 76)
+  const homeGoalDiffDelta = clamp(round(restEdgeDays * 0.035 + bodyClockEdge * 0.015 + hostEdge * 0.08, 2), -0.16, 0.16)
+  const totalGoalsDelta = clamp(
+    round((shortRestCount > 0 ? 0.03 : 0) + (penaltyRisk >= 70 ? -0.06 : penaltyRisk >= 58 ? -0.03 : 0) - (heatAfternoon ? 0.04 : 0), 2),
+    -0.12,
+    0.08,
+  )
+  const confidenceDelta = clamp(Math.round(Math.abs(restEdgeDays) >= 1.5 || Math.abs(bodyClockEdge) >= 4 || hostEdge !== 0 ? 1 : 0) - (penaltyRisk >= 72 ? 2 : 0), -3, 2)
+  const riskDelta = clamp(Math.round(shortRestCount * 2 + (maxBodyShift >= 6 ? 3 : maxBodyShift >= 4 ? 1 : 0) + (penaltyRisk >= 70 ? 4 : penaltyRisk >= 58 ? 2 : 0) + (hostEdge !== 0 ? 1 : 0)), 0, 10)
+  const restSummary = `${homeTeam.zhName}休息${formatRestDays(homeRestDays)}，${awayTeam.zhName}休息${formatRestDays(awayRestDays)}`
+  const clockSummary =
+    localHour === null
+      ? '开球当地时段待核验'
+      : `当地约${localHour}点开球，身体时钟偏移 ${homeTeam.zhName}${formatShift(homeBodyShift)} / ${awayTeam.zhName}${formatShift(awayBodyShift)}`
+  const hostSummary = hostEdge === 0 ? '无明显东道主/准主场加成' : `${homeHost ? homeTeam.zhName : awayTeam.zhName}存在东道主或准主场环境加成`
+
+  return {
+    rest: {
+      homeDays: homeRestDays,
+      awayDays: awayRestDays,
+      edgeDays: round(restEdgeDays, 1),
+      summary: restSummary,
+    },
+    bodyClock: {
+      localHour,
+      homeShiftHours: homeBodyShift,
+      awayShiftHours: awayBodyShift,
+      edgeHours: round(bodyClockEdge, 1),
+      summary: clockSummary,
+    },
+    host: {
+      country: hostCountry,
+      homeHost,
+      awayHost,
+      edge: hostEdge,
+      summary: hostSummary,
+    },
+    knockoutTempo: {
+      penaltyRisk,
+      extraTimeRisk: advancement?.pressureType === 'knockout' ? clamp(Math.round(penaltyRisk * 0.78), 28, 72) : 12,
+      summary:
+        advancement?.pressureType === 'knockout'
+          ? `淘汰赛拖入加时/点球风险 ${penaltyRisk}/100，强弱差越小越压低大比分。`
+          : '非淘汰赛，点球因素不参与90分钟主判断。',
+    },
+    homeGoalDiffDelta,
+    totalGoalsDelta,
+    confidenceDelta,
+    riskDelta,
+    summary: `${restSummary}；${clockSummary}；${hostSummary}；${advancement?.pressureType === 'knockout' ? `加时点球风险${penaltyRisk}/100` : '无点球淘汰压力'}。`,
+  }
+}
+
+function restDaysBeforeKickoff(teamContext, kickoffMs) {
+  const tournamentMatch = [...(teamContext.tournament?.matches ?? [])]
+    .filter((match) => match.dateUtc && new Date(match.dateUtc).getTime() < kickoffMs)
+    .sort((left, right) => new Date(right.dateUtc).getTime() - new Date(left.dateUtc).getTime())[0]
+  const recent = tournamentMatch ?? teamContext.recentMatches?.find((match) => match.dateUtc)
+  if (!recent?.dateUtc) return null
+  const previousMs = new Date(recent.dateUtc).getTime()
+  if (!Number.isFinite(previousMs) || previousMs >= kickoffMs) return null
+  return round((kickoffMs - previousMs) / (24 * 60 * 60 * 1000), 1)
+}
+
+function profileTimezoneOffset(profile) {
+  return Number.isFinite(profile?.lon) ? clamp(Math.round(profile.lon / 15), -12, 14) : null
+}
+
+function timezoneDeltaHours(left, right) {
+  const raw = left - right
+  if (raw > 12) return raw - 24
+  if (raw < -12) return raw + 24
+  return raw
+}
+
+function venueHostCountry(weather) {
+  const city = String(weather.city ?? '').toLowerCase()
+  const lat = weather.latitude
+  const lon = weather.longitude
+  if (/british columbia|ontario|quebec|alberta|canada/.test(city) || (Number.isFinite(lat) && lat >= 49.1)) return 'Canada'
+  if (/mexico|ciudad|jalisco|nuevo leon|nuevo león/.test(city) || (Number.isFinite(lat) && Number.isFinite(lon) && lat <= 32.5 && lon < -86)) return 'Mexico'
+  if (Number.isFinite(lat) && Number.isFinite(lon) && lat >= 24 && lat <= 49.5 && lon >= -125 && lon <= -66) return 'United States'
+  return null
+}
+
+function isHostTeam(team, hostCountry) {
+  return normalizeTeamKey(team.name) === normalizeTeamKey(hostCountry) || normalizeTeamKey(team.zhName) === normalizeTeamKey(teamNames.get(hostCountry))
+}
+
+function formatRestDays(days) {
+  return typeof days === 'number' ? `${days}天` : '待核验'
+}
+
+function formatShift(hours) {
+  return typeof hours === 'number' ? `${hours}小时` : '待核验'
+}
+
 function teamHumanProfile(team, ownContext, opponentContext, weather, newsItems) {
   const recent = ownContext.recentMatches ?? []
   const form = ownContext.formString || ''
@@ -1638,7 +1777,7 @@ function humanVolatilityRisk(humanFactors) {
   return clamp(Math.round((volatility - 1.4) * 2.2 + (pressure > 72 ? 2 : 0)), 0, 6)
 }
 
-function buildContextAdjustment(homeContext, awayContext, weather, geography, divination, humanFactors = null, advancement = null) {
+function buildContextAdjustment(homeContext, awayContext, weather, geography, divination, humanFactors = null, advancement = null, situational = null) {
   const formEdge = homeContext.formScore - awayContext.formScore
   const injuryEdge = awayContext.injuries.riskScore - homeContext.injuries.riskScore
   const travelEdge = clamp((geography.distanceEdgeKm ?? 0) / 4500, -0.9, 0.9)
@@ -1646,6 +1785,7 @@ function buildContextAdjustment(homeContext, awayContext, weather, geography, di
   const humanEdge = clamp((humanFactors?.edge ?? 0) / 28, -1, 1)
   const tournamentEdge = clamp(((homeContext.tournament?.strengthScore ?? 46) - (awayContext.tournament?.strengthScore ?? 46)) / 32, -1, 1)
   const advancementEdge = clamp(advancement?.homeGoalDiffDelta ?? 0, -0.08, 0.08)
+  const situationalEdge = clamp(situational?.homeGoalDiffDelta ?? 0, -0.16, 0.16)
   const weatherRisk = weather.riskLevel === '高' ? 8 : weather.riskLevel === '中' ? 4 : 0
   const formReliability = Math.min(homeContext.sampleSize, awayContext.sampleSize) >= 3 ? 1 : 0.55
   const weatherTempoDrag =
@@ -1661,6 +1801,7 @@ function buildContextAdjustment(homeContext, awayContext, weather, geography, di
         tournamentEdge * 0.12 +
         humanEdge * 0.13 +
         advancementEdge +
+        situationalEdge +
         divinationEdge * 0.04,
       2,
     ),
@@ -1673,7 +1814,8 @@ function buildContextAdjustment(homeContext, awayContext, weather, geography, di
         tournamentTempoAdjustment(homeContext.tournament, awayContext.tournament) +
         humanTempoAdjustment(humanFactors) -
         weatherTempoDrag +
-        (advancement?.totalGoalsDelta ?? 0),
+        (advancement?.totalGoalsDelta ?? 0) +
+        (situational?.totalGoalsDelta ?? 0),
       2,
     ),
     -0.38,
@@ -1685,7 +1827,8 @@ function buildContextAdjustment(homeContext, awayContext, weather, geography, di
         Math.abs(humanFactors?.edge ?? 0) * 0.08 -
         weatherRisk * 0.35 -
         Math.max(homeContext.injuries.riskScore, awayContext.injuries.riskScore) * 0.04 +
-        (advancement?.confidenceDelta ?? 0),
+        (advancement?.confidenceDelta ?? 0) +
+        (situational?.confidenceDelta ?? 0),
     ),
     -8,
     9,
@@ -1696,7 +1839,8 @@ function buildContextAdjustment(homeContext, awayContext, weather, geography, di
         Math.max(homeContext.injuries.riskScore, awayContext.injuries.riskScore) * 0.08 +
         (formReliability < 1 ? 3 : 0) +
         humanVolatilityRisk(humanFactors) +
-        (advancement?.riskDelta ?? 0),
+        (advancement?.riskDelta ?? 0) +
+        (situational?.riskDelta ?? 0),
     ),
     0,
     18,
@@ -1712,6 +1856,7 @@ function buildContextAdjustment(homeContext, awayContext, weather, geography, di
       `天气/节奏修正 ${totalGoalsDelta > 0 ? '+' : ''}${totalGoalsDelta} 总进球。`,
       `本届战绩修正：${homeContext.tournament?.summary ?? '主队暂无'}；${awayContext.tournament?.summary ?? '客队暂无'}。`,
       advancement?.summary ?? '晋级形势：暂无额外修正。',
+      situational?.summary ?? '赛程体能：暂无额外修正。',
       `伤病与天气风险使风险指数 ${riskDelta > 0 ? '+' : ''}${riskDelta}。`,
       humanFactors?.summary ?? '心态/教练代理：数据不足，未单独修正。',
       `古法取象 ${divination.weight}：${divination.summary}`,
@@ -2163,6 +2308,12 @@ function buildProfessionalBrief(market, homeTeam, awayTeam, judgement, scoreline
               evidence: context.advancement.summary,
             },
             {
+              label: '赛程体能',
+              score: Math.max(35, 80 - context.situational.riskDelta * 6),
+              tone: context.situational.riskDelta >= 6 ? 'watch' : 'good',
+              evidence: context.situational.summary,
+            },
+            {
               label: '古法占卜低权重',
               score: Math.round(50 + context.divination.delta * 8),
               tone: 'watch',
@@ -2286,6 +2437,7 @@ function buildDeepThinkingPlan({ grade, expertAnswer, plays, scenarios, riskCont
       scoreline.strengthProfile?.summary ?? '实力护栏：暂无足够近况数据，只按市场概率保守处理。',
       context ? `本届杯赛：${context.home.tournament.summary}；${context.away.tournament.summary}` : '本届杯赛战绩暂未接入。',
       context?.advancement?.summary ?? '晋级形势暂未接入。',
+      context?.situational?.summary ?? '赛程体能暂未接入。',
       context?.humanFactors?.summary ?? '心态/教练代理：暂无足够近况数据，未单独修正。',
       `胜平负方向：${expertAnswer.marketDirection}；总进球校验：${expertAnswer.totalGoals}。`,
       context
@@ -2299,7 +2451,7 @@ function buildDeepThinkingPlan({ grade, expertAnswer, plays, scenarios, riskCont
         : '古法校验未参与本次评分。',
       `主要风险：${hotRisk?.label ?? '赔率'}为${hotRisk?.level ?? '中'}，${scoreRisk?.label ?? '比分方差'}为${scoreRisk?.level ?? '中'}。`,
       scenarios[0] ? `基准剧本：${scenarios[0].scorePath}` : '等待更多情景数据。',
-    ].slice(0, 7),
+    ].slice(0, 8),
     noBuyRules: [
       `中国体彩比分赔率低于 ${scorePlay?.minOdds ?? '建议门槛'} 时不买。`,
       resultPlay ? `胜平负 ${resultPlay.selection} 低于 ${resultPlay.minOdds} 时不买。` : '胜平负赔率不可核验时不买。',
@@ -2455,6 +2607,11 @@ function buildRiskControls(market, judgement, scoreline, favorite, context = nul
         label: '晋级压力',
         level: context.advancement.pressureLevel,
         detail: context.advancement.summary,
+      },
+      {
+        label: '赛程体能',
+        level: context.situational.riskDelta >= 7 ? '高' : context.situational.riskDelta >= 4 ? '中' : '低',
+        detail: context.situational.summary,
       },
       {
         label: '占卜只作校验',
@@ -2951,6 +3108,7 @@ function scoreStrengthCoherenceMultiplier(
   const tournamentResult = tournamentSide === 'home' ? scoreResult(1, 0) : tournamentSide === 'away' ? scoreResult(0, 1) : scoreResult(0, 0)
   const tournamentFavorite = tournamentSide === 'home' ? homeTournament : tournamentSide === 'away' ? awayTournament : null
   const advancement = context?.advancement ?? null
+  const situational = context?.situational ?? null
   let multiplier = 1
 
   if (profile.strongerSide === 'level') {
@@ -2965,6 +3123,10 @@ function scoreStrengthCoherenceMultiplier(
       if (totalGoals >= 2 && totalGoals <= 4) multiplier += 0.04
       if (advancement.homePressure > advancement.awayPressure + 14 && result === scoreResult(1, 0)) multiplier += 0.04
       if (advancement.awayPressure > advancement.homePressure + 14 && result === scoreResult(0, 1)) multiplier += 0.04
+    }
+    if (situational?.knockoutTempo?.penaltyRisk >= 68) {
+      if (result === scoreResult(0, 0) || result === scoreResult(1, 1)) multiplier += 0.08
+      if (totalGoals >= 4) multiplier -= 0.08
     }
     return clamp(round(multiplier, 2), 0.74, 1.14)
   }
@@ -3024,6 +3186,17 @@ function scoreStrengthCoherenceMultiplier(
     if (advancement.awayPressure > advancement.homePressure + 14 && result === scoreResult(0, 1)) multiplier += 0.04
     if (advancement.homeNeed.includes('基本出线') && homeGoals - awayGoals >= 3) multiplier -= 0.05
     if (advancement.awayNeed.includes('基本出线') && awayGoals - homeGoals >= 3) multiplier -= 0.05
+  }
+  if (situational) {
+    if (situational.knockoutTempo.penaltyRisk >= 68) {
+      if (result === scoreResult(0, 0) || result === scoreResult(1, 1)) multiplier += 0.08
+      if (Math.abs(homeGoals - awayGoals) <= 1 && totalGoals <= 3) multiplier += 0.04
+      if (totalGoals >= 4) multiplier -= 0.08
+    }
+    if (situational.rest.edgeDays >= 1.5 && result === scoreResult(1, 0)) multiplier += 0.04
+    if (situational.rest.edgeDays <= -1.5 && result === scoreResult(0, 1)) multiplier += 0.04
+    if (situational.host.edge > 0 && result === scoreResult(1, 0)) multiplier += 0.04
+    if (situational.host.edge < 0 && result === scoreResult(0, 1)) multiplier += 0.04
   }
 
   return clamp(round(multiplier, 2), 0.52, 1.28)
@@ -3513,6 +3686,12 @@ function buildJudgement(market, event, newsItems, context = null) {
               value: context.weather.riskLevel === '高' ? 72 : context.weather.riskLevel === '中' ? 52 : 32,
               tone: context.weather.riskLevel === '高' ? 'bad' : context.weather.riskLevel === '中' ? 'watch' : 'good',
               note: `${context.weather.summary} ${context.geography.travelEdge}`,
+            },
+            {
+              label: '赛程体能',
+              value: Math.max(30, 82 - context.situational.riskDelta * 6),
+              tone: context.situational.riskDelta >= 6 ? 'watch' : 'good',
+              note: context.situational.summary,
             },
             {
               label: '古法校验',

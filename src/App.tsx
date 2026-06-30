@@ -597,10 +597,11 @@ function ContextIntelPanel({ match }: { match: MatchBrief }) {
   const advancementPool = context.advancement.nextOpponentPool
     .map((team) => `${team.zhName}${team.placeholder ? '' : ` ${team.strengthScore}`}`)
     .join(' / ')
+  const situationalLevel = context.situational.riskDelta >= 7 ? '高' : context.situational.riskDelta >= 4 ? '中' : '低'
 
   return (
     <section className="analysis-panel context-intel-panel">
-      <PanelTitle icon={<ScrollText />} title="实况上下文" detail="近5场 / 球员 / 伤病 / 天气 / 地理 / 晋级半区 / 古法低权重" />
+      <PanelTitle icon={<ScrollText />} title="实况上下文" detail="近5场 / 球员 / 伤病 / 天气 / 地理 / 赛程体能 / 晋级半区 / 古法低权重" />
       <div className="context-grid">
         <TeamContextCard team={match.home} context={context.home} />
         <TeamContextCard team={match.away} context={context.away} />
@@ -642,6 +643,19 @@ function ContextIntelPanel({ match }: { match: MatchBrief }) {
             <span>{match.home.zhName}: {context.advancement.homeNeed}</span>
             <span>{match.away.zhName}: {context.advancement.awayNeed}</span>
             {advancementPool ? <span>晋级后对手池: {advancementPool}</span> : null}
+          </div>
+        </article>
+        <article>
+          <div className="environment-title">
+            <Activity size={16} aria-hidden="true" />
+            <strong>赛程体能</strong>
+            <span className={'risk-badge risk-' + situationalLevel}>{situationalLevel}</span>
+          </div>
+          <p>{context.situational.summary}</p>
+          <div className="geo-pair">
+            <span>{context.situational.rest.summary}</span>
+            <span>{context.situational.bodyClock.summary}</span>
+            <span>{context.situational.knockoutTempo.summary}</span>
           </div>
         </article>
         <article>
