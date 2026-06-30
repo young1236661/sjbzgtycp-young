@@ -156,9 +156,9 @@ async function main() {
   const upcomingWindow = events
     .filter((event) => {
       const kickoff = new Date(event.date).getTime()
-      const lower = now.getTime() - 3 * 60 * 60 * 1000
+      const lower = now.getTime()
       const upper = now.getTime() + 54 * 60 * 60 * 1000
-      return kickoff >= lower && kickoff <= upper
+      return isPreMatchEvent(event) && kickoff >= lower && kickoff <= upper
     })
     .sort((left, right) => new Date(left.date).getTime() - new Date(right.date).getTime())
     .slice(0, 8)
@@ -831,6 +831,16 @@ function scoreParts(score) {
 function isCompletedEvent(event) {
   const status = String(event.status?.type?.state ?? event.status?.type?.name ?? event.status?.type?.description ?? event.status?.type?.shortDetail ?? '').toLowerCase()
   return /post|final|ft|full/.test(status)
+}
+
+function isPreMatchEvent(event) {
+  const status = String(
+    event.status?.type?.state ?? event.status?.type?.name ?? event.status?.type?.description ?? event.status?.type?.shortDetail ?? '',
+  ).toLowerCase()
+
+  if (/pre|scheduled|preview/.test(status)) return true
+  if (/in|live|post|final|ft|full|half|extra|pen/.test(status)) return false
+  return !isCompletedEvent(event)
 }
 
 function normalizeTeam(competitor) {
