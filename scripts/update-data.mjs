@@ -9,6 +9,7 @@ const FIFA_URL =
 const SPORTTERY_URL = 'https://www.sporttery.cn/jc/'
 const SPORTTERY_API = 'https://webapi.sporttery.cn/gateway/jc/football/getMatchListV1.qry?clientCode=3001'
 const ODDS_API_SPORT = 'soccer_fifa_world_cup'
+const HISTORY_SOURCE_URL = 'https://www.fifa.com/en/tournaments/mens/worldcup'
 const TEAM_SCHEDULE_URL = 'https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams'
 const TEAM_INJURY_URL = 'https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams'
 const GEOCODE_URL = 'https://geocoding-api.open-meteo.com/v1/search'
@@ -91,6 +92,249 @@ const countryProfiles = new Map([
   ['DR Congo', { zhName: '刚果民主共和国', lat: -4.32, lon: 15.31, region: '中非', climate: '赤道湿热', element: '木' }],
 ])
 
+const worldCupHistoryProfiles = new Map([
+  [
+    'England',
+    {
+      zhName: '英格兰',
+      appearances: 16,
+      titles: 1,
+      finals: 1,
+      semifinals: 3,
+      quarterfinals: 10,
+      knockoutRunsSince2002: 5,
+      bestFinish: '1966 冠军',
+      recentBest: '2018 四强、2022 八强',
+      score: 78,
+    },
+  ],
+  [
+    'Congo DR',
+    {
+      zhName: '刚果民主共和国',
+      appearances: 2,
+      titles: 0,
+      finals: 0,
+      semifinals: 0,
+      quarterfinals: 0,
+      knockoutRunsSince2002: 0,
+      bestFinish: '1974 以扎伊尔身份参赛，小组赛',
+      recentBest: '2026 重返世界杯',
+      score: 42,
+    },
+  ],
+  [
+    'DR Congo',
+    {
+      zhName: '刚果民主共和国',
+      appearances: 2,
+      titles: 0,
+      finals: 0,
+      semifinals: 0,
+      quarterfinals: 0,
+      knockoutRunsSince2002: 0,
+      bestFinish: '1974 以扎伊尔身份参赛，小组赛',
+      recentBest: '2026 重返世界杯',
+      score: 42,
+    },
+  ],
+  [
+    'Belgium',
+    {
+      zhName: '比利时',
+      appearances: 14,
+      titles: 0,
+      finals: 0,
+      semifinals: 2,
+      quarterfinals: 5,
+      knockoutRunsSince2002: 3,
+      bestFinish: '2018 季军',
+      recentBest: '2014 八强、2018 季军',
+      score: 72,
+    },
+  ],
+  [
+    'Senegal',
+    {
+      zhName: '塞内加尔',
+      appearances: 4,
+      titles: 0,
+      finals: 0,
+      semifinals: 0,
+      quarterfinals: 1,
+      knockoutRunsSince2002: 2,
+      bestFinish: '2002 八强',
+      recentBest: '2022 十六强',
+      score: 58,
+    },
+  ],
+  [
+    'United States',
+    {
+      zhName: '美国',
+      appearances: 12,
+      titles: 0,
+      finals: 0,
+      semifinals: 1,
+      quarterfinals: 2,
+      knockoutRunsSince2002: 4,
+      bestFinish: '1930 四强',
+      recentBest: '2002 八强、2010/2014/2022 十六强',
+      score: 66,
+    },
+  ],
+  [
+    'Bosnia-Herzegovina',
+    {
+      zhName: '波黑',
+      appearances: 2,
+      titles: 0,
+      finals: 0,
+      semifinals: 0,
+      quarterfinals: 0,
+      knockoutRunsSince2002: 0,
+      bestFinish: '2014 小组赛',
+      recentBest: '2026 再次参赛',
+      score: 43,
+    },
+  ],
+  [
+    'Bosnia and Herzegovina',
+    {
+      zhName: '波黑',
+      appearances: 2,
+      titles: 0,
+      finals: 0,
+      semifinals: 0,
+      quarterfinals: 0,
+      knockoutRunsSince2002: 0,
+      bestFinish: '2014 小组赛',
+      recentBest: '2026 再次参赛',
+      score: 43,
+    },
+  ],
+  [
+    'Spain',
+    {
+      zhName: '西班牙',
+      appearances: 16,
+      titles: 1,
+      finals: 1,
+      semifinals: 2,
+      quarterfinals: 6,
+      knockoutRunsSince2002: 4,
+      bestFinish: '2010 冠军',
+      recentBest: '2010 冠军、2022 十六强',
+      score: 76,
+    },
+  ],
+  [
+    'Austria',
+    {
+      zhName: '奥地利',
+      appearances: 8,
+      titles: 0,
+      finals: 0,
+      semifinals: 2,
+      quarterfinals: 3,
+      knockoutRunsSince2002: 0,
+      bestFinish: '1954 季军',
+      recentBest: '长期缺席世界杯正赛',
+      score: 55,
+    },
+  ],
+  [
+    'Portugal',
+    {
+      zhName: '葡萄牙',
+      appearances: 9,
+      titles: 0,
+      finals: 0,
+      semifinals: 2,
+      quarterfinals: 4,
+      knockoutRunsSince2002: 4,
+      bestFinish: '1966 季军',
+      recentBest: '2006 四强、2022 八强',
+      score: 70,
+    },
+  ],
+  [
+    'Croatia',
+    {
+      zhName: '克罗地亚',
+      appearances: 7,
+      titles: 0,
+      finals: 1,
+      semifinals: 3,
+      quarterfinals: 3,
+      knockoutRunsSince2002: 2,
+      bestFinish: '2018 亚军',
+      recentBest: '2018 亚军、2022 季军',
+      score: 73,
+    },
+  ],
+  [
+    'Switzerland',
+    {
+      zhName: '瑞士',
+      appearances: 12,
+      titles: 0,
+      finals: 0,
+      semifinals: 0,
+      quarterfinals: 3,
+      knockoutRunsSince2002: 4,
+      bestFinish: '1934/1938/1954 八强',
+      recentBest: '近几届多次十六强',
+      score: 62,
+    },
+  ],
+  [
+    'Algeria',
+    {
+      zhName: '阿尔及利亚',
+      appearances: 5,
+      titles: 0,
+      finals: 0,
+      semifinals: 0,
+      quarterfinals: 0,
+      knockoutRunsSince2002: 1,
+      bestFinish: '2014 十六强',
+      recentBest: '2014 十六强',
+      score: 52,
+    },
+  ],
+  [
+    'Mexico',
+    {
+      zhName: '墨西哥',
+      appearances: 18,
+      titles: 0,
+      finals: 0,
+      semifinals: 0,
+      quarterfinals: 2,
+      knockoutRunsSince2002: 6,
+      bestFinish: '1970/1986 八强',
+      recentBest: '长期稳定进入淘汰赛',
+      score: 67,
+    },
+  ],
+  [
+    'France',
+    {
+      zhName: '法国',
+      appearances: 17,
+      titles: 2,
+      finals: 4,
+      semifinals: 7,
+      quarterfinals: 9,
+      knockoutRunsSince2002: 4,
+      bestFinish: '1998、2018 冠军',
+      recentBest: '2018 冠军、2022 亚军',
+      score: 88,
+    },
+  ],
+])
+
 const teamNames = new Map([
   ['Netherlands', '荷兰'],
   ['Sweden', '瑞典'],
@@ -162,6 +406,7 @@ async function main() {
   const knockoutPaths = buildKnockoutPaths(events, tournamentRecords)
   const newsResult = await fetchNews()
   const oddsApiResult = await fetchOddsApi()
+  const oddsApiBook = buildOddsApiBook(oddsApiResult.data)
   const sportteryResult = await checkSporttery()
   const fifaResult = await checkFifa()
 
@@ -179,7 +424,7 @@ async function main() {
   activeModelCalibration = modelReview.calibration
 
   const matches = await Promise.all(
-    upcomingWindow.map((event) => normalizeMatch(event, newsResult.news, tournamentRecords, groupStandings, knockoutPaths)),
+    upcomingWindow.map((event) => normalizeMatch(event, newsResult.news, tournamentRecords, groupStandings, knockoutPaths, oddsApiBook)),
   )
   sources.push(
     fifaResult,
@@ -190,6 +435,14 @@ async function main() {
     buildContextSource('espn-team-schedules', 'ESPN 球队近 5 场', contextStats.teamSchedulesOk, contextStats.teamSchedulesTried),
     buildContextSource('espn-injuries', 'ESPN 伤病名单', contextStats.injuriesOk, contextStats.injuriesTried),
     buildContextSource('open-meteo-weather', 'Open-Meteo 天气', contextStats.weatherOk, contextStats.weatherTried),
+    {
+      id: 'fifa-history-profile',
+      name: 'FIFA 历届世界杯表现档案',
+      status: 'ok',
+      url: HISTORY_SOURCE_URL,
+      lastCheckedAt: checkedAt,
+      detail: `${worldCupHistoryProfiles.size} 条球队历史档案参与低权重校准`,
+    },
   )
   const healthySources = sources.filter((source) => source.status === 'ok').length
 
@@ -360,6 +613,149 @@ async function fetchOddsApi() {
   }
 }
 
+function buildOddsApiBook(data = []) {
+  const book = new Map()
+
+  for (const game of data ?? []) {
+    const market = normalizeOddsApiMarket(game)
+    if (!market) continue
+    book.set(matchupKey(game.home_team, game.away_team), market)
+  }
+
+  return book
+}
+
+function normalizeOddsApiMarket(game) {
+  const bookmakers = Array.isArray(game?.bookmakers) ? game.bookmakers : []
+  if (!bookmakers.length || !game?.home_team || !game?.away_team) return null
+
+  const homeTeam = game.home_team
+  const awayTeam = game.away_team
+  const bookmakerNames = bookmakers.map((book) => book.title ?? book.key).filter(Boolean)
+  const moneyline = [
+    oddsApiOutcome(homeTeam, 'home', collectOutcomePrices(bookmakers, 'h2h', homeTeam)),
+    oddsApiOutcome('平局', 'draw', collectOutcomePrices(bookmakers, 'h2h', 'Draw')),
+    oddsApiOutcome(awayTeam, 'away', collectOutcomePrices(bookmakers, 'h2h', awayTeam)),
+  ]
+  const probabilitySum = moneyline.reduce((sum, item) => sum + (item.impliedProbability ?? 0), 0)
+  moneyline.forEach((item) => {
+    item.normalizedProbability = probabilitySum > 0 ? (item.impliedProbability ?? 0) / probabilitySum : null
+  })
+
+  return {
+    provider: 'The Odds API consensus',
+    details: `多博彩公司中位数：${bookmakerNames.slice(0, 4).join(' / ')}${bookmakerNames.length > 4 ? ` 等 ${bookmakerNames.length} 家` : ''}`,
+    moneyline,
+    total: [
+      oddsApiOutcome('大球', 'over', collectOutcomePrices(bookmakers, 'totals', 'Over')),
+      oddsApiOutcome('小球', 'under', collectOutcomePrices(bookmakers, 'totals', 'Under')),
+    ],
+    spread: [
+      oddsApiOutcome(homeTeam, 'spreadHome', collectOutcomePrices(bookmakers, 'spreads', homeTeam)),
+      oddsApiOutcome(awayTeam, 'spreadAway', collectOutcomePrices(bookmakers, 'spreads', awayTeam)),
+    ],
+    updatedAt: checkedAt,
+  }
+}
+
+function collectOutcomePrices(bookmakers, marketKey, outcomeName) {
+  const prices = []
+  const points = []
+  const target = marketTeamKey(outcomeName)
+
+  for (const bookmaker of bookmakers) {
+    const market = bookmaker.markets?.find((item) => item.key === marketKey)
+    const outcome = market?.outcomes?.find((item) => marketTeamKey(item.name) === target)
+    if (!outcome) continue
+    if (Number.isFinite(Number(outcome.price))) prices.push(Number(outcome.price))
+    if (Number.isFinite(Number(outcome.point))) points.push(Number(outcome.point))
+  }
+
+  return {
+    price: median(prices),
+    line: median(points),
+    count: prices.length,
+  }
+}
+
+function oddsApiOutcome(label, side, aggregate) {
+  const decimal = aggregate?.price ?? null
+  const implied = decimal && decimal > 1 ? 1 / decimal : null
+
+  return {
+    label: teamNames.get(label) ?? label,
+    side,
+    american: decimal ? decimalToAmerican(decimal) : null,
+    decimal: decimal ? round(decimal, 2) : null,
+    impliedProbability: implied,
+    normalizedProbability: null,
+    line: aggregate?.line ?? null,
+    movement: null,
+    bookmakerCount: aggregate?.count ?? 0,
+  }
+}
+
+function mergeMarkets(espnMarket, oddsApiMarket) {
+  if (!oddsApiMarket) return espnMarket
+  if (!espnMarket) return oddsApiMarket
+
+  return {
+    ...oddsApiMarket,
+    provider: oddsApiMarket.provider,
+    details: `${oddsApiMarket.details}；ESPN/DraftKings 备用：${espnMarket.details}`,
+    backupProvider: espnMarket.provider,
+    moneyline: marketHasPrices(oddsApiMarket.moneyline) ? oddsApiMarket.moneyline : espnMarket.moneyline,
+    total: marketHasPrices(oddsApiMarket.total) ? oddsApiMarket.total : espnMarket.total,
+    spread: marketHasPrices(oddsApiMarket.spread) ? oddsApiMarket.spread : espnMarket.spread,
+  }
+}
+
+function marketHasPrices(outcomes = []) {
+  return Array.isArray(outcomes) && outcomes.some((item) => Number.isFinite(item?.impliedProbability))
+}
+
+function median(values) {
+  const sorted = values.filter((value) => Number.isFinite(value)).sort((left, right) => left - right)
+  if (!sorted.length) return null
+  const middle = Math.floor(sorted.length / 2)
+  return sorted.length % 2 ? sorted[middle] : round((sorted[middle - 1] + sorted[middle]) / 2, 3)
+}
+
+function decimalToAmerican(decimal) {
+  if (!decimal || decimal <= 1) return null
+  const value = decimal >= 2 ? Math.round((decimal - 1) * 100) : Math.round(-100 / (decimal - 1))
+  return value > 0 ? `+${value}` : String(value)
+}
+
+function matchupKey(homeName, awayName) {
+  return `${marketTeamKey(homeName)}__${marketTeamKey(awayName)}`
+}
+
+function marketTeamKey(value) {
+  const normalized = String(value ?? '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/&/g, 'and')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim()
+
+  const aliases = new Map([
+    ['usa', 'united states'],
+    ['us', 'united states'],
+    ['u s', 'united states'],
+    ['congo dr', 'congo dr'],
+    ['dr congo', 'congo dr'],
+    ['democratic republic of congo', 'congo dr'],
+    ['bosnia herzegovina', 'bosnia herzegovina'],
+    ['bosnia and herzegovina', 'bosnia herzegovina'],
+    ['draw', 'draw'],
+    ['tie', 'draw'],
+  ])
+
+  return aliases.get(normalized) ?? normalized
+}
+
 async function checkSporttery() {
   try {
     const response = await fetchWithTimeout(SPORTTERY_API, {
@@ -412,14 +808,23 @@ async function checkFifa() {
   }
 }
 
-async function normalizeMatch(event, newsItems, tournamentRecords = new Map(), groupStandings = new Map(), knockoutPaths = new Map()) {
+async function normalizeMatch(
+  event,
+  newsItems,
+  tournamentRecords = new Map(),
+  groupStandings = new Map(),
+  knockoutPaths = new Map(),
+  oddsApiBook = new Map(),
+) {
   const competition = event.competitions?.[0] ?? {}
   const competitors = competition.competitors ?? []
   const home = competitors.find((item) => item.homeAway === 'home') ?? competitors[0] ?? {}
   const away = competitors.find((item) => item.homeAway === 'away') ?? competitors[1] ?? {}
   const normalizedHome = normalizeTeam(home)
   const normalizedAway = normalizeTeam(away)
-  const market = normalizeMarket(competition.odds?.[0], home, away)
+  const espnMarket = normalizeMarket(competition.odds?.[0], home, away)
+  const oddsApiMarket = oddsApiBook.get(matchupKey(normalizedHome.name, normalizedAway.name))
+  const market = mergeMarkets(espnMarket, oddsApiMarket)
   const context = await buildMatchContext(
     event,
     competition,
@@ -768,6 +1173,54 @@ function defaultTournamentRecord(team) {
   }
 }
 
+function worldCupHistoryForTeam(team) {
+  const profile =
+    worldCupHistoryProfiles.get(team.name) ??
+    worldCupHistoryProfiles.get(team.zhName) ??
+    worldCupHistoryProfiles.get(teamNames.get(team.name)) ??
+    null
+
+  if (!profile) return defaultWorldCupHistory(team)
+
+  return {
+    ...profile,
+    name: team.name,
+    zhName: team.zhName,
+    score: clamp(profile.score, 35, 90),
+    summary: `${team.zhName} 历届世界杯：${profile.appearances} 次参赛，最佳 ${profile.bestFinish}，近代样本 ${profile.recentBest}，历史底蕴 ${profile.score}/100。`,
+  }
+}
+
+function defaultWorldCupHistory(team) {
+  return {
+    name: team.name,
+    zhName: team.zhName,
+    appearances: 0,
+    titles: 0,
+    finals: 0,
+    semifinals: 0,
+    quarterfinals: 0,
+    knockoutRunsSince2002: 0,
+    bestFinish: '缺少可核验样本',
+    recentBest: '缺少近代世界杯淘汰赛样本',
+    score: 44,
+    summary: `${team.zhName} 历届世界杯样本不足，历史底蕴按 44/100 保守处理。`,
+  }
+}
+
+function worldCupHistoryTempoAdjustment(homeHistory, awayHistory) {
+  if (!homeHistory || !awayHistory) return 0
+  const combinedKnockoutRuns = (homeHistory.knockoutRunsSince2002 ?? 0) + (awayHistory.knockoutRunsSince2002 ?? 0)
+  const combinedTitles = (homeHistory.titles ?? 0) + (awayHistory.titles ?? 0)
+  let adjustment = 0
+
+  if (combinedKnockoutRuns >= 7) adjustment -= 0.03
+  if (combinedTitles >= 2) adjustment += 0.02
+  if (Math.abs((homeHistory.score ?? 44) - (awayHistory.score ?? 44)) >= 24) adjustment += 0.03
+
+  return clamp(round(adjustment, 2), -0.04, 0.05)
+}
+
 function normalizeTeamKey(value) {
   return String(value ?? '').trim().toLowerCase()
 }
@@ -839,6 +1292,7 @@ function buildModelReview(completedMatches) {
       recentKnockoutNonDraws >= 3
         ? '最近三场淘汰赛90分钟均分出胜负，平局仍要防，但热门或准主场方的控场胜权重上调。'
         : '淘汰赛仍保留加时点球牵引，实力接近场继续防 0-0 / 1-1。',
+      '新增历届世界杯底蕴层：冠军、四强、八强和近代淘汰赛经验只做低权重加成，用来修正抗压与临场执行，不覆盖当前赔率和近况。',
       '本轮新增球员心态、教练执行、抗压稳定性代理指标；文化占卜继续低权重，不覆盖可验证信息。',
     ],
     calibration: {
@@ -912,12 +1366,14 @@ async function buildMatchContext(
   const homeContext = {
     ...homeRecent,
     tournament: tournamentRecordForTeam(tournamentRecords, homeTeam),
+    history: worldCupHistoryForTeam(homeTeam),
     injuries: homeInjuries,
     playerSignals: extractPlayerSignals(homeCompetitor),
   }
   const awayContext = {
     ...awayRecent,
     tournament: tournamentRecordForTeam(tournamentRecords, awayTeam),
+    history: worldCupHistoryForTeam(awayTeam),
     injuries: awayInjuries,
     playerSignals: extractPlayerSignals(awayCompetitor),
   }
@@ -938,7 +1394,7 @@ async function buildMatchContext(
     advancement,
     situational,
     adjustment,
-    note: '近况、球员、伤病、天气、地理、赛程体能、生物钟、主场环境、晋级压力与半区对手强度进入主模型；古法占卜仅作低权重文化校验，不覆盖可验证事实。',
+    note: '近况、球员、伤病、天气、地理、历届世界杯底蕴、赛程体能、生物钟、主场环境、晋级压力与半区对手强度进入主模型；古法占卜仅作低权重文化校验，不覆盖可验证事实。',
   }
 }
 
@@ -1689,6 +2145,7 @@ function teamHumanProfile(team, ownContext, opponentContext, weather, newsItems)
   const goalsAgainst = ownContext.goalsAgainstAvg ?? 1.15
   const opponentGoalsAgainst = opponentContext.goalsAgainstAvg ?? 1.15
   const tournament = ownContext.tournament ?? defaultTournamentRecord(team)
+  const history = ownContext.history ?? defaultWorldCupHistory(team)
   const injuryRisk = ownContext.injuries?.riskScore ?? 18
   const aliases = teamNewsAliases(team)
   const newsPressure = newsItems.slice(0, 8).some((item) => {
@@ -1703,6 +2160,7 @@ function teamHumanProfile(team, ownContext, opponentContext, weather, newsItems)
   const defensiveTrust = clamp((1.15 - goalsAgainst) * 12, -14, 16)
   const cupMomentum = clamp((tournament.strengthScore - 50) * 0.32 + tournament.goalDiff * 1.8 + tournament.bigWins * 4 - tournament.heavyLosses * 5, -14, 18)
   const cupCoachSignal = clamp((tournament.defenseScore - 50) * 0.24 + (tournament.attackScore - 50) * 0.16, -10, 14)
+  const historyComposure = clamp((history.score - 52) * 0.12 + (history.knockoutRunsSince2002 ?? 0) * 0.5 + (history.titles ?? 0) * 1.2, -4, 7)
   const weatherStress = weather.riskLevel === '高' ? 5 : weather.riskLevel === '中' ? 2 : 0
   const mentality = clamp(
     round(
@@ -1713,7 +2171,8 @@ function teamHumanProfile(team, ownContext, opponentContext, weather, newsItems)
         recentPulse +
         unbeatenBonus +
         attackConfidence * 0.55 +
-        cupMomentum -
+        cupMomentum +
+        historyComposure -
         injuryRisk * 0.16 -
         (newsPressure ? 4 : 0),
       1,
@@ -1728,7 +2187,8 @@ function teamHumanProfile(team, ownContext, opponentContext, weather, newsItems)
         clamp(12 - marginVolatility * 4.5, -8, 12) +
         clamp(10 - goalVolatility * 2.8, -8, 10) +
         clamp((goalsFor - goalsAgainst) * 4, -12, 14) +
-        cupCoachSignal -
+        cupCoachSignal +
+        historyComposure * 0.55 -
         injuryRisk * 0.12 -
         weatherStress,
       1,
@@ -1742,7 +2202,7 @@ function teamHumanProfile(team, ownContext, opponentContext, weather, newsItems)
     coach,
     pressure: clamp(round(50 + wins * 4 - losses * 5 + (newsPressure ? 9 : 0) + injuryRisk * 0.18, 1), 20, 88),
     volatility: round(marginVolatility + goalVolatility * 0.45, 2),
-    note: `心态 ${mentality}，教练执行 ${coach}；近况 ${wins}胜${draws}平${losses}负，本届 ${tournament.wins}胜${tournament.draws}平${tournament.losses}负，伤病/新闻压力 ${newsPressure ? '偏高' : '常规'}。`,
+    note: `心态 ${mentality}，教练执行 ${coach}；近况 ${wins}胜${draws}平${losses}负，本届 ${tournament.wins}胜${tournament.draws}平${tournament.losses}负，历史底蕴 ${history.score}/100，伤病/新闻压力 ${newsPressure ? '偏高' : '常规'}。`,
   }
 }
 
@@ -1805,6 +2265,7 @@ function buildContextAdjustment(homeContext, awayContext, weather, geography, di
   const divinationEdge = clamp((divination.delta ?? 0) * 0.18, -0.72, 0.72)
   const humanEdge = clamp((humanFactors?.edge ?? 0) / 28, -1, 1)
   const tournamentEdge = clamp(((homeContext.tournament?.strengthScore ?? 46) - (awayContext.tournament?.strengthScore ?? 46)) / 32, -1, 1)
+  const historyEdge = clamp(((homeContext.history?.score ?? 44) - (awayContext.history?.score ?? 44)) / 34, -1, 1)
   const advancementEdge = clamp(advancement?.homeGoalDiffDelta ?? 0, -0.08, 0.08)
   const situationalEdge = clamp(situational?.homeGoalDiffDelta ?? 0, -0.16, 0.16)
   const weatherRisk = weather.riskLevel === '高' ? 8 : weather.riskLevel === '中' ? 4 : 0
@@ -1820,6 +2281,7 @@ function buildContextAdjustment(homeContext, awayContext, weather, geography, di
         injuryEdge * 0.006 +
         travelEdge * 0.08 +
         tournamentEdge * 0.12 +
+        historyEdge * 0.07 +
         humanEdge * 0.13 +
         advancementEdge +
         situationalEdge +
@@ -1833,6 +2295,7 @@ function buildContextAdjustment(homeContext, awayContext, weather, geography, di
     round(
         ((homeContext.goalsForAvg ?? 1.2) + (awayContext.goalsForAvg ?? 1.2) - 2.6) * 0.09 +
         tournamentTempoAdjustment(homeContext.tournament, awayContext.tournament) +
+        worldCupHistoryTempoAdjustment(homeContext.history, awayContext.history) +
         humanTempoAdjustment(humanFactors) -
         weatherTempoDrag +
         (advancement?.totalGoalsDelta ?? 0) +
@@ -1848,6 +2311,7 @@ function buildContextAdjustment(homeContext, awayContext, weather, geography, di
         Math.abs(humanFactors?.edge ?? 0) * 0.08 -
         weatherRisk * 0.35 -
         Math.max(homeContext.injuries.riskScore, awayContext.injuries.riskScore) * 0.04 +
+        Math.abs(historyEdge) * 2 +
         (advancement?.confidenceDelta ?? 0) +
         (situational?.confidenceDelta ?? 0),
     ),
@@ -1876,6 +2340,7 @@ function buildContextAdjustment(homeContext, awayContext, weather, geography, di
       `近况差修正 ${homeGoalDiffDelta > 0 ? '+' : ''}${homeGoalDiffDelta} 球。`,
       `天气/节奏修正 ${totalGoalsDelta > 0 ? '+' : ''}${totalGoalsDelta} 总进球。`,
       `本届战绩修正：${homeContext.tournament?.summary ?? '主队暂无'}；${awayContext.tournament?.summary ?? '客队暂无'}。`,
+      `历届世界杯底蕴：${homeContext.history?.summary ?? '主队暂无'}；${awayContext.history?.summary ?? '客队暂无'}。`,
       advancement?.summary ?? '晋级形势：暂无额外修正。',
       situational?.summary ?? '赛程体能：暂无额外修正。',
       `伤病与天气风险使风险指数 ${riskDelta > 0 ? '+' : ''}${riskDelta}。`,
@@ -2073,7 +2538,7 @@ function buildScorelineAnalysis(market, homeTeam, awayTeam, judgement, newsItems
     }))
 
   return {
-    model: '胜平负去水概率 + 大小球盘口 + 平局压缩/抗热门校准 + Poisson 比分分布',
+    model: '胜平负去水概率 + 大小球盘口 + 历届世界杯低权重底蕴 + 平局压缩/抗热门校准 + Poisson 比分分布',
     homeExpectedGoals,
     awayExpectedGoals,
     totalExpectedGoals,
@@ -2317,6 +2782,12 @@ function buildProfessionalBrief(market, homeTeam, awayTeam, judgement, scoreline
               evidence: `${homeTeam.zhName} ${context.home.trendNote} ${awayTeam.zhName} ${context.away.trendNote}`,
             },
             {
+              label: '历届世界杯底蕴',
+              score: Math.round((context.home.history.score + context.away.history.score) / 2),
+              tone: Math.abs(context.home.history.score - context.away.history.score) >= 18 ? 'good' : 'watch',
+              evidence: `${context.home.history.summary} ${context.away.history.summary}`,
+            },
+            {
               label: '天气/地理',
               score: context.weather.riskLevel === '高' ? 70 : context.weather.riskLevel === '中' ? 52 : 35,
               tone: context.weather.riskLevel === '高' ? 'bad' : context.weather.riskLevel === '中' ? 'watch' : 'good',
@@ -2457,6 +2928,7 @@ function buildDeepThinkingPlan({ grade, expertAnswer, plays, scenarios, riskCont
       `模型最集中比分：${expertAnswer.recommendedScore}；备选：${expertAnswer.secondaryScores.slice(0, 2).join(' / ') || '不扩展'}。`,
       scoreline.strengthProfile?.summary ?? '实力护栏：暂无足够近况数据，只按市场概率保守处理。',
       context ? `本届杯赛：${context.home.tournament.summary}；${context.away.tournament.summary}` : '本届杯赛战绩暂未接入。',
+      context ? `历届世界杯：${context.home.history.summary}；${context.away.history.summary}` : '历届世界杯底蕴暂未接入。',
       context?.advancement?.summary ?? '晋级形势暂未接入。',
       context?.situational?.summary ?? '赛程体能暂未接入。',
       context?.humanFactors?.summary ?? '心态/教练代理：暂无足够近况数据，未单独修正。',
@@ -3024,15 +3496,18 @@ function buildStrengthProfile(homeWin, awayWin, context) {
   const awayHuman = context?.humanFactors?.awayCombined ?? 52
   const homeTournament = context?.home?.tournament?.strengthScore ?? 46
   const awayTournament = context?.away?.tournament?.strengthScore ?? 46
+  const homeHistory = context?.home?.history?.score ?? 44
+  const awayHistory = context?.away?.history?.score ?? 44
   const reliability = Math.min(homeContext.sampleSize ?? 0, awayContext.sampleSize ?? 0) >= 3 ? 1 : 0.72
   const homeStrength = round(
     clamp(
-      homeMarket * 0.48 +
-        (homeContext.formScore ?? 50) * 0.17 * reliability +
-        homeRecent * 0.11 +
+      homeMarket * 0.46 +
+        (homeContext.formScore ?? 50) * 0.16 * reliability +
+        homeRecent * 0.1 +
         homeTournament * 0.13 +
-        homeHealth * 0.04 +
-        homeHuman * 0.07,
+        homeHistory * 0.07 +
+        homeHealth * 0.03 +
+        homeHuman * 0.05,
       12,
       92,
     ),
@@ -3040,12 +3515,13 @@ function buildStrengthProfile(homeWin, awayWin, context) {
   )
   const awayStrength = round(
     clamp(
-      awayMarket * 0.48 +
-        (awayContext.formScore ?? 50) * 0.17 * reliability +
-        awayRecent * 0.11 +
+      awayMarket * 0.46 +
+        (awayContext.formScore ?? 50) * 0.16 * reliability +
+        awayRecent * 0.1 +
         awayTournament * 0.13 +
-        awayHealth * 0.04 +
-        awayHuman * 0.07,
+        awayHistory * 0.07 +
+        awayHealth * 0.03 +
+        awayHuman * 0.05,
       12,
       92,
     ),
@@ -3053,6 +3529,7 @@ function buildStrengthProfile(homeWin, awayWin, context) {
   )
   const edge = round(homeStrength - awayStrength, 1)
   const gap = Math.abs(edge)
+  const historyGap = Math.abs(homeHistory - awayHistory)
   const strongerSide = Math.abs(edge) < 3 ? 'level' : edge > 0 ? 'home' : 'away'
   const strongerResult = strongerSide === 'home' ? scoreResult(1, 0) : strongerSide === 'away' ? scoreResult(0, 1) : scoreResult(0, 0)
   const favoriteProbability = Math.max(homeWin, awayWin)
@@ -3069,8 +3546,8 @@ function buildStrengthProfile(homeWin, awayWin, context) {
     isStrongGap: (gap >= 24 && favoriteProbability >= 0.62) || gap >= 36,
     summary:
       strongerSide === 'level'
-        ? `实力护栏：综合实力接近（${homeStrength}-${awayStrength}），比分优先保留平局和一球差。`
-        : `实力护栏：${strongerSide === 'home' ? '主队' : '客队'}综合实力 ${homeStrength}-${awayStrength} 领先，冷门比分只进防守层，不抢主推。`,
+        ? `实力护栏：综合实力接近（${homeStrength}-${awayStrength}），比分优先保留平局和一球差。${historyGap >= 10 ? ` 历史底蕴 ${homeHistory}-${awayHistory} 只作低权重校验。` : ''}`
+        : `实力护栏：${strongerSide === 'home' ? '主队' : '客队'}综合实力 ${homeStrength}-${awayStrength} 领先，冷门比分只进防守层，不抢主推。${historyGap >= 10 ? ` 历史底蕴 ${homeHistory}-${awayHistory} 已计入但不覆盖当前赔率。` : ''}`,
   }
 }
 
