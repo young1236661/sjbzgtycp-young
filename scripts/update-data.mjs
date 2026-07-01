@@ -31,6 +31,8 @@ let activeModelCalibration = {
   favoriteTailBoost: 0,
   lowDrawRetention: 0,
   oneGoalBaseline: 0,
+  favoriteControlBoost: 0,
+  knockoutDrawFade: 0,
 }
 
 const indoorStadiums = new Set(['AT&T Stadium', 'Mercedes-Benz Stadium', 'SoFi Stadium', 'BC Place', 'State Farm Stadium'])
@@ -75,6 +77,7 @@ const countryProfiles = new Map([
   ['Iran', { zhName: '伊朗', lat: 35.69, lon: 51.39, region: '西亚高原', climate: '干燥高原', element: '土' }],
   ['New Zealand', { zhName: '新西兰', lat: -41.29, lon: 174.78, region: '南太平洋海岛', climate: '温带海洋', element: '水' }],
   ['Belgium', { zhName: '比利时', lat: 50.85, lon: 4.35, region: '西欧低地', climate: '温带海洋', element: '金' }],
+  ['Switzerland', { zhName: '瑞士', lat: 46.95, lon: 7.45, region: '中欧阿尔卑斯', climate: '温带山地', element: '土' }],
   ['Jordan', { zhName: '约旦', lat: 31.95, lon: 35.93, region: '西亚', climate: '干燥半干旱', element: '土' }],
   ['Algeria', { zhName: '阿尔及利亚', lat: 36.75, lon: 3.06, region: '北非', climate: '地中海/沙漠', element: '土' }],
   ['Portugal', { zhName: '葡萄牙', lat: 38.72, lon: -9.14, region: '西南欧', climate: '地中海海洋', element: '金' }],
@@ -96,6 +99,7 @@ const teamNames = new Map([
   ['Curaçao', '库拉索'],
   ['Curacao', '库拉索'],
   ['Ecuador', '厄瓜多尔'],
+  ['Switzerland', '瑞士'],
   ['Bosnia-Herzegovina', '波黑'],
   ['Bosnia and Herzegovina', '波黑'],
   ['United States', '美国'],
@@ -806,6 +810,15 @@ function buildModelReview(completedMatches) {
   const favoritesConverted = completedMatches.filter((match) => match.result !== '平局' && match.totalGoals >= 4).length
   const lowDraws = completedMatches.filter((match) => match.result === '平局' && match.totalGoals <= 2).length
   const oneGoalWins = completedMatches.filter((match) => match.result !== '平局' && Math.abs(scoreParts(match.score)[0] - scoreParts(match.score)[1]) === 1).length
+  const controlledCleanWins = completedMatches.filter((match) => {
+    if (match.result === '平局') return false
+    const [left, right] = scoreParts(match.score)
+    const winner = Math.max(left ?? 0, right ?? 0)
+    const loser = Math.min(left ?? 0, right ?? 0)
+    return loser === 0 && winner >= 2 && match.totalGoals <= 3
+  }).length
+  const recentThree = completedMatches.slice(0, 3)
+  const recentKnockoutNonDraws = recentThree.filter((match) => match.result !== '平局').length
 
   return {
     title: '赛后复盘校准',
@@ -820,12 +833,20 @@ function buildModelReview(completedMatches) {
       oneGoalWins >= 2
         ? '一球小胜仍是主流落点，强弱不极端时比分优先一球差。'
         : '一球小胜权重维持，但遇到心理顺风和教练执行稳定的强队，上调穿盘可能。',
+      controlledCleanWins >= 2
+        ? '最新淘汰赛出现多场强侧零封控场胜，热门队在领先后仍可能把比分带到 2-0 / 3-0，不能过度停在 0-0 / 1-0。'
+        : '零封控场胜样本不足，强队大胜仍需赔率和阵容共同确认。',
+      recentKnockoutNonDraws >= 3
+        ? '最近三场淘汰赛90分钟均分出胜负，平局仍要防，但热门或准主场方的控场胜权重上调。'
+        : '淘汰赛仍保留加时点球牵引，实力接近场继续防 0-0 / 1-1。',
       '本轮新增球员心态、教练执行、抗压稳定性代理指标；文化占卜继续低权重，不覆盖可验证信息。',
     ],
     calibration: {
       favoriteTailBoost: favoritesConverted >= 2 ? 1 : 0,
       lowDrawRetention: lowDraws >= 1 ? 1 : 0,
       oneGoalBaseline: oneGoalWins >= 2 ? 1 : 0,
+      favoriteControlBoost: controlledCleanWins >= 2 ? 1 : 0,
+      knockoutDrawFade: recentThree.length >= 3 && recentKnockoutNonDraws >= 3 ? 1 : 0,
     },
   }
 }
@@ -3322,6 +3343,24 @@ function scoreTailMultiplier(homeGoals, awayGoals, totalExpectedGoals, resultPro
   ) {
     multiplier += 0.06
   }
+  if (
+    activeModelCalibration.favoriteControlBoost &&
+    favoriteProbability >= 0.66 &&
+    result === favoriteResult &&
+    underdogGoals === 0 &&
+    favoriteMargin >= 2 &&
+    totalGoals <= 3
+  ) {
+    multiplier += favoriteMargin === 2 ? 0.1 : 0.07
+  }
+  if (
+    activeModelCalibration.knockoutDrawFade &&
+    favoriteProbability >= 0.6 &&
+    result === '平局' &&
+    totalGoals === 0
+  ) {
+    multiplier -= 0.06
+  }
 
   return clamp(round(multiplier * strengthLift, 2), 0.52, 1.6)
 }
@@ -3429,21 +3468,45 @@ function scoreCandidateRank(item, resultStrength, context = null, totalExpectedG
       : strongConsolationSignal < 0
         ? 1 - Math.min(0.12, Math.abs(strongConsolationSignal) * 0.035)
         : 1
-  const reviewLift =
+  let reviewLift = 1
+  if (
     activeModelCalibration.favoriteTailBoost &&
     favoriteProbability >= 0.72 &&
     item.result === favoriteResult &&
     favoriteMargin >= 2 &&
     totalGoals >= 3
-      ? 1.08
-      : activeModelCalibration.oneGoalBaseline &&
-          favoriteProbability < 0.66 &&
-          item.result === favoriteResult &&
-          favoriteMargin === 1
-        ? 1.05
-        : activeModelCalibration.lowDrawRetention && item.result === scoreResult(0, 0) && totalGoals <= 2 && drawStrength >= 0.28
-          ? 1.06
-          : 1
+  ) {
+    reviewLift *= 1.08
+  }
+  if (
+    activeModelCalibration.oneGoalBaseline &&
+    favoriteProbability < 0.66 &&
+    item.result === favoriteResult &&
+    favoriteMargin === 1
+  ) {
+    reviewLift *= 1.05
+  }
+  if (activeModelCalibration.lowDrawRetention && item.result === scoreResult(0, 0) && totalGoals <= 2 && drawStrength >= 0.28) {
+    reviewLift *= 1.06
+  }
+  if (
+    activeModelCalibration.favoriteControlBoost &&
+    favoriteProbability >= 0.66 &&
+    item.result === favoriteResult &&
+    underdogGoals === 0 &&
+    favoriteMargin >= 2 &&
+    totalGoals <= 3
+  ) {
+    reviewLift *= favoriteMargin === 2 ? 1.1 : 1.07
+  }
+  if (
+    activeModelCalibration.knockoutDrawFade &&
+    favoriteProbability >= 0.6 &&
+    item.result === scoreResult(0, 0) &&
+    totalGoals === 0
+  ) {
+    reviewLift *= 0.94
+  }
   const strengthLift = scoreStrengthCoherenceMultiplier(
     homeGoals,
     awayGoals,
