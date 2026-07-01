@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-07-01T05:49:57.830Z",
-  "generatedAtChina": "07/01 13:49",
+  "generatedAt": "2026-07-01T05:54:24.065Z",
+  "generatedAtChina": "07/01 13:54",
   "targetDateChina": "2026-07-01",
   "timezone": "Asia/Shanghai",
   "summary": {
     "headline": "未来 54 小时跟踪 6 场世界杯比赛",
     "note": "系统将公开赛程、新闻和海外市场赔率转为概率视图，再给出谨慎的体彩核验方向。所有判断只作信息分析，不保证盈利。",
     "trackedMatches": 6,
-    "healthySources": 29,
+    "healthySources": 30,
     "updateMode": "GitHub 定时"
   },
   "sources": [
@@ -16,7 +16,7 @@
       "name": "FIFA 官方赛程",
       "status": "ok",
       "url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/match-schedule-fixtures-results-teams-stadiums",
-      "lastCheckedAt": "2026-07-01T05:49:57.830Z",
+      "lastCheckedAt": "2026-07-01T05:54:24.065Z",
       "detail": "官方页面可访问"
     },
     {
@@ -24,7 +24,7 @@
       "name": "ESPN 赛程 20260611",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260611",
-      "lastCheckedAt": "2026-07-01T05:49:57.830Z",
+      "lastCheckedAt": "2026-07-01T05:54:24.065Z",
       "detail": "2 场比赛"
     },
     {
@@ -32,7 +32,7 @@
       "name": "ESPN 赛程 20260612",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260612",
-      "lastCheckedAt": "2026-07-01T05:49:57.830Z",
+      "lastCheckedAt": "2026-07-01T05:54:24.065Z",
       "detail": "2 场比赛"
     },
     {
@@ -40,7 +40,7 @@
       "name": "ESPN 赛程 20260613",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260613",
-      "lastCheckedAt": "2026-07-01T05:49:57.830Z",
+      "lastCheckedAt": "2026-07-01T05:54:24.065Z",
       "detail": "3 场比赛"
     },
     {
@@ -48,7 +48,7 @@
       "name": "ESPN 赛程 20260614",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260614",
-      "lastCheckedAt": "2026-07-01T05:49:57.830Z",
+      "lastCheckedAt": "2026-07-01T05:54:24.065Z",
       "detail": "5 场比赛"
     },
     {
@@ -56,7 +56,7 @@
       "name": "ESPN 赛程 20260615",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260615",
-      "lastCheckedAt": "2026-07-01T05:49:57.830Z",
+      "lastCheckedAt": "2026-07-01T05:54:24.065Z",
       "detail": "4 场比赛"
     },
     {
@@ -64,7 +64,7 @@
       "name": "ESPN 赛程 20260616",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260616",
-      "lastCheckedAt": "2026-07-01T05:49:57.830Z",
+      "lastCheckedAt": "2026-07-01T05:54:24.065Z",
       "detail": "3 场比赛"
     },
     {
@@ -72,7 +72,7 @@
       "name": "ESPN 赛程 20260617",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260617",
-      "lastCheckedAt": "2026-07-01T05:49:57.830Z",
+      "lastCheckedAt": "2026-07-01T05:54:24.065Z",
       "detail": "5 场比赛"
     },
     {
@@ -80,7 +80,7 @@
       "name": "ESPN 赛程 20260618",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260618",
-      "lastCheckedAt": "2026-07-01T05:49:57.830Z",
+      "lastCheckedAt": "2026-07-01T05:54:24.065Z",
       "detail": "4 场比赛"
     },
     {
@@ -88,7 +88,7 @@
       "name": "ESPN 赛程 20260619",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260619",
-      "lastCheckedAt": "2026-07-01T05:49:57.830Z",
+      "lastCheckedAt": "2026-07-01T05:54:24.065Z",
       "detail": "4 场比赛"
     },
     {
@@ -96,7 +96,7 @@
       "name": "ESPN 赛程 20260620",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260620",
-      "lastCheckedAt": "2026-07-01T05:49:57.830Z",
+      "lastCheckedAt": "2026-07-01T05:54:24.065Z",
       "detail": "3 场比赛"
     },
     {
@@ -104,7 +104,7 @@
       "name": "ESPN 赛程 20260621",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260621",
-      "lastCheckedAt": "2026-07-01T05:49:57.830Z",
+      "lastCheckedAt": "2026-07-01T05:54:24.065Z",
       "detail": "5 场比赛"
     },
     {
@@ -112,7 +112,7 @@
       "name": "ESPN 赛程 20260622",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260622",
-      "lastCheckedAt": "2026-07-01T05:49:57.830Z",
+      "lastCheckedAt": "2026-07-01T05:54:24.065Z",
       "detail": "4 场比赛"
     },
     {
@@ -120,7 +120,7 @@
       "name": "ESPN 赛程 20260623",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260623",
-      "lastCheckedAt": "2026-07-01T05:49:57.830Z",
+      "lastCheckedAt": "2026-07-01T05:54:24.065Z",
       "detail": "4 场比赛"
     },
     {
@@ -128,7 +128,7 @@
       "name": "ESPN 赛程 20260624",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260624",
-      "lastCheckedAt": "2026-07-01T05:49:57.830Z",
+      "lastCheckedAt": "2026-07-01T05:54:24.065Z",
       "detail": "6 场比赛"
     },
     {
@@ -136,7 +136,7 @@
       "name": "ESPN 赛程 20260625",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260625",
-      "lastCheckedAt": "2026-07-01T05:49:57.830Z",
+      "lastCheckedAt": "2026-07-01T05:54:24.065Z",
       "detail": "6 场比赛"
     },
     {
@@ -144,7 +144,7 @@
       "name": "ESPN 赛程 20260626",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260626",
-      "lastCheckedAt": "2026-07-01T05:49:57.830Z",
+      "lastCheckedAt": "2026-07-01T05:54:24.065Z",
       "detail": "6 场比赛"
     },
     {
@@ -152,7 +152,7 @@
       "name": "ESPN 赛程 20260627",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260627",
-      "lastCheckedAt": "2026-07-01T05:49:57.830Z",
+      "lastCheckedAt": "2026-07-01T05:54:24.065Z",
       "detail": "6 场比赛"
     },
     {
@@ -160,7 +160,7 @@
       "name": "ESPN 赛程 20260628",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260628",
-      "lastCheckedAt": "2026-07-01T05:49:57.830Z",
+      "lastCheckedAt": "2026-07-01T05:54:24.065Z",
       "detail": "1 场比赛"
     },
     {
@@ -168,7 +168,7 @@
       "name": "ESPN 赛程 20260629",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260629",
-      "lastCheckedAt": "2026-07-01T05:49:57.830Z",
+      "lastCheckedAt": "2026-07-01T05:54:24.065Z",
       "detail": "3 场比赛"
     },
     {
@@ -176,7 +176,7 @@
       "name": "ESPN 赛程 20260630",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260630",
-      "lastCheckedAt": "2026-07-01T05:49:57.830Z",
+      "lastCheckedAt": "2026-07-01T05:54:24.065Z",
       "detail": "3 场比赛"
     },
     {
@@ -184,7 +184,7 @@
       "name": "ESPN 赛程 20260701",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260701",
-      "lastCheckedAt": "2026-07-01T05:49:57.830Z",
+      "lastCheckedAt": "2026-07-01T05:54:24.065Z",
       "detail": "3 场比赛"
     },
     {
@@ -192,7 +192,7 @@
       "name": "ESPN 赛程 20260702",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260702",
-      "lastCheckedAt": "2026-07-01T05:49:57.830Z",
+      "lastCheckedAt": "2026-07-01T05:54:24.065Z",
       "detail": "3 场比赛"
     },
     {
@@ -200,7 +200,7 @@
       "name": "ESPN 赛程 20260703",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260703",
-      "lastCheckedAt": "2026-07-01T05:49:57.830Z",
+      "lastCheckedAt": "2026-07-01T05:54:24.065Z",
       "detail": "3 场比赛"
     },
     {
@@ -208,7 +208,7 @@
       "name": "ESPN 世界杯新闻",
       "status": "ok",
       "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/news",
-      "lastCheckedAt": "2026-07-01T05:49:57.830Z",
+      "lastCheckedAt": "2026-07-01T05:54:24.065Z",
       "detail": "6 条新闻"
     },
     {
@@ -216,7 +216,7 @@
       "name": "The Odds API",
       "status": "ok",
       "url": "https://the-odds-api.com/",
-      "lastCheckedAt": "2026-07-01T05:49:57.830Z",
+      "lastCheckedAt": "2026-07-01T05:54:24.065Z",
       "detail": "12 场赔率"
     },
     {
@@ -224,15 +224,15 @@
       "name": "中国体彩网竞彩",
       "status": "warn",
       "url": "https://www.sporttery.cn/jc/",
-      "lastCheckedAt": "2026-07-01T05:49:57.830Z",
-      "detail": "HTTP 567"
+      "lastCheckedAt": "2026-07-01T05:54:24.065Z",
+      "detail": "需人工核验：fetch failed"
     },
     {
       "id": "espn-team-schedules",
       "name": "ESPN 球队近 5 场",
       "status": "ok",
       "url": "https://www.espn.com/soccer/",
-      "lastCheckedAt": "2026-07-01T05:49:57.830Z",
+      "lastCheckedAt": "2026-07-01T05:54:24.065Z",
       "detail": "12/12 项成功"
     },
     {
@@ -240,23 +240,23 @@
       "name": "ESPN 伤病名单",
       "status": "ok",
       "url": "https://www.espn.com/soccer/",
-      "lastCheckedAt": "2026-07-01T05:49:57.830Z",
+      "lastCheckedAt": "2026-07-01T05:54:24.065Z",
       "detail": "12/12 项成功"
     },
     {
       "id": "open-meteo-weather",
       "name": "Open-Meteo 天气",
-      "status": "warn",
+      "status": "ok",
       "url": "https://open-meteo.com/",
-      "lastCheckedAt": "2026-07-01T05:49:57.830Z",
-      "detail": "5/6 项成功"
+      "lastCheckedAt": "2026-07-01T05:54:24.065Z",
+      "detail": "6/6 项成功"
     },
     {
       "id": "fifa-history-profile",
       "name": "FIFA 历届世界杯表现档案",
       "status": "ok",
       "url": "https://www.fifa.com/en/tournaments/mens/worldcup",
-      "lastCheckedAt": "2026-07-01T05:49:57.830Z",
+      "lastCheckedAt": "2026-07-01T05:54:24.065Z",
       "detail": "16 条球队历史档案参与低权重校准"
     }
   ],
@@ -1196,7 +1196,7 @@
             "american": "-345",
             "decimal": 1.29,
             "impliedProbability": 0.7751937984496123,
-            "normalizedProbability": 0.7443569046353135,
+            "normalizedProbability": 0.7438396020935599,
             "line": null,
             "movement": null,
             "bookmakerCount": 44
@@ -1207,7 +1207,7 @@
             "american": "+425",
             "decimal": 5.25,
             "impliedProbability": 0.19047619047619047,
-            "normalizedProbability": 0.18289912513896273,
+            "normalizedProbability": 0.1827720165144176,
             "line": null,
             "movement": null,
             "bookmakerCount": 44
@@ -1215,10 +1215,10 @@
           {
             "label": "刚果民主共和国",
             "side": "away",
-            "american": "+1220",
-            "decimal": 13.2,
-            "impliedProbability": 0.07575757575757576,
-            "normalizedProbability": 0.07274397022572382,
+            "american": "+1208",
+            "decimal": 13.08,
+            "impliedProbability": 0.07648183556405354,
+            "normalizedProbability": 0.07338838139202236,
             "line": null,
             "movement": null,
             "bookmakerCount": 44
@@ -1272,7 +1272,7 @@
             "bookmakerCount": 9
           }
         ],
-        "updatedAt": "2026-07-01T05:49:57.830Z",
+        "updatedAt": "2026-07-01T05:54:24.065Z",
         "backupProvider": "DraftKings"
       },
       "context": {
@@ -1825,7 +1825,7 @@
           "gap": 40.4,
           "strongerSide": "home",
           "strongerResult": "主胜",
-          "favoriteProbability": 0.7444,
+          "favoriteProbability": 0.7438,
           "isClearGap": true,
           "isStrongGap": true,
           "summary": "实力护栏：主队综合实力 84.4-44 领先，冷门比分只进防守层，不抢主推。 历史底蕴 78-42 已计入但不覆盖当前赔率。"
@@ -1834,17 +1834,17 @@
           {
             "label": "英格兰",
             "side": "home",
-            "probability": 0.7444
+            "probability": 0.7438
           },
           {
             "label": "平局",
             "side": "draw",
-            "probability": 0.1829
+            "probability": 0.1828
           },
           {
             "label": "刚果民主共和国",
             "side": "away",
-            "probability": 0.0727
+            "probability": 0.0734
           }
         ],
         "bestPick": {
@@ -2340,10 +2340,10 @@
           {
             "label": "比利时",
             "side": "home",
-            "american": "+117",
-            "decimal": 2.17,
-            "impliedProbability": 0.4618937644341801,
-            "normalizedProbability": 0.44219419395428267,
+            "american": "+118",
+            "decimal": 2.18,
+            "impliedProbability": 0.4587155963302752,
+            "normalizedProbability": 0.440491822848275,
             "line": null,
             "movement": null,
             "bookmakerCount": 46
@@ -2354,7 +2354,7 @@
             "american": "+228",
             "decimal": 3.28,
             "impliedProbability": 0.3048780487804878,
-            "normalizedProbability": 0.29187513107043356,
+            "normalizedProbability": 0.29276590664915836,
             "line": null,
             "movement": null,
             "bookmakerCount": 46
@@ -2365,7 +2365,7 @@
             "american": "+260",
             "decimal": 3.6,
             "impliedProbability": 0.2777777777777778,
-            "normalizedProbability": 0.2659306749752839,
+            "normalizedProbability": 0.26674227050256655,
             "line": null,
             "movement": null,
             "bookmakerCount": 46
@@ -2419,7 +2419,7 @@
             "bookmakerCount": 9
           }
         ],
-        "updatedAt": "2026-07-01T05:49:57.830Z",
+        "updatedAt": "2026-07-01T05:54:24.065Z",
         "backupProvider": "DraftKings"
       },
       "context": {
@@ -2744,16 +2744,18 @@
           ]
         },
         "weather": {
-          "status": "天气抓取失败",
+          "status": "小时预报已读取",
           "venueName": "Lumen Field",
           "city": "Seattle, Washington",
+          "latitude": 47.60621,
+          "longitude": -122.33207,
           "roofLikely": false,
-          "temperatureC": null,
-          "precipitationProbability": null,
-          "windKph": null,
-          "humidity": null,
-          "riskLevel": "中",
-          "summary": "天气接口失败：HTTP 429；赛前需人工核验。"
+          "temperatureC": 17.1,
+          "precipitationProbability": 1,
+          "windKph": 9.4,
+          "humidity": 65,
+          "riskLevel": "低",
+          "summary": "17°C，降水 1%，风 9 km/h，湿度 65%。露天影响按正常权重计入。"
         },
         "geography": {
           "homeRegion": "西欧低地",
@@ -2762,11 +2764,11 @@
           "awayClimate": "热带草原",
           "homeElement": "金",
           "awayElement": "火",
-          "homeDistanceKm": null,
-          "awayDistanceKm": null,
-          "distanceEdgeKm": 0,
-          "travelEdge": "旅行距离差不大",
-          "summary": "比利时 来自西欧低地，塞内加尔 来自西非；旅行距离差不大。"
+          "homeDistanceKm": 7943,
+          "awayDistanceKm": 9882,
+          "distanceEdgeKm": 1939,
+          "travelEdge": "比利时 旅行距离少约 1900 km",
+          "summary": "比利时 来自西欧低地，塞内加尔 来自西非；比利时 旅行距离少约 1900 km。"
         },
         "divination": {
           "method": "梅花易数取数 + 日时五行 + 天气五行 + 方位生克低权重合参",
@@ -2775,43 +2777,43 @@
           "dayElement": "火",
           "hourBranch": "寅",
           "hourElement": "木",
-          "weatherElement": "金",
+          "weatherElement": "土",
           "homeNameElement": "水",
           "awayNameElement": "木",
-          "homeFortune": -1.06,
-          "awayFortune": 3.39,
+          "homeFortune": -1.61,
+          "awayFortune": 3.94,
           "relationNote": "塞内加尔 火 克 比利时 金，取象上客队略占克制。",
           "breakdown": [
-            "日五行 火，寅时取 木，天气取 金。",
-            "比利时：地域 金，队名取 水，卦象 坎(水)，运势 -1.06。",
-            "塞内加尔：地域 火，队名取 木，卦象 艮(土)，运势 3.39。",
+            "日五行 火，寅时取 木，天气取 土。",
+            "比利时：地域 金，队名取 水，卦象 坎(水)，运势 -1.61。",
+            "塞内加尔：地域 火，队名取 木，卦象 艮(土)，运势 3.94。",
             "塞内加尔 火 克 比利时 金，取象上客队略占克制。"
           ],
           "lean": "away",
           "delta": -4,
           "weight": "≤4%，只作文化辅助",
-          "summary": "五行八卦合参略偏塞内加尔，只作为低权重校验；日 火、寅时 木、天气 金。"
+          "summary": "五行八卦合参略偏塞内加尔，只作为低权重校验；日 火、寅时 木、天气 土。"
         },
         "humanFactors": {
           "home": {
             "mentality": 72.1,
-            "coach": 66,
+            "coach": 68,
             "pressure": 39,
             "volatility": 3.53,
-            "note": "心态 72.1，教练执行 66；近况 1胜1平3负，本届 1胜2平0负，历史底蕴 72/100，伤病/新闻压力 常规。"
+            "note": "心态 72.1，教练执行 68；近况 1胜1平3负，本届 1胜2平0负，历史底蕴 72/100，伤病/新闻压力 常规。"
           },
           "away": {
             "mentality": 88,
-            "coach": 73.2,
+            "coach": 75.2,
             "pressure": 57,
             "volatility": 3.65,
-            "note": "心态 88，教练执行 73.2；近况 3胜1平1负，本届 1胜0平2负，历史底蕴 58/100，伤病/新闻压力 常规。"
+            "note": "心态 88，教练执行 75.2；近况 3胜1平1负，本届 1胜0平2负，历史底蕴 58/100，伤病/新闻压力 常规。"
           },
-          "homeCombined": 69.2,
-          "awayCombined": 80.9,
-          "edge": -11.7,
+          "homeCombined": 70.1,
+          "awayCombined": 81.9,
+          "edge": -11.8,
           "lean": "away",
-          "summary": "心态/教练代理：塞内加尔 69.2-80.9 占优，提升其一球差和顺风扩大比分路径。"
+          "summary": "心态/教练代理：塞内加尔 70.1-81.9 占优，提升其一球差和顺风扩大比分路径。"
         },
         "advancement": {
           "stage": "round-of-32",
@@ -2856,14 +2858,14 @@
             "summary": "比利时休息4.7天，塞内加尔休息5天"
           },
           "bodyClock": {
-            "localHour": null,
-            "homeShiftHours": null,
-            "awayShiftHours": null,
-            "edgeHours": 0,
-            "summary": "开球当地时段待核验"
+            "localHour": 12,
+            "homeShiftHours": 8,
+            "awayShiftHours": 7,
+            "edgeHours": -1,
+            "summary": "当地约12点开球，身体时钟偏移 比利时8小时 / 塞内加尔7小时"
           },
           "host": {
-            "country": null,
+            "country": "United States",
             "homeHost": false,
             "awayHost": false,
             "edge": 0,
@@ -2874,34 +2876,34 @@
             "extraTimeRisk": 52,
             "summary": "淘汰赛拖入加时/点球风险 67/100，强弱差越小越压低大比分。"
           },
-          "homeGoalDiffDelta": -0.01,
+          "homeGoalDiffDelta": -0.03,
           "totalGoalsDelta": -0.03,
           "confidenceDelta": 0,
-          "riskDelta": 2,
-          "summary": "比利时休息4.7天，塞内加尔休息5天；开球当地时段待核验；无明显东道主/准主场加成；加时点球风险67/100。"
+          "riskDelta": 5,
+          "summary": "比利时休息4.7天，塞内加尔休息5天；当地约12点开球，身体时钟偏移 比利时8小时 / 塞内加尔7小时；无明显东道主/准主场加成；加时点球风险67/100。"
         },
         "adjustment": {
-          "homeGoalDiffDelta": -0.24,
+          "homeGoalDiffDelta": -0.23,
           "totalGoalsDelta": 0.32,
-          "confidenceDelta": 0,
-          "riskDelta": 16,
+          "confidenceDelta": 1,
+          "riskDelta": 15,
           "notes": [
-            "近况差修正 -0.24 球。",
+            "近况差修正 -0.23 球。",
             "天气/节奏修正 +0.32 总进球。",
             "本届战绩修正：本届 3 场 1胜2平0负，进失球 6-2，杯赛强度 69.3。；本届 3 场 1胜0平2负，进失球 8-6，杯赛强度 58.7。。",
             "历届世界杯底蕴：比利时 历届世界杯：14 次参赛，最佳 2018 季军，近代样本 2014 八强、2018 季军，历史底蕴 72/100。；塞内加尔 历届世界杯：4 次参赛，最佳 2002 八强，近代样本 2022 十六强，历史底蕴 58/100。。",
             "32强淘汰赛：输球即出局；晋级后潜在对手 美国(69.4) / 波黑(50.3)，对手池最高强度 69.4。模型降低无意义大胜，保留一球差和2-3球区间。",
-            "比利时休息4.7天，塞内加尔休息5天；开球当地时段待核验；无明显东道主/准主场加成；加时点球风险67/100。",
-            "伤病与天气风险使风险指数 +16。",
-            "心态/教练代理：塞内加尔 69.2-80.9 占优，提升其一球差和顺风扩大比分路径。",
-            "古法取象 ≤4%，只作文化辅助：五行八卦合参略偏塞内加尔，只作为低权重校验；日 火、寅时 木、天气 金。"
+            "比利时休息4.7天，塞内加尔休息5天；当地约12点开球，身体时钟偏移 比利时8小时 / 塞内加尔7小时；无明显东道主/准主场加成；加时点球风险67/100。",
+            "伤病与天气风险使风险指数 +15。",
+            "心态/教练代理：塞内加尔 70.1-81.9 占优，提升其一球差和顺风扩大比分路径。",
+            "古法取象 ≤4%，只作文化辅助：五行八卦合参略偏塞内加尔，只作为低权重校验；日 火、寅时 木、天气 土。"
           ]
         },
         "note": "近况、球员、伤病、天气、地理、历届世界杯底蕴、赛程体能、生物钟、主场环境、晋级压力与半区对手强度进入主模型；古法占卜仅作低权重文化校验，不覆盖可验证事实。"
       },
       "judgement": {
-        "confidence": 58,
-        "risk": 57,
+        "confidence": 59,
+        "risk": 56,
         "tier": "观望",
         "lean": "倾向 比利时，但需要赔率核验",
         "stake": "只做观察，不主动加码",
@@ -2940,21 +2942,21 @@
           },
           {
             "label": "天气地理",
-            "value": 52,
-            "tone": "watch",
-            "note": "天气接口失败：HTTP 429；赛前需人工核验。 旅行距离差不大"
+            "value": 32,
+            "tone": "good",
+            "note": "17°C，降水 1%，风 9 km/h，湿度 65%。露天影响按正常权重计入。 比利时 旅行距离少约 1900 km"
           },
           {
             "label": "赛程体能",
-            "value": 70,
+            "value": 52,
             "tone": "good",
-            "note": "比利时休息4.7天，塞内加尔休息5天；开球当地时段待核验；无明显东道主/准主场加成；加时点球风险67/100。"
+            "note": "比利时休息4.7天，塞内加尔休息5天；当地约12点开球，身体时钟偏移 比利时8小时 / 塞内加尔7小时；无明显东道主/准主场加成；加时点球风险67/100。"
           },
           {
             "label": "古法校验",
             "value": 18,
             "tone": "good",
-            "note": "梅花易数取数 + 日时五行 + 天气五行 + 方位生克低权重合参；五行八卦合参略偏塞内加尔，只作为低权重校验；日 火、寅时 木、天气 金。"
+            "note": "梅花易数取数 + 日时五行 + 天气五行 + 方位生克低权重合参；五行八卦合参略偏塞内加尔，只作为低权重校验；日 火、寅时 木、天气 土。"
           }
         ]
       },
@@ -2965,31 +2967,31 @@
         "totalExpectedGoals": 2.78,
         "strengthProfile": {
           "homeStrength": 67.2,
-          "awayStrength": 56.5,
-          "edge": 10.7,
-          "gap": 10.7,
+          "awayStrength": 56.6,
+          "edge": 10.6,
+          "gap": 10.6,
           "strongerSide": "home",
           "strongerResult": "主胜",
-          "favoriteProbability": 0.4422,
+          "favoriteProbability": 0.4405,
           "isClearGap": false,
           "isStrongGap": false,
-          "summary": "实力护栏：主队综合实力 67.2-56.5 领先，冷门比分只进防守层，不抢主推。 历史底蕴 72-58 已计入但不覆盖当前赔率。"
+          "summary": "实力护栏：主队综合实力 67.2-56.6 领先，冷门比分只进防守层，不抢主推。 历史底蕴 72-58 已计入但不覆盖当前赔率。"
         },
         "resultProbabilities": [
           {
             "label": "比利时",
             "side": "home",
-            "probability": 0.4422
+            "probability": 0.4405
           },
           {
             "label": "平局",
             "side": "draw",
-            "probability": 0.2919
+            "probability": 0.2928
           },
           {
             "label": "塞内加尔",
             "side": "away",
-            "probability": 0.2659
+            "probability": 0.2667
           }
         ],
         "bestPick": {
@@ -3183,14 +3185,14 @@
           "本版把总进球从基础 2.58 校准到 2.78，并对强弱分明场景的 3+ 进球比分做尾部上调。",
           "复盘校准：让球盘口不支持热门穿盘，比分排序优先保留一球小胜路径。",
           "复盘校准：平局赔率热且总进球偏低，0-0 / 1-1 不再只是防守票，而是进入主判断层。",
-          "近况差修正 -0.24 球。",
+          "近况差修正 -0.23 球。",
           "天气/节奏修正 +0.32 总进球。",
           "expectedValue 只有抓到中国体彩官方比分赔率后才会填充；当前显示的是盈亏平衡与建议最低赔率。",
           "最新新闻未触发高风险词，但仍需赛前核验首发。"
         ]
       },
       "professional": {
-        "rankScore": 50,
+        "rankScore": 52,
         "grade": "观望",
         "headline": "信息优势不足，等待官方赔率与首发后再判断",
         "finalAdvice": "避免把平局风险低估，尤其是小组赛阶段。 当前不适合主动购买，等待官方赔率和首发。",
@@ -3198,7 +3200,7 @@
         "deepThinking": {
           "label": "深度推演层",
           "conclusion": "最合适买法：不买。本场保留预算。",
-          "confidenceScore": 42,
+          "confidenceScore": 44,
           "purchasePlan": [
             {
               "label": "最终动作",
@@ -3211,17 +3213,17 @@
           ],
           "reasoningSummary": [
             "模型最集中比分：1-1（平局）；备选：2-1（主胜） / 1-0（主胜）。",
-            "实力护栏：主队综合实力 67.2-56.5 领先，冷门比分只进防守层，不抢主推。 历史底蕴 72-58 已计入但不覆盖当前赔率。",
+            "实力护栏：主队综合实力 67.2-56.6 领先，冷门比分只进防守层，不抢主推。 历史底蕴 72-58 已计入但不覆盖当前赔率。",
             "本届杯赛：本届 3 场 1胜2平0负，进失球 6-2，杯赛强度 69.3。；本届 3 场 1胜0平2负，进失球 8-6，杯赛强度 58.7。",
             "历届世界杯：比利时 历届世界杯：14 次参赛，最佳 2018 季军，近代样本 2014 八强、2018 季军，历史底蕴 72/100。；塞内加尔 历届世界杯：4 次参赛，最佳 2002 八强，近代样本 2022 十六强，历史底蕴 58/100。",
             "32强淘汰赛：输球即出局；晋级后潜在对手 美国(69.4) / 波黑(50.3)，对手池最高强度 69.4。模型降低无意义大胜，保留一球差和2-3球区间。",
-            "比利时休息4.7天，塞内加尔休息5天；开球当地时段待核验；无明显东道主/准主场加成；加时点球风险67/100。",
-            "心态/教练代理：塞内加尔 69.2-80.9 占优，提升其一球差和顺风扩大比分路径。",
+            "比利时休息4.7天，塞内加尔休息5天；当地约12点开球，身体时钟偏移 比利时8小时 / 塞内加尔7小时；无明显东道主/准主场加成；加时点球风险67/100。",
+            "心态/教练代理：塞内加尔 70.1-81.9 占优，提升其一球差和顺风扩大比分路径。",
             "胜平负方向：平局；总进球校验：总进球 2/3/4。"
           ],
           "noBuyRules": [
             "中国体彩比分赔率低于 ≥ 8.37 时不买。",
-            "胜平负 平局 低于 ≥ 3.78 时不买。",
+            "胜平负 平局 低于 ≥ 3.76 时不买。",
             "首发出现核心前锋、门将或中卫明显轮换时不买。",
             "临场 30 分钟内热门方向继续大幅降赔时不追。",
             "中国体彩未开售、停售或让球口径变化时不买。"
@@ -3238,7 +3240,7 @@
           ],
           "marketDirection": "平局",
           "totalGoals": "总进球 2/3/4",
-          "buyCondition": "必须同时满足：比分赔率 ≥ 8.37、胜平负方向 ≥ 3.78、首发无明显轮换；若平局赔率给足，可用 1-1 平局防守 做极小防守。",
+          "buyCondition": "必须同时满足：比分赔率 ≥ 8.37、胜平负方向 ≥ 3.76、首发无明显轮换；若平局赔率给足，可用 1-1 平局防守 做极小防守。",
           "passCondition": "任一核心条件不满足就放弃；避免把平局风险低估，尤其是小组赛阶段。",
           "stakeCeiling": "保留预算。只做观察，不主动加码",
           "confidenceBand": "低：不进入购买清单"
@@ -3272,7 +3274,7 @@
             "priority": "备选",
             "confidence": 35,
             "budgetShare": "单场预算 8%-15%",
-            "minOdds": "≥ 3.78",
+            "minOdds": "≥ 3.76",
             "expectedValueNote": "去水概率 29%，低于建议赔率时性价比不足。",
             "reason": "比分主方案已经转向平局，胜平负也应以平局核验，不再硬跟市场热门。",
             "noBetIf": "官方胜平负赔率明显低于门槛，或临场赔率短时间大幅下压。"
@@ -3341,7 +3343,7 @@
           },
           {
             "label": "赔率过热",
-            "score": 57,
+            "score": 56,
             "tone": "good",
             "evidence": "市场热度尚可，但仍需赛前赔率确认。"
           },
@@ -3365,9 +3367,9 @@
           },
           {
             "label": "天气/地理",
-            "score": 52,
-            "tone": "watch",
-            "evidence": "天气接口失败：HTTP 429；赛前需人工核验。 比利时 来自西欧低地，塞内加尔 来自西非；旅行距离差不大。"
+            "score": 35,
+            "tone": "good",
+            "evidence": "17°C，降水 1%，风 9 km/h，湿度 65%。露天影响按正常权重计入。 比利时 来自西欧低地，塞内加尔 来自西非；比利时 旅行距离少约 1900 km。"
           },
           {
             "label": "晋级压力",
@@ -3377,15 +3379,15 @@
           },
           {
             "label": "赛程体能",
-            "score": 68,
+            "score": 50,
             "tone": "good",
-            "evidence": "比利时休息4.7天，塞内加尔休息5天；开球当地时段待核验；无明显东道主/准主场加成；加时点球风险67/100。"
+            "evidence": "比利时休息4.7天，塞内加尔休息5天；当地约12点开球，身体时钟偏移 比利时8小时 / 塞内加尔7小时；无明显东道主/准主场加成；加时点球风险67/100。"
           },
           {
             "label": "古法占卜低权重",
             "score": 18,
             "tone": "watch",
-            "evidence": "坎(水) vs 艮(土)；五行八卦合参略偏塞内加尔，只作为低权重校验；日 火、寅时 木、天气 金。"
+            "evidence": "坎(水) vs 艮(土)；五行八卦合参略偏塞内加尔，只作为低权重校验；日 火、寅时 木、天气 土。"
           }
         ],
         "riskControls": [
@@ -3407,12 +3409,12 @@
           {
             "label": "综合风险",
             "level": "中",
-            "detail": "当前风险指数 57/100；超过中档时只做核验，不扩大组合。"
+            "detail": "当前风险指数 56/100；超过中档时只做核验，不扩大组合。"
           },
           {
             "label": "天气地理",
-            "level": "中",
-            "detail": "天气接口失败：HTTP 429；赛前需人工核验。 比利时 来自西欧低地，塞内加尔 来自西非；旅行距离差不大。"
+            "level": "低",
+            "detail": "17°C，降水 1%，风 9 km/h，湿度 65%。露天影响按正常权重计入。 比利时 来自西欧低地，塞内加尔 来自西非；比利时 旅行距离少约 1900 km。"
           },
           {
             "label": "伤病首发",
@@ -3426,8 +3428,8 @@
           },
           {
             "label": "赛程体能",
-            "level": "低",
-            "detail": "比利时休息4.7天，塞内加尔休息5天；开球当地时段待核验；无明显东道主/准主场加成；加时点球风险67/100。"
+            "level": "中",
+            "detail": "比利时休息4.7天，塞内加尔休息5天；当地约12点开球，身体时钟偏移 比利时8小时 / 塞内加尔7小时；无明显东道主/准主场加成；加时点球风险67/100。"
           },
           {
             "label": "占卜只作校验",
@@ -3437,9 +3439,9 @@
         ],
         "checklist": [
           "中国体彩比分 1-1（平局） 官方赔率是否 ≥ 8.37",
-          "胜平负 平局 是否达到 ≥ 3.78",
+          "胜平负 平局 是否达到 ≥ 3.76",
           "近5场实况是否仍支持：WLDLL vs WDWWL",
-          "天气地理是否冲突：天气接口失败：HTTP 429；赛前需人工核验。",
+          "天气地理是否冲突：17°C，降水 1%，风 9 km/h，湿度 65%。露天影响按正常权重计入。",
           "赛前 30 分钟确认首发、门将、核心前锋和中卫组合",
           "停售前确认赔率没有突然下压，且比赛仍在竞彩开售列表"
         ],
@@ -3494,10 +3496,10 @@
           {
             "label": "USA",
             "side": "home",
-            "american": "-270",
-            "decimal": 1.37,
-            "impliedProbability": 0.7299270072992701,
-            "normalizedProbability": 0.6933840908615533,
+            "american": "-263",
+            "decimal": 1.38,
+            "impliedProbability": 0.7246376811594204,
+            "normalizedProbability": 0.6925276844800639,
             "line": null,
             "movement": null,
             "bookmakerCount": 46
@@ -3505,10 +3507,10 @@
           {
             "label": "平局",
             "side": "draw",
-            "american": "+388",
-            "decimal": 4.88,
-            "impliedProbability": 0.20512820512820512,
-            "normalizedProbability": 0.19485870861134932,
+            "american": "+390",
+            "decimal": 4.9,
+            "impliedProbability": 0.2040816326530612,
+            "normalizedProbability": 0.19503840909846692,
             "line": null,
             "movement": null,
             "bookmakerCount": 46
@@ -3519,7 +3521,7 @@
             "american": "+750",
             "decimal": 8.5,
             "impliedProbability": 0.11764705882352941,
-            "normalizedProbability": 0.11175720052709741,
+            "normalizedProbability": 0.11243390642146918,
             "line": null,
             "movement": null,
             "bookmakerCount": 46
@@ -3573,7 +3575,7 @@
             "bookmakerCount": 9
           }
         ],
-        "updatedAt": "2026-07-01T05:49:57.830Z",
+        "updatedAt": "2026-07-01T05:54:24.065Z",
         "backupProvider": "DraftKings"
       },
       "context": {
@@ -4076,9 +4078,9 @@
           },
           {
             "label": "平局噪音",
-            "value": 19,
+            "value": 20,
             "tone": "good",
-            "note": "平局去水后约 19%"
+            "note": "平局去水后约 20%"
           },
           {
             "label": "新闻热度",
@@ -4124,7 +4126,7 @@
           "gap": 50.5,
           "strongerSide": "home",
           "strongerResult": "主胜",
-          "favoriteProbability": 0.6934,
+          "favoriteProbability": 0.6925,
           "isClearGap": true,
           "isStrongGap": true,
           "summary": "实力护栏：主队综合实力 82.3-31.8 领先，冷门比分只进防守层，不抢主推。 历史底蕴 66-43 已计入但不覆盖当前赔率。"
@@ -4133,17 +4135,17 @@
           {
             "label": "USA",
             "side": "home",
-            "probability": 0.6934
+            "probability": 0.6925
           },
           {
             "label": "平局",
             "side": "draw",
-            "probability": 0.1949
+            "probability": 0.195
           },
           {
             "label": "Bosnia & Herzegovina",
             "side": "away",
-            "probability": 0.1118
+            "probability": 0.1124
           }
         ],
         "bestPick": {
@@ -4720,7 +4722,7 @@
             "bookmakerCount": 9
           }
         ],
-        "updatedAt": "2026-07-01T05:49:57.830Z",
+        "updatedAt": "2026-07-01T05:54:24.065Z",
         "backupProvider": "DraftKings"
       },
       "context": {
@@ -5867,7 +5869,7 @@
             "bookmakerCount": 9
           }
         ],
-        "updatedAt": "2026-07-01T05:49:57.830Z",
+        "updatedAt": "2026-07-01T05:54:24.065Z",
         "backupProvider": "DraftKings"
       },
       "context": {
@@ -6935,10 +6937,10 @@
           {
             "label": "瑞士",
             "side": "home",
-            "american": "+105",
-            "decimal": 2.05,
-            "impliedProbability": 0.48780487804878053,
-            "normalizedProbability": 0.4663654573381599,
+            "american": "+104",
+            "decimal": 2.04,
+            "impliedProbability": 0.49019607843137253,
+            "normalizedProbability": 0.46758261947132185,
             "line": null,
             "movement": null,
             "bookmakerCount": 46
@@ -6949,7 +6951,7 @@
             "american": "+225",
             "decimal": 3.25,
             "impliedProbability": 0.3081664098613251,
-            "normalizedProbability": 0.29462224577603313,
+            "normalizedProbability": 0.293950244598304,
             "line": null,
             "movement": null,
             "bookmakerCount": 46
@@ -6960,7 +6962,7 @@
             "american": "+300",
             "decimal": 4,
             "impliedProbability": 0.25,
-            "normalizedProbability": 0.2390122968858069,
+            "normalizedProbability": 0.23846713593037414,
             "line": null,
             "movement": null,
             "bookmakerCount": 46
@@ -7014,7 +7016,7 @@
             "bookmakerCount": 9
           }
         ],
-        "updatedAt": "2026-07-01T05:49:57.830Z",
+        "updatedAt": "2026-07-01T05:54:24.065Z",
         "backupProvider": "DraftKings"
       },
       "context": {
@@ -7559,32 +7561,32 @@
         "awayExpectedGoals": 1.03,
         "totalExpectedGoals": 2.63,
         "strengthProfile": {
-          "homeStrength": 69.5,
-          "awayStrength": 52.6,
-          "edge": 16.9,
-          "gap": 16.9,
+          "homeStrength": 69.6,
+          "awayStrength": 52.5,
+          "edge": 17.1,
+          "gap": 17.1,
           "strongerSide": "home",
           "strongerResult": "主胜",
-          "favoriteProbability": 0.4664,
+          "favoriteProbability": 0.4676,
           "isClearGap": false,
           "isStrongGap": false,
-          "summary": "实力护栏：主队综合实力 69.5-52.6 领先，冷门比分只进防守层，不抢主推。 历史底蕴 62-52 已计入但不覆盖当前赔率。"
+          "summary": "实力护栏：主队综合实力 69.6-52.5 领先，冷门比分只进防守层，不抢主推。 历史底蕴 62-52 已计入但不覆盖当前赔率。"
         },
         "resultProbabilities": [
           {
             "label": "瑞士",
             "side": "home",
-            "probability": 0.4664
+            "probability": 0.4676
           },
           {
             "label": "平局",
             "side": "draw",
-            "probability": 0.2946
+            "probability": 0.294
           },
           {
             "label": "阿尔及利亚",
             "side": "away",
-            "probability": 0.239
+            "probability": 0.2385
           }
         ],
         "bestPick": {
@@ -7806,7 +7808,7 @@
           ],
           "reasoningSummary": [
             "模型最集中比分：1-0（主胜）；备选：2-1（主胜） / 1-1（平局）。",
-            "实力护栏：主队综合实力 69.5-52.6 领先，冷门比分只进防守层，不抢主推。 历史底蕴 62-52 已计入但不覆盖当前赔率。",
+            "实力护栏：主队综合实力 69.6-52.5 领先，冷门比分只进防守层，不抢主推。 历史底蕴 62-52 已计入但不覆盖当前赔率。",
             "本届杯赛：本届 3 场 2胜1平0负，进失球 7-3，杯赛强度 71.5。；本届 3 场 1胜1平1负，进失球 5-7，杯赛强度 46.7。",
             "历届世界杯：瑞士 历届世界杯：12 次参赛，最佳 1934/1938/1954 八强，近代样本 近几届多次十六强，历史底蕴 62/100。；阿尔及利亚 历届世界杯：5 次参赛，最佳 2014 十六强，近代样本 2014 十六强，历史底蕴 52/100。",
             "32强淘汰赛：输球即出局；晋级后潜在对手 澳大利亚(54.3) / 埃及(62.9)，对手池最高强度 62.9。模型降低无意义大胜，保留一球差和2-3球区间。",
