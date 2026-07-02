@@ -313,6 +313,40 @@ export interface ScorelineCandidate {
   reason: string
 }
 
+export interface SimulationDistribution {
+  label: string
+  side: 'home' | 'draw' | 'away' | null
+  probability: number
+  count: number
+  score?: string
+  goals?: string
+}
+
+export interface MatchProcessSimulation {
+  model: string
+  runs: number
+  seed: string
+  resultDistribution: SimulationDistribution[]
+  topScores: SimulationDistribution[]
+  totalGoals: SimulationDistribution[]
+  halftime: {
+    mostCommonScore: string
+    resultDistribution: SimulationDistribution[]
+  }
+  process: {
+    firstGoalHomeProbability: number
+    firstGoalAwayProbability: number
+    noGoalProbability: number
+    firstGoalMostLikelyPhase: string
+    lateGoalProbability: number
+    noGoalFirst30Probability: number
+    equalizerProbability: number
+    comebackProbability: number
+    favoriteCoverProbability: number | null
+  }
+  summary: string
+}
+
 export interface ScorelineAnalysis {
   model: string
   homeExpectedGoals: number
@@ -322,6 +356,7 @@ export interface ScorelineAnalysis {
   bestPick: ScorelineCandidate | null
   candidates: ScorelineCandidate[]
   avoid: ScorelineCandidate[]
+  simulation?: MatchProcessSimulation
   notes: string[]
 }
 

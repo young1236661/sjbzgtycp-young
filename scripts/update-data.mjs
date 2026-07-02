@@ -10,6 +10,7 @@ const SPORTTERY_URL = 'https://www.sporttery.cn/jc/'
 const SPORTTERY_API = 'https://webapi.sporttery.cn/gateway/jc/football/getMatchListV1.qry?clientCode=3001'
 const ODDS_API_SPORT = 'soccer_fifa_world_cup'
 const HISTORY_SOURCE_URL = 'https://www.fifa.com/en/tournaments/mens/worldcup'
+const MONTE_CARLO_RUNS = 10000
 const TEAM_SCHEDULE_URL = 'https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams'
 const TEAM_INJURY_URL = 'https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams'
 const GEOCODE_URL = 'https://geocoding-api.open-meteo.com/v1/search'
@@ -2536,6 +2537,15 @@ function buildScorelineAnalysis(market, homeTeam, awayTeam, judgement, newsItems
       grade: '回避',
       reason: '概率过低，除非官方赔率极端偏高，否则不适合作为主要比分方向。',
     }))
+  const simulation = simulateMatchProgress({
+    homeTeam,
+    awayTeam,
+    homeExpectedGoals,
+    awayExpectedGoals,
+    resultProbabilities,
+    totalExpectedGoals,
+    context,
+  })
 
   return {
     model: '胜平负去水概率 + 大小球盘口 + 历届世界杯低权重底蕴 + 平局压缩/抗热门校准 + Poisson 比分分布',
@@ -2547,9 +2557,11 @@ function buildScorelineAnalysis(market, homeTeam, awayTeam, judgement, newsItems
     bestPick: candidates[0] ?? null,
     candidates,
     avoid,
+    simulation,
     notes: [
       '比分玩法方差很大，候选只适合小额娱乐或赛前核验。',
       `本版把总进球从基础 ${baseTotalExpectedGoals.toFixed(2)} 校准到 ${totalExpectedGoals.toFixed(2)}，并对强弱分明场景的 3+ 进球比分做尾部上调。`,
+      simulation.summary,
       ...(Math.abs(goalShareAdjustment) >= 0.01
         ? [
             `复盘校准：保留总进球 ${totalExpectedGoals.toFixed(2)} 不变，仅把主场弱势方的一球贡献修正 ${goalShareAdjustment > 0 ? '+' : ''}${goalShareAdjustment}。`,
@@ -2757,6 +2769,16 @@ function buildProfessionalBrief(market, homeTeam, awayTeam, judgement, scoreline
         tone: scoreConcentration >= 13 ? 'good' : scoreConcentration >= 9 ? 'watch' : 'bad',
         evidence: `首选比分 ${bestScore.score} 概率约 ${formatPct(bestScore.probability)}，盈亏线 ${bestScore.fairOdds.toFixed(2)}。`,
       },
+      ...(scoreline.simulation
+        ? [
+            {
+              label: '1万次进程模拟',
+              score: Math.round((scoreline.simulation.resultDistribution[0]?.probability ?? 0) * 100),
+              tone: (scoreline.simulation.resultDistribution[0]?.probability ?? 0) >= 0.62 ? 'good' : 'watch',
+              evidence: scoreline.simulation.summary,
+            },
+          ]
+        : []),
       {
         label: '赔率过热',
         score: judgement.risk,
@@ -4113,6 +4135,325 @@ function scoreResult(homeGoals, awayGoals) {
   if (homeGoals > awayGoals) return '主胜'
   if (homeGoals < awayGoals) return '客胜'
   return '平局'
+}
+
+function simulateMatchProgress({
+  homeTeam,
+  awayTeam,
+  homeExpectedGoals,
+  awayExpectedGoals,
+  resultProbabilities,
+  totalExpectedGoals,
+  context,
+}) {
+  const seed = [
+    homeTeam.name,
+    awayTeam.name,
+    homeExpectedGoals.toFixed(2),
+    awayExpectedGoals.toFixed(2),
+    totalExpectedGoals.toFixed(2),
+    resultProbabilities.map((item) => `${item.side}:${item.probability}`).join(','),
+  ].join('|')
+  const rng = seededRandom(seed)
+  const phases = matchPhaseWeights(context, resultProbabilities, totalExpectedGoals)
+  const resultCounts = new Map([
+    ['主胜', 0],
+    ['平局', 0],
+    ['客胜', 0],
+  ])
+  const resultSides = new Map([
+    ['主胜', 'home'],
+    ['平局', 'draw'],
+    ['客胜', 'away'],
+  ])
+  const scoreCounts = new Map()
+  const totalCounts = new Map()
+  const halftimeScoreCounts = new Map()
+  const halftimeResultCounts = new Map([
+    ['主胜', 0],
+    ['平局', 0],
+    ['客胜', 0],
+  ])
+  const firstGoalCounts = new Map([
+    ['home', 0],
+    ['away', 0],
+    ['none', 0],
+  ])
+  const firstGoalPhaseCounts = new Map()
+
+  let lateGoalCount = 0
+  let noGoalFirst30Count = 0
+  let equalizerCount = 0
+  let comebackCount = 0
+  let favoriteCoverCount = 0
+  const favoriteSide = favoriteSideFromProbabilities(resultProbabilities)
+
+  for (let run = 0; run < MONTE_CARLO_RUNS; run += 1) {
+    const match = simulateSingleProgress({
+      homeExpectedGoals,
+      awayExpectedGoals,
+      phases,
+      favoriteSide,
+      context,
+      rng,
+    })
+    const result = scoreResult(match.homeGoals, match.awayGoals)
+    const score = `${match.homeGoals}-${match.awayGoals}`
+    const totalGoals = match.homeGoals + match.awayGoals
+    const totalKey = totalGoals >= 7 ? '7+' : String(totalGoals)
+    const halftimeScore = `${match.halftimeHome}-${match.halftimeAway}`
+    const halftimeResult = scoreResult(match.halftimeHome, match.halftimeAway)
+
+    resultCounts.set(result, (resultCounts.get(result) ?? 0) + 1)
+    scoreCounts.set(score, (scoreCounts.get(score) ?? 0) + 1)
+    totalCounts.set(totalKey, (totalCounts.get(totalKey) ?? 0) + 1)
+    halftimeScoreCounts.set(halftimeScore, (halftimeScoreCounts.get(halftimeScore) ?? 0) + 1)
+    halftimeResultCounts.set(halftimeResult, (halftimeResultCounts.get(halftimeResult) ?? 0) + 1)
+    firstGoalCounts.set(match.firstGoalSide, (firstGoalCounts.get(match.firstGoalSide) ?? 0) + 1)
+    if (match.firstGoalPhase) {
+      firstGoalPhaseCounts.set(match.firstGoalPhase, (firstGoalPhaseCounts.get(match.firstGoalPhase) ?? 0) + 1)
+    }
+    if (match.hasLateGoal) lateGoalCount += 1
+    if (match.noGoalFirst30) noGoalFirst30Count += 1
+    if (match.hasEqualizer) equalizerCount += 1
+    if (match.hasComeback) comebackCount += 1
+    if (favoriteSide === 'home' && match.homeGoals - match.awayGoals >= 2) favoriteCoverCount += 1
+    if (favoriteSide === 'away' && match.awayGoals - match.homeGoals >= 2) favoriteCoverCount += 1
+  }
+
+  const resultDistribution = mapCountsToDistribution(resultCounts, MONTE_CARLO_RUNS, {
+    sideByLabel: resultSides,
+  })
+  const topScores = mapCountsToDistribution(scoreCounts, MONTE_CARLO_RUNS)
+    .slice(0, 8)
+    .map((item) => ({ ...item, score: item.label }))
+  const totalGoals = mapCountsToDistribution(totalCounts, MONTE_CARLO_RUNS)
+    .sort((left, right) => {
+      const leftNumber = left.label === '7+' ? 7 : Number(left.label)
+      const rightNumber = right.label === '7+' ? 7 : Number(right.label)
+      return leftNumber - rightNumber
+    })
+    .map((item) => ({ ...item, goals: item.label }))
+  const halftimeScores = mapCountsToDistribution(halftimeScoreCounts, MONTE_CARLO_RUNS)
+  const halftimeResults = mapCountsToDistribution(halftimeResultCounts, MONTE_CARLO_RUNS, {
+    sideByLabel: resultSides,
+  })
+  const firstGoalPhase = mapCountsToDistribution(firstGoalPhaseCounts, MONTE_CARLO_RUNS)[0] ?? null
+  const topResult = resultDistribution[0]
+  const topTotal = [...totalGoals].sort((left, right) => right.probability - left.probability)[0]
+  const process = {
+    firstGoalHomeProbability: round((firstGoalCounts.get('home') ?? 0) / MONTE_CARLO_RUNS, 4),
+    firstGoalAwayProbability: round((firstGoalCounts.get('away') ?? 0) / MONTE_CARLO_RUNS, 4),
+    noGoalProbability: round((firstGoalCounts.get('none') ?? 0) / MONTE_CARLO_RUNS, 4),
+    firstGoalMostLikelyPhase: firstGoalPhase?.label ?? '无进球',
+    lateGoalProbability: round(lateGoalCount / MONTE_CARLO_RUNS, 4),
+    noGoalFirst30Probability: round(noGoalFirst30Count / MONTE_CARLO_RUNS, 4),
+    equalizerProbability: round(equalizerCount / MONTE_CARLO_RUNS, 4),
+    comebackProbability: round(comebackCount / MONTE_CARLO_RUNS, 4),
+    favoriteCoverProbability: favoriteSide === 'draw' ? null : round(favoriteCoverCount / MONTE_CARLO_RUNS, 4),
+  }
+
+  return {
+    model: '10,000-run deterministic Monte Carlo match-process simulation',
+    runs: MONTE_CARLO_RUNS,
+    seed,
+    resultDistribution,
+    topScores,
+    totalGoals,
+    halftime: {
+      mostCommonScore: halftimeScores[0]?.label ?? '0-0',
+      resultDistribution: halftimeResults,
+    },
+    process,
+    summary: buildSimulationSummary({
+      result: topResult,
+      topScores,
+      topTotal,
+      process,
+    }),
+  }
+}
+
+function simulateSingleProgress({ homeExpectedGoals, awayExpectedGoals, phases, favoriteSide, context, rng }) {
+  let homeGoals = 0
+  let awayGoals = 0
+  let halftimeHome = 0
+  let halftimeAway = 0
+  let homeTrailed = false
+  let awayTrailed = false
+  let hasEqualizer = false
+  const events = []
+
+  for (const phase of phases) {
+    let homeLambda = homeExpectedGoals * phase.weight
+    let awayLambda = awayExpectedGoals * phase.weight
+
+    if (phase.start >= 61) {
+      if (homeGoals < awayGoals) homeLambda *= 1.12
+      if (awayGoals < homeGoals) awayLambda *= 1.12
+      if (homeGoals > awayGoals) homeLambda *= 0.97
+      if (awayGoals > homeGoals) awayLambda *= 0.97
+    }
+
+    if (phase.start >= 76) {
+      if (context?.advancement?.pressureType === 'knockout' && homeGoals === awayGoals) {
+        homeLambda *= 0.96
+        awayLambda *= 0.96
+      }
+      if (favoriteSide === 'home' && homeGoals <= awayGoals) homeLambda *= 1.08
+      if (favoriteSide === 'away' && awayGoals <= homeGoals) awayLambda *= 1.08
+    }
+
+    if (context?.weather?.riskLevel === '高' && phase.end <= 45) {
+      homeLambda *= 0.96
+      awayLambda *= 0.96
+    }
+
+    const phaseEvents = []
+    const homePhaseGoals = poissonSample(homeLambda, rng)
+    const awayPhaseGoals = poissonSample(awayLambda, rng)
+    for (let goal = 0; goal < homePhaseGoals; goal += 1) {
+      phaseEvents.push({ side: 'home', minute: randomMinuteInPhase(phase, rng), phase: phase.label })
+    }
+    for (let goal = 0; goal < awayPhaseGoals; goal += 1) {
+      phaseEvents.push({ side: 'away', minute: randomMinuteInPhase(phase, rng), phase: phase.label })
+    }
+
+    phaseEvents.sort((left, right) => left.minute - right.minute || rng() - 0.5)
+    for (const event of phaseEvents) {
+      if (homeGoals < awayGoals) homeTrailed = true
+      if (awayGoals < homeGoals) awayTrailed = true
+      if (event.side === 'home') homeGoals += 1
+      if (event.side === 'away') awayGoals += 1
+      if (homeGoals === awayGoals && homeGoals + awayGoals > 0) hasEqualizer = true
+      events.push(event)
+    }
+
+    if (phase.end <= 45) {
+      halftimeHome = homeGoals
+      halftimeAway = awayGoals
+    }
+  }
+
+  const firstGoal = events[0]
+  const hasLateGoal = events.some((event) => event.minute >= 76)
+  const noGoalFirst30 = !events.some((event) => event.minute <= 30)
+  const hasComeback = (homeGoals > awayGoals && homeTrailed) || (awayGoals > homeGoals && awayTrailed)
+
+  return {
+    homeGoals,
+    awayGoals,
+    halftimeHome,
+    halftimeAway,
+    firstGoalSide: firstGoal?.side ?? 'none',
+    firstGoalPhase: firstGoal?.phase ?? null,
+    hasLateGoal,
+    noGoalFirst30,
+    hasEqualizer,
+    hasComeback,
+  }
+}
+
+function matchPhaseWeights(context, resultProbabilities, totalExpectedGoals) {
+  const phases = [
+    { label: '0-15', start: 0, end: 15, weight: 0.13 },
+    { label: '16-30', start: 16, end: 30, weight: 0.14 },
+    { label: '31-45+', start: 31, end: 45, weight: 0.16 },
+    { label: '46-60', start: 46, end: 60, weight: 0.16 },
+    { label: '61-75', start: 61, end: 75, weight: 0.18 },
+    { label: '76-90+', start: 76, end: 95, weight: 0.23 },
+  ]
+  const drawProbability = resultProbabilities.find((item) => item.side === 'draw')?.probability ?? 0.26
+  const favoriteProbability = Math.max(...resultProbabilities.map((item) => item.probability))
+
+  if (context?.advancement?.pressureType === 'knockout') {
+    phases[0].weight -= 0.015
+    phases[1].weight -= 0.01
+    phases[4].weight += 0.01
+    phases[5].weight += 0.015
+  }
+  if (context?.advancement?.pressureScore >= 76) {
+    phases[2].weight += 0.01
+    phases[5].weight += 0.015
+    phases[0].weight -= 0.01
+    phases[1].weight -= 0.015
+  }
+  if (drawProbability >= 0.29 && totalExpectedGoals <= 2.55) {
+    phases[0].weight -= 0.01
+    phases[1].weight -= 0.01
+    phases[5].weight += 0.02
+  }
+  if (favoriteProbability >= 0.68) {
+    phases[1].weight += 0.01
+    phases[2].weight += 0.01
+    phases[5].weight -= 0.02
+  }
+  if (context?.situational?.riskDelta >= 7) {
+    phases[4].weight += 0.01
+    phases[5].weight += 0.01
+    phases[0].weight -= 0.01
+    phases[1].weight -= 0.01
+  }
+
+  const totalWeight = phases.reduce((sum, phase) => sum + Math.max(phase.weight, 0.04), 0)
+  return phases.map((phase) => ({
+    ...phase,
+    weight: Math.max(phase.weight, 0.04) / totalWeight,
+  }))
+}
+
+function favoriteSideFromProbabilities(resultProbabilities) {
+  return [...resultProbabilities].sort((left, right) => right.probability - left.probability)[0]?.side ?? 'draw'
+}
+
+function mapCountsToDistribution(counts, runs, options = {}) {
+  const sideByLabel = options.sideByLabel ?? new Map()
+  return [...counts.entries()]
+    .map(([label, count]) => ({
+      label,
+      side: sideByLabel.get(label) ?? null,
+      probability: round(count / runs, 4),
+      count,
+    }))
+    .sort((left, right) => right.probability - left.probability)
+}
+
+function buildSimulationSummary({ result, topScores, topTotal, process }) {
+  const scoreText = topScores
+    .slice(0, 3)
+    .map((item) => `${item.score} ${formatPct(item.probability)}`)
+    .join(' / ')
+  return `${MONTE_CARLO_RUNS.toLocaleString('zh-CN')}次进程模拟：${result?.label ?? '方向不明'} ${formatPct(result?.probability ?? 0)}；最密比分 ${scoreText || '暂无'}；总进球最集中 ${topTotal?.goals ?? '-'}球 ${formatPct(topTotal?.probability ?? 0)}；76分钟后仍有进球 ${formatPct(process.lateGoalProbability)}，前30分钟无进球 ${formatPct(process.noGoalFirst30Probability)}。`
+}
+
+function seededRandom(seedText) {
+  let hash = 1779033703 ^ seedText.length
+  for (let index = 0; index < seedText.length; index += 1) {
+    hash = Math.imul(hash ^ seedText.charCodeAt(index), 3432918353)
+    hash = (hash << 13) | (hash >>> 19)
+  }
+  return () => {
+    hash = Math.imul(hash ^ (hash >>> 16), 2246822507)
+    hash = Math.imul(hash ^ (hash >>> 13), 3266489909)
+    hash ^= hash >>> 16
+    return (hash >>> 0) / 4294967296
+  }
+}
+
+function poissonSample(lambda, rng) {
+  if (lambda <= 0) return 0
+  const limit = Math.exp(-lambda)
+  let product = 1
+  let goals = 0
+  do {
+    goals += 1
+    product *= rng()
+  } while (product > limit && goals < 12)
+  return goals - 1
+}
+
+function randomMinuteInPhase(phase, rng) {
+  return phase.start + Math.floor(rng() * (phase.end - phase.start + 1))
 }
 
 function poisson(k, lambda) {
