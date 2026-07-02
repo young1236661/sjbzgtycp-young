@@ -481,6 +481,61 @@ export interface BankrollRule {
   note: string
 }
 
+export interface TrainingSetSummary {
+  sampleSize: number
+  predictionSamples: number
+  goalAverage: number
+  drawRate: number
+  oneGoalWinRate: number
+  highGoalRate: number
+  lowDraws: number
+  controlledCleanWins: number
+  favoritesConverted: number
+  favoriteConcededWins: number
+  resultAccuracy: number
+  topScoreAccuracy: number
+  top3ScoreAccuracy: number
+  totalBandAccuracy: number
+}
+
+export interface PredictionBacktestItem {
+  id: string
+  kickoffChina: string
+  matchup: string
+  actual: string
+  predictedResult: string
+  predictedScore: string
+  top3Scores: string[]
+  totalBand: string
+  hit: {
+    result: boolean
+    topScore: boolean
+    top3Score: boolean
+    totalBand: boolean
+  }
+}
+
+export interface CompletedMatchReview {
+  id: string
+  kickoffChina: string
+  home: string
+  away: string
+  score: string
+  totalGoals: number
+  result: string
+}
+
+export interface ModelReview {
+  title: string
+  scope: string
+  trainingSet: TrainingSetSummary
+  completedMatches: CompletedMatchReview[]
+  recentCompleted: CompletedMatchReview[]
+  predictionBacktest: PredictionBacktestItem[]
+  lessons: string[]
+  calibration: Record<string, number>
+}
+
 export interface WorldCupBrief {
   generatedAt: string
   generatedAtChina: string
@@ -495,6 +550,7 @@ export interface WorldCupBrief {
   }
   sources: SourceHealth[]
   news: NewsItem[]
+  modelReview?: ModelReview
   matches: MatchBrief[]
   bankroll: {
     title: string

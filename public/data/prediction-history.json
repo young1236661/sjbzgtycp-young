@@ -1,0 +1,3293 @@
+{
+  "version": 1,
+  "updatedAt": "2026-07-02T03:55:02.437Z",
+  "count": 53,
+  "predictions": {
+    "760449": {
+      "matchId": "760449",
+      "createdAt": "2026-06-21T03:12:29.097Z",
+      "sourceCommit": "488c6d87ceffea3bd8574925fba376de1cb3475e",
+      "kickoffUtc": "2026-06-21T04:00Z",
+      "kickoffChina": "06/21 12:00",
+      "home": "突尼斯",
+      "away": "日本",
+      "marketDirection": "日本 客胜",
+      "recommendedScore": "0-1（客胜）",
+      "secondaryScores": [
+        "0-2（客胜）",
+        "0-3（客胜）",
+        "1-2（客胜）"
+      ],
+      "totalGoals": "总进球 2/3",
+      "topScores": [
+        {
+          "score": "0-1",
+          "result": "客胜",
+          "probability": 0.14924431357662746
+        },
+        {
+          "score": "0-2",
+          "result": "客胜",
+          "probability": 0.14551320573721174
+        },
+        {
+          "score": "0-3",
+          "result": "客胜",
+          "probability": 0.09458358372918763
+        },
+        {
+          "score": "1-2",
+          "result": "客胜",
+          "probability": 0.09021818755707128
+        },
+        {
+          "score": "1-1",
+          "result": "平局",
+          "probability": 0.09253147441750902
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "突尼斯",
+          "side": "home",
+          "probability": 0.101
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.2133
+        },
+        {
+          "label": "日本",
+          "side": "away",
+          "probability": 0.6856
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760450": {
+      "matchId": "760450",
+      "createdAt": "2026-06-21T03:12:29.097Z",
+      "sourceCommit": "488c6d87ceffea3bd8574925fba376de1cb3475e",
+      "kickoffUtc": "2026-06-21T22:00Z",
+      "kickoffChina": "06/22 06:00",
+      "home": "乌拉圭",
+      "away": "佛得角",
+      "marketDirection": "乌拉圭 主胜",
+      "recommendedScore": "1-0（主胜）",
+      "secondaryScores": [
+        "2-0（主胜）",
+        "3-0（主胜）",
+        "2-1（主胜）"
+      ],
+      "totalGoals": "总进球 2/3",
+      "topScores": [
+        {
+          "score": "1-0",
+          "result": "主胜",
+          "probability": 0.17435302519719237
+        },
+        {
+          "score": "2-0",
+          "result": "主胜",
+          "probability": 0.15778948780345908
+        },
+        {
+          "score": "3-0",
+          "result": "主胜",
+          "probability": 0.09519965764142031
+        },
+        {
+          "score": "2-1",
+          "result": "主胜",
+          "probability": 0.08362842853583331
+        },
+        {
+          "score": "0-0",
+          "result": "平局",
+          "probability": 0.096327638230493
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "乌拉圭",
+          "side": "home",
+          "probability": 0.6528
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.2277
+        },
+        {
+          "label": "佛得角",
+          "side": "away",
+          "probability": 0.1195
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760451": {
+      "matchId": "760451",
+      "createdAt": "2026-06-21T03:12:29.097Z",
+      "sourceCommit": "488c6d87ceffea3bd8574925fba376de1cb3475e",
+      "kickoffUtc": "2026-06-21T19:00Z",
+      "kickoffChina": "06/22 03:00",
+      "home": "比利时",
+      "away": "伊朗",
+      "marketDirection": "比利时 主胜",
+      "recommendedScore": "2-0（主胜）",
+      "secondaryScores": [
+        "1-0（主胜）",
+        "2-1（主胜）",
+        "3-0（主胜）"
+      ],
+      "totalGoals": "总进球 2/3/4",
+      "topScores": [
+        {
+          "score": "2-0",
+          "result": "主胜",
+          "probability": 0.1265709627512864
+        },
+        {
+          "score": "1-0",
+          "result": "主胜",
+          "probability": 0.12531778490226378
+        },
+        {
+          "score": "2-1",
+          "result": "主胜",
+          "probability": 0.09619393169097767
+        },
+        {
+          "score": "3-0",
+          "result": "主胜",
+          "probability": 0.08522444825253286
+        },
+        {
+          "score": "1-1",
+          "result": "平局",
+          "probability": 0.09524151652572048
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "比利时",
+          "side": "home",
+          "probability": 0.6725
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.1997
+        },
+        {
+          "label": "伊朗",
+          "side": "away",
+          "probability": 0.1278
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760452": {
+      "matchId": "760452",
+      "createdAt": "2026-06-21T03:12:29.097Z",
+      "sourceCommit": "488c6d87ceffea3bd8574925fba376de1cb3475e",
+      "kickoffUtc": "2026-06-22T01:00Z",
+      "kickoffChina": "06/22 09:00",
+      "home": "新西兰",
+      "away": "埃及",
+      "marketDirection": "埃及 客胜",
+      "recommendedScore": "0-1（客胜）",
+      "secondaryScores": [
+        "0-2（客胜）",
+        "1-2（客胜）",
+        "1-1（平局）"
+      ],
+      "totalGoals": "总进球 2/3",
+      "topScores": [
+        {
+          "score": "0-1",
+          "result": "客胜",
+          "probability": 0.13223397367459072
+        },
+        {
+          "score": "0-2",
+          "result": "客胜",
+          "probability": 0.10975419814991029
+        },
+        {
+          "score": "1-2",
+          "result": "客胜",
+          "probability": 0.09548615239042195
+        },
+        {
+          "score": "1-1",
+          "result": "平局",
+          "probability": 0.11504355709689393
+        },
+        {
+          "score": "0-3",
+          "result": "客胜",
+          "probability": 0.06073065630961703
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "新西兰",
+          "side": "home",
+          "probability": 0.1744
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.2284
+        },
+        {
+          "label": "埃及",
+          "side": "away",
+          "probability": 0.5972
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760453": {
+      "matchId": "760453",
+      "createdAt": "2026-06-21T03:12:29.097Z",
+      "sourceCommit": "488c6d87ceffea3bd8574925fba376de1cb3475e",
+      "kickoffUtc": "2026-06-21T16:00Z",
+      "kickoffChina": "06/22 00:00",
+      "home": "西班牙",
+      "away": "沙特阿拉伯",
+      "marketDirection": "西班牙 主胜",
+      "recommendedScore": "2-0（主胜）",
+      "secondaryScores": [
+        "1-0（主胜）",
+        "3-0（主胜）",
+        "2-1（主胜）"
+      ],
+      "totalGoals": "总进球 2/3/4",
+      "topScores": [
+        {
+          "score": "2-0",
+          "result": "主胜",
+          "probability": 0.16294924219476287
+        },
+        {
+          "score": "1-0",
+          "result": "主胜",
+          "probability": 0.13868020612320242
+        },
+        {
+          "score": "3-0",
+          "result": "主胜",
+          "probability": 0.12764357305256424
+        },
+        {
+          "score": "2-1",
+          "result": "主胜",
+          "probability": 0.07821563625348618
+        },
+        {
+          "score": "4-0",
+          "result": "主胜",
+          "probability": 0.0749905991683815
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "西班牙",
+          "side": "home",
+          "probability": 0.8754
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.0875
+        },
+        {
+          "label": "沙特阿拉伯",
+          "side": "away",
+          "probability": 0.037
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760454": {
+      "matchId": "760454",
+      "createdAt": "2026-06-21T03:12:29.097Z",
+      "sourceCommit": "488c6d87ceffea3bd8574925fba376de1cb3475e",
+      "kickoffUtc": "2026-06-23T00:00Z",
+      "kickoffChina": "06/23 08:00",
+      "home": "挪威",
+      "away": "Senegal",
+      "marketDirection": "挪威 主胜",
+      "recommendedScore": "1-1（平局）",
+      "secondaryScores": [
+        "1-0（主胜）",
+        "2-1（主胜）",
+        "2-0（主胜）"
+      ],
+      "totalGoals": "总进球 2/3",
+      "topScores": [
+        {
+          "score": "1-1",
+          "result": "平局",
+          "probability": 0.12267754273037991
+        },
+        {
+          "score": "1-0",
+          "result": "主胜",
+          "probability": 0.10667612411337384
+        },
+        {
+          "score": "2-1",
+          "result": "主胜",
+          "probability": 0.09078138162048113
+        },
+        {
+          "score": "2-0",
+          "result": "主胜",
+          "probability": 0.07894033184389664
+        },
+        {
+          "score": "0-1",
+          "result": "客胜",
+          "probability": 0.08289023157458102
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "挪威",
+          "side": "home",
+          "probability": 0.4168
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.2739
+        },
+        {
+          "label": "Senegal",
+          "side": "away",
+          "probability": 0.3093
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760455": {
+      "matchId": "760455",
+      "createdAt": "2026-06-21T11:43:41.167Z",
+      "sourceCommit": "eaf0f6e7c0a1a787e8168f616fa610ac6339b88d",
+      "kickoffUtc": "2026-06-23T03:00Z",
+      "kickoffChina": "06/23 11:00",
+      "home": "Jordan",
+      "away": "Algeria",
+      "marketDirection": "Algeria 客胜",
+      "recommendedScore": "0-1（客胜）",
+      "secondaryScores": [
+        "0-2（客胜）",
+        "1-2（客胜）",
+        "1-1（平局）"
+      ],
+      "totalGoals": "总进球 2/3",
+      "topScores": [
+        {
+          "score": "0-1",
+          "result": "客胜",
+          "probability": 0.12293311072514748
+        },
+        {
+          "score": "0-2",
+          "result": "客胜",
+          "probability": 0.10695180633087831
+        },
+        {
+          "score": "1-2",
+          "result": "客胜",
+          "probability": 0.09732614376109926
+        },
+        {
+          "score": "1-1",
+          "result": "平局",
+          "probability": 0.11186913075988421
+        },
+        {
+          "score": "0-3",
+          "result": "客胜",
+          "probability": 0.0620320476719094
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "Jordan",
+          "side": "home",
+          "probability": 0.1601
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.2287
+        },
+        {
+          "label": "Algeria",
+          "side": "away",
+          "probability": 0.6112
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760456": {
+      "matchId": "760456",
+      "createdAt": "2026-06-21T03:12:29.097Z",
+      "sourceCommit": "488c6d87ceffea3bd8574925fba376de1cb3475e",
+      "kickoffUtc": "2026-06-22T17:00Z",
+      "kickoffChina": "06/23 01:00",
+      "home": "阿根廷",
+      "away": "Austria",
+      "marketDirection": "阿根廷 主胜",
+      "recommendedScore": "1-0（主胜）",
+      "secondaryScores": [
+        "2-0（主胜）",
+        "2-1（主胜）",
+        "1-1（平局）"
+      ],
+      "totalGoals": "总进球 2/3",
+      "topScores": [
+        {
+          "score": "1-0",
+          "result": "主胜",
+          "probability": 0.12647941527245818
+        },
+        {
+          "score": "2-0",
+          "result": "主胜",
+          "probability": 0.10877229713431401
+        },
+        {
+          "score": "2-1",
+          "result": "主胜",
+          "probability": 0.09680734444953946
+        },
+        {
+          "score": "1-1",
+          "result": "平局",
+          "probability": 0.11256667959248777
+        },
+        {
+          "score": "3-0",
+          "result": "主胜",
+          "probability": 0.06236278369034005
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "阿根廷",
+          "side": "home",
+          "probability": 0.6018
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.2389
+        },
+        {
+          "label": "Austria",
+          "side": "away",
+          "probability": 0.1593
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760457": {
+      "matchId": "760457",
+      "createdAt": "2026-06-21T03:12:29.097Z",
+      "sourceCommit": "488c6d87ceffea3bd8574925fba376de1cb3475e",
+      "kickoffUtc": "2026-06-22T21:00Z",
+      "kickoffChina": "06/23 05:00",
+      "home": "法国",
+      "away": "Iraq",
+      "marketDirection": "法国 主胜",
+      "recommendedScore": "2-0（主胜）",
+      "secondaryScores": [
+        "1-0（主胜）",
+        "3-0（主胜）",
+        "2-1（主胜）"
+      ],
+      "totalGoals": "总进球 2/3/4",
+      "topScores": [
+        {
+          "score": "2-0",
+          "result": "主胜",
+          "probability": 0.15740294935824234
+        },
+        {
+          "score": "1-0",
+          "result": "主胜",
+          "probability": 0.1322713860153297
+        },
+        {
+          "score": "3-0",
+          "result": "主胜",
+          "probability": 0.12487300649087227
+        },
+        {
+          "score": "2-1",
+          "result": "主胜",
+          "probability": 0.0802755041727036
+        },
+        {
+          "score": "4-0",
+          "result": "主胜",
+          "probability": 0.074299438862069
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "法国",
+          "side": "home",
+          "probability": 0.8898
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.0794
+        },
+        {
+          "label": "Iraq",
+          "side": "away",
+          "probability": 0.0308
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760458": {
+      "matchId": "760458",
+      "createdAt": "2026-06-22T07:25:57.253Z",
+      "sourceCommit": "bcb2944090be0995a4444128f2d47b09de39ad62",
+      "kickoffUtc": "2026-06-23T20:00Z",
+      "kickoffChina": "06/24 04:00",
+      "home": "英格兰",
+      "away": "Ghana",
+      "marketDirection": "英格兰 主胜",
+      "recommendedScore": "3-0（主胜）",
+      "secondaryScores": [
+        "3-1（主胜）",
+        "2-0（主胜）",
+        "4-0（主胜）"
+      ],
+      "totalGoals": "总进球 3/4/5",
+      "topScores": [
+        {
+          "score": "3-0",
+          "result": "主胜",
+          "probability": 0.0992
+        },
+        {
+          "score": "3-1",
+          "result": "主胜",
+          "probability": 0.0929
+        },
+        {
+          "score": "2-0",
+          "result": "主胜",
+          "probability": 0.0949
+        },
+        {
+          "score": "4-0",
+          "result": "主胜",
+          "probability": 0.0776
+        },
+        {
+          "score": "2-1",
+          "result": "主胜",
+          "probability": 0.0796
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "英格兰",
+          "side": "home",
+          "probability": 0.7841
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.1474
+        },
+        {
+          "label": "Ghana",
+          "side": "away",
+          "probability": 0.0685
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760459": {
+      "matchId": "760459",
+      "createdAt": "2026-06-22T07:25:57.253Z",
+      "sourceCommit": "bcb2944090be0995a4444128f2d47b09de39ad62",
+      "kickoffUtc": "2026-06-24T02:00Z",
+      "kickoffChina": "06/24 10:00",
+      "home": "Colombia",
+      "away": "Congo DR",
+      "marketDirection": "Colombia 主胜",
+      "recommendedScore": "2-0（主胜）",
+      "secondaryScores": [
+        "1-0（主胜）",
+        "3-0（主胜）",
+        "2-1（主胜）"
+      ],
+      "totalGoals": "总进球 2/3",
+      "topScores": [
+        {
+          "score": "2-0",
+          "result": "主胜",
+          "probability": 0.1665
+        },
+        {
+          "score": "1-0",
+          "result": "主胜",
+          "probability": 0.1525
+        },
+        {
+          "score": "3-0",
+          "result": "主胜",
+          "probability": 0.1082
+        },
+        {
+          "score": "2-1",
+          "result": "主胜",
+          "probability": 0.0833
+        },
+        {
+          "score": "3-1",
+          "result": "主胜",
+          "probability": 0.0606
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "Colombia",
+          "side": "home",
+          "probability": 0.6344
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.2285
+        },
+        {
+          "label": "Congo DR",
+          "side": "away",
+          "probability": 0.1371
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760460": {
+      "matchId": "760460",
+      "createdAt": "2026-06-22T07:25:57.253Z",
+      "sourceCommit": "bcb2944090be0995a4444128f2d47b09de39ad62",
+      "kickoffUtc": "2026-06-23T23:00Z",
+      "kickoffChina": "06/24 07:00",
+      "home": "Panama",
+      "away": "Croatia",
+      "marketDirection": "Croatia 客胜",
+      "recommendedScore": "0-2（客胜）",
+      "secondaryScores": [
+        "1-2（客胜）",
+        "0-3（客胜）",
+        "0-1（客胜）"
+      ],
+      "totalGoals": "总进球 2/3/4",
+      "topScores": [
+        {
+          "score": "0-2",
+          "result": "客胜",
+          "probability": 0.1109
+        },
+        {
+          "score": "1-2",
+          "result": "客胜",
+          "probability": 0.1005
+        },
+        {
+          "score": "0-3",
+          "result": "客胜",
+          "probability": 0.0784
+        },
+        {
+          "score": "0-1",
+          "result": "客胜",
+          "probability": 0.09
+        },
+        {
+          "score": "1-3",
+          "result": "客胜",
+          "probability": 0.0737
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "Panama",
+          "side": "home",
+          "probability": 0.147
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.233
+        },
+        {
+          "label": "Croatia",
+          "side": "away",
+          "probability": 0.6201
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760461": {
+      "matchId": "760461",
+      "createdAt": "2026-06-22T07:25:57.253Z",
+      "sourceCommit": "bcb2944090be0995a4444128f2d47b09de39ad62",
+      "kickoffUtc": "2026-06-23T17:00Z",
+      "kickoffChina": "06/24 01:00",
+      "home": "葡萄牙",
+      "away": "Uzbekistan",
+      "marketDirection": "葡萄牙 主胜",
+      "recommendedScore": "3-1（主胜）",
+      "secondaryScores": [
+        "3-0（主胜）",
+        "2-0（主胜）",
+        "4-0（主胜）"
+      ],
+      "totalGoals": "总进球 3/4/5",
+      "topScores": [
+        {
+          "score": "3-1",
+          "result": "主胜",
+          "probability": 0.0934
+        },
+        {
+          "score": "3-0",
+          "result": "主胜",
+          "probability": 0.0953
+        },
+        {
+          "score": "2-0",
+          "result": "主胜",
+          "probability": 0.0896
+        },
+        {
+          "score": "4-0",
+          "result": "主胜",
+          "probability": 0.076
+        },
+        {
+          "score": "4-1",
+          "result": "主胜",
+          "probability": 0.0692
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "葡萄牙",
+          "side": "home",
+          "probability": 0.7991
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.137
+        },
+        {
+          "label": "Uzbekistan",
+          "side": "away",
+          "probability": 0.0639
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760462": {
+      "matchId": "760462",
+      "createdAt": "2026-06-23T01:59:19.215Z",
+      "sourceCommit": "b4148f8d8ea480afea58fe40d105c6075c8af0ec",
+      "kickoffUtc": "2026-06-24T19:00Z",
+      "kickoffChina": "06/25 03:00",
+      "home": "Bosnia-Herzegovina",
+      "away": "Qatar",
+      "marketDirection": "Bosnia-Herzegovina 主胜",
+      "recommendedScore": "2-0（主胜）",
+      "secondaryScores": [
+        "3-0（主胜）",
+        "3-1（主胜）",
+        "2-1（主胜）"
+      ],
+      "totalGoals": "总进球 3/4/5",
+      "topScores": [
+        {
+          "score": "2-0",
+          "result": "主胜",
+          "probability": 0.1057
+        },
+        {
+          "score": "3-0",
+          "result": "主胜",
+          "probability": 0.0932
+        },
+        {
+          "score": "3-1",
+          "result": "主胜",
+          "probability": 0.0899
+        },
+        {
+          "score": "2-1",
+          "result": "主胜",
+          "probability": 0.0907
+        },
+        {
+          "score": "4-0",
+          "result": "主胜",
+          "probability": 0.0624
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "Bosnia-Herzegovina",
+          "side": "home",
+          "probability": 0.6717
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.1915
+        },
+        {
+          "label": "Qatar",
+          "side": "away",
+          "probability": 0.1368
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760463": {
+      "matchId": "760463",
+      "createdAt": "2026-06-23T01:59:19.215Z",
+      "sourceCommit": "b4148f8d8ea480afea58fe40d105c6075c8af0ec",
+      "kickoffUtc": "2026-06-24T19:00Z",
+      "kickoffChina": "06/25 03:00",
+      "home": "Switzerland",
+      "away": "Canada",
+      "marketDirection": "Switzerland 主胜",
+      "recommendedScore": "1-1（平局）",
+      "secondaryScores": [
+        "1-0（主胜）",
+        "2-1（主胜）",
+        "0-1（客胜）"
+      ],
+      "totalGoals": "总进球 2/3",
+      "topScores": [
+        {
+          "score": "1-1",
+          "result": "平局",
+          "probability": 0.1243
+        },
+        {
+          "score": "1-0",
+          "result": "主胜",
+          "probability": 0.1019
+        },
+        {
+          "score": "2-1",
+          "result": "主胜",
+          "probability": 0.087
+        },
+        {
+          "score": "0-1",
+          "result": "客胜",
+          "probability": 0.0888
+        },
+        {
+          "score": "2-0",
+          "result": "主胜",
+          "probability": 0.0713
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "Switzerland",
+          "side": "home",
+          "probability": 0.4012
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.3157
+        },
+        {
+          "label": "Canada",
+          "side": "away",
+          "probability": 0.2832
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760464": {
+      "matchId": "760464",
+      "createdAt": "2026-06-23T05:07:28.248Z",
+      "sourceCommit": "5cdc1d0363870a0c12d87d40b21ffeb5391b3734",
+      "kickoffUtc": "2026-06-24T22:00Z",
+      "kickoffChina": "06/25 06:00",
+      "home": "Morocco",
+      "away": "海地",
+      "marketDirection": "Morocco 主胜",
+      "recommendedScore": "3-0（主胜）",
+      "secondaryScores": [
+        "3-1（主胜）",
+        "4-0（主胜）",
+        "4-1（主胜）"
+      ],
+      "totalGoals": "总进球 3/4/5",
+      "topScores": [
+        {
+          "score": "3-0",
+          "result": "主胜",
+          "probability": 0.0946
+        },
+        {
+          "score": "3-1",
+          "result": "主胜",
+          "probability": 0.0917
+        },
+        {
+          "score": "4-0",
+          "result": "主胜",
+          "probability": 0.0843
+        },
+        {
+          "score": "4-1",
+          "result": "主胜",
+          "probability": 0.0759
+        },
+        {
+          "score": "2-0",
+          "result": "主胜",
+          "probability": 0.0796
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "Morocco",
+          "side": "home",
+          "probability": 0.8149
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.1284
+        },
+        {
+          "label": "海地",
+          "side": "away",
+          "probability": 0.0567
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760465": {
+      "matchId": "760465",
+      "createdAt": "2026-06-23T09:26:07.431Z",
+      "sourceCommit": "c260c59d0d3ea8ea0edb47151092b4778182978e",
+      "kickoffUtc": "2026-06-24T22:00Z",
+      "kickoffChina": "06/25 06:00",
+      "home": "Scotland",
+      "away": "巴西",
+      "marketDirection": "巴西 客胜",
+      "recommendedScore": "1-2（客胜）",
+      "secondaryScores": [
+        "1-3（客胜）",
+        "0-2（客胜）",
+        "0-3（客胜）"
+      ],
+      "totalGoals": "总进球 2/3/4",
+      "topScores": [
+        {
+          "score": "1-2",
+          "result": "客胜",
+          "probability": 0.1063
+        },
+        {
+          "score": "1-3",
+          "result": "客胜",
+          "probability": 0.0951
+        },
+        {
+          "score": "0-2",
+          "result": "客胜",
+          "probability": 0.0957
+        },
+        {
+          "score": "0-3",
+          "result": "客胜",
+          "probability": 0.0831
+        },
+        {
+          "score": "0-1",
+          "result": "客胜",
+          "probability": 0.0785
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "Scotland",
+          "side": "home",
+          "probability": 0.1364
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.1818
+        },
+        {
+          "label": "巴西",
+          "side": "away",
+          "probability": 0.6818
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760466": {
+      "matchId": "760466",
+      "createdAt": "2026-06-24T04:28:20.859Z",
+      "sourceCommit": "ab8dcd1a15c162292550421fe5b2995d495bd185",
+      "kickoffUtc": "2026-06-25T01:00Z",
+      "kickoffChina": "06/25 09:00",
+      "home": "South Africa",
+      "away": "South Korea",
+      "marketDirection": "South Korea 客胜",
+      "recommendedScore": "1-2（客胜）",
+      "secondaryScores": [
+        "0-1（客胜）",
+        "1-1（平局）",
+        "1-3（客胜）"
+      ],
+      "totalGoals": "总进球 2/3",
+      "topScores": [
+        {
+          "score": "1-2",
+          "result": "客胜",
+          "probability": 0.1095
+        },
+        {
+          "score": "0-1",
+          "result": "客胜",
+          "probability": 0.1074
+        },
+        {
+          "score": "1-1",
+          "result": "平局",
+          "probability": 0.1182
+        },
+        {
+          "score": "1-3",
+          "result": "客胜",
+          "probability": 0.0573
+        },
+        {
+          "score": "0-2",
+          "result": "客胜",
+          "probability": 0.0742
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "South Africa",
+          "side": "home",
+          "probability": 0.1825
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.2426
+        },
+        {
+          "label": "South Korea",
+          "side": "away",
+          "probability": 0.5749
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760467": {
+      "matchId": "760467",
+      "createdAt": "2026-06-24T04:28:20.859Z",
+      "sourceCommit": "ab8dcd1a15c162292550421fe5b2995d495bd185",
+      "kickoffUtc": "2026-06-25T01:00Z",
+      "kickoffChina": "06/25 09:00",
+      "home": "Czechia",
+      "away": "墨西哥",
+      "marketDirection": "墨西哥 客胜",
+      "recommendedScore": "0-1（客胜）",
+      "secondaryScores": [
+        "1-1（平局）",
+        "1-2（客胜）",
+        "1-0（主胜）"
+      ],
+      "totalGoals": "总进球 2/3",
+      "topScores": [
+        {
+          "score": "0-1",
+          "result": "客胜",
+          "probability": 0.1216
+        },
+        {
+          "score": "1-1",
+          "result": "平局",
+          "probability": 0.1313
+        },
+        {
+          "score": "1-2",
+          "result": "客胜",
+          "probability": 0.0821
+        },
+        {
+          "score": "1-0",
+          "result": "主胜",
+          "probability": 0.1051
+        },
+        {
+          "score": "0-0",
+          "result": "平局",
+          "probability": 0.0973
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "Czechia",
+          "side": "home",
+          "probability": 0.2576
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.2477
+        },
+        {
+          "label": "墨西哥",
+          "side": "away",
+          "probability": 0.4947
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760468": {
+      "matchId": "760468",
+      "createdAt": "2026-06-24T05:11:28.931Z",
+      "sourceCommit": "45d4b126f275f1aa271923b59da5283160b8c9fb",
+      "kickoffUtc": "2026-06-25T20:00Z",
+      "kickoffChina": "06/26 04:00",
+      "home": "厄瓜多尔",
+      "away": "德国",
+      "marketDirection": "德国 客胜",
+      "recommendedScore": "1-2（客胜）",
+      "secondaryScores": [
+        "1-1（平局）",
+        "1-3（客胜）",
+        "0-2（客胜）"
+      ],
+      "totalGoals": "总进球 2/3/4",
+      "topScores": [
+        {
+          "score": "1-2",
+          "result": "客胜",
+          "probability": 0.0964
+        },
+        {
+          "score": "1-1",
+          "result": "平局",
+          "probability": 0.0981
+        },
+        {
+          "score": "1-3",
+          "result": "客胜",
+          "probability": 0.0639
+        },
+        {
+          "score": "0-2",
+          "result": "客胜",
+          "probability": 0.0692
+        },
+        {
+          "score": "0-1",
+          "result": "客胜",
+          "probability": 0.0685
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "厄瓜多尔",
+          "side": "home",
+          "probability": 0.2551
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.2333
+        },
+        {
+          "label": "德国",
+          "side": "away",
+          "probability": 0.5116
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760469": {
+      "matchId": "760469",
+      "createdAt": "2026-06-25T03:29:49.482Z",
+      "sourceCommit": "9073dac92009b85159f09def0891be49bf8745bd",
+      "kickoffUtc": "2026-06-26T02:00Z",
+      "kickoffChina": "06/26 10:00",
+      "home": "Paraguay",
+      "away": "Australia",
+      "marketDirection": "平局 平局",
+      "recommendedScore": "1-0（主胜）",
+      "secondaryScores": [
+        "0-0（平局）",
+        "1-1（平局）",
+        "2-0（主胜）"
+      ],
+      "totalGoals": "总进球 1/2",
+      "topScores": [
+        {
+          "score": "1-0",
+          "result": "主胜",
+          "probability": 0.2251
+        },
+        {
+          "score": "0-0",
+          "result": "平局",
+          "probability": 0.1459
+        },
+        {
+          "score": "1-1",
+          "result": "平局",
+          "probability": 0.1184
+        },
+        {
+          "score": "2-0",
+          "result": "主胜",
+          "probability": 0.111
+        },
+        {
+          "score": "2-1",
+          "result": "主胜",
+          "probability": 0.0803
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "Paraguay",
+          "side": "home",
+          "probability": 0.3416
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.4251
+        },
+        {
+          "label": "Australia",
+          "side": "away",
+          "probability": 0.2333
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760470": {
+      "matchId": "760470",
+      "createdAt": "2026-06-25T03:29:49.482Z",
+      "sourceCommit": "9073dac92009b85159f09def0891be49bf8745bd",
+      "kickoffUtc": "2026-06-26T02:00Z",
+      "kickoffChina": "06/26 10:00",
+      "home": "Türkiye",
+      "away": "美国",
+      "marketDirection": "美国 客胜",
+      "recommendedScore": "1-2（客胜）",
+      "secondaryScores": [
+        "1-1（平局）",
+        "1-3（客胜）",
+        "0-2（客胜）"
+      ],
+      "totalGoals": "总进球 2/3/4",
+      "topScores": [
+        {
+          "score": "1-2",
+          "result": "客胜",
+          "probability": 0.0976
+        },
+        {
+          "score": "1-1",
+          "result": "平局",
+          "probability": 0.0972
+        },
+        {
+          "score": "1-3",
+          "result": "客胜",
+          "probability": 0.0661
+        },
+        {
+          "score": "0-2",
+          "result": "客胜",
+          "probability": 0.0723
+        },
+        {
+          "score": "0-1",
+          "result": "客胜",
+          "probability": 0.07
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "Türkiye",
+          "side": "home",
+          "probability": 0.2657
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.2333
+        },
+        {
+          "label": "美国",
+          "side": "away",
+          "probability": 0.501
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760471": {
+      "matchId": "760471",
+      "createdAt": "2026-06-25T03:29:49.482Z",
+      "sourceCommit": "9073dac92009b85159f09def0891be49bf8745bd",
+      "kickoffUtc": "2026-06-25T23:00Z",
+      "kickoffChina": "06/26 07:00",
+      "home": "日本",
+      "away": "瑞典",
+      "marketDirection": "日本 主胜",
+      "recommendedScore": "2-1（主胜）",
+      "secondaryScores": [
+        "1-1（平局）",
+        "2-0（主胜）",
+        "3-1（主胜）"
+      ],
+      "totalGoals": "总进球 2/3/4",
+      "topScores": [
+        {
+          "score": "2-1",
+          "result": "主胜",
+          "probability": 0.0981
+        },
+        {
+          "score": "1-1",
+          "result": "平局",
+          "probability": 0.0982
+        },
+        {
+          "score": "2-0",
+          "result": "主胜",
+          "probability": 0.0738
+        },
+        {
+          "score": "3-1",
+          "result": "主胜",
+          "probability": 0.0661
+        },
+        {
+          "score": "1-0",
+          "result": "主胜",
+          "probability": 0.0718
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "日本",
+          "side": "home",
+          "probability": 0.5124
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.2699
+        },
+        {
+          "label": "瑞典",
+          "side": "away",
+          "probability": 0.2177
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760472": {
+      "matchId": "760472",
+      "createdAt": "2026-06-25T03:29:49.482Z",
+      "sourceCommit": "9073dac92009b85159f09def0891be49bf8745bd",
+      "kickoffUtc": "2026-06-25T23:00Z",
+      "kickoffChina": "06/26 07:00",
+      "home": "突尼斯",
+      "away": "荷兰",
+      "marketDirection": "荷兰 客胜",
+      "recommendedScore": "0-3（客胜）",
+      "secondaryScores": [
+        "0-2（客胜）",
+        "0-4（客胜）",
+        "0-1（客胜）"
+      ],
+      "totalGoals": "总进球 2/3/4",
+      "topScores": [
+        {
+          "score": "0-3",
+          "result": "客胜",
+          "probability": 0.1437
+        },
+        {
+          "score": "0-2",
+          "result": "客胜",
+          "probability": 0.1406
+        },
+        {
+          "score": "0-4",
+          "result": "客胜",
+          "probability": 0.1172
+        },
+        {
+          "score": "0-1",
+          "result": "客胜",
+          "probability": 0.0897
+        },
+        {
+          "score": "1-3",
+          "result": "客胜",
+          "probability": 0.0714
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "突尼斯",
+          "side": "home",
+          "probability": 0.0417
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.0871
+        },
+        {
+          "label": "荷兰",
+          "side": "away",
+          "probability": 0.8712
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760473": {
+      "matchId": "760473",
+      "createdAt": "2026-06-24T04:28:20.859Z",
+      "sourceCommit": "ab8dcd1a15c162292550421fe5b2995d495bd185",
+      "kickoffUtc": "2026-06-25T20:00Z",
+      "kickoffChina": "06/26 04:00",
+      "home": "库拉索",
+      "away": "科特迪瓦",
+      "marketDirection": "科特迪瓦 客胜",
+      "recommendedScore": "0-3（客胜）",
+      "secondaryScores": [
+        "0-4（客胜）",
+        "0-2（客胜）",
+        "0-1（客胜）"
+      ],
+      "totalGoals": "总进球 2/3/4",
+      "topScores": [
+        {
+          "score": "0-3",
+          "result": "客胜",
+          "probability": 0.1597
+        },
+        {
+          "score": "0-4",
+          "result": "客胜",
+          "probability": 0.1338
+        },
+        {
+          "score": "0-2",
+          "result": "客胜",
+          "probability": 0.1427
+        },
+        {
+          "score": "0-1",
+          "result": "客胜",
+          "probability": 0.0941
+        },
+        {
+          "score": "0-5",
+          "result": "客胜",
+          "probability": 0.0768
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "库拉索",
+          "side": "home",
+          "probability": 0.0534
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.1131
+        },
+        {
+          "label": "科特迪瓦",
+          "side": "away",
+          "probability": 0.8334
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760474": {
+      "matchId": "760474",
+      "createdAt": "2026-06-25T04:51:25.533Z",
+      "sourceCommit": "aa422d8fc5608e8477612c422c78ce92b2bc4e08",
+      "kickoffUtc": "2026-06-26T19:00Z",
+      "kickoffChina": "06/27 03:00",
+      "home": "塞内加尔",
+      "away": "伊拉克",
+      "marketDirection": "塞内加尔 主胜",
+      "recommendedScore": "3-0（主胜）",
+      "secondaryScores": [
+        "2-0（主胜）",
+        "4-0（主胜）",
+        "3-1（主胜）"
+      ],
+      "totalGoals": "总进球 3/4/5",
+      "topScores": [
+        {
+          "score": "3-0",
+          "result": "主胜",
+          "probability": 0.1163
+        },
+        {
+          "score": "2-0",
+          "result": "主胜",
+          "probability": 0.1114
+        },
+        {
+          "score": "4-0",
+          "result": "主胜",
+          "probability": 0.091
+        },
+        {
+          "score": "3-1",
+          "result": "主胜",
+          "probability": 0.0889
+        },
+        {
+          "score": "2-1",
+          "result": "主胜",
+          "probability": 0.0762
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "塞内加尔",
+          "side": "home",
+          "probability": 0.7834
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.1368
+        },
+        {
+          "label": "伊拉克",
+          "side": "away",
+          "probability": 0.0798
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760475": {
+      "matchId": "760475",
+      "createdAt": "2026-06-25T04:51:25.533Z",
+      "sourceCommit": "aa422d8fc5608e8477612c422c78ce92b2bc4e08",
+      "kickoffUtc": "2026-06-26T19:00Z",
+      "kickoffChina": "06/27 03:00",
+      "home": "挪威",
+      "away": "法国",
+      "marketDirection": "法国 客胜",
+      "recommendedScore": "1-2（客胜）",
+      "secondaryScores": [
+        "1-3（客胜）",
+        "2-2（平局）",
+        "1-4（客胜）"
+      ],
+      "totalGoals": "总进球 3/4/5",
+      "topScores": [
+        {
+          "score": "1-2",
+          "result": "客胜",
+          "probability": 0.0968
+        },
+        {
+          "score": "1-3",
+          "result": "客胜",
+          "probability": 0.0773
+        },
+        {
+          "score": "2-2",
+          "result": "平局",
+          "probability": 0.0725
+        },
+        {
+          "score": "1-4",
+          "result": "客胜",
+          "probability": 0.0394
+        },
+        {
+          "score": "2-3",
+          "result": "客胜",
+          "probability": 0.0493
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "挪威",
+          "side": "home",
+          "probability": 0.1997
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.2178
+        },
+        {
+          "label": "法国",
+          "side": "away",
+          "probability": 0.5825
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760476": {
+      "matchId": "760476",
+      "createdAt": "2026-06-26T04:24:25.209Z",
+      "sourceCommit": "a31d575ec80806c3ebbb4c278862e97879c8eca1",
+      "kickoffUtc": "2026-06-27T03:00Z",
+      "kickoffChina": "06/27 11:00",
+      "home": "埃及",
+      "away": "伊朗",
+      "marketDirection": "平局",
+      "recommendedScore": "0-0（平局）",
+      "secondaryScores": [
+        "1-1（平局）",
+        "1-0（主胜）",
+        "2-1（主胜）"
+      ],
+      "totalGoals": "总进球 1/2",
+      "topScores": [
+        {
+          "score": "0-0",
+          "result": "平局",
+          "probability": 0.1844
+        },
+        {
+          "score": "1-1",
+          "result": "平局",
+          "probability": 0.1579
+        },
+        {
+          "score": "1-0",
+          "result": "主胜",
+          "probability": 0.1534
+        },
+        {
+          "score": "2-1",
+          "result": "主胜",
+          "probability": 0.0812
+        },
+        {
+          "score": "0-1",
+          "result": "客胜",
+          "probability": 0.0842
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "埃及",
+          "side": "home",
+          "probability": 0.3815
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.374
+        },
+        {
+          "label": "伊朗",
+          "side": "away",
+          "probability": 0.2445
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760477": {
+      "matchId": "760477",
+      "createdAt": "2026-06-26T04:24:25.209Z",
+      "sourceCommit": "a31d575ec80806c3ebbb4c278862e97879c8eca1",
+      "kickoffUtc": "2026-06-27T03:00Z",
+      "kickoffChina": "06/27 11:00",
+      "home": "新西兰",
+      "away": "比利时",
+      "marketDirection": "比利时 客胜",
+      "recommendedScore": "1-3（客胜）",
+      "secondaryScores": [
+        "1-2（客胜）",
+        "0-3（客胜）",
+        "1-4（客胜）"
+      ],
+      "totalGoals": "总进球 3/4/5",
+      "topScores": [
+        {
+          "score": "1-3",
+          "result": "客胜",
+          "probability": 0.0987
+        },
+        {
+          "score": "1-2",
+          "result": "客胜",
+          "probability": 0.0901
+        },
+        {
+          "score": "0-3",
+          "result": "客胜",
+          "probability": 0.0901
+        },
+        {
+          "score": "1-4",
+          "result": "客胜",
+          "probability": 0.0697
+        },
+        {
+          "score": "0-4",
+          "result": "客胜",
+          "probability": 0.0741
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "新西兰",
+          "side": "home",
+          "probability": 0.0598
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.1197
+        },
+        {
+          "label": "比利时",
+          "side": "away",
+          "probability": 0.8205
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760478": {
+      "matchId": "760478",
+      "createdAt": "2026-06-26T04:24:25.209Z",
+      "sourceCommit": "a31d575ec80806c3ebbb4c278862e97879c8eca1",
+      "kickoffUtc": "2026-06-27T00:00Z",
+      "kickoffChina": "06/27 08:00",
+      "home": "佛得角",
+      "away": "沙特阿拉伯",
+      "marketDirection": "平局",
+      "recommendedScore": "1-1（平局）",
+      "secondaryScores": [
+        "0-0（平局）",
+        "1-0（主胜）",
+        "0-1（客胜）"
+      ],
+      "totalGoals": "总进球 1/2",
+      "topScores": [
+        {
+          "score": "1-1",
+          "result": "平局",
+          "probability": 0.149
+        },
+        {
+          "score": "0-0",
+          "result": "平局",
+          "probability": 0.1359
+        },
+        {
+          "score": "1-0",
+          "result": "主胜",
+          "probability": 0.1226
+        },
+        {
+          "score": "0-1",
+          "result": "客胜",
+          "probability": 0.1163
+        },
+        {
+          "score": "2-1",
+          "result": "主胜",
+          "probability": 0.0699
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "佛得角",
+          "side": "home",
+          "probability": 0.3607
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.2853
+        },
+        {
+          "label": "沙特阿拉伯",
+          "side": "away",
+          "probability": 0.354
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760479": {
+      "matchId": "760479",
+      "createdAt": "2026-06-26T04:24:25.209Z",
+      "sourceCommit": "a31d575ec80806c3ebbb4c278862e97879c8eca1",
+      "kickoffUtc": "2026-06-27T00:00Z",
+      "kickoffChina": "06/27 08:00",
+      "home": "乌拉圭",
+      "away": "西班牙",
+      "marketDirection": "西班牙 客胜",
+      "recommendedScore": "0-1（客胜）",
+      "secondaryScores": [
+        "0-2（客胜）",
+        "0-3（客胜）",
+        "0-0（平局）"
+      ],
+      "totalGoals": "总进球 1/2",
+      "topScores": [
+        {
+          "score": "0-1",
+          "result": "客胜",
+          "probability": 0.2621
+        },
+        {
+          "score": "0-2",
+          "result": "客胜",
+          "probability": 0.2403
+        },
+        {
+          "score": "0-3",
+          "result": "客胜",
+          "probability": 0.1081
+        },
+        {
+          "score": "0-0",
+          "result": "平局",
+          "probability": 0.1147
+        },
+        {
+          "score": "1-2",
+          "result": "客胜",
+          "probability": 0.0477
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "乌拉圭",
+          "side": "home",
+          "probability": 0.12
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.24
+        },
+        {
+          "label": "西班牙",
+          "side": "away",
+          "probability": 0.64
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760480": {
+      "matchId": "760480",
+      "createdAt": "2026-06-26T05:37:57.668Z",
+      "sourceCommit": "cdf5a6b949a1452c9adc6fabe4b08d0d0456d5bd",
+      "kickoffUtc": "2026-06-27T21:00Z",
+      "kickoffChina": "06/28 05:00",
+      "home": "克罗地亚",
+      "away": "加纳",
+      "marketDirection": "克罗地亚 主胜",
+      "recommendedScore": "1-0（主胜）",
+      "secondaryScores": [
+        "2-0（主胜）",
+        "0-0（平局）",
+        "1-1（平局）"
+      ],
+      "totalGoals": "总进球 1/2",
+      "topScores": [
+        {
+          "score": "1-0",
+          "result": "主胜",
+          "probability": 0.2033
+        },
+        {
+          "score": "2-0",
+          "result": "主胜",
+          "probability": 0.1586
+        },
+        {
+          "score": "0-0",
+          "result": "平局",
+          "probability": 0.1303
+        },
+        {
+          "score": "1-1",
+          "result": "平局",
+          "probability": 0.1032
+        },
+        {
+          "score": "3-0",
+          "result": "主胜",
+          "probability": 0.0825
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "克罗地亚",
+          "side": "home",
+          "probability": 0.5429
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.2825
+        },
+        {
+          "label": "加纳",
+          "side": "away",
+          "probability": 0.1746
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760481": {
+      "matchId": "760481",
+      "createdAt": "2026-06-27T05:03:59.149Z",
+      "sourceCommit": "632a6741234c0dac56f85746fa31746ed34d1e19",
+      "kickoffUtc": "2026-06-27T23:30Z",
+      "kickoffChina": "06/28 07:30",
+      "home": "哥伦比亚",
+      "away": "葡萄牙",
+      "marketDirection": "平局",
+      "recommendedScore": "1-1（平局）",
+      "secondaryScores": [
+        "2-1（主胜）",
+        "1-2（客胜）",
+        "2-2（平局）"
+      ],
+      "totalGoals": "总进球 2/3/4",
+      "topScores": [
+        {
+          "score": "1-1",
+          "result": "平局",
+          "probability": 0.1197
+        },
+        {
+          "score": "2-1",
+          "result": "主胜",
+          "probability": 0.0818
+        },
+        {
+          "score": "1-2",
+          "result": "客胜",
+          "probability": 0.0854
+        },
+        {
+          "score": "2-2",
+          "result": "平局",
+          "probability": 0.0684
+        },
+        {
+          "score": "1-0",
+          "result": "主胜",
+          "probability": 0.0658
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "哥伦比亚",
+          "side": "home",
+          "probability": 0.2481
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.2514
+        },
+        {
+          "label": "葡萄牙",
+          "side": "away",
+          "probability": 0.5004
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760482": {
+      "matchId": "760482",
+      "createdAt": "2026-06-27T05:03:59.149Z",
+      "sourceCommit": "632a6741234c0dac56f85746fa31746ed34d1e19",
+      "kickoffUtc": "2026-06-27T23:30Z",
+      "kickoffChina": "06/28 07:30",
+      "home": "刚果民主共和国",
+      "away": "乌兹别克斯坦",
+      "marketDirection": "刚果民主共和国 主胜",
+      "recommendedScore": "1-0（主胜）",
+      "secondaryScores": [
+        "2-0（主胜）",
+        "2-1（主胜）",
+        "1-1（平局）"
+      ],
+      "totalGoals": "总进球 2/3",
+      "topScores": [
+        {
+          "score": "1-0",
+          "result": "主胜",
+          "probability": 0.1213
+        },
+        {
+          "score": "2-0",
+          "result": "主胜",
+          "probability": 0.1001
+        },
+        {
+          "score": "2-1",
+          "result": "主胜",
+          "probability": 0.0961
+        },
+        {
+          "score": "1-1",
+          "result": "平局",
+          "probability": 0.1165
+        },
+        {
+          "score": "3-0",
+          "result": "主胜",
+          "probability": 0.0551
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "刚果民主共和国",
+          "side": "home",
+          "probability": 0.5576
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.239
+        },
+        {
+          "label": "乌兹别克斯坦",
+          "side": "away",
+          "probability": 0.2034
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760483": {
+      "matchId": "760483",
+      "createdAt": "2026-06-27T05:03:59.149Z",
+      "sourceCommit": "632a6741234c0dac56f85746fa31746ed34d1e19",
+      "kickoffUtc": "2026-06-28T02:00Z",
+      "kickoffChina": "06/28 10:00",
+      "home": "约旦",
+      "away": "阿根廷",
+      "marketDirection": "阿根廷 客胜",
+      "recommendedScore": "0-2（客胜）",
+      "secondaryScores": [
+        "0-3（客胜）",
+        "0-4（客胜）",
+        "1-3（客胜）"
+      ],
+      "totalGoals": "总进球 3/4/5",
+      "topScores": [
+        {
+          "score": "0-2",
+          "result": "客胜",
+          "probability": 0.1337
+        },
+        {
+          "score": "0-3",
+          "result": "客胜",
+          "probability": 0.121
+        },
+        {
+          "score": "0-4",
+          "result": "客胜",
+          "probability": 0.1038
+        },
+        {
+          "score": "1-3",
+          "result": "客胜",
+          "probability": 0.0874
+        },
+        {
+          "score": "0-1",
+          "result": "客胜",
+          "probability": 0.0807
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "约旦",
+          "side": "home",
+          "probability": 0.0564
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.1128
+        },
+        {
+          "label": "阿根廷",
+          "side": "away",
+          "probability": 0.8308
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760484": {
+      "matchId": "760484",
+      "createdAt": "2026-06-27T05:03:59.149Z",
+      "sourceCommit": "632a6741234c0dac56f85746fa31746ed34d1e19",
+      "kickoffUtc": "2026-06-28T02:00Z",
+      "kickoffChina": "06/28 10:00",
+      "home": "阿尔及利亚",
+      "away": "奥地利",
+      "marketDirection": "平局",
+      "recommendedScore": "0-0（平局）",
+      "secondaryScores": [
+        "1-1（平局）",
+        "0-1（客胜）",
+        "1-2（客胜）"
+      ],
+      "totalGoals": "总进球 1/2",
+      "topScores": [
+        {
+          "score": "0-0",
+          "result": "平局",
+          "probability": 0.1706
+        },
+        {
+          "score": "1-1",
+          "result": "平局",
+          "probability": 0.16
+        },
+        {
+          "score": "0-1",
+          "result": "客胜",
+          "probability": 0.143
+        },
+        {
+          "score": "1-2",
+          "result": "客胜",
+          "probability": 0.0829
+        },
+        {
+          "score": "1-0",
+          "result": "主胜",
+          "probability": 0.0846
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "阿尔及利亚",
+          "side": "home",
+          "probability": 0.2285
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.4463
+        },
+        {
+          "label": "奥地利",
+          "side": "away",
+          "probability": 0.3253
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760485": {
+      "matchId": "760485",
+      "createdAt": "2026-06-26T05:37:57.668Z",
+      "sourceCommit": "cdf5a6b949a1452c9adc6fabe4b08d0d0456d5bd",
+      "kickoffUtc": "2026-06-27T21:00Z",
+      "kickoffChina": "06/28 05:00",
+      "home": "巴拿马",
+      "away": "英格兰",
+      "marketDirection": "英格兰 客胜",
+      "recommendedScore": "1-3（客胜）",
+      "secondaryScores": [
+        "0-2（客胜）",
+        "0-1（客胜）",
+        "1-2（客胜）"
+      ],
+      "totalGoals": "总进球 3/4/5",
+      "topScores": [
+        {
+          "score": "1-3",
+          "result": "客胜",
+          "probability": 0.0967
+        },
+        {
+          "score": "0-2",
+          "result": "客胜",
+          "probability": 0.123
+        },
+        {
+          "score": "0-1",
+          "result": "客胜",
+          "probability": 0.0916
+        },
+        {
+          "score": "1-2",
+          "result": "客胜",
+          "probability": 0.085
+        },
+        {
+          "score": "0-3",
+          "result": "客胜",
+          "probability": 0.0975
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "巴拿马",
+          "side": "home",
+          "probability": 0.0639
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.1198
+        },
+        {
+          "label": "英格兰",
+          "side": "away",
+          "probability": 0.8163
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760486": {
+      "matchId": "760486",
+      "createdAt": "2026-06-27T10:46:26.137Z",
+      "sourceCommit": "b875deb0717e69f35437c310a4fb793690991d3e",
+      "kickoffUtc": "2026-06-28T19:00Z",
+      "kickoffChina": "06/29 03:00",
+      "home": "South Africa",
+      "away": "Canada",
+      "marketDirection": "Canada 客胜",
+      "recommendedScore": "0-1（客胜）",
+      "secondaryScores": [
+        "1-2（客胜）",
+        "1-1（平局）",
+        "0-2（客胜）"
+      ],
+      "totalGoals": "总进球 2/3",
+      "topScores": [
+        {
+          "score": "0-1",
+          "result": "客胜",
+          "probability": 0.1481
+        },
+        {
+          "score": "1-2",
+          "result": "客胜",
+          "probability": 0.0983
+        },
+        {
+          "score": "1-1",
+          "result": "平局",
+          "probability": 0.1269
+        },
+        {
+          "score": "0-2",
+          "result": "客胜",
+          "probability": 0.105
+        },
+        {
+          "score": "0-0",
+          "result": "平局",
+          "probability": 0.0956
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "South Africa",
+          "side": "home",
+          "probability": 0.1818
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.2615
+        },
+        {
+          "label": "Canada",
+          "side": "away",
+          "probability": 0.5567
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760487": {
+      "matchId": "760487",
+      "createdAt": "2026-06-27T12:00:51.404Z",
+      "sourceCommit": "12e940b62020e40512b6d42e948f73c5f3e46da6",
+      "kickoffUtc": "2026-06-29T17:00Z",
+      "kickoffChina": "06/30 01:00",
+      "home": "巴西",
+      "away": "日本",
+      "marketDirection": "巴西 主胜",
+      "recommendedScore": "1-0（主胜）",
+      "secondaryScores": [
+        "2-1（主胜）",
+        "2-0（主胜）",
+        "1-1（平局）"
+      ],
+      "totalGoals": "总进球 2/3",
+      "topScores": [
+        {
+          "score": "1-0",
+          "result": "主胜",
+          "probability": 0.1354
+        },
+        {
+          "score": "2-1",
+          "result": "主胜",
+          "probability": 0.1166
+        },
+        {
+          "score": "2-0",
+          "result": "主胜",
+          "probability": 0.1061
+        },
+        {
+          "score": "1-1",
+          "result": "平局",
+          "probability": 0.1087
+        },
+        {
+          "score": "3-1",
+          "result": "主胜",
+          "probability": 0.0609
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "巴西",
+          "side": "home",
+          "probability": 0.5592
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.249
+        },
+        {
+          "label": "日本",
+          "side": "away",
+          "probability": 0.1917
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760488": {
+      "matchId": "760488",
+      "createdAt": "2026-06-28T05:44:37.034Z",
+      "sourceCommit": "abd90f706b5a1f4e7db91255d82b4f15028c14cb",
+      "kickoffUtc": "2026-06-30T01:00Z",
+      "kickoffChina": "06/30 09:00",
+      "home": "荷兰",
+      "away": "Morocco",
+      "marketDirection": "荷兰 主胜",
+      "recommendedScore": "1-0（主胜）",
+      "secondaryScores": [
+        "1-1（平局）",
+        "2-1（主胜）",
+        "0-0（平局）"
+      ],
+      "totalGoals": "总进球 2/3",
+      "topScores": [
+        {
+          "score": "1-0",
+          "result": "主胜",
+          "probability": 0.163
+        },
+        {
+          "score": "1-1",
+          "result": "平局",
+          "probability": 0.1507
+        },
+        {
+          "score": "2-1",
+          "result": "主胜",
+          "probability": 0.0948
+        },
+        {
+          "score": "0-0",
+          "result": "平局",
+          "probability": 0.1053
+        },
+        {
+          "score": "0-1",
+          "result": "客胜",
+          "probability": 0.0936
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "荷兰",
+          "side": "home",
+          "probability": 0.4459
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.295
+        },
+        {
+          "label": "Morocco",
+          "side": "away",
+          "probability": 0.2591
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760489": {
+      "matchId": "760489",
+      "createdAt": "2026-06-28T05:44:37.034Z",
+      "sourceCommit": "abd90f706b5a1f4e7db91255d82b4f15028c14cb",
+      "kickoffUtc": "2026-06-29T20:30Z",
+      "kickoffChina": "06/30 04:30",
+      "home": "德国",
+      "away": "巴拉圭",
+      "marketDirection": "德国 主胜",
+      "recommendedScore": "3-0（主胜）",
+      "secondaryScores": [
+        "3-1（主胜）",
+        "2-0（主胜）",
+        "2-1（主胜）"
+      ],
+      "totalGoals": "总进球 3/4/5",
+      "topScores": [
+        {
+          "score": "3-0",
+          "result": "主胜",
+          "probability": 0.1073
+        },
+        {
+          "score": "3-1",
+          "result": "主胜",
+          "probability": 0.0998
+        },
+        {
+          "score": "2-0",
+          "result": "主胜",
+          "probability": 0.1077
+        },
+        {
+          "score": "2-1",
+          "result": "主胜",
+          "probability": 0.0967
+        },
+        {
+          "score": "4-0",
+          "result": "主胜",
+          "probability": 0.0716
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "德国",
+          "side": "home",
+          "probability": 0.6956
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.1916
+        },
+        {
+          "label": "巴拉圭",
+          "side": "away",
+          "probability": 0.1127
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760490": {
+      "matchId": "760490",
+      "createdAt": "2026-06-29T06:05:22.625Z",
+      "sourceCommit": "75238a4926507724eb5087cc9112b013211f0059",
+      "kickoffUtc": "2026-06-30T17:00Z",
+      "kickoffChina": "07/01 01:00",
+      "home": "科特迪瓦",
+      "away": "挪威",
+      "marketDirection": "挪威 客胜",
+      "recommendedScore": "1-2（客胜）",
+      "secondaryScores": [
+        "1-1（平局）",
+        "0-1（客胜）",
+        "2-1（主胜）"
+      ],
+      "totalGoals": "总进球 2/3/4",
+      "topScores": [
+        {
+          "score": "1-2",
+          "result": "客胜",
+          "probability": 0.1029
+        },
+        {
+          "score": "1-1",
+          "result": "平局",
+          "probability": 0.1105
+        },
+        {
+          "score": "0-1",
+          "result": "客胜",
+          "probability": 0.0699
+        },
+        {
+          "score": "2-1",
+          "result": "主胜",
+          "probability": 0.0773
+        },
+        {
+          "score": "1-3",
+          "result": "客胜",
+          "probability": 0.0597
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "科特迪瓦",
+          "side": "home",
+          "probability": 0.2616
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.2728
+        },
+        {
+          "label": "挪威",
+          "side": "away",
+          "probability": 0.4657
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760491": {
+      "matchId": "760491",
+      "createdAt": "2026-06-29T06:05:22.625Z",
+      "sourceCommit": "75238a4926507724eb5087cc9112b013211f0059",
+      "kickoffUtc": "2026-07-01T01:00Z",
+      "kickoffChina": "07/01 09:00",
+      "home": "墨西哥",
+      "away": "厄瓜多尔",
+      "marketDirection": "平局",
+      "recommendedScore": "0-0（平局）",
+      "secondaryScores": [
+        "1-1（平局）",
+        "1-0（主胜）",
+        "0-1（客胜）"
+      ],
+      "totalGoals": "总进球 1/2",
+      "topScores": [
+        {
+          "score": "0-0",
+          "result": "平局",
+          "probability": 0.2334
+        },
+        {
+          "score": "1-1",
+          "result": "平局",
+          "probability": 0.1622
+        },
+        {
+          "score": "1-0",
+          "result": "主胜",
+          "probability": 0.1606
+        },
+        {
+          "score": "0-1",
+          "result": "客胜",
+          "probability": 0.1206
+        },
+        {
+          "score": "2-1",
+          "result": "主胜",
+          "probability": 0.0614
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "墨西哥",
+          "side": "home",
+          "probability": 0.4274
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.326
+        },
+        {
+          "label": "厄瓜多尔",
+          "side": "away",
+          "probability": 0.2466
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760492": {
+      "matchId": "760492",
+      "createdAt": "2026-06-29T06:05:22.625Z",
+      "sourceCommit": "75238a4926507724eb5087cc9112b013211f0059",
+      "kickoffUtc": "2026-06-30T21:00Z",
+      "kickoffChina": "07/01 05:00",
+      "home": "法国",
+      "away": "瑞典",
+      "marketDirection": "法国 主胜",
+      "recommendedScore": "3-0（主胜）",
+      "secondaryScores": [
+        "3-1（主胜）",
+        "2-0（主胜）",
+        "2-1（主胜）"
+      ],
+      "totalGoals": "总进球 3/4/5",
+      "topScores": [
+        {
+          "score": "3-0",
+          "result": "主胜",
+          "probability": 0.1152
+        },
+        {
+          "score": "3-1",
+          "result": "主胜",
+          "probability": 0.0991
+        },
+        {
+          "score": "2-0",
+          "result": "主胜",
+          "probability": 0.1127
+        },
+        {
+          "score": "2-1",
+          "result": "主胜",
+          "probability": 0.0935
+        },
+        {
+          "score": "4-0",
+          "result": "主胜",
+          "probability": 0.0789
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "法国",
+          "side": "home",
+          "probability": 0.7596
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.1485
+        },
+        {
+          "label": "瑞典",
+          "side": "away",
+          "probability": 0.0919
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760493": {
+      "matchId": "760493",
+      "createdAt": "2026-06-30T03:53:47.250Z",
+      "sourceCommit": "84652ea8004f6c2d21fb292947debdef9d69b247",
+      "kickoffUtc": "2026-07-01T20:00Z",
+      "kickoffChina": "07/02 04:00",
+      "home": "比利时",
+      "away": "塞内加尔",
+      "marketDirection": "平局",
+      "recommendedScore": "1-1（平局）",
+      "secondaryScores": [
+        "1-0（主胜）",
+        "0-0（平局）",
+        "2-1（主胜）"
+      ],
+      "totalGoals": "总进球 2/3",
+      "topScores": [
+        {
+          "score": "1-1",
+          "result": "平局",
+          "probability": 0.1542
+        },
+        {
+          "score": "1-0",
+          "result": "主胜",
+          "probability": 0.1202
+        },
+        {
+          "score": "0-0",
+          "result": "平局",
+          "probability": 0.1046
+        },
+        {
+          "score": "2-1",
+          "result": "主胜",
+          "probability": 0.0924
+        },
+        {
+          "score": "1-2",
+          "result": "客胜",
+          "probability": 0.0808
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "比利时",
+          "side": "home",
+          "probability": 0.4374
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.2916
+        },
+        {
+          "label": "塞内加尔",
+          "side": "away",
+          "probability": 0.271
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760494": {
+      "matchId": "760494",
+      "createdAt": "2026-06-30T03:53:47.250Z",
+      "sourceCommit": "84652ea8004f6c2d21fb292947debdef9d69b247",
+      "kickoffUtc": "2026-07-02T00:00Z",
+      "kickoffChina": "07/02 08:00",
+      "home": "美国",
+      "away": "波黑",
+      "marketDirection": "美国 主胜",
+      "recommendedScore": "3-0（主胜）",
+      "secondaryScores": [
+        "1-0（主胜）",
+        "2-0（主胜）",
+        "2-1（主胜）"
+      ],
+      "totalGoals": "总进球 2/3/4",
+      "topScores": [
+        {
+          "score": "3-0",
+          "result": "主胜",
+          "probability": 0.1287
+        },
+        {
+          "score": "1-0",
+          "result": "主胜",
+          "probability": 0.1072
+        },
+        {
+          "score": "2-0",
+          "result": "主胜",
+          "probability": 0.128
+        },
+        {
+          "score": "2-1",
+          "result": "主胜",
+          "probability": 0.091
+        },
+        {
+          "score": "4-0",
+          "result": "主胜",
+          "probability": 0.0906
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "美国",
+          "side": "home",
+          "probability": 0.6973
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.196
+        },
+        {
+          "label": "波黑",
+          "side": "away",
+          "probability": 0.1067
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760495": {
+      "matchId": "760495",
+      "createdAt": "2026-06-30T03:53:47.250Z",
+      "sourceCommit": "84652ea8004f6c2d21fb292947debdef9d69b247",
+      "kickoffUtc": "2026-07-01T16:00Z",
+      "kickoffChina": "07/02 00:00",
+      "home": "英格兰",
+      "away": "刚果民主共和国",
+      "marketDirection": "英格兰 主胜",
+      "recommendedScore": "2-0（主胜）",
+      "secondaryScores": [
+        "3-0（主胜）",
+        "3-1（主胜）",
+        "4-0（主胜）"
+      ],
+      "totalGoals": "总进球 2/3/4",
+      "topScores": [
+        {
+          "score": "2-0",
+          "result": "主胜",
+          "probability": 0.14
+        },
+        {
+          "score": "3-0",
+          "result": "主胜",
+          "probability": 0.1299
+        },
+        {
+          "score": "3-1",
+          "result": "主胜",
+          "probability": 0.0938
+        },
+        {
+          "score": "4-0",
+          "result": "主胜",
+          "probability": 0.0927
+        },
+        {
+          "score": "2-1",
+          "result": "主胜",
+          "probability": 0.0897
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "英格兰",
+          "side": "home",
+          "probability": 0.7515
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.1746
+        },
+        {
+          "label": "刚果民主共和国",
+          "side": "away",
+          "probability": 0.0739
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760496": {
+      "matchId": "760496",
+      "createdAt": "2026-07-01T04:34:40.403Z",
+      "sourceCommit": "2f2b121a701e192ef352df108fdc3fd7ec5d20ed",
+      "kickoffUtc": "2026-07-02T23:00Z",
+      "kickoffChina": "07/03 07:00",
+      "home": "葡萄牙",
+      "away": "克罗地亚",
+      "marketDirection": "葡萄牙 主胜",
+      "recommendedScore": "2-1（主胜）",
+      "secondaryScores": [
+        "1-0（主胜）",
+        "2-0（主胜）",
+        "3-1（主胜）"
+      ],
+      "totalGoals": "总进球 2/3/4",
+      "topScores": [
+        {
+          "score": "2-1",
+          "result": "主胜",
+          "probability": 0.1287
+        },
+        {
+          "score": "1-0",
+          "result": "主胜",
+          "probability": 0.1389
+        },
+        {
+          "score": "2-0",
+          "result": "主胜",
+          "probability": 0.1224
+        },
+        {
+          "score": "3-1",
+          "result": "主胜",
+          "probability": 0.0754
+        },
+        {
+          "score": "3-0",
+          "result": "主胜",
+          "probability": 0.0705
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "葡萄牙",
+          "side": "home",
+          "probability": 0.5333
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.2667
+        },
+        {
+          "label": "克罗地亚",
+          "side": "away",
+          "probability": 0.2
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760497": {
+      "matchId": "760497",
+      "createdAt": "2026-07-01T04:34:40.403Z",
+      "sourceCommit": "2f2b121a701e192ef352df108fdc3fd7ec5d20ed",
+      "kickoffUtc": "2026-07-02T19:00Z",
+      "kickoffChina": "07/03 03:00",
+      "home": "西班牙",
+      "away": "奥地利",
+      "marketDirection": "西班牙 主胜",
+      "recommendedScore": "2-0（主胜）",
+      "secondaryScores": [
+        "3-1（主胜）",
+        "3-0（主胜）",
+        "2-1（主胜）"
+      ],
+      "totalGoals": "总进球 3/4/5",
+      "topScores": [
+        {
+          "score": "2-0",
+          "result": "主胜",
+          "probability": 0.1449
+        },
+        {
+          "score": "3-1",
+          "result": "主胜",
+          "probability": 0.0998
+        },
+        {
+          "score": "3-0",
+          "result": "主胜",
+          "probability": 0.1157
+        },
+        {
+          "score": "2-1",
+          "result": "主胜",
+          "probability": 0.0939
+        },
+        {
+          "score": "4-0",
+          "result": "主胜",
+          "probability": 0.0783
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "西班牙",
+          "side": "home",
+          "probability": 0.7208
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.1831
+        },
+        {
+          "label": "奥地利",
+          "side": "away",
+          "probability": 0.0961
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760498": {
+      "matchId": "760498",
+      "createdAt": "2026-07-01T04:34:40.403Z",
+      "sourceCommit": "2f2b121a701e192ef352df108fdc3fd7ec5d20ed",
+      "kickoffUtc": "2026-07-03T03:00Z",
+      "kickoffChina": "07/03 11:00",
+      "home": "瑞士",
+      "away": "阿尔及利亚",
+      "marketDirection": "瑞士 主胜",
+      "recommendedScore": "1-0（主胜）",
+      "secondaryScores": [
+        "2-1（主胜）",
+        "1-1（平局）",
+        "2-0（主胜）"
+      ],
+      "totalGoals": "总进球 2/3",
+      "topScores": [
+        {
+          "score": "1-0",
+          "result": "主胜",
+          "probability": 0.1265
+        },
+        {
+          "score": "2-1",
+          "result": "主胜",
+          "probability": 0.1056
+        },
+        {
+          "score": "1-1",
+          "result": "平局",
+          "probability": 0.1306
+        },
+        {
+          "score": "2-0",
+          "result": "主胜",
+          "probability": 0.0973
+        },
+        {
+          "score": "3-1",
+          "result": "主胜",
+          "probability": 0.0541
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "瑞士",
+          "side": "home",
+          "probability": 0.4687
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.2911
+        },
+        {
+          "label": "阿尔及利亚",
+          "side": "away",
+          "probability": 0.2402
+        }
+      ],
+      "simulationSummary": ""
+    },
+    "760499": {
+      "matchId": "760499",
+      "createdAt": "2026-07-02T02:32:39.911Z",
+      "sourceCommit": "598d05ddee6bef86b136c6c752f90c37d8995ed8",
+      "kickoffUtc": "2026-07-03T18:00Z",
+      "kickoffChina": "07/04 02:00",
+      "home": "澳大利亚",
+      "away": "埃及",
+      "marketDirection": "平局",
+      "recommendedScore": "0-0（平局）",
+      "secondaryScores": [
+        "0-1（客胜）",
+        "1-1（平局）",
+        "1-2（客胜）"
+      ],
+      "totalGoals": "总进球 1/2",
+      "topScores": [
+        {
+          "score": "0-0",
+          "result": "平局",
+          "probability": 0.2271
+        },
+        {
+          "score": "0-1",
+          "result": "客胜",
+          "probability": 0.2307
+        },
+        {
+          "score": "1-1",
+          "result": "平局",
+          "probability": 0.1507
+        },
+        {
+          "score": "1-2",
+          "result": "客胜",
+          "probability": 0.08
+        },
+        {
+          "score": "0-2",
+          "result": "客胜",
+          "probability": 0.1093
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "澳大利亚",
+          "side": "home",
+          "probability": 0.2892
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.3291
+        },
+        {
+          "label": "埃及",
+          "side": "away",
+          "probability": 0.3817
+        }
+      ],
+      "simulationSummary": "10,000次进程模拟：客胜 55%；最密比分 0-1 22% / 0-0 17% / 0-2 13%；总进球最集中 1球 30%；76分钟后仍有进球 42%，前30分钟无进球 73%。"
+    },
+    "760500": {
+      "matchId": "760500",
+      "createdAt": "2026-07-02T02:32:39.911Z",
+      "sourceCommit": "598d05ddee6bef86b136c6c752f90c37d8995ed8",
+      "kickoffUtc": "2026-07-03T22:00Z",
+      "kickoffChina": "07/04 06:00",
+      "home": "阿根廷",
+      "away": "佛得角",
+      "marketDirection": "阿根廷 主胜",
+      "recommendedScore": "2-0（主胜）",
+      "secondaryScores": [
+        "3-0（主胜）",
+        "4-0（主胜）",
+        "1-0（主胜）"
+      ],
+      "totalGoals": "总进球 3/4/5",
+      "topScores": [
+        {
+          "score": "2-0",
+          "result": "主胜",
+          "probability": 0.1434
+        },
+        {
+          "score": "3-0",
+          "result": "主胜",
+          "probability": 0.1407
+        },
+        {
+          "score": "4-0",
+          "result": "主胜",
+          "probability": 0.101
+        },
+        {
+          "score": "1-0",
+          "result": "主胜",
+          "probability": 0.0858
+        },
+        {
+          "score": "3-1",
+          "result": "主胜",
+          "probability": 0.0844
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "阿根廷",
+          "side": "home",
+          "probability": 0.8283
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.1208
+        },
+        {
+          "label": "佛得角",
+          "side": "away",
+          "probability": 0.0509
+        }
+      ],
+      "simulationSummary": "10,000次进程模拟：主胜 83%；最密比分 2-0 12% / 3-0 12% / 1-0 9%；总进球最集中 3球 21%；76分钟后仍有进球 58%，前30分钟无进球 46%。"
+    },
+    "760501": {
+      "matchId": "760501",
+      "createdAt": "2026-07-02T02:32:39.911Z",
+      "sourceCommit": "598d05ddee6bef86b136c6c752f90c37d8995ed8",
+      "kickoffUtc": "2026-07-04T01:30Z",
+      "kickoffChina": "07/04 09:30",
+      "home": "哥伦比亚",
+      "away": "加纳",
+      "marketDirection": "哥伦比亚 主胜",
+      "recommendedScore": "1-0（主胜）",
+      "secondaryScores": [
+        "2-0（主胜）",
+        "2-1（主胜）",
+        "3-0（主胜）"
+      ],
+      "totalGoals": "总进球 1/2",
+      "topScores": [
+        {
+          "score": "1-0",
+          "result": "主胜",
+          "probability": 0.3239
+        },
+        {
+          "score": "2-0",
+          "result": "主胜",
+          "probability": 0.2797
+        },
+        {
+          "score": "2-1",
+          "result": "主胜",
+          "probability": 0.05
+        },
+        {
+          "score": "3-0",
+          "result": "主胜",
+          "probability": 0.0904
+        },
+        {
+          "score": "0-0",
+          "result": "平局",
+          "probability": 0.0894
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "哥伦比亚",
+          "side": "home",
+          "probability": 0.6288
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.2341
+        },
+        {
+          "label": "加纳",
+          "side": "away",
+          "probability": 0.1371
+        }
+      ],
+      "simulationSummary": "10,000次进程模拟：主胜 82%；最密比分 1-0 24% / 2-0 23% / 3-0 15%；总进球最集中 2球 27%；76分钟后仍有进球 42%，前30分钟无进球 63%。"
+    }
+  }
+}

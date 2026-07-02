@@ -1,4 +1,5 @@
-import { mkdir, writeFile } from 'node:fs/promises'
+import { mkdir, readFile, writeFile } from 'node:fs/promises'
+import { execFileSync } from 'node:child_process'
 import { dirname, resolve } from 'node:path'
 
 const TIMEZONE = 'Asia/Shanghai'
@@ -10,6 +11,7 @@ const SPORTTERY_URL = 'https://www.sporttery.cn/jc/'
 const SPORTTERY_API = 'https://webapi.sporttery.cn/gateway/jc/football/getMatchListV1.qry?clientCode=3001'
 const ODDS_API_SPORT = 'soccer_fifa_world_cup'
 const HISTORY_SOURCE_URL = 'https://www.fifa.com/en/tournaments/mens/worldcup'
+const PREDICTION_HISTORY_PATH = 'public/data/prediction-history.json'
 const MONTE_CARLO_RUNS = 10000
 const TEAM_SCHEDULE_URL = 'https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams'
 const TEAM_INJURY_URL = 'https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams'
@@ -35,6 +37,9 @@ let activeModelCalibration = {
   oneGoalBaseline: 0,
   favoriteControlBoost: 0,
   knockoutDrawFade: 0,
+  underdogGoalRetention: 0,
+  highGoalVolatility: 0,
+  drawGuard: 0,
 }
 
 const indoorStadiums = new Set(['AT&T Stadium', 'Mercedes-Benz Stadium', 'SoFi Stadium', 'BC Place', 'State Farm Stadium'])
@@ -405,6 +410,7 @@ async function main() {
   const tournamentRecords = buildTournamentRecords(events)
   const groupStandings = buildGroupStandings(events)
   const knockoutPaths = buildKnockoutPaths(events, tournamentRecords)
+  const predictionHistory = await readPredictionHistory()
   const newsResult = await fetchNews()
   const oddsApiResult = await fetchOddsApi()
   const oddsApiBook = buildOddsApiBook(oddsApiResult.data)
@@ -420,13 +426,14 @@ async function main() {
     })
     .sort((left, right) => new Date(left.date).getTime() - new Date(right.date).getTime())
     .slice(0, 8)
-  const recentCompleted = completedEventsForReview(events)
+  const recentCompleted = completedEventsForReview(events, predictionHistory)
   const modelReview = buildModelReview(recentCompleted)
   activeModelCalibration = modelReview.calibration
 
   const matches = await Promise.all(
     upcomingWindow.map((event) => normalizeMatch(event, newsResult.news, tournamentRecords, groupStandings, knockoutPaths, oddsApiBook)),
   )
+  const updatedPredictionHistory = updatePredictionHistory(predictionHistory, matches)
   sources.push(
     fifaResult,
     ...scoreboards.map((board) => board.source),
@@ -436,6 +443,14 @@ async function main() {
     buildContextSource('espn-team-schedules', 'ESPN 球队近 5 场', contextStats.teamSchedulesOk, contextStats.teamSchedulesTried),
     buildContextSource('espn-injuries', 'ESPN 伤病名单', contextStats.injuriesOk, contextStats.injuriesTried),
     buildContextSource('open-meteo-weather', 'Open-Meteo 天气', contextStats.weatherOk, contextStats.weatherTried),
+    {
+      id: 'prediction-history',
+      name: '本地预测档案',
+      status: updatedPredictionHistory.count > 0 ? 'ok' : 'warn',
+      url: PREDICTION_HISTORY_PATH,
+      lastCheckedAt: checkedAt,
+      detail: `${updatedPredictionHistory.count} 场赛前预测用于后续赛后训练`,
+    },
     {
       id: 'fifa-history-profile',
       name: 'FIFA 历届世界杯表现档案',
@@ -497,6 +512,7 @@ async function main() {
   }
 
   await writeJson('public/data/worldcup-brief.json', brief)
+  await writeJson(PREDICTION_HISTORY_PATH, updatedPredictionHistory)
   console.log(`Updated ${brief.matches.length} matches at ${brief.generatedAtChina}`)
 }
 
@@ -1226,8 +1242,8 @@ function normalizeTeamKey(value) {
   return String(value ?? '').trim().toLowerCase()
 }
 
-function completedEventsForReview(events) {
-  const lower = now.getTime() - 72 * 60 * 60 * 1000
+function completedEventsForReview(events, predictionHistory = null) {
+  const lower = new Date(`${TOURNAMENT_START_DATE}T00:00:00Z`).getTime()
 
   return events
     .filter((event) => {
@@ -1242,41 +1258,116 @@ function completedEventsForReview(events) {
       const awayScore = readScore(away.score)
       const homeName = teamNames.get(teamName(home)) ?? teamName(home)
       const awayName = teamNames.get(teamName(away)) ?? teamName(away)
+      const competition = event.competitions?.[0] ?? {}
+      const timestamp = new Date(event.date).getTime()
 
       if (homeScore === null || awayScore === null) return null
 
       return {
         id: String(event.id),
+        timestamp,
         kickoffChina: formatChinaDateTime(event.date),
+        stage: event.season?.slug ?? competition.altGameNote ?? 'unknown',
         home: homeName,
         away: awayName,
         score: `${homeScore}-${awayScore}`,
         totalGoals: homeScore + awayScore,
-        result: homeScore > awayScore ? '主胜' : homeScore < awayScore ? '客胜' : '平局',
+        result: scoreResult(homeScore, awayScore),
+        prediction: buildCompletedPredictionSample(event, home, away, homeScore, awayScore, predictionHistory),
       }
     })
     .filter(Boolean)
-    .sort((left, right) => new Date(right.kickoffChina).getTime() - new Date(left.kickoffChina).getTime())
-    .slice(0, 8)
+    .sort((left, right) => right.timestamp - left.timestamp)
 }
 
 function buildModelReview(completedMatches) {
-  const favoritesConverted = completedMatches.filter((match) => match.result !== '平局' && match.totalGoals >= 4).length
-  const lowDraws = completedMatches.filter((match) => match.result === '平局' && match.totalGoals <= 2).length
-  const oneGoalWins = completedMatches.filter((match) => match.result !== '平局' && Math.abs(scoreParts(match.score)[0] - scoreParts(match.score)[1]) === 1).length
-  const controlledCleanWins = completedMatches.filter((match) => {
+  const recentCompleted = completedMatches.slice(0, 8)
+  const scoredMatches = completedMatches.filter((match) => match.totalGoals >= 0)
+  const predictionSamples = completedMatches.filter((match) => match.prediction?.available)
+  const favoritesConverted = scoredMatches.filter((match) => match.result !== '平局' && match.totalGoals >= 4).length
+  const lowDraws = scoredMatches.filter((match) => match.result === '平局' && match.totalGoals <= 2).length
+  const oneGoalWins = scoredMatches.filter((match) => match.result !== '平局' && Math.abs(scoreParts(match.score)[0] - scoreParts(match.score)[1]) === 1).length
+  const controlledCleanWins = scoredMatches.filter((match) => {
     if (match.result === '平局') return false
     const [left, right] = scoreParts(match.score)
     const winner = Math.max(left ?? 0, right ?? 0)
     const loser = Math.min(left ?? 0, right ?? 0)
     return loser === 0 && winner >= 2 && match.totalGoals <= 3
   }).length
+  const favoriteConcededWins = scoredMatches.filter((match) => {
+    if (!match.prediction?.available || match.prediction.predictedResult !== match.result || match.result === '平局') return false
+    const [left, right] = scoreParts(match.score)
+    return match.prediction.favoriteSide === 'home' ? right > 0 : left > 0
+  }).length
+  const highGoalMatches = scoredMatches.filter((match) => match.totalGoals >= 4).length
+  const drawMatches = scoredMatches.filter((match) => match.result === '平局').length
   const recentThree = completedMatches.slice(0, 3)
   const recentKnockoutNonDraws = recentThree.filter((match) => match.result !== '平局').length
+  const goalAverage =
+    scoredMatches.length > 0 ? round(scoredMatches.reduce((sum, match) => sum + match.totalGoals, 0) / scoredMatches.length, 2) : 0
+  const resultHits = predictionSamples.filter((match) => match.prediction.predictedResult === match.result).length
+  const topScoreHits = predictionSamples.filter((match) => match.prediction.topScoreHit).length
+  const top3ScoreHits = predictionSamples.filter((match) => match.prediction.top3ScoreHit).length
+  const totalBandHits = predictionSamples.filter((match) => match.prediction.totalBandHit).length
+  const favoriteHitRate = predictionSamples.length > 0 ? resultHits / predictionSamples.length : 0
+  const topScoreHitRate = predictionSamples.length > 0 ? topScoreHits / predictionSamples.length : 0
+  const top3ScoreHitRate = predictionSamples.length > 0 ? top3ScoreHits / predictionSamples.length : 0
+  const totalBandHitRate = predictionSamples.length > 0 ? totalBandHits / predictionSamples.length : 0
+  const highGoalRate = scoredMatches.length > 0 ? highGoalMatches / scoredMatches.length : 0
+  const drawRate = scoredMatches.length > 0 ? drawMatches / scoredMatches.length : 0
+  const oneGoalRate = scoredMatches.length > 0 ? oneGoalWins / scoredMatches.length : 0
+  const favoriteConcededWinRate = predictionSamples.length > 0 ? favoriteConcededWins / predictionSamples.length : 0
+  const trainingAdvice = buildTrainingAdvice({
+    sampleSize: scoredMatches.length,
+    predictionSamples: predictionSamples.length,
+    favoriteHitRate,
+    topScoreHitRate,
+    top3ScoreHitRate,
+    totalBandHitRate,
+    highGoalRate,
+    drawRate,
+    oneGoalRate,
+    favoriteConcededWinRate,
+    recentKnockoutNonDraws,
+  })
 
   return {
     title: '赛后复盘校准',
-    completedMatches,
+    scope: `本届世界杯 ${TOURNAMENT_START_DATE} 至 ${targetDateChina} 已完赛样本`,
+    trainingSet: {
+      sampleSize: scoredMatches.length,
+      predictionSamples: predictionSamples.length,
+      goalAverage,
+      drawRate: round(drawRate, 4),
+      oneGoalWinRate: round(oneGoalRate, 4),
+      highGoalRate: round(highGoalRate, 4),
+      lowDraws,
+      controlledCleanWins,
+      favoritesConverted,
+      favoriteConcededWins,
+      resultAccuracy: round(favoriteHitRate, 4),
+      topScoreAccuracy: round(topScoreHitRate, 4),
+      top3ScoreAccuracy: round(top3ScoreHitRate, 4),
+      totalBandAccuracy: round(totalBandHitRate, 4),
+    },
+    completedMatches: recentCompleted,
+    recentCompleted,
+    predictionBacktest: predictionSamples.slice(0, 12).map((match) => ({
+      id: match.id,
+      kickoffChina: match.kickoffChina,
+      matchup: `${match.home} vs ${match.away}`,
+      actual: `${match.score} ${match.result}`,
+      predictedResult: match.prediction.predictedResult,
+      predictedScore: match.prediction.topScores[0]?.score ?? '无',
+      top3Scores: match.prediction.topScores.slice(0, 3).map((item) => item.score),
+      totalBand: match.prediction.totalBand,
+      hit: {
+        result: match.prediction.predictedResult === match.result,
+        topScore: match.prediction.topScoreHit,
+        top3Score: match.prediction.top3ScoreHit,
+        totalBand: match.prediction.totalBandHit,
+      },
+    })),
     lessons: [
       favoritesConverted >= 2
         ? '强队一旦早早打开局面，尾部比分需要上调，不能只停留在 1-0 / 2-0。'
@@ -1293,6 +1384,7 @@ function buildModelReview(completedMatches) {
       recentKnockoutNonDraws >= 3
         ? '最近三场淘汰赛90分钟均分出胜负，平局仍要防，但热门或准主场方的控场胜权重上调。'
         : '淘汰赛仍保留加时点球牵引，实力接近场继续防 0-0 / 1-1。',
+      ...trainingAdvice,
       '新增历届世界杯底蕴层：冠军、四强、八强和近代淘汰赛经验只做低权重加成，用来修正抗压与临场执行，不覆盖当前赔率和近况。',
       '本轮新增球员心态、教练执行、抗压稳定性代理指标；文化占卜继续低权重，不覆盖可验证信息。',
     ],
@@ -1302,8 +1394,324 @@ function buildModelReview(completedMatches) {
       oneGoalBaseline: oneGoalWins >= 2 ? 1 : 0,
       favoriteControlBoost: controlledCleanWins >= 2 ? 1 : 0,
       knockoutDrawFade: recentThree.length >= 3 && recentKnockoutNonDraws >= 3 ? 1 : 0,
+      underdogGoalRetention: favoriteConcededWinRate >= 0.18 || (predictionSamples.length > 0 && topScoreHitRate < 0.18) ? 1 : 0,
+      highGoalVolatility: highGoalRate >= 0.24 || (predictionSamples.length > 0 && totalBandHitRate < 0.52) ? 1 : 0,
+      drawGuard: drawRate >= 0.2 || (predictionSamples.length > 0 && top3ScoreHitRate < 0.42) ? 1 : 0,
     },
   }
+}
+
+async function readPredictionHistory() {
+  const empty = {
+    version: 1,
+    updatedAt: checkedAt,
+    count: 0,
+    predictions: {},
+  }
+
+  try {
+    const raw = await readFile(resolve(PREDICTION_HISTORY_PATH), 'utf8')
+    const parsed = JSON.parse(raw)
+    if (parsed && typeof parsed === 'object' && parsed.predictions) {
+      return {
+        version: parsed.version ?? 1,
+        updatedAt: parsed.updatedAt ?? checkedAt,
+        count: Object.keys(parsed.predictions).length,
+        predictions: parsed.predictions,
+      }
+    }
+  } catch {
+    // Missing history is expected on the first run; seed from git below.
+  }
+
+  const seeded = seedPredictionHistoryFromGit()
+  return seeded.count > 0 ? seeded : empty
+}
+
+function seedPredictionHistoryFromGit() {
+  const predictions = {}
+
+  try {
+    const commits = execFileSync('git', ['log', '--format=%H', '--', 'public/data/worldcup-brief.json'], {
+      encoding: 'utf8',
+      maxBuffer: 4 * 1024 * 1024,
+    })
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean)
+      .reverse()
+
+    for (const hash of commits) {
+      try {
+        const raw = execFileSync('git', ['show', `${hash}:public/data/worldcup-brief.json`], {
+          encoding: 'utf8',
+          maxBuffer: 24 * 1024 * 1024,
+        })
+        const brief = JSON.parse(raw)
+        for (const match of brief.matches ?? []) {
+          const id = String(match.id)
+          if (!id || predictions[id]) continue
+          predictions[id] = predictionRecordFromMatch(match, brief.generatedAt, hash)
+        }
+      } catch {
+        // Ignore commits without a readable data snapshot.
+      }
+    }
+  } catch {
+    // Git history is not always available in CI or downloaded archives.
+  }
+
+  return {
+    version: 1,
+    updatedAt: checkedAt,
+    count: Object.keys(predictions).length,
+    predictions,
+  }
+}
+
+function updatePredictionHistory(history, matches) {
+  const predictions = { ...(history?.predictions ?? {}) }
+  for (const match of matches) {
+    const id = String(match.id)
+    if (!id) continue
+    const existing = predictions[id]
+    const existingCreated = existing?.createdAt ? new Date(existing.createdAt).getTime() : Infinity
+    const currentCreated = new Date(checkedAt).getTime()
+    if (existing && existingCreated <= currentCreated) continue
+    predictions[id] = predictionRecordFromMatch(match, checkedAt, 'current-update')
+  }
+
+  return {
+    version: 1,
+    updatedAt: checkedAt,
+    count: Object.keys(predictions).length,
+    predictions,
+  }
+}
+
+function predictionRecordFromMatch(match, createdAt, sourceCommit) {
+  return {
+    matchId: String(match.id),
+    createdAt,
+    sourceCommit,
+    kickoffUtc: match.kickoffUtc,
+    kickoffChina: match.kickoffChina,
+    home: match.home?.zhName ?? match.home?.name ?? '',
+    away: match.away?.zhName ?? match.away?.name ?? '',
+    marketDirection: match.professional?.expertAnswer?.marketDirection ?? '',
+    recommendedScore: match.professional?.expertAnswer?.recommendedScore ?? '',
+    secondaryScores: match.professional?.expertAnswer?.secondaryScores ?? [],
+    totalGoals: match.professional?.expertAnswer?.totalGoals ?? '',
+    topScores: (match.scoreline?.candidates ?? []).slice(0, 5).map((candidate) => ({
+      score: candidate.score,
+      result: candidate.result,
+      probability: candidate.probability,
+    })),
+    resultProbabilities: match.scoreline?.resultProbabilities ?? [],
+    simulationSummary: match.scoreline?.simulation?.summary ?? '',
+  }
+}
+
+function buildArchivedPredictionSample(archivedPrediction, homeScore, awayScore) {
+  const actualScore = `${homeScore}-${awayScore}`
+  const actualTotalGoals = homeScore + awayScore
+  const topScores =
+    archivedPrediction.topScores?.length > 0
+      ? archivedPrediction.topScores.map((item) => ({
+          score: item.score,
+          result: item.result ?? scoreResultFromScore(item.score),
+          probability: item.probability ?? null,
+        }))
+      : archivedPredictionToScores(archivedPrediction)
+  const predictedScore = topScores[0]?.score ?? extractScoreText(archivedPrediction.recommendedScore)
+  const predictedResult = scoreResultFromScore(predictedScore) ?? resultFromMarketDirection(archivedPrediction.marketDirection)
+  const totalBand = archivedPrediction.totalGoals ?? ''
+  const totalBandNumbers = parseTotalBandSelection(totalBand)
+  const topScoreList = topScores.length > 0 ? topScores : [{ score: predictedScore, result: predictedResult, probability: null }]
+
+  return {
+    available: true,
+    provider: 'prediction-history',
+    predictedResult,
+    favoriteSide: sideFromResult(predictedResult),
+    favoriteProbability: archivedPrediction.resultProbabilities?.find((item) => item.side === sideFromResult(predictedResult))?.probability ?? null,
+    totalExpectedGoals: null,
+    homeExpectedGoals: null,
+    awayExpectedGoals: null,
+    totalBand,
+    totalBandHit: totalBandNumbers.length > 0 ? totalBandNumbers.includes(actualTotalGoals) : null,
+    topScores: topScoreList,
+    topScoreHit: topScoreList[0]?.score === actualScore,
+    top3ScoreHit: topScoreList.slice(0, 3).some((item) => item.score === actualScore),
+  }
+}
+
+function archivedPredictionToScores(archivedPrediction) {
+  const scores = [
+    extractScoreText(archivedPrediction.recommendedScore),
+    ...(archivedPrediction.secondaryScores ?? []).map(extractScoreText),
+  ].filter(Boolean)
+
+  return [...new Set(scores)].map((score) => ({
+    score,
+    result: scoreResultFromScore(score),
+    probability: null,
+  }))
+}
+
+function extractScoreText(value) {
+  const match = String(value ?? '').match(/(\d+)\s*[-:：]\s*(\d+)/)
+  return match ? `${Number(match[1])}-${Number(match[2])}` : ''
+}
+
+function scoreResultFromScore(score) {
+  const [homeGoals, awayGoals] = scoreParts(score)
+  if (!Number.isFinite(homeGoals) || !Number.isFinite(awayGoals)) return null
+  return scoreResult(homeGoals, awayGoals)
+}
+
+function resultFromMarketDirection(value) {
+  const text = String(value ?? '')
+  if (text.includes('主胜')) return '主胜'
+  if (text.includes('客胜')) return '客胜'
+  if (text.includes('平')) return '平局'
+  return '平局'
+}
+
+function sideFromResult(result) {
+  if (result === '主胜') return 'home'
+  if (result === '客胜') return 'away'
+  return 'draw'
+}
+
+function buildCompletedPredictionSample(event, home, away, homeScore, awayScore, predictionHistory = null) {
+  const archivedPrediction = predictionHistory?.predictions?.[String(event.id)]
+  if (archivedPrediction) {
+    return buildArchivedPredictionSample(archivedPrediction, homeScore, awayScore)
+  }
+
+  const market = normalizeMarket(event.competitions?.[0]?.odds?.[0], home, away)
+  if (!market) {
+    return {
+      available: false,
+      reason: '缺少可回放赔率',
+    }
+  }
+
+  const resultProbabilities = resultProbabilitiesFromMarket(market)
+  const leader = [...resultProbabilities].sort((left, right) => right.probability - left.probability)[0]
+  const totalExpectedGoals = estimateTotalGoals(market)
+  const goalDiff = calibrateGoalDifference(
+    estimateGoalDifference(
+      resultProbabilities.find((item) => item.side === 'home')?.probability ?? 0.33,
+      resultProbabilities.find((item) => item.side === 'away')?.probability ?? 0.33,
+      resultProbabilities.find((item) => item.side === 'draw')?.probability ?? 0.26,
+      market,
+    ),
+    resultProbabilities.find((item) => item.side === 'home')?.probability ?? 0.33,
+    resultProbabilities.find((item) => item.side === 'away')?.probability ?? 0.33,
+    resultProbabilities.find((item) => item.side === 'draw')?.probability ?? 0.26,
+  )
+  const homeExpectedGoals = clamp(round((totalExpectedGoals + goalDiff) / 2, 2), 0.18, 4.8)
+  const awayExpectedGoals = clamp(round(totalExpectedGoals - homeExpectedGoals, 2), 0.18, 4.8)
+  const topScores = buildReplayScoreCandidates(homeExpectedGoals, awayExpectedGoals)
+  const actualScore = `${homeScore}-${awayScore}`
+  const actualTotalGoals = homeScore + awayScore
+  const totalBand = totalGoalsBand(totalExpectedGoals).selection
+  const totalBandNumbers = parseTotalBandSelection(totalBand)
+
+  return {
+    available: true,
+    provider: market.provider,
+    predictedResult: resultLabelFromSide(leader?.side),
+    favoriteSide: leader?.side ?? 'draw',
+    favoriteProbability: leader?.probability ?? 0,
+    totalExpectedGoals,
+    homeExpectedGoals,
+    awayExpectedGoals,
+    totalBand,
+    totalBandHit: totalBandNumbers.includes(actualTotalGoals),
+    topScores,
+    topScoreHit: topScores[0]?.score === actualScore,
+    top3ScoreHit: topScores.slice(0, 3).some((item) => item.score === actualScore),
+  }
+}
+
+function buildReplayScoreCandidates(homeExpectedGoals, awayExpectedGoals) {
+  const scores = []
+  for (let homeGoals = 0; homeGoals <= 6; homeGoals += 1) {
+    for (let awayGoals = 0; awayGoals <= 6; awayGoals += 1) {
+      const probability = poisson(homeGoals, homeExpectedGoals) * poisson(awayGoals, awayExpectedGoals)
+      scores.push({
+        score: `${homeGoals}-${awayGoals}`,
+        result: scoreResult(homeGoals, awayGoals),
+        probability: round(probability, 4),
+      })
+    }
+  }
+
+  return scores.sort((left, right) => right.probability - left.probability).slice(0, 5)
+}
+
+function resultLabelFromSide(side) {
+  if (side === 'home') return '主胜'
+  if (side === 'away') return '客胜'
+  return '平局'
+}
+
+function parseTotalBandSelection(selection) {
+  return String(selection)
+    .match(/\d+/g)
+    ?.map((value) => Number(value))
+    .filter((value) => Number.isFinite(value)) ?? []
+}
+
+function buildTrainingAdvice({
+  sampleSize,
+  predictionSamples,
+  favoriteHitRate,
+  topScoreHitRate,
+  top3ScoreHitRate,
+  totalBandHitRate,
+  highGoalRate,
+  drawRate,
+  oneGoalRate,
+  favoriteConcededWinRate,
+  recentKnockoutNonDraws,
+}) {
+  if (predictionSamples === 0) {
+    return [
+      `训练集：本届已完赛 ${sampleSize} 场，但当前环境没有可用的赛前预测档案；本轮只用赛果分布训练进球尾部、平局率和一球差基线，不计算命中率。`,
+    ]
+  }
+
+  const advice = [
+    `训练集：本届已完赛 ${sampleSize} 场，其中 ${predictionSamples} 场有可回放赔率/模型预测；胜平负回放命中 ${formatPct(favoriteHitRate)}，比分首选 ${formatPct(topScoreHitRate)}，比分前三 ${formatPct(top3ScoreHitRate)}，总进球区间 ${formatPct(totalBandHitRate)}。`,
+  ]
+
+  if (topScoreHitRate < 0.18) {
+    advice.push('比分首选命中偏低，训练后降低单点比分权重，更多采用前三比分和总进球区间交叉验证。')
+  }
+  if (top3ScoreHitRate < 0.42) {
+    advice.push('比分前三覆盖不足，训练后保留平局防守和弱队进一球路径，避免过度零封化。')
+  }
+  if (totalBandHitRate < 0.52 || highGoalRate >= 0.24) {
+    advice.push('总进球波动偏大，训练后上调 4+ 球尾部和后段进球权重，避免模型过度保守。')
+  }
+  if (drawRate >= 0.2) {
+    advice.push('平局样本占比不低，训练后保留 0-0 / 1-1 低比分防守层，尤其用于实力接近与淘汰赛谨慎局。')
+  }
+  if (oneGoalRate >= 0.34) {
+    advice.push('一球差仍是主流结果，训练后继续把 1-0 / 2-1 / 0-1 / 1-2 作为中强度比赛的核心落点。')
+  }
+  if (favoriteConcededWinRate >= 0.18) {
+    advice.push('热门赢球但丢一球的比例需要重视，训练后上调 2-1 / 3-1，轻微下调机械式 2-0 / 3-0。')
+  }
+  if (recentKnockoutNonDraws >= 3) {
+    advice.push('最近淘汰赛连续分胜负，训练后不把平局当主线，但保留小额防守，不重仓追平。')
+  }
+
+  return advice
 }
 
 function scoreParts(score) {
@@ -3853,6 +4261,24 @@ function scoreTailMultiplier(homeGoals, awayGoals, totalExpectedGoals, resultPro
     multiplier += favoriteMargin === 2 ? 0.1 : 0.07
   }
   if (
+    activeModelCalibration.underdogGoalRetention &&
+    result === favoriteResult &&
+    underdogGoals === 1 &&
+    totalGoals >= 2 &&
+    totalGoals <= 4
+  ) {
+    multiplier += 0.06
+  }
+  if (activeModelCalibration.highGoalVolatility && totalGoals >= 4) {
+    multiplier += favoriteProbability >= 0.6 && result === favoriteResult ? 0.06 : 0.04
+  }
+  if (activeModelCalibration.highGoalVolatility && totalGoals <= 1 && favoriteProbability >= 0.62) {
+    multiplier -= 0.03
+  }
+  if (activeModelCalibration.drawGuard && result === '平局' && totalGoals <= 2 && draw >= 0.22) {
+    multiplier += 0.04
+  }
+  if (
     activeModelCalibration.knockoutDrawFade &&
     favoriteProbability >= 0.6 &&
     result === '平局' &&
@@ -3997,6 +4423,24 @@ function scoreCandidateRank(item, resultStrength, context = null, totalExpectedG
     totalGoals <= 3
   ) {
     reviewLift *= favoriteMargin === 2 ? 1.1 : 1.07
+  }
+  if (
+    activeModelCalibration.underdogGoalRetention &&
+    item.result === favoriteResult &&
+    underdogGoals === 1 &&
+    totalGoals >= 2 &&
+    totalGoals <= 4
+  ) {
+    reviewLift *= 1.06
+  }
+  if (activeModelCalibration.highGoalVolatility && totalGoals >= 4) {
+    reviewLift *= favoriteProbability >= 0.6 && item.result === favoriteResult ? 1.06 : 1.04
+  }
+  if (activeModelCalibration.highGoalVolatility && totalGoals <= 1 && favoriteProbability >= 0.62) {
+    reviewLift *= 0.97
+  }
+  if (activeModelCalibration.drawGuard && item.result === scoreResult(0, 0) && totalGoals <= 2 && drawStrength >= 0.22) {
+    reviewLift *= 1.04
   }
   if (
     activeModelCalibration.knockoutDrawFade &&
