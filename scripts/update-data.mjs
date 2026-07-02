@@ -13,6 +13,8 @@ const ODDS_API_SPORT = 'soccer_fifa_world_cup'
 const HISTORY_SOURCE_URL = 'https://www.fifa.com/en/tournaments/mens/worldcup'
 const PREDICTION_HISTORY_PATH = 'public/data/prediction-history.json'
 const MONTE_CARLO_RUNS = 10000
+const REGULATION_SCOPE = '90分钟常规时间 + 上下半场补时，不含加时赛和点球大战'
+const REGULATION_SCOPE_SHORT = '90分钟含补时'
 const TEAM_SCHEDULE_URL = 'https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams'
 const TEAM_INJURY_URL = 'https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams'
 const GEOCODE_URL = 'https://geocoding-api.open-meteo.com/v1/search'
@@ -474,6 +476,7 @@ async function main() {
           : '未来 54 小时暂无可解析比赛',
       note:
         '系统将公开赛程、新闻和海外市场赔率转为概率视图，再给出谨慎的体彩核验方向。所有判断只作信息分析，不保证盈利。',
+      predictionScope: REGULATION_SCOPE,
       trackedMatches: matches.length,
       healthySources,
       updateMode: process.env.GITHUB_ACTIONS ? 'GitHub 定时' : '本地脚本',
@@ -879,9 +882,10 @@ async function normalizeMatch(
     sporttery: {
       status: '需赛前核验',
       officialUrl: SPORTTERY_URL,
+      scope: REGULATION_SCOPE,
       markets: ['胜平负', '让球胜平负', '总进球', '比分'],
       note:
-        '海外市场盘口与竞彩官方赔率、开售状态、让球设定可能不同。购买前请用中国体彩网或销售终端核验最终赔率和截止时间。',
+        `本系统胜平负、比分、总进球均按${REGULATION_SCOPE_SHORT}判断。海外市场盘口与竞彩官方赔率、开售状态、让球设定可能不同。购买前请用中国体彩网或销售终端核验最终赔率和截止时间。`,
     },
   }
 }
@@ -2487,14 +2491,14 @@ function buildSituationalContext(event, homeTeam, awayTeam, homeContext, awayCon
       extraTimeRisk: advancement?.pressureType === 'knockout' ? clamp(Math.round(penaltyRisk * 0.78), 28, 72) : 12,
       summary:
         advancement?.pressureType === 'knockout'
-          ? `淘汰赛拖入加时/点球风险 ${penaltyRisk}/100，强弱差越小越压低大比分。`
+          ? `淘汰赛拖入加时/点球风险 ${penaltyRisk}/100；该项只作为${REGULATION_SCOPE_SHORT}内谨慎程度因子，不把加时/点球计入赛果。`
           : '非淘汰赛，点球因素不参与90分钟主判断。',
     },
     homeGoalDiffDelta,
     totalGoalsDelta,
     confidenceDelta,
     riskDelta,
-    summary: `${restSummary}；${clockSummary}；${hostSummary}；${advancement?.pressureType === 'knockout' ? `加时点球风险${penaltyRisk}/100` : '无点球淘汰压力'}。`,
+    summary: `${restSummary}；${clockSummary}；${hostSummary}；${advancement?.pressureType === 'knockout' ? `加时点球风险${penaltyRisk}/100，仅作90分钟保守因子` : '无点球淘汰压力'}。`,
   }
 }
 
@@ -2806,7 +2810,8 @@ function outcome(label, side, openOdds, closeOdds, line = null) {
 function buildScorelineAnalysis(market, homeTeam, awayTeam, judgement, newsItems, context = null) {
   if (!market) {
     return {
-      model: '等待赔率后生成比分分布',
+      model: `等待赔率后生成比分分布（${REGULATION_SCOPE_SHORT}）`,
+      scope: REGULATION_SCOPE,
       homeExpectedGoals: 0,
       awayExpectedGoals: 0,
       totalExpectedGoals: 0,
@@ -2956,7 +2961,8 @@ function buildScorelineAnalysis(market, homeTeam, awayTeam, judgement, newsItems
   })
 
   return {
-    model: '胜平负去水概率 + 大小球盘口 + 历届世界杯低权重底蕴 + 平局压缩/抗热门校准 + Poisson 比分分布',
+    model: `胜平负去水概率 + 大小球盘口 + 历届世界杯低权重底蕴 + 平局压缩/抗热门校准 + Poisson 比分分布（${REGULATION_SCOPE_SHORT}）`,
+    scope: REGULATION_SCOPE,
     homeExpectedGoals,
     awayExpectedGoals,
     totalExpectedGoals,
@@ -2967,6 +2973,7 @@ function buildScorelineAnalysis(market, homeTeam, awayTeam, judgement, newsItems
     avoid,
     simulation,
     notes: [
+      `预测口径：${REGULATION_SCOPE}。`,
       '比分玩法方差很大，候选只适合小额娱乐或赛前核验。',
       `本版把总进球从基础 ${baseTotalExpectedGoals.toFixed(2)} 校准到 ${totalExpectedGoals.toFixed(2)}，并对强弱分明场景的 3+ 进球比分做尾部上调。`,
       simulation.summary,
@@ -4698,7 +4705,8 @@ function simulateMatchProgress({
   }
 
   return {
-    model: '10,000-run deterministic Monte Carlo match-process simulation',
+    model: `10,000-run deterministic Monte Carlo match-process simulation (${REGULATION_SCOPE_SHORT})`,
+    scope: REGULATION_SCOPE,
     runs: MONTE_CARLO_RUNS,
     seed,
     resultDistribution,
@@ -4867,7 +4875,7 @@ function buildSimulationSummary({ result, topScores, topTotal, process }) {
     .slice(0, 3)
     .map((item) => `${item.score} ${formatPct(item.probability)}`)
     .join(' / ')
-  return `${MONTE_CARLO_RUNS.toLocaleString('zh-CN')}次进程模拟：${result?.label ?? '方向不明'} ${formatPct(result?.probability ?? 0)}；最密比分 ${scoreText || '暂无'}；总进球最集中 ${topTotal?.goals ?? '-'}球 ${formatPct(topTotal?.probability ?? 0)}；76分钟后仍有进球 ${formatPct(process.lateGoalProbability)}，前30分钟无进球 ${formatPct(process.noGoalFirst30Probability)}。`
+  return `${MONTE_CARLO_RUNS.toLocaleString('zh-CN')}次${REGULATION_SCOPE_SHORT}进程模拟：${result?.label ?? '方向不明'} ${formatPct(result?.probability ?? 0)}；最密比分 ${scoreText || '暂无'}；总进球最集中 ${topTotal?.goals ?? '-'}球 ${formatPct(topTotal?.probability ?? 0)}；76分钟后仍有进球 ${formatPct(process.lateGoalProbability)}，前30分钟无进球 ${formatPct(process.noGoalFirst30Probability)}。`
 }
 
 function seededRandom(seedText) {

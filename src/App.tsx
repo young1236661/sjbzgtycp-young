@@ -354,6 +354,7 @@ function SummaryStrip({ brief }: { brief: WorldCupBrief }) {
         <span className="kpi-label">今日情报</span>
         <strong>{brief.summary.headline}</strong>
         <p>{brief.summary.note}</p>
+        {brief.summary.predictionScope ? <p>预测口径：{brief.summary.predictionScope}</p> : null}
       </div>
       <MetricCell label="跟踪比赛" value={String(brief.summary.trackedMatches)} icon={<CalendarDays />} />
       <MetricCell label="健康来源" value={String(brief.summary.healthySources)} icon={<ShieldCheck />} />

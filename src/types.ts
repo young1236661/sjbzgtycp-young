@@ -324,6 +324,7 @@ export interface SimulationDistribution {
 
 export interface MatchProcessSimulation {
   model: string
+  scope?: string
   runs: number
   seed: string
   resultDistribution: SimulationDistribution[]
@@ -349,6 +350,7 @@ export interface MatchProcessSimulation {
 
 export interface ScorelineAnalysis {
   model: string
+  scope?: string
   homeExpectedGoals: number
   awayExpectedGoals: number
   totalExpectedGoals: number
@@ -443,6 +445,7 @@ export interface ProfessionalBrief {
 export interface SportteryMapping {
   status: '需赛前核验' | '接口可用' | '暂无官方数据'
   officialUrl: string
+  scope?: string
   markets: string[]
   note: string
 }
@@ -544,6 +547,7 @@ export interface WorldCupBrief {
   summary: {
     headline: string
     note: string
+    predictionScope?: string
     trackedMatches: number
     healthySources: number
     updateMode: string
