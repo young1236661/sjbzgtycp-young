@@ -348,6 +348,34 @@ export interface MatchProcessSimulation {
   summary: string
 }
 
+export interface ModelAgreement {
+  model: string
+  marketDirection: {
+    side: 'home' | 'draw' | 'away'
+    label: string
+    probability: number
+  } | null
+  poissonDirection: {
+    side: 'home' | 'draw' | 'away' | null
+    score: string
+    result: string | null
+    probability: number | null
+  }
+  simulationDirection: SimulationDistribution | null
+  marketGap: number
+  directionAgreement: number
+  scoreAgreement: 'top1' | 'top3' | 'conflict'
+  totalAgreement: boolean
+  topSimulationScore: string
+  topSimulationTotal: string | null
+  conflictScore: number
+  riskLevel: '低' | '中' | '高'
+  confidencePenalty: number
+  stakeMultiplier: number
+  flags: string[]
+  summary: string
+}
+
 export interface ScorelineAnalysis {
   model: string
   scope?: string
@@ -359,6 +387,7 @@ export interface ScorelineAnalysis {
   candidates: ScorelineCandidate[]
   avoid: ScorelineCandidate[]
   simulation?: MatchProcessSimulation
+  modelAgreement?: ModelAgreement
   notes: string[]
 }
 
@@ -518,6 +547,41 @@ export interface PredictionBacktestItem {
   }
 }
 
+export interface PredictionReflectionPattern {
+  pattern: string
+  evidence: string
+  adjustment: string
+}
+
+export interface PredictionReflectionMiss {
+  id: string
+  kickoffChina: string
+  matchup: string
+  actual: string
+  predictedResult: string
+  predictedScore: string
+  totalBand: string
+  missType: string
+}
+
+export interface PredictionReflection {
+  headline: string
+  sampleSize: number
+  resultMissCount: number
+  exactScoreMissCount: number
+  top3ScoreMissCount: number
+  totalBandMissCount: number
+  missRates: {
+    result: number
+    exactScore: number
+    top3Score: number
+    totalBand: number
+  }
+  mistakePatterns: PredictionReflectionPattern[]
+  recentMisses: PredictionReflectionMiss[]
+  modelChanges: string[]
+}
+
 export interface CompletedMatchReview {
   id: string
   kickoffChina: string
@@ -534,6 +598,7 @@ export interface ModelReview {
   trainingSet: TrainingSetSummary
   completedMatches: CompletedMatchReview[]
   recentCompleted: CompletedMatchReview[]
+  reflection: PredictionReflection
   predictionBacktest: PredictionBacktestItem[]
   lessons: string[]
   calibration: Record<string, number>

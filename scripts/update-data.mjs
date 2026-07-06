@@ -1321,6 +1321,7 @@ function buildModelReview(completedMatches) {
   const drawRate = scoredMatches.length > 0 ? drawMatches / scoredMatches.length : 0
   const oneGoalRate = scoredMatches.length > 0 ? oneGoalWins / scoredMatches.length : 0
   const favoriteConcededWinRate = predictionSamples.length > 0 ? favoriteConcededWins / predictionSamples.length : 0
+  const reflection = buildPredictionReflection(predictionSamples)
   const trainingAdvice = buildTrainingAdvice({
     sampleSize: scoredMatches.length,
     predictionSamples: predictionSamples.length,
@@ -1356,6 +1357,7 @@ function buildModelReview(completedMatches) {
     },
     completedMatches: recentCompleted,
     recentCompleted,
+    reflection,
     predictionBacktest: predictionSamples.slice(0, 12).map((match) => ({
       id: match.id,
       kickoffChina: match.kickoffChina,
@@ -1389,6 +1391,7 @@ function buildModelReview(completedMatches) {
         ? '最近三场淘汰赛90分钟均分出胜负，平局仍要防，但热门或准主场方的控场胜权重上调。'
         : '淘汰赛仍保留加时点球牵引，实力接近场继续防 0-0 / 1-1。',
       ...trainingAdvice,
+      ...reflection.modelChanges,
       '新增历届世界杯底蕴层：冠军、四强、八强和近代淘汰赛经验只做低权重加成，用来修正抗压与临场执行，不覆盖当前赔率和近况。',
       '本轮新增球员心态、教练执行、抗压稳定性代理指标；文化占卜继续低权重，不覆盖可验证信息。',
     ],
@@ -1401,8 +1404,146 @@ function buildModelReview(completedMatches) {
       underdogGoalRetention: favoriteConcededWinRate >= 0.18 || (predictionSamples.length > 0 && topScoreHitRate < 0.18) ? 1 : 0,
       highGoalVolatility: highGoalRate >= 0.24 || (predictionSamples.length > 0 && totalBandHitRate < 0.52) ? 1 : 0,
       drawGuard: drawRate >= 0.2 || (predictionSamples.length > 0 && top3ScoreHitRate < 0.42) ? 1 : 0,
+      singleScoreCaution: predictionSamples.length > 0 && topScoreHitRate < 0.18 ? 1 : 0,
+      agreementArbitration: 1,
+      conflictDowngrade: predictionSamples.length > 0 && top3ScoreHitRate < 0.45 ? 1 : 0,
     },
   }
+}
+
+function buildPredictionReflection(predictionSamples) {
+  const sampleSize = predictionSamples.length
+
+  if (sampleSize === 0) {
+    return {
+      headline: '还没有可回放的赛前预测档案，本轮只能用赛果分布做保守校准。',
+      sampleSize,
+      resultMissCount: 0,
+      exactScoreMissCount: 0,
+      top3ScoreMissCount: 0,
+      totalBandMissCount: 0,
+      missRates: {
+        result: 0,
+        exactScore: 0,
+        top3Score: 0,
+        totalBand: 0,
+      },
+      mistakePatterns: [],
+      recentMisses: [],
+      modelChanges: ['没有预测档案时不输出强结论，只保留赔率、总进球和一球差基线。'],
+    }
+  }
+
+  const resultMisses = predictionSamples.filter((match) => match.prediction.predictedResult !== match.result)
+  const exactScoreMisses = predictionSamples.filter((match) => !match.prediction.topScoreHit)
+  const top3ScoreMisses = predictionSamples.filter((match) => !match.prediction.top3ScoreHit)
+  const totalBandMisses = predictionSamples.filter((match) => match.prediction.totalBandHit === false)
+  const exactMissButResultHit = predictionSamples.filter(
+    (match) => !match.prediction.topScoreHit && match.prediction.predictedResult === match.result,
+  )
+  const predictedDrawActualWin = resultMisses.filter((match) => match.prediction.predictedResult === '平局' && match.result !== '平局')
+  const predictedWinActualDraw = resultMisses.filter((match) => match.prediction.predictedResult !== '平局' && match.result === '平局')
+  const scoreTooLow = exactScoreMisses.filter((match) => {
+    const predictedTotal = scoreTotal(match.prediction.topScores[0]?.score)
+    return predictedTotal !== null && predictedTotal < match.totalGoals
+  })
+  const scoreTooHigh = exactScoreMisses.filter((match) => {
+    const predictedTotal = scoreTotal(match.prediction.topScores[0]?.score)
+    return predictedTotal !== null && predictedTotal > match.totalGoals
+  })
+  const cleanSheetOverrated = exactScoreMisses.filter((match) => {
+    const predicted = scoreParts(match.prediction.topScores[0]?.score)
+    const actual = scoreParts(match.score)
+    if (predicted.length < 2 || actual.length < 2) return false
+    return (predicted[0] === 0 || predicted[1] === 0) && actual[0] > 0 && actual[1] > 0
+  })
+
+  const mistakePatterns = [
+    {
+      pattern: '比分首选命中偏低',
+      evidence: `首选比分错 ${exactScoreMisses.length}/${sampleSize}，但方向命中后仍错比分 ${exactMissButResultHit.length} 场。`,
+      adjustment: '首选比分只做小额核验；输出时必须同时给前三比分、总进球区间和放弃条件。',
+    },
+    scoreTooLow.length >= scoreTooHigh.length
+      ? {
+          pattern: '进球尾部容易被低估',
+          evidence: `首选比分低估总进球 ${scoreTooLow.length} 场，高估 ${scoreTooHigh.length} 场。`,
+          adjustment: '当淘汰赛后段进球概率、热门压制和总进球盘口同时偏高时，上调 3/4/5 球与 2-1、3-1、3-2 权重。',
+        }
+      : {
+          pattern: '进球节奏偶尔被高估',
+          evidence: `首选比分高估总进球 ${scoreTooHigh.length} 场，低估 ${scoreTooLow.length} 场。`,
+          adjustment: '遇到高湿、强队领先后控场或让球穿盘信号不足时，下调 4+ 球尾部。',
+        },
+    predictedDrawActualWin.length > predictedWinActualDraw.length
+      ? {
+          pattern: '平局防守层曾被放得太重',
+          evidence: `预测平局但实际分胜负 ${predictedDrawActualWin.length} 场；预测胜负但实际平局 ${predictedWinActualDraw.length} 场。`,
+          adjustment: '淘汰赛和强弱差清楚时，平局从主方案降为小额防守，不再抢占首选方向。',
+        }
+      : {
+          pattern: '平局仍需要防守',
+          evidence: `预测胜负但实际平局 ${predictedWinActualDraw.length} 场；预测平局但实际分胜负 ${predictedDrawActualWin.length} 场。`,
+          adjustment: '实力接近、总进球盘口偏低、前30分钟慢热概率高时，保留 0-0 / 1-1 防守层。',
+        },
+    {
+      pattern: '零封路径不能机械化',
+      evidence: `首选零封但实际双方进球 ${cleanSheetOverrated.length} 场。`,
+      adjustment: '热门方仍可赢，但弱队一球贡献要保留，优先把 2-0 与 2-1、3-0 与 3-1 成对核验。',
+    },
+    {
+      pattern: '总进球比单点比分更稳定',
+      evidence: `总进球区间错 ${totalBandMisses.length}/${sampleSize}，通常优于精确比分首选。`,
+      adjustment: '组合购买里让总进球承担节奏判断，比分只承担小额高赔率验证。',
+    },
+  ]
+
+  return {
+    headline: `复盘结论：胜平负方向可参考，但精确比分不能重仓；模型已改为“盘口 + Poisson + 1万次模拟”冲突降级。`,
+    sampleSize,
+    resultMissCount: resultMisses.length,
+    exactScoreMissCount: exactScoreMisses.length,
+    top3ScoreMissCount: top3ScoreMisses.length,
+    totalBandMissCount: totalBandMisses.length,
+    missRates: {
+      result: round(resultMisses.length / sampleSize, 4),
+      exactScore: round(exactScoreMisses.length / sampleSize, 4),
+      top3Score: round(top3ScoreMisses.length / sampleSize, 4),
+      totalBand: round(totalBandMisses.length / sampleSize, 4),
+    },
+    mistakePatterns,
+    recentMisses: [...new Map([...resultMisses, ...totalBandMisses, ...top3ScoreMisses].map((match) => [match.id, match])).values()]
+      .slice(0, 6)
+      .map((match) => ({
+        id: match.id,
+        kickoffChina: match.kickoffChina,
+        matchup: `${match.home} vs ${match.away}`,
+        actual: `${match.score} ${match.result}`,
+        predictedResult: match.prediction.predictedResult,
+        predictedScore: match.prediction.topScores[0]?.score ?? '无',
+        totalBand: match.prediction.totalBand,
+        missType: [
+          match.prediction.predictedResult !== match.result ? '胜平负方向错' : null,
+          !match.prediction.topScoreHit ? '首选比分错' : null,
+          !match.prediction.top3ScoreHit ? '前三比分未覆盖' : null,
+          match.prediction.totalBandHit === false ? '总进球区间错' : null,
+        ]
+          .filter(Boolean)
+          .join(' / '),
+      })),
+    modelChanges: [
+      '复盘后新增三模型一致性实验：盘口方向、Poisson比分方向、1万次蒙特卡洛方向不一致时自动扣分并降低投注等级。',
+      '复盘后降低单点比分权重：比分首选不再作为重仓依据，必须与前三比分和总进球区间交叉确认。',
+      '复盘后强化弱队一球路径：热门胜出时不机械零封，把 2-1 / 3-1 与 2-0 / 3-0 成对比较。',
+      '复盘后把平局从“猜中高赔率”的诱惑改成防守层：只有盘口、总进球和模拟同时支持才升级为主方向。',
+    ],
+  }
+}
+
+function scoreTotal(score) {
+  const parts = scoreParts(score)
+  if (parts.length < 2) return null
+  return parts[0] + parts[1]
 }
 
 async function readPredictionHistory() {
@@ -2959,6 +3100,12 @@ function buildScorelineAnalysis(market, homeTeam, awayTeam, judgement, newsItems
     totalExpectedGoals,
     context,
   })
+  const modelAgreement = buildModelAgreement({
+    resultProbabilities,
+    candidates,
+    simulation,
+    totalExpectedGoals,
+  })
 
   return {
     model: `胜平负去水概率 + 大小球盘口 + 历届世界杯低权重底蕴 + 平局压缩/抗热门校准 + Poisson 比分分布（${REGULATION_SCOPE_SHORT}）`,
@@ -2972,11 +3119,13 @@ function buildScorelineAnalysis(market, homeTeam, awayTeam, judgement, newsItems
     candidates,
     avoid,
     simulation,
+    modelAgreement,
     notes: [
       `预测口径：${REGULATION_SCOPE}。`,
       '比分玩法方差很大，候选只适合小额娱乐或赛前核验。',
       `本版把总进球从基础 ${baseTotalExpectedGoals.toFixed(2)} 校准到 ${totalExpectedGoals.toFixed(2)}，并对强弱分明场景的 3+ 进球比分做尾部上调。`,
       simulation.summary,
+      modelAgreement.summary,
       ...(Math.abs(goalShareAdjustment) >= 0.01
         ? [
             `复盘校准：保留总进球 ${totalExpectedGoals.toFixed(2)} 不变，仅把主场弱势方的一球贡献修正 ${goalShareAdjustment > 0 ? '+' : ''}${goalShareAdjustment}。`,
@@ -3089,12 +3238,22 @@ function buildProfessionalBrief(market, homeTeam, awayTeam, judgement, scoreline
   const overheatPenalty = judgement.tier === '避免追高' ? 8 : 0
   const contextConfidence = context?.adjustment?.confidenceDelta ?? 0
   const contextRisk = context?.adjustment?.riskDelta ?? 0
+  const modelAgreement = scoreline.modelAgreement ?? null
+  const agreementPenalty = modelAgreement?.confidencePenalty ?? 0
   const rankScore = clamp(
-    Math.round(judgement.confidence * 0.52 + (100 - judgement.risk) * 0.24 + scoreConcentration * 1.15 - overheatPenalty + contextConfidence - contextRisk * 0.4),
+    Math.round(
+      judgement.confidence * 0.52 +
+        (100 - judgement.risk) * 0.24 +
+        scoreConcentration * 1.15 -
+        overheatPenalty +
+        contextConfidence -
+        contextRisk * 0.4 -
+        agreementPenalty,
+    ),
     20,
     91,
   )
-  const grade = professionalGrade(rankScore, judgement)
+  const grade = professionalGrade(rankScore, judgement, modelAgreement)
   const totalBand = totalGoalsBand(scoreline.totalExpectedGoals)
   const winnerSide = resultDirection?.side === 'home' ? '主胜' : resultDirection?.side === 'away' ? '客胜' : '平局'
   const favoriteName = resultDirection?.label ?? '市场主方向'
@@ -3194,6 +3353,16 @@ function buildProfessionalBrief(market, homeTeam, awayTeam, judgement, scoreline
             },
           ]
         : []),
+      ...(modelAgreement
+        ? [
+            {
+              label: '模型一致性',
+              score: Math.max(0, 100 - modelAgreement.conflictScore * 2),
+              tone: modelAgreement.riskLevel === '高' ? 'bad' : modelAgreement.riskLevel === '中' ? 'watch' : 'good',
+              evidence: modelAgreement.summary,
+            },
+          ]
+        : []),
       {
         label: '赔率过热',
         score: judgement.risk,
@@ -3262,6 +3431,7 @@ function buildProfessionalBrief(market, homeTeam, awayTeam, judgement, scoreline
     ],
     downgradeTriggers: [
       '官方比分赔率低于建议最低赔率',
+      ...(modelAgreement?.riskLevel === '高' ? ['模型一致性冲突为高，盘口/Poisson/蒙特卡洛无法互相确认'] : []),
       '热门方向 30 分钟内继续大幅降赔',
       '主力前锋/门将/核心中卫缺阵或明显轮换',
       '临场天气、红牌停赛、战意信息与当前模型假设冲突',
@@ -3277,6 +3447,7 @@ function buildDeepThinkingPlan({ grade, expertAnswer, plays, scenarios, riskCont
   const hotRisk = riskControls.find((risk) => risk.label === '赔率压缩')
   const scoreRisk = riskControls.find((risk) => risk.label === '比分方差')
   const newsRisk = contextNewsRisk(context)
+  const modelAgreement = scoreline.modelAgreement ?? null
   const confidenceScore = clamp(
     Math.round(
       judgement.confidence * 0.46 +
@@ -3285,7 +3456,8 @@ function buildDeepThinkingPlan({ grade, expertAnswer, plays, scenarios, riskCont
         (grade === '重点核验' ? 8 : grade === '小额分散' ? 3 : grade === '只核验不追高' ? -6 : -14) -
         (newsRisk ? 5 : 0) +
         (context?.adjustment?.confidenceDelta ?? 0) -
-        (context?.adjustment?.riskDelta ?? 0) * 0.4,
+        (context?.adjustment?.riskDelta ?? 0) * 0.4 -
+        (modelAgreement?.confidencePenalty ?? 0) * 0.35,
     ),
     15,
     92,
@@ -3370,6 +3542,7 @@ function buildDeepThinkingPlan({ grade, expertAnswer, plays, scenarios, riskCont
       context?.situational?.summary ?? '赛程体能暂未接入。',
       context?.humanFactors?.summary ?? '心态/教练代理：暂无足够近况数据，未单独修正。',
       `胜平负方向：${expertAnswer.marketDirection}；总进球校验：${expertAnswer.totalGoals}。`,
+      modelAgreement?.summary ?? '模型一致性：缺少可用的蒙特卡洛或盘口对照，按常规风险处理。',
       context
         ? `近5场：${context.home.trendNote}；${context.away.trendNote}`
         : '近5场数据暂未接入。',
@@ -3381,14 +3554,15 @@ function buildDeepThinkingPlan({ grade, expertAnswer, plays, scenarios, riskCont
         : '古法校验未参与本次评分。',
       `主要风险：${hotRisk?.label ?? '赔率'}为${hotRisk?.level ?? '中'}，${scoreRisk?.label ?? '比分方差'}为${scoreRisk?.level ?? '中'}。`,
       scenarios[0] ? `基准剧本：${scenarios[0].scorePath}` : '等待更多情景数据。',
-    ].slice(0, 8),
+    ].slice(0, 9),
     noBuyRules: [
       `中国体彩比分赔率低于 ${scorePlay?.minOdds ?? '建议门槛'} 时不买。`,
       resultPlay ? `胜平负 ${resultPlay.selection} 低于 ${resultPlay.minOdds} 时不买。` : '胜平负赔率不可核验时不买。',
+      modelAgreement?.riskLevel === '高' ? '盘口、Poisson 与 1万次模拟方向冲突为高时，本场直接不买。' : null,
       '首发出现核心前锋、门将或中卫明显轮换时不买。',
       '临场 30 分钟内热门方向继续大幅降赔时不追。',
       newsRisk ? '最新新闻存在阵容/纪律风险，必须等首发后再决定。' : '中国体彩未开售、停售或让球口径变化时不买。',
-    ],
+    ].filter(Boolean),
     updateSensitivity:
       grade === '重点核验'
         ? '对官方赔率和首发最敏感，赛前 30 分钟需要重新核验。'
@@ -3494,6 +3668,7 @@ function buildRiskControls(market, judgement, scoreline, favorite, context = nul
   const favoriteMove = Math.abs(favoriteMarket?.movement ?? 0)
   const bestScoreProbability = scoreline.bestPick?.probability ?? 0
   const topTwoGap = (scoreline.candidates[0]?.probability ?? 0) - (scoreline.candidates[1]?.probability ?? 0)
+  const modelAgreement = scoreline.modelAgreement ?? null
 
   const controls = [
     {
@@ -3520,6 +3695,14 @@ function buildRiskControls(market, judgement, scoreline, favorite, context = nul
       detail: `当前风险指数 ${judgement.risk}/100；超过中档时只做核验，不扩大组合。`,
     },
   ]
+
+  if (modelAgreement) {
+    controls.push({
+      label: '模型一致性',
+      level: modelAgreement.riskLevel,
+      detail: `${modelAgreement.summary} 复盘规则：冲突为高时直接降级，冲突为中时不做重仓单点比分。`,
+    })
+  }
 
   if (context) {
     controls.push(
@@ -3554,8 +3737,10 @@ function buildRiskControls(market, judgement, scoreline, favorite, context = nul
   return controls
 }
 
-function professionalGrade(rankScore, judgement) {
+function professionalGrade(rankScore, judgement, modelAgreement = null) {
+  if (modelAgreement?.riskLevel === '高') return '观望'
   if (judgement.tier === '避免追高') return '只核验不追高'
+  if (modelAgreement?.riskLevel === '中' && rankScore >= 68) return '小额分散'
   if (rankScore >= 68 && judgement.risk < 58) return '重点核验'
   if (rankScore >= 58) return '小额分散'
   return '观望'
@@ -4726,6 +4911,97 @@ function simulateMatchProgress({
   }
 }
 
+function buildModelAgreement({ resultProbabilities, candidates, simulation, totalExpectedGoals }) {
+  const marketLeader = [...resultProbabilities].sort((left, right) => right.probability - left.probability)[0] ?? null
+  const marketRunnerUp = [...resultProbabilities].sort((left, right) => right.probability - left.probability)[1] ?? null
+  const poissonLeader = candidates[0] ? sideFromResult(candidates[0].result) : null
+  const simulationLeader = simulation?.resultDistribution?.[0]?.side ?? null
+  const topSimulationScore = simulation?.topScores?.[0]?.score ?? ''
+  const topPoissonScore = candidates[0]?.score ?? ''
+  const topThreeScores = candidates.slice(0, 3).map((item) => item.score)
+  const directionVotes = [marketLeader?.side, poissonLeader, simulationLeader].filter(Boolean)
+  const directionAgreement = Math.max(
+    ...['home', 'draw', 'away'].map((side) => directionVotes.filter((vote) => vote === side).length),
+    0,
+  )
+  const marketGap = marketLeader && marketRunnerUp ? round(marketLeader.probability - marketRunnerUp.probability, 4) : 0
+  const totalBand = totalGoalsBand(totalExpectedGoals).selection
+  const totalBandNumbers = parseTotalBandSelection(totalBand)
+  const topSimulationTotal = simulation?.totalGoals
+    ? [...simulation.totalGoals].sort((left, right) => right.probability - left.probability)[0]
+    : null
+  const topSimulationTotalNumber = topSimulationTotal?.goals === '7+' ? 7 : Number(topSimulationTotal?.goals)
+  const scoreAgreement =
+    topSimulationScore && topSimulationScore === topPoissonScore
+      ? 'top1'
+      : topSimulationScore && topThreeScores.includes(topSimulationScore)
+        ? 'top3'
+        : 'conflict'
+  const totalAgreement = Number.isFinite(topSimulationTotalNumber) ? totalBandNumbers.includes(topSimulationTotalNumber) : false
+  const simulationConfidence = simulation?.resultDistribution?.[0]?.probability ?? 0
+  const flags = []
+
+  if (directionAgreement < 2) flags.push('三模型胜平负方向冲突')
+  if (directionAgreement === 2) flags.push('三模型仅两票一致')
+  if (scoreAgreement === 'conflict') flags.push('Poisson首选比分与蒙特卡洛最密比分不在同一区间')
+  if (scoreAgreement === 'top3') flags.push('比分方向仅前三候选一致')
+  if (!totalAgreement) flags.push('总进球区间与蒙特卡洛最密总进球不一致')
+  if (marketGap < 0.08) flags.push('盘口去水概率差距过窄')
+  if (simulationConfidence < 0.55) flags.push('蒙特卡洛主方向不足55%')
+  if ((simulation?.process?.lateGoalProbability ?? 0) >= 0.55) flags.push('后段进球概率高，比分尾部更容易漂移')
+
+  const conflictScore = clamp(
+    (directionAgreement === 3 ? 0 : directionAgreement === 2 ? 7 : 16) +
+      (scoreAgreement === 'top1' ? 0 : scoreAgreement === 'top3' ? 4 : 9) +
+      (totalAgreement ? 0 : 5) +
+      (marketGap < 0.08 ? 6 : 0) +
+      (simulationConfidence < 0.55 ? 5 : 0) +
+      ((simulation?.process?.lateGoalProbability ?? 0) >= 0.55 ? 3 : 0),
+    0,
+    40,
+  )
+  const riskLevel = conflictScore >= 24 ? '高' : conflictScore >= 14 ? '中' : '低'
+  const stakeMultiplier = riskLevel === '高' ? 0.45 : riskLevel === '中' ? 0.7 : 1
+  const summary = `模型一致性实验：盘口=${sideLabel(marketLeader?.side)}、Poisson=${sideLabel(poissonLeader)}、蒙特卡洛=${sideLabel(simulationLeader)}；冲突分 ${conflictScore}/40（${riskLevel}），${flags.length ? flags.slice(0, 3).join('；') : '三层判断基本一致'}。`
+
+  return {
+    model: 'market + poisson + 10k monte-carlo agreement experiment',
+    marketDirection: marketLeader
+      ? {
+          side: marketLeader.side,
+          label: marketLeader.label,
+          probability: marketLeader.probability,
+        }
+      : null,
+    poissonDirection: {
+      side: poissonLeader,
+      score: topPoissonScore,
+      result: candidates[0]?.result ?? null,
+      probability: candidates[0]?.probability ?? null,
+    },
+    simulationDirection: simulation?.resultDistribution?.[0] ?? null,
+    marketGap,
+    directionAgreement,
+    scoreAgreement,
+    totalAgreement,
+    topSimulationScore,
+    topSimulationTotal: topSimulationTotal?.goals ?? null,
+    conflictScore,
+    riskLevel,
+    confidencePenalty: conflictScore,
+    stakeMultiplier,
+    flags,
+    summary,
+  }
+}
+
+function sideLabel(side) {
+  if (side === 'home') return '主胜'
+  if (side === 'away') return '客胜'
+  if (side === 'draw') return '平局'
+  return '未知'
+}
+
 function simulateSingleProgress({ homeExpectedGoals, awayExpectedGoals, phases, favoriteSide, context, rng }) {
   let homeGoals = 0
   let awayGoals = 0
@@ -4957,7 +5233,7 @@ function buildJudgement(market, event, newsItems, context = null) {
   let stake = '只做观察，不主动加码'
   let lean = `倾向 ${favorite?.label ?? '市场热门'}，但需要赔率核验`
   let guidance = '市场分歧和不确定性仍高，优先看赛前阵容、官方竞彩赔率和盘口变化。'
-  let avoid = '避免把平局风险低估，尤其是小组赛阶段。'
+  let avoid = '避免把淘汰赛常规时间的平局风险低估；平局只在盘口、总进球和模拟同时支持时升级。'
 
   if (favoriteProbability > 0.76) {
     tier = '避免追高'
