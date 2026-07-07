@@ -42,6 +42,9 @@ let activeModelCalibration = {
   underdogGoalRetention: 0,
   highGoalVolatility: 0,
   drawGuard: 0,
+  homeNarrativeDampening: 0,
+  awayFavoriteTailGuard: 0,
+  eliteLowScoreGuard: 0,
 }
 
 const indoorStadiums = new Set(['AT&T Stadium', 'Mercedes-Benz Stadium', 'SoFi Stadium', 'BC Place', 'State Farm Stadium'])
@@ -1322,6 +1325,7 @@ function buildModelReview(completedMatches) {
   const oneGoalRate = scoredMatches.length > 0 ? oneGoalWins / scoredMatches.length : 0
   const favoriteConcededWinRate = predictionSamples.length > 0 ? favoriteConcededWins / predictionSamples.length : 0
   const reflection = buildPredictionReflection(predictionSamples)
+  const reflectionPatterns = new Set(reflection.mistakePatterns.map((item) => item.pattern))
   const trainingAdvice = buildTrainingAdvice({
     sampleSize: scoredMatches.length,
     predictionSamples: predictionSamples.length,
@@ -1407,6 +1411,9 @@ function buildModelReview(completedMatches) {
       singleScoreCaution: predictionSamples.length > 0 && topScoreHitRate < 0.18 ? 1 : 0,
       agreementArbitration: 1,
       conflictDowngrade: predictionSamples.length > 0 && top3ScoreHitRate < 0.45 ? 1 : 0,
+      homeNarrativeDampening: reflectionPatterns.has('主场/东道主叙事不能压过客队硬实力') ? 1 : 0,
+      awayFavoriteTailGuard: reflectionPatterns.has('客队高火力尾部需要保留') ? 1 : 0,
+      eliteLowScoreGuard: reflectionPatterns.has('强强淘汰赛可能被高估总进球') ? 1 : 0,
     },
   }
 }
@@ -1450,6 +1457,36 @@ function buildPredictionReflection(predictionSamples) {
   const scoreTooHigh = exactScoreMisses.filter((match) => {
     const predictedTotal = scoreTotal(match.prediction.topScores[0]?.score)
     return predictedTotal !== null && predictedTotal > match.totalGoals
+  })
+  const homeNarrativeMisses = resultMisses.filter((match) => {
+    const [homeGoals, awayGoals] = scoreParts(match.score)
+    return (
+      match.prediction.predictedResult === '主胜' &&
+      match.result === '客胜' &&
+      Number.isFinite(homeGoals) &&
+      Number.isFinite(awayGoals) &&
+      awayGoals - homeGoals >= 2
+    )
+  })
+  const awayHighTempoMisses = resultMisses.filter((match) => {
+    const [homeGoals, awayGoals] = scoreParts(match.score)
+    return (
+      match.result === '客胜' &&
+      Number.isFinite(homeGoals) &&
+      Number.isFinite(awayGoals) &&
+      awayGoals >= 3 &&
+      match.totalGoals >= 4
+    )
+  })
+  const eliteLowScoreMisses = predictionSamples.filter((match) => {
+    const predictedTotal = scoreTotal(match.prediction.topScores[0]?.score)
+    return (
+      match.prediction.predictedResult === match.result &&
+      match.prediction.totalBandHit === false &&
+      predictedTotal !== null &&
+      predictedTotal >= 3 &&
+      match.totalGoals <= 1
+    )
   })
   const cleanSheetOverrated = exactScoreMisses.filter((match) => {
     const predicted = scoreParts(match.prediction.topScores[0]?.score)
@@ -1496,6 +1533,33 @@ function buildPredictionReflection(predictionSamples) {
       evidence: `总进球区间错 ${totalBandMisses.length}/${sampleSize}，通常优于精确比分首选。`,
       adjustment: '组合购买里让总进球承担节奏判断，比分只承担小额高赔率验证。',
     },
+    ...(homeNarrativeMisses.length > 0
+      ? [
+          {
+            pattern: '主场/东道主叙事不能压过客队硬实力',
+            evidence: `预测主胜但实际客队两球以上取胜 ${homeNarrativeMisses.length} 场，最新典型是美国 1-4 比利时。`,
+            adjustment: '当主队只是环境叙事占优，而客队杯赛攻击力、淘汰赛经验或盘口不弱时，削弱主队加成并上调客队多球胜尾部。',
+          },
+        ]
+      : []),
+    ...(awayHighTempoMisses.length > 0
+      ? [
+          {
+            pattern: '客队高火力尾部需要保留',
+            evidence: `方向错且实际客胜4+总进球 ${awayHighTempoMisses.length} 场。`,
+            adjustment: '客队具备持续进攻与转换效率时，不把 1-2 当唯一客胜路径，保留 1-3 / 1-4 / 2-4 等尾部风险。',
+          },
+        ]
+      : []),
+    ...(eliteLowScoreMisses.length > 0
+      ? [
+          {
+            pattern: '强强淘汰赛可能被高估总进球',
+            evidence: `方向命中但总进球高估 ${eliteLowScoreMisses.length} 场，最新典型是葡萄牙 0-1 西班牙。`,
+            adjustment: '强队互相制约、首发偏稳、淘汰赛常规时间时，下调 3+ 球扩张，增加 0-1 / 1-0 / 1-1 权重。',
+          },
+        ]
+      : []),
   ]
 
   return {
@@ -1536,6 +1600,15 @@ function buildPredictionReflection(predictionSamples) {
       '复盘后降低单点比分权重：比分首选不再作为重仓依据，必须与前三比分和总进球区间交叉确认。',
       '复盘后强化弱队一球路径：热门胜出时不机械零封，把 2-1 / 3-1 与 2-0 / 3-0 成对比较。',
       '复盘后把平局从“猜中高赔率”的诱惑改成防守层：只有盘口、总进球和模拟同时支持才升级为主方向。',
+      ...(homeNarrativeMisses.length > 0
+        ? ['昨日美国 1-4 比利时后新增主场叙事降权：东道主/准主场只作低权重环境因子，不覆盖客队杯赛强度和攻击尾部。']
+        : []),
+      ...(awayHighTempoMisses.length > 0
+        ? ['昨日美国 1-4 比利时后新增客队高火力尾部保护：客胜方向不再只停留在一球小胜，保留多球客胜风险。']
+        : []),
+      ...(eliteLowScoreMisses.length > 0
+        ? ['昨日葡萄牙 0-1 西班牙后新增强强低比分保护：强队淘汰赛若防守与控场信号偏强，下调总进球扩张。']
+        : []),
     ],
   }
 }
@@ -2824,6 +2897,25 @@ function buildContextAdjustment(homeContext, awayContext, weather, geography, di
   const situationalEdge = clamp(situational?.homeGoalDiffDelta ?? 0, -0.16, 0.16)
   const weatherRisk = weather.riskLevel === '高' ? 8 : weather.riskLevel === '中' ? 4 : 0
   const formReliability = Math.min(homeContext.sampleSize, awayContext.sampleSize) >= 3 ? 1 : 0.55
+  const homeNarrativePenalty =
+    activeModelCalibration.homeNarrativeDampening &&
+    situational?.host?.edge > 0 &&
+    (tournamentEdge < -0.12 || formEdge < -8 || humanEdge < -0.18)
+      ? -0.08
+      : 0
+  const awayQualityCorrection =
+    activeModelCalibration.awayFavoriteTailGuard &&
+    tournamentEdge < -0.18 &&
+    (awayContext.tournament?.attackScore ?? 50) >= 62
+      ? -0.07
+      : 0
+  const eliteLowScoreDrag =
+    activeModelCalibration.eliteLowScoreGuard &&
+    advancement?.pressureType === 'knockout' &&
+    ((homeContext.tournament?.defenseScore ?? 50) + (awayContext.tournament?.defenseScore ?? 50)) / 2 >= 62 &&
+    Math.abs(tournamentEdge) <= 0.35
+      ? 0.08
+      : 0
   const weatherTempoDrag =
     (weather.riskLevel === '高' ? 0.14 : weather.riskLevel === '中' ? 0.06 : 0) +
     ((weather.precipitationProbability ?? 0) >= 35 ? 0.08 : 0) +
@@ -2839,6 +2931,8 @@ function buildContextAdjustment(homeContext, awayContext, weather, geography, di
         humanEdge * 0.13 +
         advancementEdge +
         situationalEdge +
+        homeNarrativePenalty +
+        awayQualityCorrection +
         divinationEdge * 0.04,
       2,
     ),
@@ -2852,6 +2946,8 @@ function buildContextAdjustment(homeContext, awayContext, weather, geography, di
         worldCupHistoryTempoAdjustment(homeContext.history, awayContext.history) +
         humanTempoAdjustment(humanFactors) -
         weatherTempoDrag +
+        (activeModelCalibration.awayFavoriteTailGuard && awayQualityCorrection < 0 ? 0.05 : 0) -
+        eliteLowScoreDrag +
         (advancement?.totalGoalsDelta ?? 0) +
         (situational?.totalGoalsDelta ?? 0),
       2,
@@ -2897,6 +2993,9 @@ function buildContextAdjustment(homeContext, awayContext, weather, geography, di
       `历届世界杯底蕴：${homeContext.history?.summary ?? '主队暂无'}；${awayContext.history?.summary ?? '客队暂无'}。`,
       advancement?.summary ?? '晋级形势：暂无额外修正。',
       situational?.summary ?? '赛程体能：暂无额外修正。',
+      ...(homeNarrativePenalty < 0 ? ['昨日美国 1-4 比利时复盘：主场/东道主叙事降权，客队硬实力优先。'] : []),
+      ...(awayQualityCorrection < 0 ? ['昨日美国 1-4 比利时复盘：客队攻击质量进入额外修正，避免漏掉多球客胜尾部。'] : []),
+      ...(eliteLowScoreDrag > 0 ? ['昨日葡萄牙 0-1 西班牙复盘：强强淘汰赛下调总进球扩张，保留低比分胜负。'] : []),
       `伤病与天气风险使风险指数 ${riskDelta > 0 ? '+' : ''}${riskDelta}。`,
       humanFactors?.summary ?? '心态/教练代理：数据不足，未单独修正。',
       `古法取象 ${divination.weight}：${divination.summary}`,
@@ -4467,6 +4566,29 @@ function scoreTailMultiplier(homeGoals, awayGoals, totalExpectedGoals, resultPro
   if (activeModelCalibration.highGoalVolatility && totalGoals <= 1 && favoriteProbability >= 0.62) {
     multiplier -= 0.03
   }
+  if (
+    activeModelCalibration.awayFavoriteTailGuard &&
+    favoriteSide === 'away' &&
+    result === favoriteResult &&
+    favoriteGoals >= 3 &&
+    totalGoals >= 4
+  ) {
+    multiplier += 0.09
+  }
+  if (
+    activeModelCalibration.homeNarrativeDampening &&
+    favoriteSide === 'home' &&
+    result === favoriteResult &&
+    context?.situational?.host?.edge > 0 &&
+    (context?.away?.tournament?.attackScore ?? 50) >= 62 &&
+    favoriteProbability < 0.58
+  ) {
+    multiplier -= 0.05
+  }
+  if (activeModelCalibration.eliteLowScoreGuard && context?.advancement?.pressureType === 'knockout') {
+    if (result === favoriteResult && totalGoals <= 1) multiplier += 0.05
+    if (totalGoals >= 4 && favoriteProbability < 0.7) multiplier -= 0.04
+  }
   if (activeModelCalibration.drawGuard && result === '平局' && totalGoals <= 2 && draw >= 0.22) {
     multiplier += 0.04
   }
@@ -4630,6 +4752,29 @@ function scoreCandidateRank(item, resultStrength, context = null, totalExpectedG
   }
   if (activeModelCalibration.highGoalVolatility && totalGoals <= 1 && favoriteProbability >= 0.62) {
     reviewLift *= 0.97
+  }
+  if (
+    activeModelCalibration.awayFavoriteTailGuard &&
+    favoriteSide === 'away' &&
+    item.result === favoriteResult &&
+    favoriteGoals >= 3 &&
+    totalGoals >= 4
+  ) {
+    reviewLift *= 1.09
+  }
+  if (
+    activeModelCalibration.homeNarrativeDampening &&
+    favoriteSide === 'home' &&
+    item.result === favoriteResult &&
+    context?.situational?.host?.edge > 0 &&
+    (context?.away?.tournament?.attackScore ?? 50) >= 62 &&
+    favoriteProbability < 0.58
+  ) {
+    reviewLift *= 0.95
+  }
+  if (activeModelCalibration.eliteLowScoreGuard && context?.advancement?.pressureType === 'knockout') {
+    if (item.result === favoriteResult && totalGoals <= 1) reviewLift *= 1.05
+    if (totalGoals >= 4 && favoriteProbability < 0.7) reviewLift *= 0.96
   }
   if (activeModelCalibration.drawGuard && item.result === scoreResult(0, 0) && totalGoals <= 2 && drawStrength >= 0.22) {
     reviewLift *= 1.04
