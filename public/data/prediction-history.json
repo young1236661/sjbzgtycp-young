@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-07T03:41:41.990Z",
-  "count": 57,
+  "updatedAt": "2026-07-08T06:22:06.794Z",
+  "count": 58,
   "predictions": {
     "760449": {
       "matchId": "760449",
@@ -3536,6 +3536,68 @@
         }
       ],
       "simulationSummary": "10,000次90分钟含补时进程模拟：主胜 77%；最密比分 2-0 14% / 1-0 12% / 3-0 11%；总进球最集中 3球 23%；76分钟后仍有进球 50%，前30分钟无进球 46%。"
+    },
+    "760510": {
+      "matchId": "760510",
+      "createdAt": "2026-07-08T05:50:58.067Z",
+      "sourceCommit": "current-update",
+      "kickoffUtc": "2026-07-09T20:00Z",
+      "kickoffChina": "07/10 04:00",
+      "home": "法国",
+      "away": "Morocco",
+      "marketDirection": "法国 主胜",
+      "recommendedScore": "2-1（主胜）",
+      "secondaryScores": [
+        "3-1（主胜）",
+        "2-0（主胜）",
+        "1-0（主胜）"
+      ],
+      "totalGoals": "总进球 2/3/4",
+      "topScores": [
+        {
+          "score": "2-1",
+          "result": "主胜",
+          "probability": 0.1229
+        },
+        {
+          "score": "3-1",
+          "result": "主胜",
+          "probability": 0.0951
+        },
+        {
+          "score": "2-0",
+          "result": "主胜",
+          "probability": 0.1083
+        },
+        {
+          "score": "1-0",
+          "result": "主胜",
+          "probability": 0.0926
+        },
+        {
+          "score": "3-0",
+          "result": "主胜",
+          "probability": 0.0697
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "法国",
+          "side": "home",
+          "probability": 0.5962
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.246
+        },
+        {
+          "label": "Morocco",
+          "side": "away",
+          "probability": 0.1578
+        }
+      ],
+      "simulationSummary": "10,000次90分钟含补时进程模拟：主胜 61%；最密比分 2-1 11% / 1-1 10% / 1-0 9%；总进球最集中 3球 23%；76分钟后仍有进球 52%，前30分钟无进球 44%。"
     }
   }
 }

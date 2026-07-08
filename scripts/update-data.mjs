@@ -45,6 +45,8 @@ let activeModelCalibration = {
   homeNarrativeDampening: 0,
   awayFavoriteTailGuard: 0,
   eliteLowScoreGuard: 0,
+  underdogMultiGoalGuard: 0,
+  zeroGoalTotalGuard: 0,
 }
 
 const indoorStadiums = new Set(['AT&T Stadium', 'Mercedes-Benz Stadium', 'SoFi Stadium', 'BC Place', 'State Farm Stadium'])
@@ -1414,6 +1416,8 @@ function buildModelReview(completedMatches) {
       homeNarrativeDampening: reflectionPatterns.has('主场/东道主叙事不能压过客队硬实力') ? 1 : 0,
       awayFavoriteTailGuard: reflectionPatterns.has('客队高火力尾部需要保留') ? 1 : 0,
       eliteLowScoreGuard: reflectionPatterns.has('强强淘汰赛可能被高估总进球') ? 1 : 0,
+      underdogMultiGoalGuard: reflectionPatterns.has('热门赢球时弱队可能进两球') ? 1 : 0,
+      zeroGoalTotalGuard: reflectionPatterns.has('低总进球区间必须覆盖0球') ? 1 : 0,
     },
   }
 }
@@ -1488,6 +1492,18 @@ function buildPredictionReflection(predictionSamples) {
       match.totalGoals <= 1
     )
   })
+  const underdogMultiGoalMisses = predictionSamples.filter((match) => {
+    if (match.prediction.predictedResult !== match.result || match.result === '平局' || match.totalGoals < 5) return false
+    const [actualHome, actualAway] = scoreParts(match.score)
+    const [predictedHome, predictedAway] = scoreParts(match.prediction.topScores[0]?.score)
+    if (![actualHome, actualAway, predictedHome, predictedAway].every(Number.isFinite)) return false
+    const actualLoserGoals = Math.min(actualHome, actualAway)
+    const predictedLoserGoals = Math.min(predictedHome, predictedAway)
+    return actualLoserGoals >= 2 && predictedLoserGoals <= 1
+  })
+  const zeroGoalBandMisses = predictionSamples.filter(
+    (match) => match.totalGoals === 0 && match.prediction.totalBandHit === false,
+  )
   const cleanSheetOverrated = exactScoreMisses.filter((match) => {
     const predicted = scoreParts(match.prediction.topScores[0]?.score)
     const actual = scoreParts(match.score)
@@ -1560,6 +1576,24 @@ function buildPredictionReflection(predictionSamples) {
           },
         ]
       : []),
+    ...(underdogMultiGoalMisses.length > 0
+      ? [
+          {
+            pattern: '热门赢球时弱队可能进两球',
+            evidence: `方向命中但实际弱队进2球且总进球5+ ${underdogMultiGoalMisses.length} 场，最新典型是阿根廷 3-2 埃及。`,
+            adjustment: '强队胜方向成立时，不把弱队进球上限卡死在1球；总进球均值接近3时增加 3-2 / 4-2 / 2-3 类尾部保护。',
+          },
+        ]
+      : []),
+    ...(zeroGoalBandMisses.length > 0
+      ? [
+          {
+            pattern: '低总进球区间必须覆盖0球',
+            evidence: `实际0-0但总进球区间未覆盖0球 ${zeroGoalBandMisses.length} 场，最新典型是瑞士 0-0 哥伦比亚。`,
+            adjustment: '当平局概率、前30分钟慢热和低xG同时出现时，总进球推荐从 1/2 改为 0/1/2。',
+          },
+        ]
+      : []),
   ]
 
   return {
@@ -1608,6 +1642,12 @@ function buildPredictionReflection(predictionSamples) {
         : []),
       ...(eliteLowScoreMisses.length > 0
         ? ['昨日葡萄牙 0-1 西班牙后新增强强低比分保护：强队淘汰赛若防守与控场信号偏强，下调总进球扩张。']
+        : []),
+      ...(underdogMultiGoalMisses.length > 0
+        ? ['昨日阿根廷 3-2 埃及后新增弱队多球保护：热门胜出不代表对手最多一球，强队开放局要覆盖 5 球尾部。']
+        : []),
+      ...(zeroGoalBandMisses.length > 0
+        ? ['昨日瑞士 0-0 哥伦比亚后新增0球保护：低节奏平局场的总进球区间必须能覆盖 0。']
         : []),
     ],
   }
@@ -3879,6 +3919,13 @@ function stakingPlanForGrade(grade, judgement) {
 }
 
 function totalGoalsBand(totalExpectedGoals) {
+  if (activeModelCalibration.zeroGoalTotalGuard && totalExpectedGoals <= 2.45) {
+    return {
+      selection: '总进球 0/1/2',
+      confidence: 59,
+      reason: '昨日0-0复盘后加入0球保护；低节奏、低总进球场不再把0球排除在主区间外。',
+    }
+  }
   if (totalExpectedGoals <= 2.25) {
     return {
       selection: '总进球 1/2',
@@ -3894,6 +3941,13 @@ function totalGoalsBand(totalExpectedGoals) {
     }
   }
   if (totalExpectedGoals <= 3.25) {
+    if (activeModelCalibration.underdogMultiGoalGuard && totalExpectedGoals >= 3.05) {
+      return {
+        selection: '总进球 2/3/4/5',
+        confidence: 61,
+        reason: '昨日3-2复盘后加入5球尾部保护；均值接近3球时，热门胜出但对手进两球的路径不能排除。',
+      }
+    }
     return {
       selection: '总进球 2/3/4',
       confidence: 63,
@@ -4589,6 +4643,16 @@ function scoreTailMultiplier(homeGoals, awayGoals, totalExpectedGoals, resultPro
     if (result === favoriteResult && totalGoals <= 1) multiplier += 0.05
     if (totalGoals >= 4 && favoriteProbability < 0.7) multiplier -= 0.04
   }
+  if (
+    activeModelCalibration.underdogMultiGoalGuard &&
+    result === favoriteResult &&
+    underdogGoals >= 2 &&
+    favoriteGoals >= 3 &&
+    totalGoals >= 5 &&
+    totalExpectedGoals >= 2.85
+  ) {
+    multiplier += 0.08
+  }
   if (activeModelCalibration.drawGuard && result === '平局' && totalGoals <= 2 && draw >= 0.22) {
     multiplier += 0.04
   }
@@ -4775,6 +4839,16 @@ function scoreCandidateRank(item, resultStrength, context = null, totalExpectedG
   if (activeModelCalibration.eliteLowScoreGuard && context?.advancement?.pressureType === 'knockout') {
     if (item.result === favoriteResult && totalGoals <= 1) reviewLift *= 1.05
     if (totalGoals >= 4 && favoriteProbability < 0.7) reviewLift *= 0.96
+  }
+  if (
+    activeModelCalibration.underdogMultiGoalGuard &&
+    item.result === favoriteResult &&
+    underdogGoals >= 2 &&
+    favoriteGoals >= 3 &&
+    totalGoals >= 5 &&
+    (totalExpectedGoals ?? totalGoals) >= 2.85
+  ) {
+    reviewLift *= 1.08
   }
   if (activeModelCalibration.drawGuard && item.result === scoreResult(0, 0) && totalGoals <= 2 && drawStrength >= 0.22) {
     reviewLift *= 1.04
