@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-08T06:22:06.794Z",
-  "count": 58,
+  "updatedAt": "2026-07-09T05:11:29.175Z",
+  "count": 59,
   "predictions": {
     "760449": {
       "matchId": "760449",
@@ -3598,6 +3598,68 @@
         }
       ],
       "simulationSummary": "10,000次90分钟含补时进程模拟：主胜 61%；最密比分 2-1 11% / 1-1 10% / 1-0 9%；总进球最集中 3球 23%；76分钟后仍有进球 52%，前30分钟无进球 44%。"
+    },
+    "760511": {
+      "matchId": "760511",
+      "createdAt": "2026-07-09T05:06:35.885Z",
+      "sourceCommit": "current-update",
+      "kickoffUtc": "2026-07-10T19:00Z",
+      "kickoffChina": "07/11 03:00",
+      "home": "西班牙",
+      "away": "比利时",
+      "marketDirection": "西班牙 主胜",
+      "recommendedScore": "2-1（主胜）",
+      "secondaryScores": [
+        "3-1（主胜）",
+        "2-0（主胜）",
+        "1-0（主胜）"
+      ],
+      "totalGoals": "总进球 2/3/4/5",
+      "topScores": [
+        {
+          "score": "2-1",
+          "result": "主胜",
+          "probability": 0.1238
+        },
+        {
+          "score": "3-1",
+          "result": "主胜",
+          "probability": 0.1002
+        },
+        {
+          "score": "2-0",
+          "result": "主胜",
+          "probability": 0.1043
+        },
+        {
+          "score": "1-0",
+          "result": "主胜",
+          "probability": 0.0866
+        },
+        {
+          "score": "3-0",
+          "result": "主胜",
+          "probability": 0.0746
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "西班牙",
+          "side": "home",
+          "probability": 0.5763
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.2431
+        },
+        {
+          "label": "比利时",
+          "side": "away",
+          "probability": 0.1806
+        }
+      ],
+      "simulationSummary": "10,000次90分钟含补时进程模拟：主胜 64%；最密比分 2-1 11% / 1-1 9% / 2-0 9%；总进球最集中 3球 22%；76分钟后仍有进球 55%，前30分钟无进球 42%。"
     }
   }
 }
