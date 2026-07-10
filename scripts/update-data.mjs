@@ -47,6 +47,7 @@ let activeModelCalibration = {
   eliteLowScoreGuard: 0,
   underdogMultiGoalGuard: 0,
   zeroGoalTotalGuard: 0,
+  favoriteCleanSheetReorder: 0,
 }
 
 const indoorStadiums = new Set(['AT&T Stadium', 'Mercedes-Benz Stadium', 'SoFi Stadium', 'BC Place', 'State Farm Stadium'])
@@ -1308,6 +1309,18 @@ function buildModelReview(completedMatches) {
     const [left, right] = scoreParts(match.score)
     return match.prediction.favoriteSide === 'home' ? right > 0 : left > 0
   }).length
+  const favoriteCleanSheetUnderweighted = predictionSamples.filter((match) => {
+    if (match.prediction.predictedResult !== match.result || match.result === '平局') return false
+    const [homeGoals, awayGoals] = scoreParts(match.score)
+    const [predictedHomeGoals, predictedAwayGoals] = scoreParts(match.prediction.topScores[0]?.score)
+    if ([homeGoals, awayGoals, predictedHomeGoals, predictedAwayGoals].some((value) => value === null)) return false
+
+    const favoriteSide = match.prediction.favoriteSide
+    const actualFavoriteGoals = favoriteSide === 'home' ? homeGoals : awayGoals
+    const actualUnderdogGoals = favoriteSide === 'home' ? awayGoals : homeGoals
+    const predictedUnderdogGoals = favoriteSide === 'home' ? predictedAwayGoals : predictedHomeGoals
+    return actualFavoriteGoals >= 2 && actualUnderdogGoals === 0 && predictedUnderdogGoals >= 1
+  }).length
   const highGoalMatches = scoredMatches.filter((match) => match.totalGoals >= 4).length
   const drawMatches = scoredMatches.filter((match) => match.result === '平局').length
   const recentThree = completedMatches.slice(0, 3)
@@ -1356,6 +1369,7 @@ function buildModelReview(completedMatches) {
       controlledCleanWins,
       favoritesConverted,
       favoriteConcededWins,
+      favoriteCleanSheetUnderweighted,
       resultAccuracy: round(favoriteHitRate, 4),
       topScoreAccuracy: round(topScoreHitRate, 4),
       top3ScoreAccuracy: round(top3ScoreHitRate, 4),
@@ -1393,6 +1407,9 @@ function buildModelReview(completedMatches) {
       controlledCleanWins >= 2
         ? '最新淘汰赛出现多场强侧零封控场胜，热门队在领先后仍可能把比分带到 2-0 / 3-0，不能过度停在 0-0 / 1-0。'
         : '零封控场胜样本不足，强队大胜仍需赔率和阵容共同确认。',
+      favoriteCleanSheetUnderweighted >= 1
+        ? `近期有 ${favoriteCleanSheetUnderweighted} 场方向命中但弱队进球被高估；小球盘口占优时，把 2-0 与 3-0 的零封路径排到同档带球胜之前。`
+        : '近期未出现明显的弱队进球高估，零封与双方进球路径维持原权重。',
       recentKnockoutNonDraws >= 3
         ? '最近三场淘汰赛90分钟均分出胜负，平局仍要防，但热门或准主场方的控场胜权重上调。'
         : '淘汰赛仍保留加时点球牵引，实力接近场继续防 0-0 / 1-1。',
@@ -1418,6 +1435,7 @@ function buildModelReview(completedMatches) {
       eliteLowScoreGuard: reflectionPatterns.has('强强淘汰赛可能被高估总进球') ? 1 : 0,
       underdogMultiGoalGuard: reflectionPatterns.has('热门赢球时弱队可能进两球') ? 1 : 0,
       zeroGoalTotalGuard: reflectionPatterns.has('低总进球区间必须覆盖0球') ? 1 : 0,
+      favoriteCleanSheetReorder: favoriteCleanSheetUnderweighted >= 1 ? 1 : 0,
     },
   }
 }
@@ -4484,6 +4502,7 @@ function scoreTailMultiplier(homeGoals, awayGoals, totalExpectedGoals, resultPro
   const favoriteResult = favoriteSide === 'home' ? '主胜' : '客胜'
   const favoriteProbability = Math.max(homeWin, awayWin)
   const spreadSignal = market ? favoriteSpreadSignal(market, favoriteSide) : { favoriteCoverProbability: null }
+  const totalSignal = market ? totalMarketSignal(market) : { line: 2.5, underProbability: 0.5 }
   const stalemateSignal = favoriteStalemateSignal(homeWin, awayWin, draw, context)
   const drawCompression = drawCompressionSignal(homeWin, awayWin, draw, totalExpectedGoals, market)
   const favoriteGoals = favoriteSide === 'home' ? homeGoals : awayGoals
@@ -4606,6 +4625,16 @@ function scoreTailMultiplier(homeGoals, awayGoals, totalExpectedGoals, resultPro
     multiplier += favoriteMargin === 2 ? 0.1 : 0.07
   }
   if (
+    activeModelCalibration.favoriteCleanSheetReorder &&
+    totalSignal.line <= 2.5 &&
+    totalSignal.underProbability >= 0.54 &&
+    favoriteProbability >= 0.56 &&
+    result === favoriteResult
+  ) {
+    if (underdogGoals === 0 && favoriteMargin === 2 && totalGoals <= 3) multiplier += 0.07
+    if (underdogGoals >= 1 && totalGoals >= 3) multiplier -= 0.04
+  }
+  if (
     activeModelCalibration.underdogGoalRetention &&
     result === favoriteResult &&
     underdogGoals === 1 &&
@@ -4690,6 +4719,7 @@ function scoreCandidateRank(item, resultStrength, context = null, totalExpectedG
   const favoriteMargin = favoriteGoals - underdogGoals
   const favoriteProbability = Math.max(homeWinStrength, awayWinStrength)
   const spreadSignal = market ? favoriteSpreadSignal(market, favoriteSide) : { favoriteCoverProbability: null }
+  const totalSignal = market ? totalMarketSignal(market) : { line: 2.5, underProbability: 0.5 }
   const stalemateSignal = favoriteStalemateSignal(homeWinStrength, awayWinStrength, drawStrength, context)
   const drawCompression = drawCompressionSignal(homeWinStrength, awayWinStrength, drawStrength, totalExpectedGoals ?? totalGoals, market)
   const consolationSignal = homeUnderdogConsolationSignal(
@@ -4801,6 +4831,16 @@ function scoreCandidateRank(item, resultStrength, context = null, totalExpectedG
     totalGoals <= 3
   ) {
     reviewLift *= favoriteMargin === 2 ? 1.1 : 1.07
+  }
+  if (
+    activeModelCalibration.favoriteCleanSheetReorder &&
+    totalSignal.line <= 2.5 &&
+    totalSignal.underProbability >= 0.54 &&
+    favoriteProbability >= 0.56 &&
+    item.result === favoriteResult
+  ) {
+    if (underdogGoals === 0 && favoriteMargin === 2 && totalGoals <= 3) reviewLift *= 1.07
+    if (underdogGoals >= 1 && totalGoals >= 3) reviewLift *= 0.96
   }
   if (
     activeModelCalibration.underdogGoalRetention &&
