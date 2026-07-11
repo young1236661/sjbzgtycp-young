@@ -3464,7 +3464,7 @@ function buildProfessionalBrief(market, homeTeam, awayTeam, judgement, scoreline
     91,
   )
   const grade = professionalGrade(rankScore, judgement, modelAgreement)
-  const totalBand = totalGoalsBand(scoreline.totalExpectedGoals)
+  const totalBand = totalGoalsBand(scoreline.totalExpectedGoals, scoreline.simulation)
   const winnerSide = resultDirection?.side === 'home' ? '主胜' : resultDirection?.side === 'away' ? '客胜' : '平局'
   const favoriteName = resultDirection?.label ?? '市场主方向'
   const newsRisk = hasMatchNewsRisk(newsItems, homeTeam, awayTeam) || contextNewsRisk(context)
@@ -3989,7 +3989,23 @@ function stakingPlanForGrade(grade, judgement) {
   return `保留预算。${judgement.stake}`
 }
 
-function totalGoalsBand(totalExpectedGoals) {
+function totalGoalsBand(totalExpectedGoals, simulation = null) {
+  const simulatedTotals = (simulation?.totalGoals ?? [])
+    .filter((item) => item.goals !== '7+' && Number.isFinite(Number(item.goals)))
+    .sort((left, right) => right.probability - left.probability)
+  if (simulatedTotals.length >= 2) {
+    const selected = simulatedTotals.slice(0, 2)
+    if (selected.reduce((sum, item) => sum + item.probability, 0) < 0.45 && simulatedTotals[2]) {
+      selected.push(simulatedTotals[2])
+    }
+    const goals = selected.map((item) => Number(item.goals)).sort((left, right) => left - right)
+    const coverage = selected.reduce((sum, item) => sum + item.probability, 0)
+    return {
+      selection: `总进球 ${goals.join('/')}`,
+      confidence: clamp(Math.round(coverage * 100 + 12), 55, 68),
+      reason: `按1万次90分钟含补时模拟选择概率最高的${selected.length}个总进球落点，合计覆盖约 ${formatPct(coverage)}。`,
+    }
+  }
   if (activeModelCalibration.zeroGoalTotalGuard && totalExpectedGoals <= 2.45) {
     return {
       selection: '总进球 0/1/2',
@@ -5237,7 +5253,7 @@ function buildModelAgreement({ resultProbabilities, candidates, simulation, tota
     0,
   )
   const marketGap = marketLeader && marketRunnerUp ? round(marketLeader.probability - marketRunnerUp.probability, 4) : 0
-  const totalBand = totalGoalsBand(totalExpectedGoals).selection
+  const totalBand = totalGoalsBand(totalExpectedGoals, simulation).selection
   const totalBandNumbers = parseTotalBandSelection(totalBand)
   const topSimulationTotal = simulation?.totalGoals
     ? [...simulation.totalGoals].sort((left, right) => right.probability - left.probability)[0]
