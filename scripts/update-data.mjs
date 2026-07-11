@@ -62,6 +62,43 @@ const teamNewsAliasMap = new Map([
   ['Netherlands', ['netherlands', 'dutch', '荷兰']],
 ])
 
+const verifiedAvailabilityOverrides = new Map([
+  [
+    'England',
+    {
+      effectiveThrough: '2026-07-12T06:00:00Z',
+      riskFloor: 26,
+      headline: '英格兰赛前可用性更新：Quansah停赛、Henderson缺阵，Rice/Guehi/James已恢复合练并可供选择',
+      note: 'Quansah停赛、Henderson缺阵；Rice、Guehi、James已恢复合练，核心阵容风险较前一版下降，但后防轮换仍需临场确认。',
+      sourceUrl: 'https://www.rotowire.com/betting/soccer/game/norway-vs-england-odds-2026-07-11-2608357',
+      items: [
+        { player: 'Jarell Quansah', status: '停赛', detail: '红牌后两场停赛' },
+        { player: 'Jordan Henderson', status: '缺阵', detail: '前臂手术，世界杯余下比赛缺阵' },
+      ],
+    },
+  ],
+  [
+    'Switzerland',
+    {
+      effectiveThrough: '2026-07-12T10:30:00Z',
+      riskFloor: 40,
+      headline: '瑞士赛前确认：Johan Manzambi因左膝伤缺席对阿根廷的四分之一决赛',
+      note: 'Manzambi确认缺阵；他是瑞士本届队内头号得分点，模型下调瑞士进攻持续性并上调阿根廷零封路径。',
+      sourceUrl: 'https://as.com/futbol/mundial/manzambi-baja-contra-argentina-f202607-n/',
+      items: [{ player: 'Johan Manzambi', status: '确认缺阵', detail: '左膝伤，主教练确认无法出场' }],
+    },
+  ],
+])
+
+const knockoutStageLabels = new Map([
+  ['round-of-32', '32强淘汰赛'],
+  ['round-of-16', '16强淘汰赛'],
+  ['quarterfinals', '四分之一决赛'],
+  ['semifinals', '半决赛'],
+  ['third-place', '三四名决赛'],
+  ['final', '决赛'],
+])
+
 const countryProfiles = new Map([
   ['South Africa', { zhName: '南非', lat: -25.75, lon: 28.23, region: '非洲南部高原', climate: '温带/亚热带', element: '土' }],
   ['Canada', { zhName: '加拿大', lat: 45.42, lon: -75.69, region: '北美北部', climate: '寒温带大陆', element: '水' }],
@@ -2043,8 +2080,8 @@ async function buildMatchContext(
   const [homeRecent, awayRecent, homeInjuries, awayInjuries, weather] = await Promise.all([
     fetchTeamRecentContext(homeTeam, event.date),
     fetchTeamRecentContext(awayTeam, event.date),
-    fetchTeamInjuryContext(homeTeam, newsItems),
-    fetchTeamInjuryContext(awayTeam, newsItems),
+    fetchTeamInjuryContext(homeTeam, newsItems, event.date),
+    fetchTeamInjuryContext(awayTeam, newsItems, event.date),
     fetchWeatherContext(venueName, venueCity, event.date),
   ])
 
@@ -2175,7 +2212,7 @@ function formScoreFromLetters(form) {
   return clamp(score, 22, 84)
 }
 
-async function fetchTeamInjuryContext(team, newsItems) {
+async function fetchTeamInjuryContext(team, newsItems, kickoffUtc) {
   contextStats.injuriesTried += 1
   const url = `${TEAM_INJURY_URL}/${encodeURIComponent(team.id)}/injuries`
   const aliases = teamNewsAliases(team)
@@ -2187,38 +2224,52 @@ async function fetchTeamInjuryContext(team, newsItems) {
     .slice(0, 2)
   const newsRisk = relatedNews.some((item) => hasNewsRisk(`${item.title} ${item.summary}`))
   const disciplineRisk = relatedNews.some((item) => DISCIPLINE_RISK_PATTERN.test(`${item.title} ${item.summary}`))
+  const verified = verifiedAvailabilityForTeam(team, kickoffUtc)
 
   try {
     const data = await fetchJson(url)
     contextStats.injuriesOk += 1
-    const items = extractInjuryItems(data)
-    const riskScore = clamp(items.length * 18 + (newsRisk ? 16 : 0) + (disciplineRisk ? 10 : 0), 0, 78)
+    const items = [...extractInjuryItems(data), ...(verified?.items ?? [])].slice(0, 5)
+    const riskScore = clamp(
+      Math.max(items.length * 18 + (newsRisk ? 16 : 0) + (disciplineRisk ? 10 : 0), verified?.riskFloor ?? 0),
+      0,
+      78,
+    )
 
     return {
       status: items.length > 0 ? `${items.length} 条伤病/出战信息` : 'ESPN 未列出明确伤病',
       riskScore,
       items,
-      relatedNews: relatedNews.map((item) => item.title),
+      relatedNews: [...relatedNews.map((item) => item.title), ...(verified?.headline ? [verified.headline] : [])],
       note:
-        items.length > 0
+        verified?.note ??
+        (items.length > 0
           ? items.slice(0, 2).map((item) => `${item.player} ${item.status}`).join('；')
           : newsRisk
             ? disciplineRisk
               ? '新闻出现黄牌/纪律或轮换风险词，需等首发确认。'
               : '新闻出现阵容风险词，需等首发确认。'
-            : '公开伤病源未给出明确缺阵，仍需赛前首发核验。',
-      sourceUrl: url,
+            : '公开伤病源未给出明确缺阵，仍需赛前首发核验。'),
+      sourceUrl: verified?.sourceUrl ?? url,
     }
   } catch (error) {
     return {
       status: '伤病接口不可用',
-      riskScore: newsRisk ? 42 : 20,
-      items: [],
-      relatedNews: relatedNews.map((item) => item.title),
-      note: `伤病接口失败：${shortError(error)}；按新闻风险词保守处理。`,
-      sourceUrl: url,
+      riskScore: Math.max(newsRisk ? 42 : 20, verified?.riskFloor ?? 0),
+      items: verified?.items ?? [],
+      relatedNews: [...relatedNews.map((item) => item.title), ...(verified?.headline ? [verified.headline] : [])],
+      note: verified?.note ?? `伤病接口失败：${shortError(error)}；按新闻风险词保守处理。`,
+      sourceUrl: verified?.sourceUrl ?? url,
     }
   }
+}
+
+function verifiedAvailabilityForTeam(team, kickoffUtc) {
+  const verified = verifiedAvailabilityOverrides.get(team.name) ?? verifiedAvailabilityOverrides.get(team.zhName)
+  if (!verified) return null
+  const kickoffTime = new Date(kickoffUtc).getTime()
+  const effectiveThrough = new Date(verified.effectiveThrough).getTime()
+  return Number.isFinite(kickoffTime) && kickoffTime <= effectiveThrough ? verified : null
 }
 
 function teamNewsAliases(team) {
@@ -2552,18 +2603,20 @@ function buildAdvancementContext(event, competition, homeTeam, awayTeam, homeCon
   const stage = event.season?.slug ?? 'unknown'
   const stageLabel = competition.altGameNote ?? event.season?.type?.name ?? 'FIFA World Cup'
 
-  if (stage === 'round-of-32') {
+  if (knockoutStageLabels.has(stage)) {
     const path = knockoutPaths.get(String(event.id))
     const maxOpponentStrength = path?.maxOpponentStrength ?? 52
     const opponentPressure = maxOpponentStrength >= 74 ? 8 : maxOpponentStrength >= 66 ? 5 : 3
-    const pressureScore = clamp(88 + opponentPressure, 84, 96)
+    const stagePressureBonus = stage === 'final' ? 5 : stage === 'semifinals' ? 3 : stage === 'quarterfinals' ? 2 : 0
+    const pressureScore = clamp(86 + opponentPressure + stagePressureBonus, 84, 96)
+    const knockoutStageLabel = knockoutStageLabels.get(stage)
     const opponentText = path?.nextOpponentPool?.length
       ? path.nextOpponentPool.map((team) => `${team.zhName}${team.placeholder ? '' : `(${team.strengthScore})`}`).join(' / ')
       : '待定'
 
     return {
       stage,
-      stageLabel: '32强淘汰赛',
+      stageLabel: knockoutStageLabel,
       pressureType: 'knockout',
       pressureScore,
       pressureLevel: pressureScore >= 88 ? '高' : '中',
@@ -2573,9 +2626,9 @@ function buildAdvancementContext(event, competition, homeTeam, awayTeam, homeCon
       awayNeed: '输球出局，开局容错率很低。',
       bracketOpponentStrength: round(maxOpponentStrength, 1),
       nextOpponentPool: path?.nextOpponentPool ?? [],
-      summary: `32强淘汰赛：输球即出局；晋级后潜在对手 ${opponentText}，对手池最高强度 ${round(maxOpponentStrength, 1)}。模型降低无意义大胜，保留一球差和2-3球区间。`,
+      summary: `${knockoutStageLabel}：输球即出局；晋级后潜在对手 ${opponentText}，对手池最高强度 ${round(maxOpponentStrength, 1)}。模型计入90分钟僵持、加时牵引和后段风险，但不把加时与点球计入赛果。`,
       homeGoalDiffDelta: 0,
-      totalGoalsDelta: maxOpponentStrength >= 70 ? -0.06 : -0.03,
+      totalGoalsDelta: maxOpponentStrength >= 70 || stage === 'final' ? -0.06 : stage === 'semifinals' || stage === 'quarterfinals' ? -0.05 : -0.03,
       riskDelta: opponentPressure,
       confidenceDelta: -2,
     }
