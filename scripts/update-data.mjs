@@ -50,6 +50,8 @@ let activeModelCalibration = {
   favoriteCleanSheetReorder: 0,
 }
 
+let regulationScoreOverrides = new Map()
+
 const indoorStadiums = new Set(['AT&T Stadium', 'Mercedes-Benz Stadium', 'SoFi Stadium', 'BC Place', 'State Farm Stadium'])
 
 const teamNewsAliasMap = new Map([
@@ -66,15 +68,25 @@ const verifiedAvailabilityOverrides = new Map([
   [
     'England',
     {
-      effectiveThrough: '2026-07-12T06:00:00Z',
-      riskFloor: 26,
-      headline: '英格兰赛前可用性更新：Quansah停赛、Henderson缺阵，Rice/Guehi/James已恢复合练并可供选择',
-      note: 'Quansah停赛、Henderson缺阵；Rice、Guehi、James已恢复合练，核心阵容风险较前一版下降，但后防轮换仍需临场确认。',
-      sourceUrl: 'https://www.rotowire.com/betting/soccer/game/norway-vs-england-odds-2026-07-11-2608357',
+      effectiveThrough: '2026-07-16T05:00:00Z',
+      riskFloor: 24,
+      headline: '英格兰半决赛可用性更新：Quansah确认停赛；Henderson已回到比赛名单，Reece James已复出',
+      note: 'Quansah两场禁赛覆盖半决赛；Henderson已在对挪威时回到替补席，Reece James也已替补复出。英格兰仍少一名后防轮换，但不再把Henderson和James按缺阵处理。',
+      sourceUrl: 'https://www.aljazeera.com/sports/2026/7/9/englands-quansah-banned-for-two-matches-after-world-cup-last-16-red-card',
       items: [
-        { player: 'Jarell Quansah', status: '停赛', detail: '红牌后两场停赛' },
-        { player: 'Jordan Henderson', status: '缺阵', detail: '前臂手术，世界杯余下比赛缺阵' },
+        { player: 'Jarell Quansah', status: '确认停赛', detail: '红牌后两场停赛，第二场为半决赛' },
       ],
+    },
+  ],
+  [
+    'France',
+    {
+      effectiveThrough: '2026-07-15T05:00:00Z',
+      riskFloor: 24,
+      headline: '法国半决赛可用性更新：Tchouaméni大腿伤势仍需确认，Manu Koné已连续首发承担中场职责',
+      note: 'Tchouaméni此前因大腿伤缺席淘汰赛，半决赛能否回归仍需临场确认；Manu Koné已形成可用替代方案，因此只做中低幅度风险修正。',
+      sourceUrl: 'https://www.fifa.com/fr/tournaments/mens/worldcup/canadamexicousa2026/articles/manu-kone-parti-pour-durer-france',
+      items: [{ player: 'Aurélien Tchouaméni', status: '出战存疑', detail: '大腿伤恢复中，半决赛前需确认' }],
     },
   ],
   [
@@ -144,6 +156,21 @@ const countryProfiles = new Map([
 ])
 
 const worldCupHistoryProfiles = new Map([
+  [
+    'Argentina',
+    {
+      zhName: '阿根廷',
+      appearances: 19,
+      titles: 3,
+      finals: 6,
+      semifinals: 6,
+      quarterfinals: 11,
+      knockoutRunsSince2002: 5,
+      bestFinish: '1978、1986、2022 冠军',
+      recentBest: '2014 亚军、2022 冠军',
+      score: 90,
+    },
+  ],
   [
     'England',
     {
@@ -452,6 +479,7 @@ async function main() {
   ])
   const scoreboards = await Promise.all(scoreboardDates.map(fetchScoreboard))
   const events = dedupeEvents(scoreboards.flatMap((board) => board.events))
+  regulationScoreOverrides = buildRegulationScoreOverrides(events)
   const tournamentRecords = buildTournamentRecords(events)
   const groupStandings = buildGroupStandings(events)
   const knockoutPaths = buildKnockoutPaths(events, tournamentRecords)
@@ -942,8 +970,9 @@ function buildTournamentRecords(events) {
     const competitors = event.competitions?.[0]?.competitors ?? []
     const home = competitors.find((item) => item.homeAway === 'home') ?? competitors[0] ?? {}
     const away = competitors.find((item) => item.homeAway === 'away') ?? competitors[1] ?? {}
-    const homeScore = readScore(home.score)
-    const awayScore = readScore(away.score)
+    const regulationScore = regulationScoreForEvent(event)
+    const homeScore = regulationScore?.home ?? null
+    const awayScore = regulationScore?.away ?? null
 
     if (homeScore === null || awayScore === null) continue
 
@@ -1301,8 +1330,9 @@ function completedEventsForReview(events, predictionHistory = null) {
       const competitors = event.competitions?.[0]?.competitors ?? []
       const home = competitors.find((item) => item.homeAway === 'home') ?? competitors[0] ?? {}
       const away = competitors.find((item) => item.homeAway === 'away') ?? competitors[1] ?? {}
-      const homeScore = readScore(home.score)
-      const awayScore = readScore(away.score)
+      const regulationScore = regulationScoreForEvent(event)
+      const homeScore = regulationScore?.home ?? null
+      const awayScore = regulationScore?.away ?? null
       const homeName = teamNames.get(teamName(home)) ?? teamName(home)
       const awayName = teamNames.get(teamName(away)) ?? teamName(away)
       const competition = event.competitions?.[0] ?? {}
@@ -1318,6 +1348,7 @@ function completedEventsForReview(events, predictionHistory = null) {
         home: homeName,
         away: awayName,
         score: `${homeScore}-${awayScore}`,
+        scoreBasis: regulationScore?.corrected ? '90分钟含补时（已剔除加时/点球）' : '90分钟含补时',
         totalGoals: homeScore + awayScore,
         result: scoreResult(homeScore, awayScore),
         prediction: buildCompletedPredictionSample(event, home, away, homeScore, awayScore, predictionHistory),
@@ -1407,6 +1438,7 @@ function buildModelReview(completedMatches) {
       favoritesConverted,
       favoriteConcededWins,
       favoriteCleanSheetUnderweighted,
+      regulationScoreCorrections: regulationScoreOverrides.size,
       resultAccuracy: round(favoriteHitRate, 4),
       topScoreAccuracy: round(topScoreHitRate, 4),
       top3ScoreAccuracy: round(top3ScoreHitRate, 4),
@@ -1447,6 +1479,9 @@ function buildModelReview(completedMatches) {
       favoriteCleanSheetUnderweighted >= 1
         ? `近期有 ${favoriteCleanSheetUnderweighted} 场方向命中但弱队进球被高估；小球盘口占优时，把 2-0 与 3-0 的零封路径排到同档带球胜之前。`
         : '近期未出现明显的弱队进球高估，零封与双方进球路径维持原权重。',
+      regulationScoreOverrides.size > 0
+        ? `已将 ${regulationScoreOverrides.size} 场加时/点球淘汰赛重建为90分钟含补时比分，赛后标签、本届战绩和近5场不再混入加时进球。`
+        : '当前已完赛样本没有需要剔除的加时或点球进球。',
       recentKnockoutNonDraws >= 3
         ? '最近三场淘汰赛90分钟均分出胜负，平局仍要防，但热门或准主场方的控场胜权重上调。'
         : '淘汰赛仍保留加时点球牵引，实力接近场继续防 0-0 / 1-1。',
@@ -2039,6 +2074,91 @@ function isCompletedEvent(event) {
   return /post|final|ft|full/.test(status)
 }
 
+function buildRegulationScoreOverrides(events) {
+  const overrides = new Map()
+
+  for (const event of events) {
+    if (!isCompletedEvent(event) || !isExtraTimeOrPenaltiesEvent(event)) continue
+    const reconstructed = reconstructRegulationScore(event)
+    if (reconstructed) overrides.set(String(event.id), reconstructed)
+  }
+
+  return overrides
+}
+
+function isExtraTimeOrPenaltiesEvent(event) {
+  const status = [
+    event.status?.type?.name,
+    event.status?.type?.description,
+    event.status?.type?.detail,
+    event.status?.type?.shortDetail,
+  ]
+    .filter(Boolean)
+    .join(' ')
+    .toLowerCase()
+
+  return Number(event.status?.period ?? 0) > 2 || /aet|after extra time|penalt|shootout/.test(status)
+}
+
+function reconstructRegulationScore(event) {
+  const competition = event.competitions?.[0] ?? {}
+  const competitors = competition.competitors ?? []
+  const home = competitors.find((item) => item.homeAway === 'home') ?? competitors[0]
+  const away = competitors.find((item) => item.homeAway === 'away') ?? competitors[1]
+  const homeId = String(home?.team?.id ?? '')
+  const awayId = String(away?.team?.id ?? '')
+  const details = competition.details
+
+  if (!home || !away || !Array.isArray(details)) return null
+
+  let homeGoals = 0
+  let awayGoals = 0
+  let recognizedGoals = 0
+
+  for (const detail of details) {
+    if (!detail?.scoringPlay || detail?.shootout || !isRegulationScoringPlay(detail)) continue
+    const value = Number(detail.scoreValue ?? 1)
+    const teamId = String(detail.team?.id ?? '')
+    if (!Number.isFinite(value) || value <= 0) continue
+
+    if (teamId === homeId) homeGoals += value
+    else if (teamId === awayId) awayGoals += value
+    else continue
+    recognizedGoals += value
+  }
+
+  const finalHome = readScore(home.score)
+  const finalAway = readScore(away.score)
+  if (recognizedGoals === 0 && (finalHome !== 0 || finalAway !== 0)) return null
+
+  return { home: homeGoals, away: awayGoals, corrected: true }
+}
+
+function isRegulationScoringPlay(detail) {
+  const display = String(detail?.clock?.displayValue ?? '').replace(/[’`]/g, "'")
+  if (/^(45|90)\s*'?\s*\+\s*\d+/.test(display)) return true
+
+  const minute = Number(display.match(/\d+/)?.[0])
+  if (Number.isFinite(minute)) return minute <= 90
+
+  const clockSeconds = Number(detail?.clock?.value)
+  return Number.isFinite(clockSeconds) && clockSeconds <= 90 * 60
+}
+
+function regulationScoreForEvent(event) {
+  const override = regulationScoreOverrides.get(String(event.id))
+  if (override) return override
+
+  const competitors = event.competitions?.[0]?.competitors ?? []
+  const home = competitors.find((item) => item.homeAway === 'home') ?? competitors[0] ?? {}
+  const away = competitors.find((item) => item.homeAway === 'away') ?? competitors[1] ?? {}
+  const homeScore = readScore(home.score)
+  const awayScore = readScore(away.score)
+  if (homeScore === null || awayScore === null) return null
+
+  return { home: homeScore, away: awayScore, corrected: false }
+}
+
 function isPreMatchEvent(event) {
   const status = String(
     event.status?.type?.state ?? event.status?.type?.name ?? event.status?.type?.description ?? event.status?.type?.shortDetail ?? '',
@@ -2131,7 +2251,7 @@ async function fetchTeamRecentContext(team, kickoffUtc) {
     const recentMatches = (data.events ?? [])
       .map((event) => normalizeRecentMatch(event, team, cutoff))
       .filter(Boolean)
-      .sort((left, right) => new Date(right.date).getTime() - new Date(left.date).getTime())
+      .sort((left, right) => new Date(right.dateUtc).getTime() - new Date(left.dateUtc).getTime())
       .slice(0, 5)
     const formLetters = recentMatches.map((match) => match.result).join('') || team.form || ''
     const wins = recentMatches.filter((match) => match.result === 'W').length
@@ -2176,9 +2296,10 @@ function normalizeRecentMatch(event, team, cutoff) {
   const competitors = event.competitions?.[0]?.competitors ?? []
   const own = competitors.find((item) => String(item.team?.id) === String(team.id) || item.team?.displayName === team.name)
   const opponent = competitors.find((item) => item !== own)
-  const ownScore = readScore(own?.score)
-  const opponentScore = readScore(opponent?.score)
-  if (!own || !opponent || ownScore === null || opponentScore === null) return null
+  const regulationScore = regulationScoreForEvent(event)
+  const ownScore = own?.homeAway === 'home' ? regulationScore?.home : regulationScore?.away
+  const opponentScore = opponent?.homeAway === 'home' ? regulationScore?.home : regulationScore?.away
+  if (!own || !opponent || !Number.isFinite(ownScore) || !Number.isFinite(opponentScore)) return null
 
   const result = ownScore > opponentScore ? 'W' : ownScore < opponentScore ? 'L' : 'D'
   const homeAway = own.homeAway === 'home' ? '主' : own.homeAway === 'away' ? '客' : '中'
