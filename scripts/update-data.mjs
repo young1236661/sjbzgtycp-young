@@ -70,9 +70,9 @@ const verifiedAvailabilityOverrides = new Map([
     {
       effectiveThrough: '2026-07-16T05:00:00Z',
       riskFloor: 24,
-      headline: '英格兰半决赛可用性更新：Quansah确认停赛；Henderson已回到比赛名单，Reece James已复出',
-      note: 'Quansah两场禁赛覆盖半决赛；Henderson已在对挪威时回到替补席，Reece James也已替补复出。英格兰仍少一名后防轮换，但不再把Henderson和James按缺阵处理。',
-      sourceUrl: 'https://www.aljazeera.com/sports/2026/7/9/englands-quansah-banned-for-two-matches-after-world-cup-last-16-red-card',
+      headline: '英格兰半决赛可用性更新：Quansah确认停赛；Rice预计克服生病首发，Konsa、Henderson和James均可进入选择范围',
+      note: 'Quansah两场禁赛覆盖半决赛；Rice状态明显好转并预计首发，Konsa抽筋后仍有望出战，Henderson和Reece James已回到比赛名单。英格兰仍少一名后防轮换，但不把恢复球员按确认缺阵处理。',
+      sourceUrl: 'https://www.theguardian.com/football/2026/jul/13/england-declan-rice-winning-fitness-battle-argentina-world-cup',
       items: [
         { player: 'Jarell Quansah', status: '确认停赛', detail: '红牌后两场停赛，第二场为半决赛' },
       ],
@@ -82,11 +82,11 @@ const verifiedAvailabilityOverrides = new Map([
     'France',
     {
       effectiveThrough: '2026-07-15T05:00:00Z',
-      riskFloor: 24,
-      headline: '法国半决赛可用性更新：Tchouaméni大腿伤势仍需确认，Manu Koné已连续首发承担中场职责',
-      note: 'Tchouaméni此前因大腿伤缺席淘汰赛，半决赛能否回归仍需临场确认；Manu Koné已形成可用替代方案，因此只做中低幅度风险修正。',
-      sourceUrl: 'https://www.fifa.com/fr/tournaments/mens/worldcup/canadamexicousa2026/articles/manu-kone-parti-pour-durer-france',
-      items: [{ player: 'Aurélien Tchouaméni', status: '出战存疑', detail: '大腿伤恢复中，半决赛前需确认' }],
+      riskFloor: 8,
+      headline: '法国半决赛可用性更新：Tchouaméni与Mbappé均已正常合练，预计可以出战西班牙',
+      note: 'Tchouaméni已正常参加合练并倾向回到首发，Mbappé也被确认身体无碍；只保留伤后负荷的轻微风险，不再按出战存疑处理。',
+      sourceUrl: 'https://as.com/futbol/mundial/dos-ausencias-en-francia-mbappe-y-tchouameni-ok-f202607-n/',
+      items: [],
     },
   ],
   [
@@ -477,7 +477,12 @@ async function main() {
     ...dateKeysBetween(TOURNAMENT_START_DATE, formatDateKey(now, 0, '-')),
     ...[-1, 0, 1, 2].map((offset) => formatDateKey(now, offset, '')),
   ])
-  const scoreboards = await Promise.all(scoreboardDates.map(fetchScoreboard))
+  const scoreboards = await mapWithConcurrency(scoreboardDates, 4, fetchScoreboard)
+  const failedScoreboards = scoreboards.filter((board) => board.source.status !== 'ok')
+  if (failedScoreboards.length > 0) {
+    const failedDates = failedScoreboards.map((board) => board.source.id.replace('espn-scoreboard-', '')).join(', ')
+    throw new Error(`Scoreboard refresh incomplete after retries (${failedDates}); keeping the previous complete dataset.`)
+  }
   const events = dedupeEvents(scoreboards.flatMap((board) => board.events))
   regulationScoreOverrides = buildRegulationScoreOverrides(events)
   const tournamentRecords = buildTournamentRecords(events)
@@ -592,31 +597,38 @@ async function main() {
 
 async function fetchScoreboard(dateKey) {
   const url = `${SCOREBOARD_URL}?dates=${dateKey}`
-  try {
-    const data = await fetchJson(url)
-    return {
-      events: data.events ?? [],
-      source: {
-        id: `espn-scoreboard-${dateKey}`,
-        name: `ESPN 赛程 ${dateKey}`,
-        status: 'ok',
-        url,
-        lastCheckedAt: checkedAt,
-        detail: `${data.events?.length ?? 0} 场比赛`,
-      },
+  let lastError
+
+  for (let attempt = 1; attempt <= 3; attempt += 1) {
+    try {
+      const data = await fetchJson(url)
+      return {
+        events: data.events ?? [],
+        source: {
+          id: `espn-scoreboard-${dateKey}`,
+          name: `ESPN 赛程 ${dateKey}`,
+          status: 'ok',
+          url,
+          lastCheckedAt: checkedAt,
+          detail: `${data.events?.length ?? 0} 场比赛${attempt > 1 ? `，第 ${attempt} 次请求成功` : ''}`,
+        },
+      }
+    } catch (error) {
+      lastError = error
+      if (attempt < 3) await delay(350 * attempt)
     }
-  } catch (error) {
-    return {
-      events: [],
-      source: {
-        id: `espn-scoreboard-${dateKey}`,
-        name: `ESPN 赛程 ${dateKey}`,
-        status: 'error',
-        url,
-        lastCheckedAt: checkedAt,
-        detail: shortError(error),
-      },
-    }
+  }
+
+  return {
+    events: [],
+    source: {
+      id: `espn-scoreboard-${dateKey}`,
+      name: `ESPN 赛程 ${dateKey}`,
+      status: 'error',
+      url,
+      lastCheckedAt: checkedAt,
+      detail: shortError(lastError),
+    },
   }
 }
 
@@ -2343,19 +2355,13 @@ async function fetchTeamInjuryContext(team, newsItems, kickoffUtc) {
       return aliases.some((alias) => alias && text.includes(alias))
     })
     .slice(0, 2)
-  const newsRisk = relatedNews.some((item) => hasNewsRisk(`${item.title} ${item.summary}`))
-  const disciplineRisk = relatedNews.some((item) => DISCIPLINE_RISK_PATTERN.test(`${item.title} ${item.summary}`))
   const verified = verifiedAvailabilityForTeam(team, kickoffUtc)
 
   try {
     const data = await fetchJson(url)
     contextStats.injuriesOk += 1
     const items = [...extractInjuryItems(data), ...(verified?.items ?? [])].slice(0, 5)
-    const riskScore = clamp(
-      Math.max(items.length * 18 + (newsRisk ? 16 : 0) + (disciplineRisk ? 10 : 0), verified?.riskFloor ?? 0),
-      0,
-      78,
-    )
+    const riskScore = clamp(Math.max(items.length * 18, verified?.riskFloor ?? 0), 0, 78)
 
     return {
       status: items.length > 0 ? `${items.length} 条伤病/出战信息` : 'ESPN 未列出明确伤病',
@@ -2366,20 +2372,16 @@ async function fetchTeamInjuryContext(team, newsItems, kickoffUtc) {
         verified?.note ??
         (items.length > 0
           ? items.slice(0, 2).map((item) => `${item.player} ${item.status}`).join('；')
-          : newsRisk
-            ? disciplineRisk
-              ? '新闻出现黄牌/纪律或轮换风险词，需等首发确认。'
-              : '新闻出现阵容风险词，需等首发确认。'
-            : '公开伤病源未给出明确缺阵，仍需赛前首发核验。'),
+          : '公开伤病源未给出明确缺阵；新闻关键词只作提醒，不计入数值伤停分，仍需赛前首发核验。'),
       sourceUrl: verified?.sourceUrl ?? url,
     }
   } catch (error) {
     return {
       status: '伤病接口不可用',
-      riskScore: Math.max(newsRisk ? 42 : 20, verified?.riskFloor ?? 0),
+      riskScore: Math.max(20, verified?.riskFloor ?? 0),
       items: verified?.items ?? [],
       relatedNews: [...relatedNews.map((item) => item.title), ...(verified?.headline ? [verified.headline] : [])],
-      note: verified?.note ?? `伤病接口失败：${shortError(error)}；按新闻风险词保守处理。`,
+      note: verified?.note ?? `伤病接口失败：${shortError(error)}；保留接口缺失基线，新闻关键词只作提醒。`,
       sourceUrl: verified?.sourceUrl ?? url,
     }
   }
@@ -3561,8 +3563,7 @@ function buildProfessionalBrief(market, homeTeam, awayTeam, judgement, scoreline
   const resultProbabilities = scoreline.resultProbabilities
   const marketLeader = [...resultProbabilities].sort((left, right) => right.probability - left.probability)[0]
   const bestScore = scoreline.bestPick
-  const resultSide = bestScore.result === '主胜' ? 'home' : bestScore.result === '客胜' ? 'away' : 'draw'
-  const resultDirection = resultProbabilities.find((item) => item.side === resultSide) ?? marketLeader
+  const resultDirection = marketLeader
   const directionFairOdds = resultDirection?.probability ? 1 / resultDirection.probability : null
   const directionSuggestedMinOdds = directionFairOdds ? round(directionFairOdds * (1.04 + judgement.risk / 900), 2) : null
   const scoreConcentration = bestScore.probability * 100
@@ -5986,6 +5987,27 @@ async function fetchJson(url, init) {
     throw new Error(`HTTP ${response.status}`)
   }
   return response.json()
+}
+
+async function mapWithConcurrency(items, limit, mapper) {
+  const results = new Array(items.length)
+  let nextIndex = 0
+
+  async function worker() {
+    while (nextIndex < items.length) {
+      const index = nextIndex
+      nextIndex += 1
+      results[index] = await mapper(items[index], index)
+    }
+  }
+
+  const workerCount = Math.min(Math.max(1, limit), items.length)
+  await Promise.all(Array.from({ length: workerCount }, () => worker()))
+  return results
+}
+
+function delay(milliseconds) {
+  return new Promise((resolveDelay) => setTimeout(resolveDelay, milliseconds))
 }
 
 async function fetchWithTimeout(url, init = {}) {
