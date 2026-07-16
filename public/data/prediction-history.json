@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-14T04:56:04.734Z",
-  "count": 63,
+  "updatedAt": "2026-07-16T13:21:12.113Z",
+  "count": 65,
   "predictions": {
     "760449": {
       "matchId": "760449",
@@ -3908,6 +3908,130 @@
         }
       ],
       "simulationSummary": "10,000次90分钟含补时进程模拟：主胜 44%；最密比分 1-1 14% / 1-0 13% / 0-0 10%；总进球最集中 2球 27%；76分钟后仍有进球 50%，前30分钟无进球 66%。"
+    },
+    "760516": {
+      "matchId": "760516",
+      "createdAt": "2026-07-16T02:40:38.681Z",
+      "sourceCommit": "current-update",
+      "kickoffUtc": "2026-07-18T21:00Z",
+      "kickoffChina": "07/19 05:00",
+      "home": "法国",
+      "away": "英格兰",
+      "marketDirection": "法国 主胜",
+      "recommendedScore": "2-1（主胜）",
+      "secondaryScores": [
+        "3-1（主胜）",
+        "2-0（主胜）",
+        "1-0（主胜）"
+      ],
+      "totalGoals": "总进球 2/3/4",
+      "topScores": [
+        {
+          "score": "2-1",
+          "result": "主胜",
+          "probability": 0.1063
+        },
+        {
+          "score": "3-1",
+          "result": "主胜",
+          "probability": 0.0812
+        },
+        {
+          "score": "2-0",
+          "result": "主胜",
+          "probability": 0.0824
+        },
+        {
+          "score": "1-0",
+          "result": "主胜",
+          "probability": 0.0736
+        },
+        {
+          "score": "1-1",
+          "result": "平局",
+          "probability": 0.0921
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "法国",
+          "side": "home",
+          "probability": 0.4805
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.2563
+        },
+        {
+          "label": "英格兰",
+          "side": "away",
+          "probability": 0.2633
+        }
+      ],
+      "simulationSummary": "10,000次90分钟含补时进程模拟：主胜 52%；最密比分 1-1 10% / 2-1 10% / 1-0 9%；总进球最集中 3球 22%；76分钟后仍有进球 52%，前30分钟无进球 45%。"
+    },
+    "760517": {
+      "matchId": "760517",
+      "createdAt": "2026-07-16T02:40:38.681Z",
+      "sourceCommit": "current-update",
+      "kickoffUtc": "2026-07-19T19:00Z",
+      "kickoffChina": "07/20 03:00",
+      "home": "西班牙",
+      "away": "阿根廷",
+      "marketDirection": "西班牙 主胜",
+      "recommendedScore": "0-0（平局）",
+      "secondaryScores": [
+        "1-1（平局）",
+        "1-0（主胜）",
+        "2-1（主胜）"
+      ],
+      "totalGoals": "总进球 1/2",
+      "topScores": [
+        {
+          "score": "0-0",
+          "result": "平局",
+          "probability": 0.2091
+        },
+        {
+          "score": "1-1",
+          "result": "平局",
+          "probability": 0.1786
+        },
+        {
+          "score": "1-0",
+          "result": "主胜",
+          "probability": 0.182
+        },
+        {
+          "score": "2-1",
+          "result": "主胜",
+          "probability": 0.081
+        },
+        {
+          "score": "0-1",
+          "result": "客胜",
+          "probability": 0.0868
+        }
+      ],
+      "resultProbabilities": [
+        {
+          "label": "西班牙",
+          "side": "home",
+          "probability": 0.4119
+        },
+        {
+          "label": "平局",
+          "side": "draw",
+          "probability": 0.3212
+        },
+        {
+          "label": "阿根廷",
+          "side": "away",
+          "probability": 0.2669
+        }
+      ],
+      "simulationSummary": "10,000次90分钟含补时进程模拟：主胜 46%；最密比分 1-0 18% / 0-0 15% / 1-1 14%；总进球最集中 1球 28%；76分钟后仍有进球 43%，前30分钟无进球 69%。"
     }
   }
 }

@@ -13,6 +13,10 @@ const ODDS_API_SPORT = 'soccer_fifa_world_cup'
 const HISTORY_SOURCE_URL = 'https://www.fifa.com/en/tournaments/mens/worldcup'
 const PREDICTION_HISTORY_PATH = 'public/data/prediction-history.json'
 const MONTE_CARLO_RUNS = 10000
+const UPCOMING_WINDOW_HOURS = 54
+const MIN_TRACKED_MATCHES = 2
+const FUTURE_SCOREBOARD_DAYS = 5
+const SCORE_CONSENSUS_ALIGNMENT_MARGIN = 0.01
 const REGULATION_SCOPE = '90分钟常规时间 + 上下半场补时，不含加时赛和点球大战'
 const REGULATION_SCOPE_SHORT = '90分钟含补时'
 const TEAM_SCHEDULE_URL = 'https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams'
@@ -48,6 +52,7 @@ let activeModelCalibration = {
   underdogMultiGoalGuard: 0,
   zeroGoalTotalGuard: 0,
   favoriteCleanSheetReorder: 0,
+  lateKnockoutDrawOvercall: 0,
 }
 
 let regulationScoreOverrides = new Map()
@@ -90,6 +95,17 @@ const verifiedAvailabilityOverrides = new Map([
     },
   ],
   [
+    'Spain',
+    {
+      effectiveThrough: '2026-07-20T00:30:00Z',
+      riskFloor: 6,
+      headline: '西班牙决赛可用性更新：Lamine Yamal与Pedro Porro赛后均确认可以出战阿根廷',
+      note: 'Yamal离场时一度跛行但随后状态正常；Porro为负荷过高并非确认伤缺，主教练预计其可以参加决赛。保留轻微负荷风险，不按缺阵处理。',
+      sourceUrl: 'https://cadenaser.com/nacional/2026/07/14/tranquilidad-total-con-lamine-yamal-y-pedro-porro-ambos-estan-bien-y-podran-jugar-la-final-del-mundial-2026-cadena-ser/',
+      items: [],
+    },
+  ],
+  [
     'Switzerland',
     {
       effectiveThrough: '2026-07-12T10:30:00Z',
@@ -108,6 +124,7 @@ const knockoutStageLabels = new Map([
   ['quarterfinals', '四分之一决赛'],
   ['semifinals', '半决赛'],
   ['third-place', '三四名决赛'],
+  ['3rd-place-match', '三四名决赛'],
   ['final', '决赛'],
 ])
 
@@ -475,7 +492,7 @@ const sources = []
 async function main() {
   const scoreboardDates = uniqueDateKeys([
     ...dateKeysBetween(TOURNAMENT_START_DATE, formatDateKey(now, 0, '-')),
-    ...[-1, 0, 1, 2].map((offset) => formatDateKey(now, offset, '')),
+    ...Array.from({ length: FUTURE_SCOREBOARD_DAYS + 2 }, (_, index) => formatDateKey(now, index - 1, '')),
   ])
   const scoreboards = await mapWithConcurrency(scoreboardDates, 4, fetchScoreboard)
   const failedScoreboards = scoreboards.filter((board) => board.source.status !== 'ok')
@@ -495,15 +512,17 @@ async function main() {
   const sportteryResult = await checkSporttery()
   const fifaResult = await checkFifa()
 
-  const upcomingWindow = events
+  const allUpcoming = events
     .filter((event) => {
       const kickoff = new Date(event.date).getTime()
-      const lower = now.getTime()
-      const upper = now.getTime() + 54 * 60 * 60 * 1000
-      return isPreMatchEvent(event) && kickoff >= lower && kickoff <= upper
+      return isPreMatchEvent(event) && kickoff >= now.getTime()
     })
     .sort((left, right) => new Date(left.date).getTime() - new Date(right.date).getTime())
-    .slice(0, 8)
+  const nearTermWindow = allUpcoming.filter(
+    (event) => new Date(event.date).getTime() <= now.getTime() + UPCOMING_WINDOW_HOURS * 60 * 60 * 1000,
+  )
+  const upcomingWindow = (nearTermWindow.length >= MIN_TRACKED_MATCHES ? nearTermWindow : allUpcoming)
+    .slice(0, Math.max(MIN_TRACKED_MATCHES, nearTermWindow.length))
   const recentCompleted = completedEventsForReview(events, predictionHistory)
   const modelReview = buildModelReview(recentCompleted)
   activeModelCalibration = modelReview.calibration
@@ -548,8 +567,8 @@ async function main() {
     summary: {
       headline:
         matches.length > 0
-          ? `未来 54 小时跟踪 ${matches.length} 场世界杯比赛`
-          : '未来 54 小时暂无可解析比赛',
+          ? `跟踪未来最近 ${matches.length} 场世界杯比赛`
+          : '未来暂无可解析比赛',
       note:
         '系统将公开赛程、新闻和海外市场赔率转为概率视图，再给出谨慎的体彩核验方向。所有判断只作信息分析，不保证盈利。',
       predictionScope: REGULATION_SCOPE,
@@ -1405,6 +1424,9 @@ function buildModelReview(completedMatches) {
   const drawMatches = scoredMatches.filter((match) => match.result === '平局').length
   const recentThree = completedMatches.slice(0, 3)
   const recentKnockoutNonDraws = recentThree.filter((match) => match.result !== '平局').length
+  const recentPredictionSamples = predictionSamples.slice(0, 4)
+  const recentPredictedDraws = recentPredictionSamples.filter((match) => match.prediction.predictedResult === '平局')
+  const recentDrawOvercalls = recentPredictedDraws.filter((match) => match.result !== '平局')
   const goalAverage =
     scoredMatches.length > 0 ? round(scoredMatches.reduce((sum, match) => sum + match.totalGoals, 0) / scoredMatches.length, 2) : 0
   const resultHits = predictionSamples.filter((match) => match.prediction.predictedResult === match.result).length
@@ -1450,6 +1472,8 @@ function buildModelReview(completedMatches) {
       favoritesConverted,
       favoriteConcededWins,
       favoriteCleanSheetUnderweighted,
+      recentPredictedDraws: recentPredictedDraws.length,
+      recentDrawOvercalls: recentDrawOvercalls.length,
       regulationScoreCorrections: regulationScoreOverrides.size,
       resultAccuracy: round(favoriteHitRate, 4),
       topScoreAccuracy: round(topScoreHitRate, 4),
@@ -1497,6 +1521,9 @@ function buildModelReview(completedMatches) {
       recentKnockoutNonDraws >= 3
         ? '最近三场淘汰赛90分钟均分出胜负，平局仍要防，但热门或准主场方的控场胜权重上调。'
         : '淘汰赛仍保留加时点球牵引，实力接近场继续防 0-0 / 1-1。',
+      recentDrawOvercalls.length >= 2
+        ? `最近 ${recentPredictedDraws.length} 次平局主判中有 ${recentDrawOvercalls.length} 次在90分钟分出胜负；本轮平局仍保留，但不再让单一 0-0 / 1-1 压过盘口与模拟共同支持的一球胜。`
+        : '近期平局主判没有连续误报，维持原有低比分平局防守权重。',
       ...trainingAdvice,
       ...reflection.modelChanges,
       '新增历届世界杯底蕴层：冠军、四强、八强和近代淘汰赛经验只做低权重加成，用来修正抗压与临场执行，不覆盖当前赔率和近况。',
@@ -1520,6 +1547,7 @@ function buildModelReview(completedMatches) {
       underdogMultiGoalGuard: reflectionPatterns.has('热门赢球时弱队可能进两球') ? 1 : 0,
       zeroGoalTotalGuard: reflectionPatterns.has('低总进球区间必须覆盖0球') ? 1 : 0,
       favoriteCleanSheetReorder: favoriteCleanSheetUnderweighted >= 1 ? 1 : 0,
+      lateKnockoutDrawOvercall: recentPredictedDraws.length >= 2 && recentDrawOvercalls.length >= 2 ? 1 : 0,
     },
   }
 }
@@ -1733,6 +1761,7 @@ function buildPredictionReflection(predictionSamples) {
       })),
     modelChanges: [
       '复盘后新增三模型一致性实验：盘口方向、Poisson比分方向、1万次蒙特卡洛方向不一致时自动扣分并降低投注等级。',
+      '最新半决赛复盘后，首选比分改为55%校准Poisson与45%一万次进程模拟融合，单一0-0/1-1不再凭一个分布直接置顶。',
       '复盘后降低单点比分权重：比分首选不再作为重仓依据，必须与前三比分和总进球区间交叉确认。',
       '复盘后强化弱队一球路径：热门胜出时不机械零封，把 2-1 / 3-1 与 2-0 / 3-0 成对比较。',
       '复盘后把平局从“猜中高赔率”的诱惑改成防守层：只有盘口、总进球和模拟同时支持才升级为主方向。',
@@ -2726,6 +2755,33 @@ function buildAdvancementContext(event, competition, homeTeam, awayTeam, homeCon
   const stage = event.season?.slug ?? 'unknown'
   const stageLabel = competition.altGameNote ?? event.season?.type?.name ?? 'FIFA World Cup'
 
+  if (stage === 'third-place' || stage === '3rd-place-match') {
+    const matchup = new Set([homeTeam.name, awayTeam.name])
+    const motivationNote =
+      matchup.has('France') && matchup.has('England')
+        ? '法国有德尚国家队告别战与姆巴佩金靴竞争，英格兰有单届胜场和贝林厄姆个人纪录动机。'
+        : '双方仍有领奖台和个人荣誉动机。'
+    return {
+      stage,
+      stageLabel: '三四名决赛',
+      pressureType: 'placement',
+      pressureScore: 64,
+      pressureLevel: '中',
+      homePressure: 62,
+      awayPressure: 64,
+      homeNeed: '无晋级压力，但需平衡荣誉、个人奖项与轮换。',
+      awayNeed: '无晋级压力，但需平衡荣誉、个人奖项与轮换。',
+      bracketOpponentStrength: null,
+      nextOpponentPool: [],
+      summary: `三四名决赛没有晋级压力，轮换和失利后的心理波动高于普通淘汰赛，节奏通常更开放。${motivationNote}`,
+      sourceUrl: 'https://www.foxsports.com/stories/soccer/2026-world-cup-third-place-odds-france-england',
+      homeGoalDiffDelta: 0,
+      totalGoalsDelta: 0.08,
+      riskDelta: 6,
+      confidenceDelta: -4,
+    }
+  }
+
   if (knockoutStageLabels.has(stage)) {
     const path = knockoutPaths.get(String(event.id))
     const maxOpponentStrength = path?.maxOpponentStrength ?? 52
@@ -3402,18 +3458,14 @@ function buildScorelineAnalysis(market, homeTeam, awayTeam, judgement, newsItems
     平局: drawProbability,
     客胜: awayProbability,
   }
-  const candidates = allScores
+  const candidatePool = allScores
     .filter((item) => item.probability >= 0.018)
     .sort(
       (left, right) =>
         scoreCandidateRank(right, resultStrength, context, totalExpectedGoals, market) -
         scoreCandidateRank(left, resultStrength, context, totalExpectedGoals, market),
     )
-    .slice(0, 9)
-    .map((item, index) => ({
-      ...item,
-      grade: index === 0 ? '首选核验' : '备选',
-    }))
+    .slice(0, 12)
 
   const avoid = allScores
     .filter((item) => item.probability < 0.014 && item.fairOdds > 70)
@@ -3433,6 +3485,48 @@ function buildScorelineAnalysis(market, homeTeam, awayTeam, judgement, newsItems
     totalExpectedGoals,
     context,
   })
+  const simulationScoreBook = new Map(
+    (simulation.scoreDistribution ?? simulation.topScores ?? []).map((item) => [item.score, item.probability]),
+  )
+  const rankedCandidates = candidatePool
+    .map((item) => {
+      const simulationProbability = simulationScoreBook.get(item.score) ?? 0
+      const consensusProbability = round(item.probability * 0.55 + simulationProbability * 0.45, 4)
+      const fairOdds = consensusProbability > 0 ? 1 / consensusProbability : item.fairOdds
+      return {
+        ...item,
+        poissonProbability: item.probability,
+        simulationProbability,
+        probability: consensusProbability,
+        fairOdds: round(fairOdds, 2),
+        suggestedMinOdds: round(fairOdds * uncertainty, 2),
+        expectedValueAtSuggestedOdds: round(consensusProbability * fairOdds * uncertainty - 1, 3),
+      }
+    })
+    .sort(
+      (left, right) =>
+        scoreCandidateRank(right, resultStrength, context, totalExpectedGoals, market) -
+        scoreCandidateRank(left, resultStrength, context, totalExpectedGoals, market),
+    )
+  const simulationTopScore = simulation.topScores?.[0]?.score
+  const marketLeaderSide = [...resultProbabilities].sort((left, right) => right.probability - left.probability)[0]?.side
+  const simulationAlignedIndex = rankedCandidates.findIndex(
+    (item) => item.score === simulationTopScore && sideFromResult(item.result) === marketLeaderSide,
+  )
+  if (
+    simulationAlignedIndex > 0 &&
+    rankedCandidates[0].probability - rankedCandidates[simulationAlignedIndex].probability <=
+      SCORE_CONSENSUS_ALIGNMENT_MARGIN
+  ) {
+    const [simulationAlignedCandidate] = rankedCandidates.splice(simulationAlignedIndex, 1)
+    rankedCandidates.unshift(simulationAlignedCandidate)
+  }
+  const candidates = rankedCandidates
+    .slice(0, 9)
+    .map((item, index) => ({
+      ...item,
+      grade: index === 0 ? '首选核验' : '备选',
+    }))
   const modelAgreement = buildModelAgreement({
     resultProbabilities,
     candidates,
@@ -3441,7 +3535,7 @@ function buildScorelineAnalysis(market, homeTeam, awayTeam, judgement, newsItems
   })
 
   return {
-    model: `胜平负去水概率 + 大小球盘口 + 历届世界杯低权重底蕴 + 平局压缩/抗热门校准 + Poisson 比分分布（${REGULATION_SCOPE_SHORT}）`,
+    model: `胜平负去水概率 + 大小球盘口 + 历届世界杯低权重底蕴 + 平局压缩/抗热门校准 + Poisson/1万次模拟比分共识（${REGULATION_SCOPE_SHORT}）`,
     scope: REGULATION_SCOPE,
     homeExpectedGoals,
     awayExpectedGoals,
@@ -3455,6 +3549,8 @@ function buildScorelineAnalysis(market, homeTeam, awayTeam, judgement, newsItems
     modelAgreement,
     notes: [
       `预测口径：${REGULATION_SCOPE}。`,
+      '首选比分采用55%校准Poisson概率与45%一万次比赛进程模拟概率融合，避免单一分布在低比分场过度集中。',
+      '若市场与蒙特卡洛方向一致，且对应模拟首选比分距离融合最高点不超过1个百分点，则决策层优先方向一致比分；原始概率仍完整保留。',
       '比分玩法方差很大，候选只适合小额娱乐或赛前核验。',
       `本版把总进球从基础 ${baseTotalExpectedGoals.toFixed(2)} 校准到 ${totalExpectedGoals.toFixed(2)}，并对强弱分明场景的 3+ 进球比分做尾部上调。`,
       simulation.summary,
@@ -3962,7 +4058,10 @@ function buildScenarios(scoreline, favoriteName, winnerSide, totalBand) {
     scenarios.push({
       title: '基准剧本',
       probability: formatPct(base.probability),
-      scorePath: `${favoriteName} ${winnerSide}，比分落在 ${base.score} 附近。`,
+      scorePath:
+        base.result === '平局'
+          ? `常规时间平局，比分落在 ${base.score} 附近。`
+          : `${base.result === winnerSide ? favoriteName : '非市场主方向'} ${base.result}，比分落在 ${base.score} 附近。`,
       action: `只核验 ${base.score}，不追更偏的高比分。`,
     })
   }
@@ -4117,15 +4216,25 @@ function totalGoalsBand(totalExpectedGoals, simulation = null) {
     .sort((left, right) => right.probability - left.probability)
   if (simulatedTotals.length >= 2) {
     const selected = simulatedTotals.slice(0, 2)
-    if (selected.reduce((sum, item) => sum + item.probability, 0) < 0.45 && simulatedTotals[2]) {
-      selected.push(simulatedTotals[2])
+    const zeroGoal = simulatedTotals.find((item) => Number(item.goals) === 0)
+    const includeZeroGuard =
+      activeModelCalibration.zeroGoalTotalGuard &&
+      totalExpectedGoals <= 2.45 &&
+      (zeroGoal?.probability ?? 0) >= 0.1 &&
+      !selected.some((item) => Number(item.goals) === 0)
+    if (includeZeroGuard) selected.push(zeroGoal)
+    const nextUnselected = simulatedTotals.find((item) => !selected.some((selectedItem) => selectedItem.goals === item.goals))
+    if (selected.reduce((sum, item) => sum + item.probability, 0) < 0.45 && nextUnselected) {
+      selected.push(nextUnselected)
     }
     const goals = selected.map((item) => Number(item.goals)).sort((left, right) => left - right)
     const coverage = selected.reduce((sum, item) => sum + item.probability, 0)
     return {
       selection: `总进球 ${goals.join('/')}`,
       confidence: clamp(Math.round(coverage * 100 + 12), 55, 68),
-      reason: `按1万次90分钟含补时模拟选择概率最高的${selected.length}个总进球落点，合计覆盖约 ${formatPct(coverage)}。`,
+      reason: includeZeroGuard
+        ? `按1万次90分钟含补时模拟选择主落点，并在低节奏场保留0球路径，合计覆盖约 ${formatPct(coverage)}。`
+        : `按1万次90分钟含补时模拟选择概率最高的${selected.length}个总进球落点，合计覆盖约 ${formatPct(coverage)}。`,
     }
   }
   if (activeModelCalibration.zeroGoalTotalGuard && totalExpectedGoals <= 2.45) {
@@ -4877,6 +4986,15 @@ function scoreTailMultiplier(homeGoals, awayGoals, totalExpectedGoals, resultPro
     multiplier += 0.04
   }
   if (
+    activeModelCalibration.lateKnockoutDrawOvercall &&
+    context?.advancement?.pressureType === 'knockout' &&
+    result === '平局' &&
+    totalGoals <= 2 &&
+    draw >= 0.3
+  ) {
+    multiplier -= 0.1
+  }
+  if (
     activeModelCalibration.knockoutDrawFade &&
     favoriteProbability >= 0.6 &&
     result === '平局' &&
@@ -5083,6 +5201,15 @@ function scoreCandidateRank(item, resultStrength, context = null, totalExpectedG
   }
   if (activeModelCalibration.drawGuard && item.result === scoreResult(0, 0) && totalGoals <= 2 && drawStrength >= 0.22) {
     reviewLift *= 1.04
+  }
+  if (
+    activeModelCalibration.lateKnockoutDrawOvercall &&
+    context?.advancement?.pressureType === 'knockout' &&
+    item.result === scoreResult(0, 0) &&
+    totalGoals <= 2 &&
+    drawStrength >= 0.3
+  ) {
+    reviewLift *= 0.84
   }
   if (
     activeModelCalibration.knockoutDrawFade &&
@@ -5310,9 +5437,11 @@ function simulateMatchProgress({
   const resultDistribution = mapCountsToDistribution(resultCounts, MONTE_CARLO_RUNS, {
     sideByLabel: resultSides,
   })
-  const topScores = mapCountsToDistribution(scoreCounts, MONTE_CARLO_RUNS)
-    .slice(0, 8)
-    .map((item) => ({ ...item, score: item.label }))
+  const scoreDistribution = mapCountsToDistribution(scoreCounts, MONTE_CARLO_RUNS).map((item) => ({
+    ...item,
+    score: item.label,
+  }))
+  const topScores = scoreDistribution.slice(0, 8)
   const totalGoals = mapCountsToDistribution(totalCounts, MONTE_CARLO_RUNS)
     .sort((left, right) => {
       const leftNumber = left.label === '7+' ? 7 : Number(left.label)
@@ -5345,6 +5474,7 @@ function simulateMatchProgress({
     runs: MONTE_CARLO_RUNS,
     seed,
     resultDistribution,
+    scoreDistribution,
     topScores,
     totalGoals,
     halftime: {
@@ -5364,10 +5494,14 @@ function simulateMatchProgress({
 function buildModelAgreement({ resultProbabilities, candidates, simulation, totalExpectedGoals }) {
   const marketLeader = [...resultProbabilities].sort((left, right) => right.probability - left.probability)[0] ?? null
   const marketRunnerUp = [...resultProbabilities].sort((left, right) => right.probability - left.probability)[1] ?? null
-  const poissonLeader = candidates[0] ? sideFromResult(candidates[0].result) : null
+  const poissonCandidate = [...candidates].sort(
+    (left, right) =>
+      (right.poissonProbability ?? right.probability ?? 0) - (left.poissonProbability ?? left.probability ?? 0),
+  )[0]
+  const poissonLeader = poissonCandidate ? sideFromResult(poissonCandidate.result) : null
   const simulationLeader = simulation?.resultDistribution?.[0]?.side ?? null
   const topSimulationScore = simulation?.topScores?.[0]?.score ?? ''
-  const topPoissonScore = candidates[0]?.score ?? ''
+  const topPoissonScore = poissonCandidate?.score ?? ''
   const topThreeScores = candidates.slice(0, 3).map((item) => item.score)
   const directionVotes = [marketLeader?.side, poissonLeader, simulationLeader].filter(Boolean)
   const directionAgreement = Math.max(
@@ -5426,8 +5560,8 @@ function buildModelAgreement({ resultProbabilities, candidates, simulation, tota
     poissonDirection: {
       side: poissonLeader,
       score: topPoissonScore,
-      result: candidates[0]?.result ?? null,
-      probability: candidates[0]?.probability ?? null,
+      result: poissonCandidate?.result ?? null,
+      probability: poissonCandidate?.poissonProbability ?? poissonCandidate?.probability ?? null,
     },
     simulationDirection: simulation?.resultDistribution?.[0] ?? null,
     marketGap,
