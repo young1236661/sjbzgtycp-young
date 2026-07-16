@@ -349,6 +349,14 @@
       "detail": "0 场比赛"
     },
     {
+      "id": "espn-scoreboard-20260718",
+      "name": "ESPN 赛程 20260718",
+      "status": "ok",
+      "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260718",
+      "lastCheckedAt": "2026-07-16T04:25:31.909Z",
+      "detail": "1 场比赛"
+    },
+    {
       "id": "espn-news",
       "name": "ESPN 世界杯新闻",
       "status": "ok",
@@ -375,7 +383,7 @@
     {
       "id": "espn-team-schedules",
       "name": "ESPN 球队近 5 场",
-      "status": "ok",
+      "status": "warn",
       "url": "https://www.espn.com/soccer/",
       "lastCheckedAt": "2026-07-16T13:21:12.113Z",
       "detail": "4/4 项成功"
@@ -383,7 +391,7 @@
     {
       "id": "espn-injuries",
       "name": "ESPN 伤病名单",
-      "status": "ok",
+      "status": "warn",
       "url": "https://www.espn.com/soccer/",
       "lastCheckedAt": "2026-07-16T13:21:12.113Z",
       "detail": "4/4 项成功"
@@ -391,7 +399,7 @@
     {
       "id": "open-meteo-weather",
       "name": "Open-Meteo 天气",
-      "status": "ok",
+      "status": "warn",
       "url": "https://open-meteo.com/",
       "lastCheckedAt": "2026-07-16T13:21:12.113Z",
       "detail": "2/2 项成功"
