@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "vite",
     "import:history": "node scripts/import-openfootball-history.mjs",
+    "import:oxford": "node scripts/import-oxford-forecast.mjs",
     "update:data": "node scripts/update-data.mjs",
     "test:model": "node scripts/model-lab.test.mjs",
     "hash:access-code": "node scripts/hash-access-code.mjs",

@@ -6,6 +6,12 @@ import {
   scoreProbabilitySamples,
   scoreTotalGoalSamples,
 } from './model-lab.mjs'
+import {
+  asianTotalLineComponents,
+  asianTotalNormalizedOverProbability,
+  fitDixonColesExpectedGoals,
+  invertPoissonOverLine,
+} from './market-math.mjs'
 
 assert.equal(canonicalTeamKey('United States'), 'usa')
 assert.equal(canonicalTeamKey('Curaçao'), 'curacao')
@@ -122,5 +128,20 @@ assert.deepEqual(perfectTotals, {
   mae: 0,
   top2Coverage: 1,
 })
+
+assert.deepEqual(asianTotalLineComponents(2.25), [2, 2.5])
+assert.deepEqual(asianTotalLineComponents(2.75), [2.5, 3])
+assert.deepEqual(asianTotalLineComponents(3), [3])
+for (const line of [2.25, 2.5, 2.75, 3, 3.5]) {
+  const expectedMean = 3.4
+  const marketProbability = asianTotalNormalizedOverProbability(expectedMean, line)
+  const recoveredMean = invertPoissonOverLine(marketProbability, line)
+  assert.ok(Math.abs(recoveredMean - expectedMean) <= 0.01, `${line}: ${recoveredMean}`)
+}
+
+const fittedScoreMarket = fitDixonColesExpectedGoals(3.51, [0.4971, 0.2465, 0.2564])
+assert.ok(Math.abs(fittedScoreMarket.totalExpectedGoals - 3.51) <= 0.01)
+assert.ok(Math.abs(fittedScoreMarket.probabilities.reduce((sum, value) => sum + value, 0) - 1) < 1e-5)
+assert.ok(fittedScoreMarket.fitError < 0.001)
 
 console.log('model-lab tests passed')

@@ -5,7 +5,9 @@ import {
   buildOpenSourceModelLab,
   HISTORICAL_MODEL_SOURCE,
   OPEN_MODEL_SOURCE,
+  OXFORD_MODEL_SOURCE,
 } from './model-lab.mjs'
+import { fitDixonColesExpectedGoals, invertPoissonOverLine } from './market-math.mjs'
 
 const TIMEZONE = 'Asia/Shanghai'
 const SCOREBOARD_URL = 'https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard'
@@ -21,7 +23,6 @@ const MONTE_CARLO_RUNS = 10000
 const UPCOMING_WINDOW_HOURS = 54
 const MIN_TRACKED_MATCHES = 2
 const FUTURE_SCOREBOARD_DAYS = 5
-const SCORE_CONSENSUS_ALIGNMENT_MARGIN = 0.01
 const REGULATION_SCOPE = '90分钟常规时间 + 上下半场补时，不含加时赛和点球大战'
 const REGULATION_SCOPE_SHORT = '90分钟含补时'
 const TEAM_SCHEDULE_URL = 'https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams'
@@ -78,25 +79,29 @@ const verifiedAvailabilityOverrides = new Map([
   [
     'England',
     {
-      effectiveThrough: '2026-07-16T05:00:00Z',
-      riskFloor: 24,
-      headline: '英格兰半决赛可用性更新：Quansah确认停赛；Rice预计克服生病首发，Konsa、Henderson和James均可进入选择范围',
-      note: 'Quansah两场禁赛覆盖半决赛；Rice状态明显好转并预计首发，Konsa抽筋后仍有望出战，Henderson和Reece James已回到比赛名单。英格兰仍少一名后防轮换，但不把恢复球员按确认缺阵处理。',
-      sourceUrl: 'https://www.theguardian.com/football/2026/jul/13/england-declan-rice-winning-fitness-battle-argentina-world-cup',
+      effectiveThrough: '2026-07-19T00:30:00Z',
+      riskFloor: 28,
+      headline: '英格兰三四名决赛可用性更新：Reece James肌肉问题高度存疑，Henderson继续缺席；Bellingham纪律风险尚未官宣',
+      note: 'Reece James在半决赛因疑似肌肉问题被换下，出战高度存疑；Jordan Henderson腕伤继续缺席。Quansah已服完两场停赛，可重新进入选择范围。Bellingham潜在纪律审查没有官方决定，因此只列为临场触发条件，不按确认停赛计分。',
+      sourceUrl: 'https://www.sportsmole.co.uk/football/france/world-cup-2026/preview/france-vs-england-prediction-team-news-lineups_601289.html',
       items: [
-        { player: 'Jarell Quansah', status: '确认停赛', detail: '红牌后两场停赛，第二场为半决赛' },
+        { player: 'Reece James', status: '出战高度存疑', detail: '半决赛因疑似肌肉问题被换下', riskWeight: 16 },
+        { player: 'Jordan Henderson', status: '预计缺阵', detail: '腕伤仍未恢复', riskWeight: 6 },
       ],
     },
   ],
   [
     'France',
     {
-      effectiveThrough: '2026-07-15T05:00:00Z',
-      riskFloor: 8,
-      headline: '法国半决赛可用性更新：Tchouaméni与Mbappé均已正常合练，预计可以出战西班牙',
-      note: 'Tchouaméni已正常参加合练并倾向回到首发，Mbappé也被确认身体无碍；只保留伤后负荷的轻微风险，不再按出战存疑处理。',
-      sourceUrl: 'https://as.com/futbol/mundial/dos-ausencias-en-francia-mbappe-y-tchouameni-ok-f202607-n/',
-      items: [],
+      effectiveThrough: '2026-07-19T00:30:00Z',
+      riskFloor: 24,
+      headline: '法国三四名决赛可用性更新：Saliba背部问题高度存疑，Samba缺席赛后首堂训练',
+      note: 'William Saliba因背部问题在半决赛上半场离场，尚无法国队官方最终结论，但周六出战被媒体判断为高度存疑；替补门将Brice Samba缺席首堂训练，预计不影响首发门将。只对防线连续性作中等修正。',
+      sourceUrl: 'https://www.sportsmole.co.uk/football/france/world-cup-2026/preview/france-vs-england-prediction-team-news-lineups_601289.html',
+      items: [
+        { player: 'William Saliba', status: '出战高度存疑', detail: '背部问题导致半决赛提前离场', riskWeight: 18 },
+        { player: 'Brice Samba', status: '训练缺席', detail: '替补门将缺席赛后首堂训练', riskWeight: 3 },
+      ],
     },
   ],
   [
@@ -579,6 +584,14 @@ async function main() {
       url: HISTORICAL_MODEL_SOURCE.url,
       lastCheckedAt: checkedAt,
       detail: `CC0历届世界杯964场90分钟数据；动态攻防模型${openModelLab.evaluation.historicalAttackDefense.policy.adopted ? '通过留出集门槛' : '仅作审计，未进入主概率'}`,
+    },
+    {
+      id: OXFORD_MODEL_SOURCE.id,
+      name: OXFORD_MODEL_SOURCE.name,
+      status: 'ok',
+      url: OXFORD_MODEL_SOURCE.url,
+      lastCheckedAt: checkedAt,
+      detail: `赛前锁定的72场公开预测已独立回测；淘汰赛外推${openModelLab.evaluation.oxfordLockedForecast.knockoutExtrapolation.policy.adopted ? '通过留出门槛' : '未通过门槛，仅作审计'}`,
     },
   )
   const healthySources = sources.filter((source) => source.status === 'ok').length
@@ -1853,7 +1866,7 @@ function scoreTotal(score) {
 
 async function readPredictionHistory() {
   const empty = {
-    version: 1,
+    version: 2,
     updatedAt: checkedAt,
     count: 0,
     predictions: {},
@@ -1912,7 +1925,7 @@ function seedPredictionHistoryFromGit() {
   }
 
   return {
-    version: 1,
+    version: 2,
     updatedAt: checkedAt,
     count: Object.keys(predictions).length,
     predictions,
@@ -1932,7 +1945,7 @@ function updatePredictionHistory(history, matches) {
   }
 
   return {
-    version: 1,
+    version: 2,
     updatedAt: checkedAt,
     count: Object.keys(predictions).length,
     predictions,
@@ -1959,6 +1972,29 @@ function predictionRecordFromMatch(match, createdAt, sourceCommit) {
     })),
     resultProbabilities: match.scoreline?.resultProbabilities ?? [],
     simulationSummary: match.scoreline?.simulation?.summary ?? '',
+    marketSnapshot: match.market
+      ? {
+          provider: match.market.provider,
+          updatedAt: match.market.updatedAt,
+          moneyline: match.market.moneyline ?? [],
+          total: match.market.total ?? [],
+          spread: match.market.spread ?? [],
+        }
+      : null,
+    modelSnapshot: match.scoreline
+      ? {
+          model: match.scoreline.model,
+          scope: match.scoreline.scope,
+          homeExpectedGoals: match.scoreline.homeExpectedGoals,
+          awayExpectedGoals: match.scoreline.awayExpectedGoals,
+          totalExpectedGoals: match.scoreline.totalExpectedGoals,
+          marketScoreFit: match.scoreline.marketScoreFit ?? null,
+          resultProbabilities: match.scoreline.resultProbabilities ?? [],
+          scoreDistribution: (match.scoreline.simulation?.scoreDistribution ?? []).slice(0, 49),
+          totalDistribution: match.scoreline.simulation?.totalGoals ?? [],
+          modelAgreement: match.scoreline.modelAgreement ?? null,
+        }
+      : null,
   }
 }
 
@@ -3459,23 +3495,11 @@ function buildScorelineAnalysis(market, homeTeam, awayTeam, judgement, newsItems
     4.65,
   )
   const drawCompression = drawCompressionSignal(homeProbability, awayProbability, drawProbability, totalExpectedGoals, market)
-  const rawGoalDiff =
-    calibrateGoalDifference(
-      estimateGoalDifference(homeProbability, awayProbability, drawProbability, market),
-      homeProbability,
-      awayProbability,
-      drawProbability
-    ) + (context?.adjustment?.homeGoalDiffDelta ?? 0)
-  const goalDiff = calibrateHomeUnderdogGoalShare(
-    rawGoalDiff,
-    homeProbability,
-    awayProbability,
-    drawProbability,
-    totalExpectedGoals,
-    context,
-    market
-  )
-  const goalShareAdjustment = round(goalDiff - rawGoalDiff, 2)
+  const marketScoreFit = fitDixonColesExpectedGoals(totalExpectedGoals, [homeProbability, drawProbability, awayProbability])
+  const rawGoalDiff = marketScoreFit.homeExpectedGoals - marketScoreFit.awayExpectedGoals
+  const contextGoalDiffDelta = clamp(context?.adjustment?.homeGoalDiffDelta ?? 0, -0.08, 0.08)
+  const goalDiff = clamp(rawGoalDiff + contextGoalDiffDelta, -2.85, 2.85)
+  const goalShareAdjustment = round(contextGoalDiffDelta, 2)
   const homeExpectedGoals = clamp(round((totalExpectedGoals + goalDiff) / 2, 2), 0.18, 4.8)
   const awayExpectedGoals = clamp(round(totalExpectedGoals - homeExpectedGoals, 2), 0.18, 4.8)
   const newsRisk = hasMatchNewsRisk(newsItems, homeTeam, awayTeam) || contextNewsRisk(context)
@@ -3599,14 +3623,7 @@ function buildScorelineAnalysis(market, homeTeam, awayTeam, judgement, newsItems
     })
     .sort((left, right) => right.probability - left.probability)
   const marketLeaderSide = [...resultProbabilities].sort((left, right) => right.probability - left.probability)[0]?.side
-  const directionAlignedIndex = rankedCandidates.findIndex((item) => sideFromResult(item.result) === marketLeaderSide)
-  if (
-    directionAlignedIndex > 0 &&
-    rankedCandidates[0].probability - rankedCandidates[directionAlignedIndex].probability <= SCORE_CONSENSUS_ALIGNMENT_MARGIN
-  ) {
-    const [directionAlignedCandidate] = rankedCandidates.splice(directionAlignedIndex, 1)
-    rankedCandidates.unshift(directionAlignedCandidate)
-  }
+  const directionalPick = rankedCandidates.find((item) => sideFromResult(item.result) === marketLeaderSide) ?? null
   const candidates = rankedCandidates
     .slice(0, 9)
     .map((item, index) => ({
@@ -3619,6 +3636,7 @@ function buildScorelineAnalysis(market, homeTeam, awayTeam, judgement, newsItems
     candidates,
     simulation,
     totalExpectedGoals,
+    marketScoreFit,
     probabilityEnsemble,
   })
 
@@ -3628,10 +3646,12 @@ function buildScorelineAnalysis(market, homeTeam, awayTeam, judgement, newsItems
     homeExpectedGoals,
     awayExpectedGoals,
     totalExpectedGoals,
+    marketScoreFit,
     strengthProfile,
     resultProbabilities,
     probabilityEnsemble,
     bestPick: candidates[0] ?? null,
+    directionalPick,
     candidates,
     avoid,
     simulation,
@@ -3639,7 +3659,7 @@ function buildScorelineAnalysis(market, homeTeam, awayTeam, judgement, newsItems
     notes: [
       `预测口径：${REGULATION_SCOPE}。`,
       '首选比分采用55%校准Poisson概率与45%一万次比赛进程模拟概率融合，避免单一分布在低比分场过度集中。',
-      '比分按55%校准Poisson与45%一万次模拟的融合概率排序；仅当胜平负主方向对应比分距统计众数不超过1个百分点时，才优先方向一致比分。',
+      '比分按55%校准Poisson与45%一万次模拟的融合概率严格降序排列；胜平负方向对应比分单独列为方向参考，不改写统计众数。',
       '比分玩法方差很大，候选只适合小额娱乐或赛前核验。',
       `本版把总进球从基础 ${baseTotalExpectedGoals.toFixed(2)} 校准到 ${totalExpectedGoals.toFixed(2)}，并对强弱分明场景的 3+ 进球比分做尾部上调。`,
       simulation.summary,
@@ -4307,18 +4327,13 @@ function totalGoalsBand(totalExpectedGoals, simulation = null) {
     .filter((item) => item.goals !== '7+' && Number.isFinite(Number(item.goals)))
     .sort((left, right) => right.probability - left.probability)
   if (simulatedTotals.length >= 2) {
-    const selected = simulatedTotals.slice(0, 2)
-    const zeroGoal = simulatedTotals.find((item) => Number(item.goals) === 0)
-    const includeZeroGuard =
-      activeModelCalibration.zeroGoalTotalGuard &&
-      totalExpectedGoals <= 2.45 &&
-      (zeroGoal?.probability ?? 0) >= 0.1 &&
-      !selected.some((item) => Number(item.goals) === 0)
-    if (includeZeroGuard) selected.push(zeroGoal)
-    const nextUnselected = simulatedTotals.find((item) => !selected.some((selectedItem) => selectedItem.goals === item.goals))
-    if (selected.reduce((sum, item) => sum + item.probability, 0) < 0.45 && nextUnselected) {
-      selected.push(nextUnselected)
+    const selected = []
+    for (const item of simulatedTotals) {
+      const selectedCoverage = selected.reduce((sum, selectedItem) => sum + selectedItem.probability, 0)
+      if (selected.length >= 4 || (selected.length >= 2 && selectedCoverage >= 0.62)) break
+      selected.push(item)
     }
+    const includeZeroGuard = false
     const goals = selected.map((item) => Number(item.goals)).sort((left, right) => left - right)
     const coverage = selected.reduce((sum, item) => sum + item.probability, 0)
     return {
@@ -4419,25 +4434,6 @@ function totalMarketSignal(market) {
   return { line, overProbability, underProbability }
 }
 
-function invertPoissonOverLine(probability, line) {
-  if (line !== 2.5) {
-    return 2.45 + (probability - 0.5) * 1.3 + (line - 2.5) * 0.45
-  }
-
-  let bestMean = 2.55
-  let bestGap = Infinity
-  for (let mean = 1.4; mean <= 4.6; mean += 0.01) {
-    const underOrEqualTwo = poisson(0, mean) + poisson(1, mean) + poisson(2, mean)
-    const overTwoPointFive = 1 - underOrEqualTwo
-    const gap = Math.abs(overTwoPointFive - probability)
-    if (gap < bestGap) {
-      bestGap = gap
-      bestMean = mean
-    }
-  }
-  return bestMean
-}
-
 function estimateGoalDifference(homeProbability, awayProbability, drawProbability, market) {
   const nonDraw = Math.max(0.2, 1 - drawProbability)
   const marketTilt = (homeProbability - awayProbability) / nonDraw
@@ -4447,29 +4443,10 @@ function estimateGoalDifference(homeProbability, awayProbability, drawProbabilit
   return clamp(round(marketTilt * 1.15 + spreadSignal, 2), -2.4, 2.4)
 }
 
-function calibrateTotalGoals(baseMean, homeProbability, awayProbability, drawProbability, market) {
-  const { line, overProbability, underProbability } = totalMarketSignal(market)
-  const favoriteProbability = Math.max(homeProbability, awayProbability)
-  const winGap = Math.abs(homeProbability - awayProbability)
-  const favoriteSide = homeProbability >= awayProbability ? 'home' : 'away'
-  const spreadSignal = favoriteSpreadSignal(market, favoriteSide)
-  let boost = 0
-
-  if (baseMean >= 2.65) boost += 0.08
-  if (baseMean >= 2.95) boost += 0.1
-  if (favoriteProbability >= 0.58) boost += 0.08
-  if (favoriteProbability >= 0.68) boost += 0.12
-  if (winGap >= 0.32) boost += 0.06
-  if (drawProbability <= 0.22) boost += 0.05
-  if (overProbability >= 0.56) boost += 0.06
-  if (line >= 3) boost += 0.08
-  if (line >= 3.5 && favoriteProbability >= 0.8) boost += 0.08
-  if (line <= 2.5 && underProbability >= 0.55) boost -= 0.12
-  if (line <= 2.5 && underProbability >= 0.58) boost -= 0.06
-  if (spreadSignal.favoriteCoverProbability !== null && spreadSignal.favoriteCoverProbability < 0.46 && favoriteProbability < 0.72) boost -= 0.12
-  if (spreadSignal.favoriteCoverProbability !== null && spreadSignal.favoriteCoverProbability < 0.43) boost -= 0.08
-
-  return round(clamp(baseMean + boost, 1.7, 4.55), 2)
+function calibrateTotalGoals(baseMean) {
+  // The Asian-total inversion already contains line level, price and vig information.
+  // Historical hand boosts used with the old 2.5-only approximation would count those signals twice.
+  return round(clamp(baseMean, 1.7, 4.55), 2)
 }
 
 function favoriteSpreadSignal(market, favoriteSide) {

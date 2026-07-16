@@ -1,0 +1,1537 @@
+{
+  "version": 1,
+  "importedAt": "2026-07-16T16:24:31.280Z",
+  "source": {
+    "id": "oxford-locked-ensemble",
+    "name": "Oxford Football Forecasting locked ensemble",
+    "url": "https://fatih.ai/worldcup2026/fixtures/",
+    "aboutUrl": "https://fatih.ai/worldcup2026/about/",
+    "lockedAt": "2026-06-09",
+    "lockedForecastSha256": "20d947440ab184403299a355db8461d84f5ce312b642690a93101c1a3369d0e6",
+    "methodology": "Elo, Dixon-Coles, Bayesian hierarchical and LightGBM-Poisson log-opinion pool",
+    "publishedValidation": {
+      "heldOutMatches": 152,
+      "ensembleRps": 0.1891,
+      "deviggedMarketRps": 0.1905,
+      "claim": "matches the market; does not significantly beat it"
+    }
+  },
+  "import": {
+    "sourceHtmlSha256": "b9e25316655889d3c8d10893f9857fa2cc2bb7c35a84724407a6deb15364baa5",
+    "fixtureCount": 72
+  },
+  "fixtures": [
+    {
+      "matchNumber": 1,
+      "stage": "Group A",
+      "dateText": "Thu 11 Jun",
+      "timeUtc": "19:00",
+      "home": "Mexico",
+      "away": "South Africa",
+      "probabilities": [
+        0.688,
+        0.212,
+        0.1
+      ],
+      "mostLikelyScore": "2-0",
+      "mostLikelyScoreProbability": 0.15,
+      "overTwoPointFive": 0.48,
+      "expectedGoals": {
+        "home": 1.98,
+        "away": 0.62,
+        "total": 2.6
+      }
+    },
+    {
+      "matchNumber": 2,
+      "stage": "Group A",
+      "dateText": "Fri 12 Jun",
+      "timeUtc": "02:00",
+      "home": "Korea Republic",
+      "away": "Czechia",
+      "probabilities": [
+        0.335,
+        0.306,
+        0.359
+      ],
+      "mostLikelyScore": "1-1",
+      "mostLikelyScoreProbability": 0.14,
+      "overTwoPointFive": 0.4,
+      "expectedGoals": {
+        "home": 1.12,
+        "away": 1.17,
+        "total": 2.29
+      }
+    },
+    {
+      "matchNumber": 3,
+      "stage": "Group B",
+      "dateText": "Fri 12 Jun",
+      "timeUtc": "19:00",
+      "home": "Canada",
+      "away": "Bosnia and Herzegovina",
+      "probabilities": [
+        0.5579999999999999,
+        0.264,
+        0.17800000000000002
+      ],
+      "mostLikelyScore": "1-0",
+      "mostLikelyScoreProbability": 0.13,
+      "overTwoPointFive": 0.45,
+      "expectedGoals": {
+        "home": 1.64,
+        "away": 0.83,
+        "total": 2.47
+      }
+    },
+    {
+      "matchNumber": 4,
+      "stage": "Group D",
+      "dateText": "Sat 13 Jun",
+      "timeUtc": "01:00",
+      "home": "USA",
+      "away": "Paraguay",
+      "probabilities": [
+        0.355,
+        0.297,
+        0.348
+      ],
+      "mostLikelyScore": "1-1",
+      "mostLikelyScoreProbability": 0.14,
+      "overTwoPointFive": 0.43,
+      "expectedGoals": {
+        "home": 1.21,
+        "away": 1.2,
+        "total": 2.41
+      }
+    },
+    {
+      "matchNumber": 5,
+      "stage": "Group C",
+      "dateText": "Sun 14 Jun",
+      "timeUtc": "01:00",
+      "home": "Haiti",
+      "away": "Scotland",
+      "probabilities": [
+        0.127,
+        0.237,
+        0.636
+      ],
+      "mostLikelyScore": "0-1",
+      "mostLikelyScoreProbability": 0.14,
+      "overTwoPointFive": 0.46,
+      "expectedGoals": {
+        "home": 0.69,
+        "away": 1.81,
+        "total": 2.5
+      }
+    },
+    {
+      "matchNumber": 6,
+      "stage": "Group D",
+      "dateText": "Sun 14 Jun",
+      "timeUtc": "04:00",
+      "home": "Australia",
+      "away": "Türkiye",
+      "probabilities": [
+        0.28800000000000003,
+        0.306,
+        0.406
+      ],
+      "mostLikelyScore": "1-1",
+      "mostLikelyScoreProbability": 0.14,
+      "overTwoPointFive": 0.39,
+      "expectedGoals": {
+        "home": 1,
+        "away": 1.24,
+        "total": 2.24
+      }
+    },
+    {
+      "matchNumber": 7,
+      "stage": "Group C",
+      "dateText": "Sat 13 Jun",
+      "timeUtc": "22:00",
+      "home": "Brazil",
+      "away": "Morocco",
+      "probabilities": [
+        0.47,
+        0.313,
+        0.217
+      ],
+      "mostLikelyScore": "1-0",
+      "mostLikelyScoreProbability": 0.15,
+      "overTwoPointFive": 0.33,
+      "expectedGoals": {
+        "home": 1.27,
+        "away": 0.77,
+        "total": 2.04
+      }
+    },
+    {
+      "matchNumber": 8,
+      "stage": "Group B",
+      "dateText": "Sat 13 Jun",
+      "timeUtc": "19:00",
+      "home": "Qatar",
+      "away": "Switzerland",
+      "probabilities": [
+        0.051,
+        0.14400000000000002,
+        0.805
+      ],
+      "mostLikelyScore": "0-2",
+      "mostLikelyScoreProbability": 0.15,
+      "overTwoPointFive": 0.59,
+      "expectedGoals": {
+        "home": 0.53,
+        "away": 2.53,
+        "total": 3.06
+      }
+    },
+    {
+      "matchNumber": 9,
+      "stage": "Group E",
+      "dateText": "Sun 14 Jun",
+      "timeUtc": "23:00",
+      "home": "Côte d'Ivoire",
+      "away": "Ecuador",
+      "probabilities": [
+        0.215,
+        0.336,
+        0.449
+      ],
+      "mostLikelyScore": "0-0",
+      "mostLikelyScoreProbability": 0.17,
+      "overTwoPointFive": 0.28,
+      "expectedGoals": {
+        "home": 0.7,
+        "away": 1.13,
+        "total": 1.83
+      }
+    },
+    {
+      "matchNumber": 10,
+      "stage": "Group E",
+      "dateText": "Sun 14 Jun",
+      "timeUtc": "17:00",
+      "home": "Germany",
+      "away": "Curaçao",
+      "probabilities": [
+        0.935,
+        0.052000000000000005,
+        0.013000000000000001
+      ],
+      "mostLikelyScore": "3-0",
+      "mostLikelyScoreProbability": 0.13,
+      "overTwoPointFive": 0.8,
+      "expectedGoals": {
+        "home": 3.85,
+        "away": 0.44,
+        "total": 4.29
+      }
+    },
+    {
+      "matchNumber": 11,
+      "stage": "Group F",
+      "dateText": "Sun 14 Jun",
+      "timeUtc": "20:00",
+      "home": "Netherlands",
+      "away": "Japan",
+      "probabilities": [
+        0.42200000000000004,
+        0.309,
+        0.26899999999999996
+      ],
+      "mostLikelyScore": "1-1",
+      "mostLikelyScoreProbability": 0.14,
+      "overTwoPointFive": 0.37,
+      "expectedGoals": {
+        "home": 1.25,
+        "away": 0.94,
+        "total": 2.19
+      }
+    },
+    {
+      "matchNumber": 12,
+      "stage": "Group F",
+      "dateText": "Mon 15 Jun",
+      "timeUtc": "02:00",
+      "home": "Sweden",
+      "away": "Tunisia",
+      "probabilities": [
+        0.466,
+        0.305,
+        0.22899999999999998
+      ],
+      "mostLikelyScore": "1-0",
+      "mostLikelyScoreProbability": 0.14,
+      "overTwoPointFive": 0.37,
+      "expectedGoals": {
+        "home": 1.31,
+        "away": 0.84,
+        "total": 2.15
+      }
+    },
+    {
+      "matchNumber": 13,
+      "stage": "Group H",
+      "dateText": "Mon 15 Jun",
+      "timeUtc": "22:00",
+      "home": "Saudi Arabia",
+      "away": "Uruguay",
+      "probabilities": [
+        0.113,
+        0.255,
+        0.632
+      ],
+      "mostLikelyScore": "0-1",
+      "mostLikelyScoreProbability": 0.18,
+      "overTwoPointFive": 0.37,
+      "expectedGoals": {
+        "home": 0.55,
+        "away": 1.63,
+        "total": 2.18
+      }
+    },
+    {
+      "matchNumber": 14,
+      "stage": "Group H",
+      "dateText": "Mon 15 Jun",
+      "timeUtc": "16:00",
+      "home": "Spain",
+      "away": "Cabo Verde",
+      "probabilities": [
+        0.8540000000000001,
+        0.115,
+        0.031
+      ],
+      "mostLikelyScore": "2-0",
+      "mostLikelyScoreProbability": 0.17,
+      "overTwoPointFive": 0.6,
+      "expectedGoals": {
+        "home": 2.7,
+        "away": 0.39,
+        "total": 3.09
+      }
+    },
+    {
+      "matchNumber": 15,
+      "stage": "Group G",
+      "dateText": "Tue 16 Jun",
+      "timeUtc": "01:00",
+      "home": "IR Iran",
+      "away": "New Zealand",
+      "probabilities": [
+        0.581,
+        0.272,
+        0.147
+      ],
+      "mostLikelyScore": "1-0",
+      "mostLikelyScoreProbability": 0.16,
+      "overTwoPointFive": 0.38,
+      "expectedGoals": {
+        "home": 1.56,
+        "away": 0.66,
+        "total": 2.22
+      }
+    },
+    {
+      "matchNumber": 16,
+      "stage": "Group G",
+      "dateText": "Mon 15 Jun",
+      "timeUtc": "19:00",
+      "home": "Belgium",
+      "away": "Egypt",
+      "probabilities": [
+        0.529,
+        0.285,
+        0.18600000000000003
+      ],
+      "mostLikelyScore": "1-0",
+      "mostLikelyScoreProbability": 0.15,
+      "overTwoPointFive": 0.39,
+      "expectedGoals": {
+        "home": 1.47,
+        "away": 0.77,
+        "total": 2.24
+      }
+    },
+    {
+      "matchNumber": 17,
+      "stage": "Group I",
+      "dateText": "Tue 16 Jun",
+      "timeUtc": "19:00",
+      "home": "France",
+      "away": "Senegal",
+      "probabilities": [
+        0.568,
+        0.272,
+        0.16
+      ],
+      "mostLikelyScore": "1-0",
+      "mostLikelyScoreProbability": 0.15,
+      "overTwoPointFive": 0.4,
+      "expectedGoals": {
+        "home": 1.56,
+        "away": 0.71,
+        "total": 2.27
+      }
+    },
+    {
+      "matchNumber": 18,
+      "stage": "Group I",
+      "dateText": "Tue 16 Jun",
+      "timeUtc": "22:00",
+      "home": "Iraq",
+      "away": "Norway",
+      "probabilities": [
+        0.081,
+        0.2,
+        0.7190000000000001
+      ],
+      "mostLikelyScore": "0-2",
+      "mostLikelyScoreProbability": 0.16,
+      "overTwoPointFive": 0.47,
+      "expectedGoals": {
+        "home": 0.54,
+        "away": 2.03,
+        "total": 2.57
+      }
+    },
+    {
+      "matchNumber": 19,
+      "stage": "Group J",
+      "dateText": "Wed 17 Jun",
+      "timeUtc": "01:00",
+      "home": "Argentina",
+      "away": "Algeria",
+      "probabilities": [
+        0.643,
+        0.24600000000000002,
+        0.111
+      ],
+      "mostLikelyScore": "1-0",
+      "mostLikelyScoreProbability": 0.17,
+      "overTwoPointFive": 0.39,
+      "expectedGoals": {
+        "home": 1.7,
+        "away": 0.56,
+        "total": 2.26
+      }
+    },
+    {
+      "matchNumber": 20,
+      "stage": "Group J",
+      "dateText": "Wed 17 Jun",
+      "timeUtc": "04:00",
+      "home": "Austria",
+      "away": "Jordan",
+      "probabilities": [
+        0.614,
+        0.245,
+        0.141
+      ],
+      "mostLikelyScore": "1-0",
+      "mostLikelyScoreProbability": 0.14,
+      "overTwoPointFive": 0.45,
+      "expectedGoals": {
+        "home": 1.76,
+        "away": 0.72,
+        "total": 2.48
+      }
+    },
+    {
+      "matchNumber": 21,
+      "stage": "Group L",
+      "dateText": "Wed 17 Jun",
+      "timeUtc": "23:00",
+      "home": "Ghana",
+      "away": "Panama",
+      "probabilities": [
+        0.33,
+        0.321,
+        0.349
+      ],
+      "mostLikelyScore": "1-1",
+      "mostLikelyScoreProbability": 0.15,
+      "overTwoPointFive": 0.35,
+      "expectedGoals": {
+        "home": 1.03,
+        "away": 1.07,
+        "total": 2.1
+      }
+    },
+    {
+      "matchNumber": 22,
+      "stage": "Group L",
+      "dateText": "Wed 17 Jun",
+      "timeUtc": "20:00",
+      "home": "England",
+      "away": "Croatia",
+      "probabilities": [
+        0.478,
+        0.305,
+        0.217
+      ],
+      "mostLikelyScore": "1-0",
+      "mostLikelyScoreProbability": 0.15,
+      "overTwoPointFive": 0.36,
+      "expectedGoals": {
+        "home": 1.32,
+        "away": 0.8,
+        "total": 2.12
+      }
+    },
+    {
+      "matchNumber": 23,
+      "stage": "Group K",
+      "dateText": "Wed 17 Jun",
+      "timeUtc": "17:00",
+      "home": "Portugal",
+      "away": "Congo DR",
+      "probabilities": [
+        0.654,
+        0.242,
+        0.10400000000000001
+      ],
+      "mostLikelyScore": "1-0",
+      "mostLikelyScoreProbability": 0.17,
+      "overTwoPointFive": 0.39,
+      "expectedGoals": {
+        "home": 1.72,
+        "away": 0.54,
+        "total": 2.26
+      }
+    },
+    {
+      "matchNumber": 24,
+      "stage": "Group K",
+      "dateText": "Thu 18 Jun",
+      "timeUtc": "02:00",
+      "home": "Uzbekistan",
+      "away": "Colombia",
+      "probabilities": [
+        0.106,
+        0.23399999999999999,
+        0.66
+      ],
+      "mostLikelyScore": "0-1",
+      "mostLikelyScoreProbability": 0.16,
+      "overTwoPointFive": 0.42,
+      "expectedGoals": {
+        "home": 0.58,
+        "away": 1.79,
+        "total": 2.37
+      }
+    },
+    {
+      "matchNumber": 25,
+      "stage": "Group A",
+      "dateText": "Thu 18 Jun",
+      "timeUtc": "16:00",
+      "home": "Czechia",
+      "away": "South Africa",
+      "probabilities": [
+        0.511,
+        0.292,
+        0.19699999999999998
+      ],
+      "mostLikelyScore": "1-0",
+      "mostLikelyScoreProbability": 0.15,
+      "overTwoPointFive": 0.38,
+      "expectedGoals": {
+        "home": 1.41,
+        "away": 0.78,
+        "total": 2.19
+      }
+    },
+    {
+      "matchNumber": 26,
+      "stage": "Group B",
+      "dateText": "Thu 18 Jun",
+      "timeUtc": "19:00",
+      "home": "Switzerland",
+      "away": "Bosnia and Herzegovina",
+      "probabilities": [
+        0.622,
+        0.242,
+        0.136
+      ],
+      "mostLikelyScore": "1-0",
+      "mostLikelyScoreProbability": 0.14,
+      "overTwoPointFive": 0.45,
+      "expectedGoals": {
+        "home": 1.78,
+        "away": 0.71,
+        "total": 2.49
+      }
+    },
+    {
+      "matchNumber": 27,
+      "stage": "Group B",
+      "dateText": "Thu 18 Jun",
+      "timeUtc": "22:00",
+      "home": "Canada",
+      "away": "Qatar",
+      "probabilities": [
+        0.774,
+        0.162,
+        0.064
+      ],
+      "mostLikelyScore": "2-0",
+      "mostLikelyScoreProbability": 0.15,
+      "overTwoPointFive": 0.57,
+      "expectedGoals": {
+        "home": 2.39,
+        "away": 0.57,
+        "total": 2.96
+      }
+    },
+    {
+      "matchNumber": 28,
+      "stage": "Group A",
+      "dateText": "Fri 19 Jun",
+      "timeUtc": "01:00",
+      "home": "Mexico",
+      "away": "Korea Republic",
+      "probabilities": [
+        0.561,
+        0.257,
+        0.182
+      ],
+      "mostLikelyScore": "1-1",
+      "mostLikelyScoreProbability": 0.12,
+      "overTwoPointFive": 0.48,
+      "expectedGoals": {
+        "home": 1.7,
+        "away": 0.88,
+        "total": 2.58
+      }
+    },
+    {
+      "matchNumber": 29,
+      "stage": "Group C",
+      "dateText": "Sat 20 Jun",
+      "timeUtc": "01:00",
+      "home": "Brazil",
+      "away": "Haiti",
+      "probabilities": [
+        0.905,
+        0.07400000000000001,
+        0.021
+      ],
+      "mostLikelyScore": "3-0",
+      "mostLikelyScoreProbability": 0.14,
+      "overTwoPointFive": 0.74,
+      "expectedGoals": {
+        "home": 3.42,
+        "away": 0.46,
+        "total": 3.88
+      }
+    },
+    {
+      "matchNumber": 30,
+      "stage": "Group C",
+      "dateText": "Fri 19 Jun",
+      "timeUtc": "22:00",
+      "home": "Scotland",
+      "away": "Morocco",
+      "probabilities": [
+        0.213,
+        0.32799999999999996,
+        0.45899999999999996
+      ],
+      "mostLikelyScore": "0-1",
+      "mostLikelyScoreProbability": 0.17,
+      "overTwoPointFive": 0.29,
+      "expectedGoals": {
+        "home": 0.71,
+        "away": 1.18,
+        "total": 1.89
+      }
+    },
+    {
+      "matchNumber": 31,
+      "stage": "Group D",
+      "dateText": "Sat 20 Jun",
+      "timeUtc": "04:00",
+      "home": "Türkiye",
+      "away": "Paraguay",
+      "probabilities": [
+        0.377,
+        0.313,
+        0.31
+      ],
+      "mostLikelyScore": "1-1",
+      "mostLikelyScoreProbability": 0.14,
+      "overTwoPointFive": 0.37,
+      "expectedGoals": {
+        "home": 1.16,
+        "away": 1.02,
+        "total": 2.18
+      }
+    },
+    {
+      "matchNumber": 32,
+      "stage": "Group D",
+      "dateText": "Fri 19 Jun",
+      "timeUtc": "19:00",
+      "home": "USA",
+      "away": "Australia",
+      "probabilities": [
+        0.386,
+        0.29100000000000004,
+        0.32299999999999995
+      ],
+      "mostLikelyScore": "1-1",
+      "mostLikelyScoreProbability": 0.14,
+      "overTwoPointFive": 0.45,
+      "expectedGoals": {
+        "home": 1.31,
+        "away": 1.17,
+        "total": 2.48
+      }
+    },
+    {
+      "matchNumber": 33,
+      "stage": "Group E",
+      "dateText": "Sat 20 Jun",
+      "timeUtc": "20:00",
+      "home": "Germany",
+      "away": "Côte d'Ivoire",
+      "probabilities": [
+        0.561,
+        0.262,
+        0.177
+      ],
+      "mostLikelyScore": "1-0",
+      "mostLikelyScoreProbability": 0.13,
+      "overTwoPointFive": 0.45,
+      "expectedGoals": {
+        "home": 1.65,
+        "away": 0.82,
+        "total": 2.47
+      }
+    },
+    {
+      "matchNumber": 34,
+      "stage": "Group E",
+      "dateText": "Sun 21 Jun",
+      "timeUtc": "00:00",
+      "home": "Ecuador",
+      "away": "Curaçao",
+      "probabilities": [
+        0.823,
+        0.141,
+        0.036000000000000004
+      ],
+      "mostLikelyScore": "2-0",
+      "mostLikelyScoreProbability": 0.18,
+      "overTwoPointFive": 0.51,
+      "expectedGoals": {
+        "home": 2.38,
+        "away": 0.35,
+        "total": 2.73
+      }
+    },
+    {
+      "matchNumber": 35,
+      "stage": "Group F",
+      "dateText": "Sat 20 Jun",
+      "timeUtc": "17:00",
+      "home": "Netherlands",
+      "away": "Sweden",
+      "probabilities": [
+        0.586,
+        0.247,
+        0.16699999999999998
+      ],
+      "mostLikelyScore": "1-0",
+      "mostLikelyScoreProbability": 0.12,
+      "overTwoPointFive": 0.49,
+      "expectedGoals": {
+        "home": 1.79,
+        "away": 0.85,
+        "total": 2.64
+      }
+    },
+    {
+      "matchNumber": 36,
+      "stage": "Group F",
+      "dateText": "Sun 21 Jun",
+      "timeUtc": "04:00",
+      "home": "Tunisia",
+      "away": "Japan",
+      "probabilities": [
+        0.141,
+        0.287,
+        0.5720000000000001
+      ],
+      "mostLikelyScore": "0-1",
+      "mostLikelyScoreProbability": 0.18,
+      "overTwoPointFive": 0.33,
+      "expectedGoals": {
+        "home": 0.58,
+        "away": 1.43,
+        "total": 2.01
+      }
+    },
+    {
+      "matchNumber": 37,
+      "stage": "Group H",
+      "dateText": "Sun 21 Jun",
+      "timeUtc": "22:00",
+      "home": "Uruguay",
+      "away": "Cabo Verde",
+      "probabilities": [
+        0.659,
+        0.24100000000000002,
+        0.1
+      ],
+      "mostLikelyScore": "1-0",
+      "mostLikelyScoreProbability": 0.18,
+      "overTwoPointFive": 0.39,
+      "expectedGoals": {
+        "home": 1.72,
+        "away": 0.52,
+        "total": 2.24
+      }
+    },
+    {
+      "matchNumber": 38,
+      "stage": "Group H",
+      "dateText": "Sun 21 Jun",
+      "timeUtc": "16:00",
+      "home": "Spain",
+      "away": "Saudi Arabia",
+      "probabilities": [
+        0.857,
+        0.11199999999999999,
+        0.031
+      ],
+      "mostLikelyScore": "2-0",
+      "mostLikelyScoreProbability": 0.16,
+      "overTwoPointFive": 0.62,
+      "expectedGoals": {
+        "home": 2.78,
+        "away": 0.42,
+        "total": 3.2
+      }
+    },
+    {
+      "matchNumber": 39,
+      "stage": "Group G",
+      "dateText": "Sun 21 Jun",
+      "timeUtc": "19:00",
+      "home": "Belgium",
+      "away": "IR Iran",
+      "probabilities": [
+        0.48200000000000004,
+        0.28600000000000003,
+        0.23199999999999998
+      ],
+      "mostLikelyScore": "1-1",
+      "mostLikelyScoreProbability": 0.13,
+      "overTwoPointFive": 0.42,
+      "expectedGoals": {
+        "home": 1.45,
+        "away": 0.93,
+        "total": 2.38
+      }
+    },
+    {
+      "matchNumber": 40,
+      "stage": "Group G",
+      "dateText": "Mon 22 Jun",
+      "timeUtc": "01:00",
+      "home": "New Zealand",
+      "away": "Egypt",
+      "probabilities": [
+        0.18600000000000003,
+        0.313,
+        0.501
+      ],
+      "mostLikelyScore": "0-1",
+      "mostLikelyScoreProbability": 0.17,
+      "overTwoPointFive": 0.31,
+      "expectedGoals": {
+        "home": 0.67,
+        "away": 1.28,
+        "total": 1.95
+      }
+    },
+    {
+      "matchNumber": 41,
+      "stage": "Group I",
+      "dateText": "Tue 23 Jun",
+      "timeUtc": "00:00",
+      "home": "Norway",
+      "away": "Senegal",
+      "probabilities": [
+        0.457,
+        0.298,
+        0.245
+      ],
+      "mostLikelyScore": "1-1",
+      "mostLikelyScoreProbability": 0.14,
+      "overTwoPointFive": 0.4,
+      "expectedGoals": {
+        "home": 1.35,
+        "away": 0.92,
+        "total": 2.27
+      }
+    },
+    {
+      "matchNumber": 42,
+      "stage": "Group I",
+      "dateText": "Mon 22 Jun",
+      "timeUtc": "21:00",
+      "home": "France",
+      "away": "Iraq",
+      "probabilities": [
+        0.782,
+        0.166,
+        0.052000000000000005
+      ],
+      "mostLikelyScore": "2-0",
+      "mostLikelyScoreProbability": 0.17,
+      "overTwoPointFive": 0.5,
+      "expectedGoals": {
+        "home": 2.24,
+        "away": 0.44,
+        "total": 2.68
+      }
+    },
+    {
+      "matchNumber": 43,
+      "stage": "Group J",
+      "dateText": "Mon 22 Jun",
+      "timeUtc": "17:00",
+      "home": "Argentina",
+      "away": "Austria",
+      "probabilities": [
+        0.614,
+        0.261,
+        0.125
+      ],
+      "mostLikelyScore": "1-0",
+      "mostLikelyScoreProbability": 0.17,
+      "overTwoPointFive": 0.38,
+      "expectedGoals": {
+        "home": 1.61,
+        "away": 0.59,
+        "total": 2.2
+      }
+    },
+    {
+      "matchNumber": 44,
+      "stage": "Group J",
+      "dateText": "Tue 23 Jun",
+      "timeUtc": "03:00",
+      "home": "Jordan",
+      "away": "Algeria",
+      "probabilities": [
+        0.154,
+        0.261,
+        0.585
+      ],
+      "mostLikelyScore": "0-1",
+      "mostLikelyScoreProbability": 0.14,
+      "overTwoPointFive": 0.43,
+      "expectedGoals": {
+        "home": 0.73,
+        "away": 1.65,
+        "total": 2.38
+      }
+    },
+    {
+      "matchNumber": 45,
+      "stage": "Group L",
+      "dateText": "Tue 23 Jun",
+      "timeUtc": "20:00",
+      "home": "England",
+      "away": "Ghana",
+      "probabilities": [
+        0.745,
+        0.191,
+        0.064
+      ],
+      "mostLikelyScore": "2-0",
+      "mostLikelyScoreProbability": 0.17,
+      "overTwoPointFive": 0.45,
+      "expectedGoals": {
+        "home": 2.03,
+        "away": 0.44,
+        "total": 2.47
+      }
+    },
+    {
+      "matchNumber": 46,
+      "stage": "Group L",
+      "dateText": "Tue 23 Jun",
+      "timeUtc": "23:00",
+      "home": "Panama",
+      "away": "Croatia",
+      "probabilities": [
+        0.114,
+        0.228,
+        0.6579999999999999
+      ],
+      "mostLikelyScore": "0-1",
+      "mostLikelyScoreProbability": 0.14,
+      "overTwoPointFive": 0.46,
+      "expectedGoals": {
+        "home": 0.65,
+        "away": 1.87,
+        "total": 2.52
+      }
+    },
+    {
+      "matchNumber": 47,
+      "stage": "Group K",
+      "dateText": "Tue 23 Jun",
+      "timeUtc": "17:00",
+      "home": "Portugal",
+      "away": "Uzbekistan",
+      "probabilities": [
+        0.7040000000000001,
+        0.207,
+        0.08900000000000001
+      ],
+      "mostLikelyScore": "2-0",
+      "mostLikelyScoreProbability": 0.15,
+      "overTwoPointFive": 0.47,
+      "expectedGoals": {
+        "home": 1.99,
+        "away": 0.57,
+        "total": 2.56
+      }
+    },
+    {
+      "matchNumber": 48,
+      "stage": "Group K",
+      "dateText": "Wed 24 Jun",
+      "timeUtc": "02:00",
+      "home": "Colombia",
+      "away": "Congo DR",
+      "probabilities": [
+        0.616,
+        0.264,
+        0.12
+      ],
+      "mostLikelyScore": "1-0",
+      "mostLikelyScoreProbability": 0.18,
+      "overTwoPointFive": 0.36,
+      "expectedGoals": {
+        "home": 1.58,
+        "away": 0.56,
+        "total": 2.14
+      }
+    },
+    {
+      "matchNumber": 49,
+      "stage": "Group C",
+      "dateText": "Wed 24 Jun",
+      "timeUtc": "22:00",
+      "home": "Scotland",
+      "away": "Brazil",
+      "probabilities": [
+        0.127,
+        0.22899999999999998,
+        0.644
+      ],
+      "mostLikelyScore": "0-2",
+      "mostLikelyScoreProbability": 0.13,
+      "overTwoPointFive": 0.48,
+      "expectedGoals": {
+        "home": 0.72,
+        "away": 1.89,
+        "total": 2.61
+      }
+    },
+    {
+      "matchNumber": 50,
+      "stage": "Group C",
+      "dateText": "Wed 24 Jun",
+      "timeUtc": "22:00",
+      "home": "Morocco",
+      "away": "Haiti",
+      "probabilities": [
+        0.73,
+        0.201,
+        0.069
+      ],
+      "mostLikelyScore": "2-0",
+      "mostLikelyScoreProbability": 0.17,
+      "overTwoPointFive": 0.43,
+      "expectedGoals": {
+        "home": 1.96,
+        "away": 0.45,
+        "total": 2.41
+      }
+    },
+    {
+      "matchNumber": 51,
+      "stage": "Group B",
+      "dateText": "Wed 24 Jun",
+      "timeUtc": "19:00",
+      "home": "Switzerland",
+      "away": "Canada",
+      "probabilities": [
+        0.46,
+        0.299,
+        0.24100000000000002
+      ],
+      "mostLikelyScore": "1-1",
+      "mostLikelyScoreProbability": 0.14,
+      "overTwoPointFive": 0.39,
+      "expectedGoals": {
+        "home": 1.35,
+        "away": 0.9,
+        "total": 2.25
+      }
+    },
+    {
+      "matchNumber": 52,
+      "stage": "Group B",
+      "dateText": "Wed 24 Jun",
+      "timeUtc": "19:00",
+      "home": "Bosnia and Herzegovina",
+      "away": "Qatar",
+      "probabilities": [
+        0.534,
+        0.27699999999999997,
+        0.18899999999999997
+      ],
+      "mostLikelyScore": "1-0",
+      "mostLikelyScoreProbability": 0.14,
+      "overTwoPointFive": 0.42,
+      "expectedGoals": {
+        "home": 1.53,
+        "away": 0.81,
+        "total": 2.34
+      }
+    },
+    {
+      "matchNumber": 53,
+      "stage": "Group A",
+      "dateText": "Thu 25 Jun",
+      "timeUtc": "01:00",
+      "home": "Czechia",
+      "away": "Mexico",
+      "probabilities": [
+        0.237,
+        0.28300000000000003,
+        0.48
+      ],
+      "mostLikelyScore": "1-1",
+      "mostLikelyScoreProbability": 0.13,
+      "overTwoPointFive": 0.44,
+      "expectedGoals": {
+        "home": 0.96,
+        "away": 1.47,
+        "total": 2.43
+      }
+    },
+    {
+      "matchNumber": 54,
+      "stage": "Group A",
+      "dateText": "Thu 25 Jun",
+      "timeUtc": "01:00",
+      "home": "South Africa",
+      "away": "Korea Republic",
+      "probabilities": [
+        0.203,
+        0.309,
+        0.488
+      ],
+      "mostLikelyScore": "0-1",
+      "mostLikelyScoreProbability": 0.16,
+      "overTwoPointFive": 0.34,
+      "expectedGoals": {
+        "home": 0.75,
+        "away": 1.3,
+        "total": 2.05
+      }
+    },
+    {
+      "matchNumber": 55,
+      "stage": "Group E",
+      "dateText": "Thu 25 Jun",
+      "timeUtc": "20:00",
+      "home": "Curaçao",
+      "away": "Côte d'Ivoire",
+      "probabilities": [
+        0.073,
+        0.187,
+        0.74
+      ],
+      "mostLikelyScore": "0-2",
+      "mostLikelyScoreProbability": 0.16,
+      "overTwoPointFive": 0.49,
+      "expectedGoals": {
+        "home": 0.53,
+        "away": 2.13,
+        "total": 2.66
+      }
+    },
+    {
+      "matchNumber": 56,
+      "stage": "Group E",
+      "dateText": "Thu 25 Jun",
+      "timeUtc": "20:00",
+      "home": "Ecuador",
+      "away": "Germany",
+      "probabilities": [
+        0.294,
+        0.307,
+        0.39899999999999997
+      ],
+      "mostLikelyScore": "1-1",
+      "mostLikelyScoreProbability": 0.14,
+      "overTwoPointFive": 0.39,
+      "expectedGoals": {
+        "home": 1.02,
+        "away": 1.23,
+        "total": 2.25
+      }
+    },
+    {
+      "matchNumber": 57,
+      "stage": "Group F",
+      "dateText": "Thu 25 Jun",
+      "timeUtc": "23:00",
+      "home": "Japan",
+      "away": "Sweden",
+      "probabilities": [
+        0.48,
+        0.292,
+        0.228
+      ],
+      "mostLikelyScore": "1-1",
+      "mostLikelyScoreProbability": 0.14,
+      "overTwoPointFive": 0.4,
+      "expectedGoals": {
+        "home": 1.4,
+        "away": 0.89,
+        "total": 2.29
+      }
+    },
+    {
+      "matchNumber": 58,
+      "stage": "Group F",
+      "dateText": "Thu 25 Jun",
+      "timeUtc": "23:00",
+      "home": "Tunisia",
+      "away": "Netherlands",
+      "probabilities": [
+        0.095,
+        0.222,
+        0.6829999999999999
+      ],
+      "mostLikelyScore": "0-1",
+      "mostLikelyScoreProbability": 0.16,
+      "overTwoPointFive": 0.44,
+      "expectedGoals": {
+        "home": 0.56,
+        "away": 1.87,
+        "total": 2.43
+      }
+    },
+    {
+      "matchNumber": 59,
+      "stage": "Group D",
+      "dateText": "Fri 26 Jun",
+      "timeUtc": "02:00",
+      "home": "Türkiye",
+      "away": "USA",
+      "probabilities": [
+        0.436,
+        0.28300000000000003,
+        0.281
+      ],
+      "mostLikelyScore": "1-1",
+      "mostLikelyScoreProbability": 0.13,
+      "overTwoPointFive": 0.47,
+      "expectedGoals": {
+        "home": 1.44,
+        "away": 1.11,
+        "total": 2.55
+      }
+    },
+    {
+      "matchNumber": 60,
+      "stage": "Group D",
+      "dateText": "Fri 26 Jun",
+      "timeUtc": "02:00",
+      "home": "Paraguay",
+      "away": "Australia",
+      "probabilities": [
+        0.375,
+        0.344,
+        0.281
+      ],
+      "mostLikelyScore": "0-0",
+      "mostLikelyScoreProbability": 0.17,
+      "overTwoPointFive": 0.28,
+      "expectedGoals": {
+        "home": 1.01,
+        "away": 0.83,
+        "total": 1.84
+      }
+    },
+    {
+      "matchNumber": 61,
+      "stage": "Group I",
+      "dateText": "Fri 26 Jun",
+      "timeUtc": "19:00",
+      "home": "Norway",
+      "away": "France",
+      "probabilities": [
+        0.245,
+        0.29600000000000004,
+        0.45899999999999996
+      ],
+      "mostLikelyScore": "1-1",
+      "mostLikelyScoreProbability": 0.14,
+      "overTwoPointFive": 0.4,
+      "expectedGoals": {
+        "home": 0.93,
+        "away": 1.37,
+        "total": 2.3
+      }
+    },
+    {
+      "matchNumber": 62,
+      "stage": "Group I",
+      "dateText": "Fri 26 Jun",
+      "timeUtc": "19:00",
+      "home": "Senegal",
+      "away": "Iraq",
+      "probabilities": [
+        0.578,
+        0.276,
+        0.146
+      ],
+      "mostLikelyScore": "1-0",
+      "mostLikelyScoreProbability": 0.17,
+      "overTwoPointFive": 0.37,
+      "expectedGoals": {
+        "home": 1.52,
+        "away": 0.64,
+        "total": 2.16
+      }
+    },
+    {
+      "matchNumber": 63,
+      "stage": "Group G",
+      "dateText": "Sat 27 Jun",
+      "timeUtc": "03:00",
+      "home": "Egypt",
+      "away": "IR Iran",
+      "probabilities": [
+        0.275,
+        0.327,
+        0.39799999999999996
+      ],
+      "mostLikelyScore": "0-0",
+      "mostLikelyScoreProbability": 0.15,
+      "overTwoPointFive": 0.32,
+      "expectedGoals": {
+        "home": 0.88,
+        "away": 1.12,
+        "total": 2
+      }
+    },
+    {
+      "matchNumber": 64,
+      "stage": "Group G",
+      "dateText": "Sat 27 Jun",
+      "timeUtc": "03:00",
+      "home": "New Zealand",
+      "away": "Belgium",
+      "probabilities": [
+        0.071,
+        0.174,
+        0.755
+      ],
+      "mostLikelyScore": "0-2",
+      "mostLikelyScoreProbability": 0.15,
+      "overTwoPointFive": 0.54,
+      "expectedGoals": {
+        "home": 0.57,
+        "away": 2.27,
+        "total": 2.84
+      }
+    },
+    {
+      "matchNumber": 65,
+      "stage": "Group H",
+      "dateText": "Sat 27 Jun",
+      "timeUtc": "00:00",
+      "home": "Cabo Verde",
+      "away": "Saudi Arabia",
+      "probabilities": [
+        0.287,
+        0.325,
+        0.38799999999999996
+      ],
+      "mostLikelyScore": "1-1",
+      "mostLikelyScoreProbability": 0.14,
+      "overTwoPointFive": 0.33,
+      "expectedGoals": {
+        "home": 0.92,
+        "away": 1.11,
+        "total": 2.03
+      }
+    },
+    {
+      "matchNumber": 66,
+      "stage": "Group H",
+      "dateText": "Sat 27 Jun",
+      "timeUtc": "00:00",
+      "home": "Uruguay",
+      "away": "Spain",
+      "probabilities": [
+        0.16899999999999998,
+        0.278,
+        0.5529999999999999
+      ],
+      "mostLikelyScore": "0-1",
+      "mostLikelyScoreProbability": 0.15,
+      "overTwoPointFive": 0.39,
+      "expectedGoals": {
+        "home": 0.72,
+        "away": 1.51,
+        "total": 2.23
+      }
+    },
+    {
+      "matchNumber": 67,
+      "stage": "Group L",
+      "dateText": "Sat 27 Jun",
+      "timeUtc": "21:00",
+      "home": "Panama",
+      "away": "England",
+      "probabilities": [
+        0.053,
+        0.158,
+        0.789
+      ],
+      "mostLikelyScore": "0-2",
+      "mostLikelyScoreProbability": 0.16,
+      "overTwoPointFive": 0.54,
+      "expectedGoals": {
+        "home": 0.48,
+        "away": 2.35,
+        "total": 2.83
+      }
+    },
+    {
+      "matchNumber": 68,
+      "stage": "Group L",
+      "dateText": "Sat 27 Jun",
+      "timeUtc": "21:00",
+      "home": "Croatia",
+      "away": "Ghana",
+      "probabilities": [
+        0.6459999999999999,
+        0.239,
+        0.115
+      ],
+      "mostLikelyScore": "1-0",
+      "mostLikelyScoreProbability": 0.16,
+      "overTwoPointFive": 0.43,
+      "expectedGoals": {
+        "home": 1.77,
+        "away": 0.61,
+        "total": 2.38
+      }
+    },
+    {
+      "matchNumber": 69,
+      "stage": "Group J",
+      "dateText": "Sun 28 Jun",
+      "timeUtc": "02:00",
+      "home": "Algeria",
+      "away": "Austria",
+      "probabilities": [
+        0.303,
+        0.311,
+        0.386
+      ],
+      "mostLikelyScore": "1-1",
+      "mostLikelyScoreProbability": 0.14,
+      "overTwoPointFive": 0.38,
+      "expectedGoals": {
+        "home": 1.02,
+        "away": 1.18,
+        "total": 2.2
+      }
+    },
+    {
+      "matchNumber": 70,
+      "stage": "Group J",
+      "dateText": "Sun 28 Jun",
+      "timeUtc": "02:00",
+      "home": "Jordan",
+      "away": "Argentina",
+      "probabilities": [
+        0.032,
+        0.12,
+        0.848
+      ],
+      "mostLikelyScore": "0-2",
+      "mostLikelyScoreProbability": 0.17,
+      "overTwoPointFive": 0.59,
+      "expectedGoals": {
+        "home": 0.39,
+        "away": 2.65,
+        "total": 3.04
+      }
+    },
+    {
+      "matchNumber": 71,
+      "stage": "Group K",
+      "dateText": "Sat 27 Jun",
+      "timeUtc": "23:30",
+      "home": "Colombia",
+      "away": "Portugal",
+      "probabilities": [
+        0.319,
+        0.31,
+        0.371
+      ],
+      "mostLikelyScore": "1-1",
+      "mostLikelyScoreProbability": 0.14,
+      "overTwoPointFive": 0.39,
+      "expectedGoals": {
+        "home": 1.06,
+        "away": 1.17,
+        "total": 2.23
+      }
+    },
+    {
+      "matchNumber": 72,
+      "stage": "Group K",
+      "dateText": "Sat 27 Jun",
+      "timeUtc": "23:30",
+      "home": "Congo DR",
+      "away": "Uzbekistan",
+      "probabilities": [
+        0.326,
+        0.35,
+        0.324
+      ],
+      "mostLikelyScore": "0-0",
+      "mostLikelyScoreProbability": 0.18,
+      "overTwoPointFive": 0.27,
+      "expectedGoals": {
+        "home": 0.91,
+        "away": 0.9,
+        "total": 1.81
+      }
+    }
+  ]
+}

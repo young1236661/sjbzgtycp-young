@@ -375,6 +375,8 @@ function ModelAuditPanel({ brief }: { brief: WorldCupBrief }) {
   const totals = evaluation.openSourceBaseline.prequentialTotalGoals
   const historical = evaluation.historicalAttackDefense
   const historicalSelected = historical.candidates.find((candidate) => candidate.name === historical.selectedCandidate)
+  const oxford = evaluation.oxfordLockedForecast
+  const scoreDistribution = evaluation.scoreDistribution
   if (!market) return null
 
   return (
@@ -414,6 +416,28 @@ function ModelAuditPanel({ brief }: { brief: WorldCupBrief }) {
             {formatMetricNumber(historical.canonical.validation.totalGoals.rps)}
           </small>
         </div>
+        {oxford ? (
+          <div>
+            <span>牛津赛前锁定模型</span>
+            <strong>{oxford.knockoutExtrapolation.policy.adopted ? '通过淘汰赛留出门禁' : '未通过，仅作独立审计'}</strong>
+            <small>
+              小组赛 {oxford.matching.evaluatedGroupMatches} 场 RPS {formatMetricNumber(oxford.directGroupForecast.direction.rps)}；
+              淘汰赛外推 {oxford.knockoutExtrapolation.samples} 场 RPS{' '}
+              {formatMetricNumber(oxford.knockoutExtrapolation.externalPriorDirection.rps)} vs 内部{' '}
+              {formatMetricNumber(oxford.knockoutExtrapolation.sameMatchInternalBaseline.rps)}
+            </small>
+          </div>
+        ) : null}
+        {scoreDistribution ? (
+          <div>
+            <span>比分节奏混合实验</span>
+            <strong>{scoreDistribution.policy.adopted ? '已通过留出门禁' : '未通过，保留单节奏分布'}</strong>
+            <small>
+              训练选择 {scoreDistribution.policy.selectedCandidate}；生产使用 {scoreDistribution.policy.productionCandidate}，
+              留出样本 {scoreDistribution.validationSize} 场
+            </small>
+          </div>
+        ) : null}
         <div>
           <span>特征纪律</span>
           <strong>盘口、Elo/DC、阵容优先</strong>

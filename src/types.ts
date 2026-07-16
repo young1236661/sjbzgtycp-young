@@ -683,6 +683,20 @@ export interface TotalGoalMetrics {
   top2Coverage: number | null
 }
 
+export interface BinaryMetrics {
+  samples: number
+  brier: number | null
+  logLoss: number | null
+  accuracy: number | null
+}
+
+export interface ExpectedGoalMetrics {
+  samples: number
+  mae: number | null
+  rmse: number | null
+  bias: number | null
+}
+
 export interface StandardEvaluation {
   methodology: string
   properScoring: string
@@ -756,6 +770,48 @@ export interface StandardEvaluation {
     policy: {
       adopted: boolean
       scope: string
+      reason: string
+    }
+  }
+  oxfordLockedForecast?: {
+    matching: {
+      publishedFixtures: number
+      evaluatedGroupMatches: number
+      unmatchedGroupMatches: string[]
+      archivedMarketOverlap: number
+    }
+    directGroupForecast: {
+      direction: ProbabilityMetrics
+      exactScore: ExactScoreMetrics
+      publishedOverTwoPointFive: BinaryMetrics
+      publishedExpectedGoals: ExpectedGoalMetrics
+      derivedPoissonTotalGoals: TotalGoalMetrics
+      sameMatchInternalBaseline: ProbabilityMetrics
+      sameMatchArchivedMarket: ProbabilityMetrics
+      caveat: string
+    }
+    knockoutExtrapolation: {
+      samples: number
+      externalPriorDirection: ProbabilityMetrics
+      externalPriorExactScore: ExactScoreMetrics
+      externalPriorTotalGoals: TotalGoalMetrics
+      sameMatchInternalBaseline: ProbabilityMetrics
+      policy: {
+        adopted: boolean
+        selectionSize: number
+        validationSize: number
+        selectedCandidate: string
+        reason: string
+      }
+    }
+  }
+  scoreDistribution?: {
+    selectionSize: number
+    validationSize: number
+    policy: {
+      adopted: boolean
+      selectedCandidate: string
+      productionCandidate: string
       reason: string
     }
   }

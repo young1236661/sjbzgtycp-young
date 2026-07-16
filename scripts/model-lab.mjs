@@ -20,6 +20,15 @@ export const HISTORICAL_MODEL_SOURCE = Object.freeze({
   license: 'CC0-1.0',
 })
 
+const OXFORD_LOCKED_FORECAST = Object.freeze(
+  JSON.parse(readFileSync(new URL('./data/oxford-locked-forecast.json', import.meta.url), 'utf8')),
+)
+
+export const OXFORD_MODEL_SOURCE = Object.freeze({
+  ...OXFORD_LOCKED_FORECAST.source,
+  license: 'published derived forecast; source terms apply',
+})
+
 const HISTORICAL_MATCHES = Object.freeze(
   JSON.parse(readFileSync(new URL('./data/world-cup-history.json', import.meta.url), 'utf8')).matches,
 )
@@ -89,6 +98,8 @@ const TEAM_ALIASES = new Map([
   ['bosnia-herzegovina', 'bosnia-and-herzegovina'],
   ['bosnia-and-herzegovina', 'bosnia-and-herzegovina'],
   ['cote-divoire', 'ivory-coast'],
+  ['cote-d-ivoire', 'ivory-coast'],
+  ['ir-iran', 'iran'],
 ])
 
 const HOST_TEAMS = new Set(['usa', 'mexico', 'canada'])
@@ -107,6 +118,26 @@ const BLEND_CANDIDATES = Object.freeze([
 const DYNAMIC_MODEL_CANDIDATES = Object.freeze([
   { name: 'dynamic-conservative', updateRate: 0.1, halfLifeYears: 4, meanRate: 0.01 },
   { name: 'dynamic-responsive', updateRate: 0.14, halfLifeYears: 2, meanRate: 0.03 },
+])
+const SCORE_DISTRIBUTION_CANDIDATES = Object.freeze([
+  { name: 'single-tempo', components: [{ weight: 1, scale: 1 }] },
+  {
+    name: 'three-tempo-conservative',
+    components: [
+      { weight: 0.125, scale: 0.7 },
+      { weight: 0.75, scale: 1 },
+      { weight: 0.125, scale: 1.5 },
+    ],
+  },
+  {
+    name: 'three-tempo-wide',
+    components: [
+      { weight: 0.175, scale: 0.6 },
+      { weight: 0.65, scale: 1 },
+      { weight: 0.175, scale: 1.65 },
+    ],
+  },
+  { name: 'inflated-mean-1.10', components: [{ weight: 1, scale: 1.1 }] },
 ])
 
 export function canonicalTeamKey(value) {
@@ -129,6 +160,13 @@ export function buildOpenSourceModelLab(records = [], archivedPredictions = {}) 
   const variantPolicy = evaluateOpenVariantPolicy(canonicalRun, meanRevertingRun)
   const selectedRun = variantPolicy.adopted ? meanRevertingRun : canonicalRun
   const prequentialRun = buildPrequentialRun(canonicalRun, meanRevertingRun)
+  const scoreDistributionLab = buildScoreDistributionLab(prequentialRun)
+  const oxfordLockedAudit = buildOxfordLockedAudit(
+    OXFORD_LOCKED_FORECAST.fixtures,
+    orderedCompleted,
+    prequentialRun,
+    archivedPredictions,
+  )
   const historicalChallenger = buildHistoricalAttackDefenseLab(
     HISTORICAL_MATCHES,
     orderedCompleted,
@@ -142,6 +180,8 @@ export function buildOpenSourceModelLab(records = [], archivedPredictions = {}) 
     prequentialRun,
     variantPolicy,
     historicalChallenger.evaluation,
+    oxfordLockedAudit.evaluation,
+    scoreDistributionLab.evaluation,
   )
 
   const predict = (homeName, awayName, options = {}) => {
@@ -152,8 +192,13 @@ export function buildOpenSourceModelLab(records = [], archivedPredictions = {}) 
       awayName,
       options,
     )
+    const oxford = oxfordLockedAudit.predict(homeName, awayName)
+    const calibratedScoreDistribution = scoreDistributionLab.predict(baseline)
     return {
       ...baseline,
+      topScores: calibratedScoreDistribution.topScores,
+      totalGoals: calibratedScoreDistribution.totalGoals,
+      scoreDistributionVariant: calibratedScoreDistribution.variant,
       variant: variantPolicy.name,
       historicalChallenger: {
         ...historical,
@@ -161,6 +206,13 @@ export function buildOpenSourceModelLab(records = [], archivedPredictions = {}) 
         role: historicalChallenger.evaluation.policy.adopted
           ? 'validated total-goal challenger'
           : 'audit-only challenger',
+      },
+      oxfordLockedChallenger: {
+        ...oxford,
+        adopted: oxfordLockedAudit.evaluation.knockoutExtrapolation.policy.adopted,
+        role: oxfordLockedAudit.evaluation.knockoutExtrapolation.policy.adopted
+          ? 'validated external prior'
+          : 'audit-only external prior',
       },
     }
   }
@@ -249,6 +301,9 @@ function runWalkForward(records, { reversionRate }) {
       actual: actualIndex(record.homeGoals, record.awayGoals),
       actualScore: `${Number(record.homeGoals)}-${Number(record.awayGoals)}`,
       actualTotal: Math.min(7, Number(record.homeGoals) + Number(record.awayGoals)),
+      stage: record.stage ?? 'unknown',
+      home: record.home,
+      away: record.away,
       probabilities: prediction.probabilities,
       totalProbabilities: prediction.totalGoals,
     })
@@ -378,6 +433,403 @@ function totalGoalProbabilities(scores) {
     distribution[Math.min(7, homeGoals + awayGoals)] += Number(item.probability) || 0
   }
   return normalizeDistribution(distribution).map((value) => round(value, 6))
+}
+
+function buildScoreDistributionLab(prequentialRun) {
+  const splitIndex = Math.max(20, Math.floor(prequentialRun.samples.length * 0.7))
+  const candidateRuns = SCORE_DISTRIBUTION_CANDIDATES.map((candidate) => {
+    const predictionsById = new Map()
+    const samples = prequentialRun.samples.map((sample) => {
+      const baseline = prequentialRun.predictionsById.get(String(sample.id))
+      const prediction = scoreDistributionFromBaseline(baseline, candidate)
+      predictionsById.set(String(sample.id), prediction)
+      return {
+        ...sample,
+        probabilities: prediction.probabilities,
+        totalProbabilities: prediction.totalGoals,
+      }
+    })
+    return { candidate, predictionsById, samples }
+  })
+  const reports = candidateRuns.map((run) => ({
+    name: run.candidate.name,
+    components: run.candidate.components,
+    selection: scoreDistributionMetrics(run.samples.slice(0, splitIndex), run.predictionsById),
+    validation: scoreDistributionMetrics(run.samples.slice(splitIndex), run.predictionsById),
+    full: scoreDistributionMetrics(run.samples, run.predictionsById),
+  }))
+  const baselineReport = reports[0]
+  const selectedReport = [...reports].sort((left, right) => {
+    const rpsDifference = left.selection.totalGoals.rps - right.selection.totalGoals.rps
+    return Math.abs(rpsDifference) > 0.0005
+      ? rpsDifference
+      : left.selection.totalGoals.logLoss - right.selection.totalGoals.logLoss
+  })[0]
+  const selectedRun = candidateRuns.find((run) => run.candidate.name === selectedReport.name) ?? candidateRuns[0]
+  const adopted =
+    selectedReport.name !== baselineReport.name &&
+    scoreDistributionClearsGate(baselineReport.validation, selectedReport.validation)
+  const productionRun = adopted ? selectedRun : candidateRuns[0]
+
+  return {
+    predict: (baseline) => {
+      if (!baseline) return { topScores: [], totalGoals: Array(8).fill(0.125), variant: 'single-tempo' }
+      const prediction = scoreDistributionFromBaseline(baseline, productionRun.candidate)
+      return {
+        topScores: prediction.topScores,
+        totalGoals: prediction.totalGoals,
+        variant: productionRun.candidate.name,
+      }
+    },
+    evaluation: {
+      selectionSize: splitIndex,
+      validationSize: prequentialRun.samples.length - splitIndex,
+      candidates: reports,
+      policy: {
+        adopted,
+        selectedCandidate: selectedReport.name,
+        productionCandidate: productionRun.candidate.name,
+        reason: adopted
+          ? 'The training-selected tempo mixture improved every total-goal proper score on the untouched holdout without materially reducing exact-score coverage.'
+          : selectedReport.name === baselineReport.name
+            ? 'The single-tempo baseline remained best on the earlier selection window.'
+            : 'The selected tempo mixture failed at least one untouched holdout gate, so the score grid stays single-tempo.',
+      },
+      diagnostic:
+        'Tempo mixtures represent latent low-, normal- and high-event match regimes. Candidate parameters are fixed before the chronological holdout is inspected.',
+    },
+  }
+}
+
+function scoreDistributionFromBaseline(baseline, candidate) {
+  const homeExpectedGoals = Number(baseline?.homeExpectedGoals) || 1.25
+  const awayExpectedGoals = Number(baseline?.awayExpectedGoals) || 1.05
+  const grid = mixtureScoreGrid(homeExpectedGoals, awayExpectedGoals, candidate.components)
+  return {
+    probabilities: [grid.home, grid.draw, grid.away],
+    totalGoals: totalGoalProbabilities(grid.scores),
+    topScores: grid.scores.slice(0, 8),
+  }
+}
+
+function mixtureScoreGrid(homeExpectedGoals, awayExpectedGoals, components) {
+  const scoreMass = new Map()
+  for (const component of components) {
+    const weight = Number(component.weight) || 0
+    const scale = Number(component.scale) || 1
+    const grid = dixonColesGrid(homeExpectedGoals * scale, awayExpectedGoals * scale, DC_RHO)
+    for (const item of grid.scores) {
+      scoreMass.set(item.score, (scoreMass.get(item.score) ?? 0) + weight * item.probability)
+    }
+  }
+
+  const mass = [...scoreMass.values()].reduce((sum, value) => sum + value, 0) || 1
+  const scores = [...scoreMass.entries()]
+    .map(([score, probability]) => ({ score, probability: round(probability / mass, 6) }))
+    .sort((left, right) => right.probability - left.probability)
+  let home = 0
+  let draw = 0
+  let away = 0
+  for (const item of scores) {
+    const [homeGoals, awayGoals] = item.score.split('-').map(Number)
+    if (homeGoals > awayGoals) home += item.probability
+    else if (homeGoals < awayGoals) away += item.probability
+    else draw += item.probability
+  }
+  const directionMass = home + draw + away || 1
+  return { home: home / directionMass, draw: draw / directionMass, away: away / directionMass, scores }
+}
+
+function scoreDistributionMetrics(samples, predictionsById) {
+  return {
+    direction: compactMetrics(scoreProbabilitySamples(samples)),
+    totalGoals: scoreTotalGoalSamples(samples),
+    exactScore: scoreExactScoreSamples(samples, predictionsById),
+  }
+}
+
+function scoreDistributionClearsGate(baseline, challenger) {
+  return (
+    totalGoalChallengerClearsGate(baseline.totalGoals, challenger.totalGoals) &&
+    challenger.totalGoals.top2Coverage >= baseline.totalGoals.top2Coverage &&
+    challenger.exactScore.top3Coverage >= baseline.exactScore.top3Coverage - 0.04 &&
+    challenger.exactScore.top8Coverage >= baseline.exactScore.top8Coverage - 0.04
+  )
+}
+
+function buildOxfordLockedAudit(fixtures, records, canonicalRun, archivedPredictions) {
+  const fixtureByMatchup = new Map(fixtures.map((fixture) => [matchupKey(fixture.home, fixture.away), fixture]))
+  const canonicalSamplesById = new Map(canonicalRun.samples.map((sample) => [String(sample.id), sample]))
+  const directSamples = []
+  const directPredictions = new Map()
+  const canonicalDirectSamples = []
+  const marketDirectSamples = []
+  const overSamples = []
+  const expectedGoalSamples = []
+  const unmatched = []
+
+  for (const record of records) {
+    if (stageBucket(record.stage) !== 'group') continue
+    const fixture = fixtureByMatchup.get(matchupKey(record.home, record.away))
+    if (!fixture) {
+      unmatched.push(`${record.home} v ${record.away}`)
+      continue
+    }
+
+    const id = String(record.id)
+    const actual = actualIndex(record.homeGoals, record.awayGoals)
+    const actualScore = `${Number(record.homeGoals)}-${Number(record.awayGoals)}`
+    const actualTotal = Number(record.homeGoals) + Number(record.awayGoals)
+    const totalProbabilities = poissonTotalDistribution(fixture.expectedGoals.total)
+    const sample = {
+      id,
+      date: record.date,
+      stage: record.stage,
+      actual,
+      actualScore,
+      actualTotal: Math.min(7, actualTotal),
+      probabilities: fixture.probabilities,
+      totalProbabilities,
+    }
+    directSamples.push(sample)
+    directPredictions.set(id, {
+      probabilities: fixture.probabilities,
+      topScores: [{ score: fixture.mostLikelyScore, probability: fixture.mostLikelyScoreProbability }],
+      totalGoals: totalProbabilities,
+    })
+    overSamples.push({ actual: actualTotal > 2.5 ? 1 : 0, probability: fixture.overTwoPointFive })
+    expectedGoalSamples.push({ actual: actualTotal, expected: fixture.expectedGoals.total })
+
+    const canonical = canonicalSamplesById.get(id)
+    if (canonical) canonicalDirectSamples.push(canonical)
+    const market = archivedProbabilityVector(archivedPredictions?.[id])
+    if (market) marketDirectSamples.push({ actual, probabilities: market })
+  }
+
+  const teamPrior = fitOxfordTeamPrior(fixtures)
+  const predict = (homeName, awayName) => predictOxfordPrior(teamPrior, homeName, awayName)
+  const knockoutSamples = []
+  const knockoutPredictions = new Map()
+  const canonicalKnockoutSamples = []
+
+  for (const record of records) {
+    if (stageBucket(record.stage) !== 'knockout') continue
+    const id = String(record.id)
+    const prediction = predict(record.home, record.away)
+    const canonical = canonicalSamplesById.get(id)
+    if (!canonical) continue
+    knockoutSamples.push({
+      id,
+      date: record.date,
+      stage: record.stage,
+      actual: actualIndex(record.homeGoals, record.awayGoals),
+      actualScore: `${Number(record.homeGoals)}-${Number(record.awayGoals)}`,
+      actualTotal: Math.min(7, Number(record.homeGoals) + Number(record.awayGoals)),
+      probabilities: prediction.probabilities,
+      totalProbabilities: prediction.totalGoals,
+    })
+    knockoutPredictions.set(id, prediction)
+    canonicalKnockoutSamples.push(canonical)
+  }
+
+  const knockoutPolicy = evaluateExternalPriorPolicy(
+    canonicalKnockoutSamples,
+    knockoutSamples,
+    canonicalRun.predictionsById,
+    knockoutPredictions,
+  )
+
+  return {
+    predict,
+    evaluation: {
+      source: OXFORD_MODEL_SOURCE,
+      matching: {
+        publishedFixtures: fixtures.length,
+        evaluatedGroupMatches: directSamples.length,
+        unmatchedGroupMatches: unmatched,
+        archivedMarketOverlap: marketDirectSamples.length,
+      },
+      directGroupForecast: {
+        direction: compactMetrics(scoreProbabilitySamples(directSamples)),
+        exactScore: scoreExactScoreSamples(directSamples, directPredictions),
+        publishedOverTwoPointFive: scoreBinarySamples(overSamples),
+        publishedExpectedGoals: scoreExpectedGoalSamples(expectedGoalSamples),
+        derivedPoissonTotalGoals: scoreTotalGoalSamples(directSamples),
+        sameMatchInternalBaseline: compactMetrics(scoreProbabilitySamples(canonicalDirectSamples)),
+        sameMatchArchivedMarket: compactMetrics(scoreProbabilitySamples(marketDirectSamples)),
+        caveat:
+          'The Oxford forecast was locked before the tournament. Total-goal multiclass probabilities are derived from its published xG; O2.5 is scored directly.',
+      },
+      knockoutExtrapolation: {
+        sourceMethod:
+          'Ridge-regularized team attack and defence priors fitted only to the 72 locked Oxford group-stage xG forecasts.',
+        samples: knockoutSamples.length,
+        externalPriorDirection: compactMetrics(scoreProbabilitySamples(knockoutSamples)),
+        externalPriorExactScore: scoreExactScoreSamples(knockoutSamples, knockoutPredictions),
+        externalPriorTotalGoals: scoreTotalGoalSamples(knockoutSamples),
+        sameMatchInternalBaseline: compactMetrics(scoreProbabilitySamples(canonicalKnockoutSamples)),
+        sameMatchInternalExactScore: scoreExactScoreSamples(canonicalKnockoutSamples, canonicalRun.predictionsById),
+        sameMatchInternalTotalGoals: scoreTotalGoalSamples(canonicalKnockoutSamples),
+        policy: knockoutPolicy,
+      },
+    },
+  }
+}
+
+function fitOxfordTeamPrior(fixtures) {
+  const observations = []
+  const teams = new Set()
+  for (const fixture of fixtures) {
+    const home = canonicalTeamKey(fixture.home)
+    const away = canonicalTeamKey(fixture.away)
+    teams.add(home)
+    teams.add(away)
+    observations.push({ team: home, opponent: away, logGoals: Math.log(Math.max(0.05, fixture.expectedGoals.home)) })
+    observations.push({ team: away, opponent: home, logGoals: Math.log(Math.max(0.05, fixture.expectedGoals.away)) })
+  }
+
+  const attack = new Map([...teams].map((team) => [team, 0]))
+  const defence = new Map([...teams].map((team) => [team, 0]))
+  const ridge = 0.8
+  let intercept = observations.reduce((sum, observation) => sum + observation.logGoals, 0) / observations.length
+
+  for (let iteration = 0; iteration < 120; iteration += 1) {
+    for (const team of teams) {
+      const relevant = observations.filter((observation) => observation.team === team)
+      const numerator = relevant.reduce(
+        (sum, observation) => sum + observation.logGoals - intercept + (defence.get(observation.opponent) ?? 0),
+        0,
+      )
+      attack.set(team, numerator / (relevant.length + ridge))
+    }
+    for (const team of teams) {
+      const relevant = observations.filter((observation) => observation.opponent === team)
+      const numerator = relevant.reduce(
+        (sum, observation) => sum + intercept + (attack.get(observation.team) ?? 0) - observation.logGoals,
+        0,
+      )
+      defence.set(team, numerator / (relevant.length + ridge))
+    }
+    intercept = observations.reduce(
+      (sum, observation) =>
+        sum + observation.logGoals - (attack.get(observation.team) ?? 0) + (defence.get(observation.opponent) ?? 0),
+      0,
+    ) / observations.length
+    const attackMean = [...attack.values()].reduce((sum, value) => sum + value, 0) / attack.size
+    const defenceMean = [...defence.values()].reduce((sum, value) => sum + value, 0) / defence.size
+    for (const team of teams) {
+      attack.set(team, (attack.get(team) ?? 0) - attackMean)
+      defence.set(team, (defence.get(team) ?? 0) - defenceMean)
+    }
+    intercept += attackMean - defenceMean
+  }
+
+  return { attack, defence, intercept }
+}
+
+function predictOxfordPrior(prior, homeName, awayName) {
+  const homeKey = canonicalTeamKey(homeName)
+  const awayKey = canonicalTeamKey(awayName)
+  const homeExpectedGoals = clamp(
+    Math.exp(prior.intercept + (prior.attack.get(homeKey) ?? 0) - (prior.defence.get(awayKey) ?? 0)),
+    0.2,
+    3.8,
+  )
+  const awayExpectedGoals = clamp(
+    Math.exp(prior.intercept + (prior.attack.get(awayKey) ?? 0) - (prior.defence.get(homeKey) ?? 0)),
+    0.2,
+    3.8,
+  )
+  const grid = dixonColesGrid(homeExpectedGoals, awayExpectedGoals, DC_RHO)
+  return {
+    model: 'Oxford locked xG attack/defence prior + Dixon-Coles',
+    source: OXFORD_MODEL_SOURCE,
+    homeKey,
+    awayKey,
+    homeExpectedGoals: round(homeExpectedGoals, 3),
+    awayExpectedGoals: round(awayExpectedGoals, 3),
+    probabilities: [grid.home, grid.draw, grid.away],
+    totalGoals: totalGoalProbabilities(grid.scores),
+    topScores: grid.scores.slice(0, 8),
+  }
+}
+
+function evaluateExternalPriorPolicy(canonicalSamples, externalSamples, canonicalPredictions, externalPredictions) {
+  const count = Math.min(canonicalSamples.length, externalSamples.length)
+  if (count < 18) {
+    return {
+      adopted: false,
+      selectedCandidate: 'internal-only',
+      reason: 'Fewer than 18 completed knockout matches; the external prior remains audit only.',
+    }
+  }
+
+  const candidates = [
+    { name: 'internal-only', internalWeight: 1 },
+    { name: 'internal-80-oxford-20', internalWeight: 0.8 },
+    { name: 'internal-65-oxford-35', internalWeight: 0.65 },
+    { name: 'internal-50-oxford-50', internalWeight: 0.5 },
+  ]
+  const splitIndex = Math.max(12, Math.floor(count * 0.7))
+  const joined = canonicalSamples.slice(0, count).map((canonical, index) => ({
+    id: canonical.id,
+    date: canonical.date,
+    actual: canonical.actual,
+    internal: canonical.probabilities,
+    external: externalSamples[index].probabilities,
+  }))
+  const reports = candidates.map((candidate) => ({
+    ...candidate,
+    selection: compactMetrics(scoreExternalBlend(joined.slice(0, splitIndex), candidate.internalWeight)),
+    validation: compactMetrics(scoreExternalBlend(joined.slice(splitIndex), candidate.internalWeight)),
+    full: compactMetrics(scoreExternalBlend(joined, candidate.internalWeight)),
+  }))
+  const baseline = reports[0]
+  const selected = [...reports].sort((left, right) => {
+    const rpsDifference = left.selection.rps - right.selection.rps
+    return Math.abs(rpsDifference) > 0.0005 ? rpsDifference : left.selection.logLoss - right.selection.logLoss
+  })[0]
+  const adopted =
+    selected.name !== baseline.name &&
+    challengerClearsGate(baseline.validation, selected.validation)
+
+  return {
+    adopted,
+    selectionSize: splitIndex,
+    validationSize: count - splitIndex,
+    selectedCandidate: selected.name,
+    internalWeight: adopted ? selected.internalWeight : 1,
+    externalWeight: adopted ? 1 - selected.internalWeight : 0,
+    candidates: reports,
+    reason: adopted
+      ? 'The training-selected locked-prior blend improved every proper score on the untouched knockout holdout.'
+      : 'No locked-prior blend cleared every untouched knockout holdout gate; keep it as an audit-only signal.',
+    note: 'Exact-score outputs remain unblended because mixing 1X2 vectors does not define a coherent score grid.',
+    predictionAudit: {
+      internalSamples: canonicalPredictions.size,
+      externalSamples: externalPredictions.size,
+    },
+  }
+}
+
+function scoreExternalBlend(samples, internalWeight) {
+  return scoreProbabilitySamples(
+    samples.map((sample) => ({
+      actual: sample.actual,
+      probabilities: blendProbabilities(sample.internal, sample.external, internalWeight),
+    })),
+  )
+}
+
+function poissonTotalDistribution(mean) {
+  const distribution = Array(8).fill(0)
+  for (let goals = 0; goals < 7; goals += 1) distribution[goals] = poissonPmf(goals, mean)
+  distribution[7] = Math.max(0, 1 - distribution.slice(0, 7).reduce((sum, value) => sum + value, 0))
+  return normalizeDistribution(distribution).map((value) => round(value, 6))
+}
+
+function matchupKey(home, away) {
+  return `${canonicalTeamKey(home)}|${canonicalTeamKey(away)}`
 }
 
 function dixonColesTau(homeGoals, awayGoals, homeLambda, awayLambda, rho) {
@@ -644,6 +1096,8 @@ function buildEvaluation(
   prequentialRun,
   variantPolicy,
   historicalEvaluation,
+  oxfordEvaluation,
+  scoreDistributionEvaluation,
 ) {
   const archivedSamples = []
   for (const record of records) {
@@ -686,6 +1140,9 @@ function buildEvaluation(
       },
     },
     historicalAttackDefense: historicalEvaluation,
+    oxfordLockedForecast: oxfordEvaluation,
+    scoreDistribution: scoreDistributionEvaluation,
+    diagnostics: buildStratifiedDiagnostics(prequentialRun.samples, prequentialRun.predictionsById),
     ensemble: evaluateEnsemblePolicy(archivedSamples),
     featurePolicy: {
       tierA: ['de-vigged market probability', 'open Elo/Dixon-Coles baseline', 'verified lineups and suspensions'],
@@ -917,6 +1374,108 @@ export function scoreTotalGoalSamples(samples = []) {
     mae: round(absoluteError / count, 4),
     top2Coverage: round(top2Hits / count, 4),
   }
+}
+
+function scoreBinarySamples(samples = []) {
+  const eligible = samples.filter(
+    (sample) => [0, 1].includes(Number(sample.actual)) && Number.isFinite(Number(sample.probability)),
+  )
+  if (!eligible.length) return { samples: 0, brier: null, logLoss: null, accuracy: null }
+
+  let brier = 0
+  let logLoss = 0
+  let hits = 0
+  for (const sample of eligible) {
+    const actual = Number(sample.actual)
+    const probability = clamp(Number(sample.probability), 1e-12, 1 - 1e-12)
+    brier += (probability - actual) ** 2
+    logLoss += -(actual * Math.log(probability) + (1 - actual) * Math.log(1 - probability))
+    if ((probability >= 0.5 ? 1 : 0) === actual) hits += 1
+  }
+
+  return {
+    samples: eligible.length,
+    brier: round(brier / eligible.length, 4),
+    logLoss: round(logLoss / eligible.length, 4),
+    accuracy: round(hits / eligible.length, 4),
+  }
+}
+
+function scoreExpectedGoalSamples(samples = []) {
+  const eligible = samples.filter(
+    (sample) => Number.isFinite(Number(sample.actual)) && Number.isFinite(Number(sample.expected)),
+  )
+  if (!eligible.length) return { samples: 0, mae: null, rmse: null, bias: null }
+
+  let absoluteError = 0
+  let squaredError = 0
+  let bias = 0
+  for (const sample of eligible) {
+    const error = Number(sample.expected) - Number(sample.actual)
+    absoluteError += Math.abs(error)
+    squaredError += error ** 2
+    bias += error
+  }
+
+  return {
+    samples: eligible.length,
+    mae: round(absoluteError / eligible.length, 4),
+    rmse: round(Math.sqrt(squaredError / eligible.length), 4),
+    bias: round(bias / eligible.length, 4),
+  }
+}
+
+function buildStratifiedDiagnostics(samples, predictionsById) {
+  const byStage = Object.fromEntries(
+    ['group', 'knockout'].map((bucket) => {
+      const selected = samples.filter((sample) => stageBucket(sample.stage) === bucket)
+      return [
+        bucket,
+        {
+          direction: compactMetrics(scoreProbabilitySamples(selected)),
+          exactScore: scoreExactScoreSamples(selected, predictionsById),
+          totalGoals: scoreTotalGoalSamples(selected),
+        },
+      ]
+    }),
+  )
+  const byConfidence = Object.fromEntries(
+    [
+      ['low-under-45', 0, 0.45],
+      ['medium-45-to-65', 0.45, 0.65],
+      ['high-65-plus', 0.65, 1.01],
+    ].map(([name, lower, upper]) => {
+      const selected = samples.filter((sample) => {
+        const maximum = Math.max(...normalizeVector(sample.probabilities))
+        return maximum >= lower && maximum < upper
+      })
+      return [name, compactMetrics(scoreProbabilitySamples(selected))]
+    }),
+  )
+  const byObservedTotal = Object.fromEntries(
+    [
+      ['zero-or-one', 0, 1],
+      ['two-or-three', 2, 3],
+      ['four-plus', 4, 7],
+    ].map(([name, lower, upper]) => {
+      const selected = samples.filter(
+        (sample) => Number(sample.actualTotal) >= lower && Number(sample.actualTotal) <= upper,
+      )
+      return [name, scoreTotalGoalSamples(selected)]
+    }),
+  )
+
+  return {
+    byStage,
+    byForecastConfidence: byConfidence,
+    byObservedTotal,
+    caveat: 'Observed-total strata diagnose failure modes only and are never used as pre-match features.',
+  }
+}
+
+function stageBucket(stage) {
+  const normalized = String(stage ?? '').toLowerCase()
+  return normalized.startsWith('group') ? 'group' : 'knockout'
 }
 
 export function scoreProbabilitySamples(samples = []) {
