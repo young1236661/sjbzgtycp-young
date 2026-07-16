@@ -2,6 +2,8 @@
 // The Elo/Dixon-Coles baseline is adapted from Cup26 AI's MIT-licensed model:
 // https://github.com/Hicruben/world-cup-2026-prediction-model
 
+import { readFileSync } from 'node:fs'
+
 export const OPEN_MODEL_SOURCE = Object.freeze({
   id: 'cup26-elo-dixon-coles',
   name: 'Cup26 AI Elo + Dixon-Coles',
@@ -9,6 +11,18 @@ export const OPEN_MODEL_SOURCE = Object.freeze({
   commit: '184f5021c42192fb6abfac71abf641ff18df11e0',
   license: 'MIT',
 })
+
+export const HISTORICAL_MODEL_SOURCE = Object.freeze({
+  id: 'openfootball-dynamic-attack-defence',
+  name: 'OpenFootball dynamic attack/defence Poisson',
+  url: 'https://github.com/openfootball/worldcup.json',
+  commit: '5e4bc62f9e711f3ea83d2b150ac3200e7e9c90a0',
+  license: 'CC0-1.0',
+})
+
+const HISTORICAL_MATCHES = Object.freeze(
+  JSON.parse(readFileSync(new URL('./data/world-cup-history.json', import.meta.url), 'utf8')).matches,
+)
 
 const BASE_RATINGS = Object.freeze({
   argentina: 1976,
@@ -90,6 +104,10 @@ const BLEND_CANDIDATES = Object.freeze([
   { name: 'market-65-open-35', market: 0.65, open: 0.35 },
   { name: 'market-50-open-50', market: 0.5, open: 0.5 },
 ])
+const DYNAMIC_MODEL_CANDIDATES = Object.freeze([
+  { name: 'dynamic-conservative', updateRate: 0.1, halfLifeYears: 4, meanRate: 0.01 },
+  { name: 'dynamic-responsive', updateRate: 0.14, halfLifeYears: 2, meanRate: 0.03 },
+])
 
 export function canonicalTeamKey(value) {
   const normalized = String(value ?? '')
@@ -111,6 +129,11 @@ export function buildOpenSourceModelLab(records = [], archivedPredictions = {}) 
   const variantPolicy = evaluateOpenVariantPolicy(canonicalRun, meanRevertingRun)
   const selectedRun = variantPolicy.adopted ? meanRevertingRun : canonicalRun
   const prequentialRun = buildPrequentialRun(canonicalRun, meanRevertingRun)
+  const historicalChallenger = buildHistoricalAttackDefenseLab(
+    HISTORICAL_MATCHES,
+    orderedCompleted,
+    canonicalRun,
+  )
   const evaluation = buildEvaluation(
     orderedCompleted,
     archivedPredictions,
@@ -118,12 +141,29 @@ export function buildOpenSourceModelLab(records = [], archivedPredictions = {}) 
     meanRevertingRun,
     prequentialRun,
     variantPolicy,
+    historicalChallenger.evaluation,
   )
 
-  const predict = (homeName, awayName, options = {}) => ({
-    ...predictFromState(selectedRun.state, homeName, awayName, options),
-    variant: variantPolicy.name,
-  })
+  const predict = (homeName, awayName, options = {}) => {
+    const baseline = predictFromState(selectedRun.state, homeName, awayName, options)
+    const historical = predictDynamicFromState(
+      historicalChallenger.selectedRun.state,
+      homeName,
+      awayName,
+      options,
+    )
+    return {
+      ...baseline,
+      variant: variantPolicy.name,
+      historicalChallenger: {
+        ...historical,
+        adopted: historicalChallenger.evaluation.policy.adopted,
+        role: historicalChallenger.evaluation.policy.adopted
+          ? 'validated total-goal challenger'
+          : 'audit-only challenger',
+      },
+    }
+  }
 
   const combineWithMarket = (marketProbabilities, openPrediction) => {
     const marketVector = probabilityVector(marketProbabilities)
@@ -208,7 +248,9 @@ function runWalkForward(records, { reversionRate }) {
       date: record.date,
       actual: actualIndex(record.homeGoals, record.awayGoals),
       actualScore: `${Number(record.homeGoals)}-${Number(record.awayGoals)}`,
+      actualTotal: Math.min(7, Number(record.homeGoals) + Number(record.awayGoals)),
       probabilities: prediction.probabilities,
+      totalProbabilities: prediction.totalGoals,
     })
     updateRatings(state, record, prediction, reversionRate)
   }
@@ -248,6 +290,7 @@ function predictFromState(state, homeName, awayName, options = {}) {
     homeExpectedGoals: round(homeExpectedGoals, 3),
     awayExpectedGoals: round(awayExpectedGoals, 3),
     probabilities: [grid.home, grid.draw, grid.away],
+    totalGoals: totalGoalProbabilities(grid.scores),
     topScores: grid.scores.slice(0, 8),
   }
 }
@@ -327,6 +370,16 @@ function dixonColesGrid(homeLambda, awayLambda, rho) {
   }
 }
 
+function totalGoalProbabilities(scores) {
+  const distribution = Array(8).fill(0)
+  for (const item of scores) {
+    const [homeGoals, awayGoals] = String(item.score).split('-').map(Number)
+    if (!Number.isFinite(homeGoals) || !Number.isFinite(awayGoals)) continue
+    distribution[Math.min(7, homeGoals + awayGoals)] += Number(item.probability) || 0
+  }
+  return normalizeDistribution(distribution).map((value) => round(value, 6))
+}
+
 function dixonColesTau(homeGoals, awayGoals, homeLambda, awayLambda, rho) {
   if (homeGoals === 0 && awayGoals === 0) return 1 - homeLambda * awayLambda * rho
   if (homeGoals === 0 && awayGoals === 1) return 1 + homeLambda * rho
@@ -349,6 +402,240 @@ function goalMarginMultiplier(goalDifference) {
   return (11 + difference) / 8
 }
 
+function buildHistoricalAttackDefenseLab(historicalRecords, currentRecords, canonicalRun) {
+  const orderedHistory = historicalRecords
+    .filter(isCompletedRecord)
+    .sort((left, right) => new Date(left.date).getTime() - new Date(right.date).getTime())
+  const runs = DYNAMIC_MODEL_CANDIDATES.map((params) => ({
+    params,
+    run: runDynamicWalkForward(orderedHistory, currentRecords, params),
+  }))
+  const splitIndex = Math.max(20, Math.floor(currentRecords.length * 0.7))
+  const canonicalSelectionDirection = scoreProbabilitySamples(canonicalRun.samples.slice(0, splitIndex))
+  const canonicalValidationDirection = scoreProbabilitySamples(canonicalRun.samples.slice(splitIndex))
+  const canonicalSelectionTotals = scoreTotalGoalSamples(canonicalRun.samples.slice(0, splitIndex))
+  const canonicalValidationTotals = scoreTotalGoalSamples(canonicalRun.samples.slice(splitIndex))
+  const reports = runs.map(({ params, run }) => ({
+    name: params.name,
+    parameters: {
+      updateRate: params.updateRate,
+      halfLifeYears: params.halfLifeYears,
+      meanRate: params.meanRate,
+    },
+    selection: {
+      direction: compactMetrics(scoreProbabilitySamples(run.samples.slice(0, splitIndex))),
+      totalGoals: scoreTotalGoalSamples(run.samples.slice(0, splitIndex)),
+    },
+    validation: {
+      direction: compactMetrics(scoreProbabilitySamples(run.samples.slice(splitIndex))),
+      totalGoals: scoreTotalGoalSamples(run.samples.slice(splitIndex)),
+    },
+    full: {
+      direction: compactMetrics(run.metrics),
+      totalGoals: run.totalGoalMetrics,
+      exactScore: run.exactScoreMetrics,
+    },
+  }))
+  const selectedReport = [...reports].sort((left, right) => {
+    const rpsDifference = left.selection.totalGoals.rps - right.selection.totalGoals.rps
+    return Math.abs(rpsDifference) > 0.0005
+      ? rpsDifference
+      : left.selection.totalGoals.logLoss - right.selection.totalGoals.logLoss
+  })[0]
+  const selectedIndex = reports.findIndex((report) => report.name === selectedReport.name)
+  const selectedRun = runs[selectedIndex].run
+  const totalGate = totalGoalChallengerClearsGate(
+    canonicalValidationTotals,
+    selectedReport.validation.totalGoals,
+  )
+  const directionSafe =
+    selectedReport.validation.direction.rps <= canonicalValidationDirection.rps + 0.005 &&
+    selectedReport.validation.direction.logLoss <= canonicalValidationDirection.logLoss + 0.02
+  const enoughSamples = currentRecords.length >= 30 && currentRecords.length - splitIndex >= 8
+  const adopted = enoughSamples && totalGate && directionSafe
+
+  return {
+    selectedRun,
+    evaluation: {
+      source: HISTORICAL_MODEL_SOURCE,
+      historicalSamples: orderedHistory.length,
+      currentSamples: currentRecords.length,
+      selectionSize: splitIndex,
+      validationSize: currentRecords.length - splitIndex,
+      selectedCandidate: selectedReport.name,
+      canonical: {
+        selection: {
+          direction: compactMetrics(canonicalSelectionDirection),
+          totalGoals: canonicalSelectionTotals,
+        },
+        validation: {
+          direction: compactMetrics(canonicalValidationDirection),
+          totalGoals: canonicalValidationTotals,
+        },
+      },
+      candidates: reports,
+      policy: {
+        adopted,
+        scope: adopted ? 'total-goal distribution' : 'audit only',
+        reason: !enoughSamples
+          ? 'Not enough chronological current-tournament samples for a protected holdout.'
+          : adopted
+            ? 'The training-selected challenger improved total-goal RPS, Brier and log-loss on the untouched holdout without materially worsening 1X2.'
+            : 'The training-selected challenger did not clear every untouched holdout gate, so it remains an audit-only signal.',
+      },
+    },
+  }
+}
+
+function runDynamicWalkForward(historicalRecords, currentRecords, params) {
+  const state = createDynamicState(params)
+  for (const record of historicalRecords) {
+    const prediction = predictDynamicFromState(state, record.home, record.away, { date: record.date })
+    updateDynamicState(state, record, prediction)
+  }
+
+  const predictionsById = new Map()
+  const samples = []
+  for (const record of currentRecords) {
+    const prediction = predictDynamicFromState(state, record.home, record.away, {
+      date: record.date,
+      homeHost: record.homeHost,
+      awayHost: record.awayHost,
+    })
+    predictionsById.set(String(record.id), prediction)
+    samples.push({
+      id: String(record.id),
+      date: record.date,
+      actual: actualIndex(record.homeGoals, record.awayGoals),
+      actualScore: `${Number(record.homeGoals)}-${Number(record.awayGoals)}`,
+      actualTotal: Math.min(7, Number(record.homeGoals) + Number(record.awayGoals)),
+      probabilities: prediction.probabilities,
+      totalProbabilities: prediction.totalGoals,
+    })
+    updateDynamicState(state, record, prediction)
+  }
+
+  return {
+    state,
+    predictionsById,
+    samples,
+    metrics: scoreProbabilitySamples(samples),
+    totalGoalMetrics: scoreTotalGoalSamples(samples),
+    exactScoreMetrics: scoreExactScoreSamples(samples, predictionsById),
+  }
+}
+
+function createDynamicState(params) {
+  return {
+    params,
+    teams: new Map(),
+    meanGoalsPerTeam: 1.35,
+    lastDate: null,
+  }
+}
+
+function predictDynamicFromState(state, homeName, awayName, options = {}) {
+  const homeKey = canonicalTeamKey(homeName)
+  const awayKey = canonicalTeamKey(awayName)
+  const targetTime = safeTimestamp(options.date) ?? state.lastDate ?? Date.now()
+  const home = dynamicTeamAt(state, homeKey, targetTime)
+  const away = dynamicTeamAt(state, awayKey, targetTime)
+  const homeHost = options.homeHost ?? HOST_TEAMS.has(homeKey)
+  const awayHost = options.awayHost ?? HOST_TEAMS.has(awayKey)
+  const hostLogBonus = homeHost ? 0.12 : awayHost ? -0.12 : 0
+  const homeExpectedGoals = clamp(
+    state.meanGoalsPerTeam * Math.exp(home.attack - away.defence + hostLogBonus),
+    0.2,
+    4.5,
+  )
+  const awayExpectedGoals = clamp(
+    state.meanGoalsPerTeam * Math.exp(away.attack - home.defence - hostLogBonus / 2),
+    0.2,
+    4.5,
+  )
+  const grid = dixonColesGrid(homeExpectedGoals, awayExpectedGoals, DC_RHO)
+
+  return {
+    model: 'time-decayed attack/defence Poisson challenger',
+    source: HISTORICAL_MODEL_SOURCE,
+    homeExpectedGoals: round(homeExpectedGoals, 3),
+    awayExpectedGoals: round(awayExpectedGoals, 3),
+    probabilities: [grid.home, grid.draw, grid.away],
+    totalGoals: totalGoalProbabilities(grid.scores),
+    topScores: grid.scores.slice(0, 8),
+  }
+}
+
+function updateDynamicState(state, record, prediction) {
+  const targetTime = safeTimestamp(record.date) ?? state.lastDate ?? Date.now()
+  const homeKey = canonicalTeamKey(record.home)
+  const awayKey = canonicalTeamKey(record.away)
+  const home = decayDynamicTeam(state, homeKey, targetTime)
+  const away = decayDynamicTeam(state, awayKey, targetTime)
+  const homeGoals = Math.min(5, Math.max(0, Number(record.homeGoals)))
+  const awayGoals = Math.min(5, Math.max(0, Number(record.awayGoals)))
+  const homeResidual = clamp(
+    (homeGoals - prediction.homeExpectedGoals) / Math.sqrt(prediction.homeExpectedGoals + 0.3),
+    -2.5,
+    2.5,
+  )
+  const awayResidual = clamp(
+    (awayGoals - prediction.awayExpectedGoals) / Math.sqrt(prediction.awayExpectedGoals + 0.3),
+    -2.5,
+    2.5,
+  )
+  const updateRate = state.params.updateRate / 2
+
+  home.attack = clamp(home.attack + updateRate * homeResidual, -1.2, 1.2)
+  away.defence = clamp(away.defence - updateRate * homeResidual, -1.2, 1.2)
+  away.attack = clamp(away.attack + updateRate * awayResidual, -1.2, 1.2)
+  home.defence = clamp(home.defence - updateRate * awayResidual, -1.2, 1.2)
+  const observedMean = (homeGoals + awayGoals) / 2
+  state.meanGoalsPerTeam = clamp(
+    state.meanGoalsPerTeam * (1 - state.params.meanRate) + observedMean * state.params.meanRate,
+    0.8,
+    2.2,
+  )
+  state.lastDate = targetTime
+}
+
+function dynamicTeamAt(state, key, targetTime) {
+  const team = state.teams.get(key)
+  if (!team) return { attack: 0, defence: 0 }
+  const factor = dynamicDecayFactor(team.updatedAt, targetTime, state.params.halfLifeYears)
+  return { attack: team.attack * factor, defence: team.defence * factor }
+}
+
+function decayDynamicTeam(state, key, targetTime) {
+  const team = state.teams.get(key) ?? { attack: 0, defence: 0, updatedAt: targetTime }
+  const factor = dynamicDecayFactor(team.updatedAt, targetTime, state.params.halfLifeYears)
+  team.attack *= factor
+  team.defence *= factor
+  team.updatedAt = targetTime
+  state.teams.set(key, team)
+  return team
+}
+
+function dynamicDecayFactor(previousTime, targetTime, halfLifeYears) {
+  if (!Number.isFinite(previousTime) || !Number.isFinite(targetTime) || targetTime <= previousTime) return 1
+  const elapsedYears = (targetTime - previousTime) / (365.25 * 24 * 60 * 60 * 1000)
+  return 0.5 ** (elapsedYears / halfLifeYears)
+}
+
+function safeTimestamp(value) {
+  const timestamp = new Date(value).getTime()
+  return Number.isFinite(timestamp) ? timestamp : null
+}
+
+function totalGoalChallengerClearsGate(canonical, challenger) {
+  return (
+    challenger.rps < canonical.rps &&
+    challenger.brier < canonical.brier &&
+    challenger.logLoss < canonical.logLoss &&
+    challenger.mae <= canonical.mae
+  )
+}
+
 function buildEvaluation(
   records,
   archivedPredictions,
@@ -356,6 +643,7 @@ function buildEvaluation(
   meanRevertingRun,
   prequentialRun,
   variantPolicy,
+  historicalEvaluation,
 ) {
   const archivedSamples = []
   for (const record of records) {
@@ -374,14 +662,17 @@ function buildEvaluation(
 
   return {
     methodology: 'strict chronological walk-forward; each match is predicted before its result updates ratings',
-    properScoring: 'RPS, multiclass Brier, log-loss and ECE; lower is better except accuracy',
+    properScoring: '1X2 and total-goal RPS, multiclass Brier and log-loss; lower is better except accuracy and coverage',
     openSourceBaseline: {
       canonical: canonicalRun.metrics,
       canonicalExactScore: canonicalRun.exactScoreMetrics,
+      canonicalTotalGoals: scoreTotalGoalSamples(canonicalRun.samples),
       meanRevertingShadow: meanRevertingRun.metrics,
       meanRevertingExactScore: meanRevertingRun.exactScoreMetrics,
+      meanRevertingTotalGoals: scoreTotalGoalSamples(meanRevertingRun.samples),
       prequentialSelected: prequentialRun.metrics,
       prequentialExactScore: prequentialRun.exactScoreMetrics,
+      prequentialTotalGoals: scoreTotalGoalSamples(prequentialRun.samples),
       prequentialChallengerSelections: prequentialRun.challengerSelections,
       variantPolicy,
       reproducedUpstreamBacktest: {
@@ -394,6 +685,7 @@ function buildEvaluation(
         sourceCommit: OPEN_MODEL_SOURCE.commit,
       },
     },
+    historicalAttackDefense: historicalEvaluation,
     ensemble: evaluateEnsemblePolicy(archivedSamples),
     featurePolicy: {
       tierA: ['de-vigged market probability', 'open Elo/Dixon-Coles baseline', 'verified lineups and suspensions'],
@@ -424,8 +716,9 @@ function evaluateOpenVariantPolicy(canonicalRun, meanRevertingRun) {
   const challengerSelection = scoreProbabilitySamples(meanRevertingRun.samples.slice(0, splitIndex))
   const canonicalValidation = scoreProbabilitySamples(canonicalRun.samples.slice(splitIndex))
   const challengerValidation = scoreProbabilitySamples(meanRevertingRun.samples.slice(splitIndex))
-  const adopted = challengerClearsGate(canonicalSelection, challengerSelection)
+  const selectionCleared = challengerClearsGate(canonicalSelection, challengerSelection)
   const holdoutConfirmed = challengerClearsGate(canonicalValidation, challengerValidation)
+  const adopted = selectionCleared && holdoutConfirmed
 
   return {
     adopted,
@@ -440,8 +733,10 @@ function evaluateOpenVariantPolicy(canonicalRun, meanRevertingRun) {
     challenger: compactMetrics(challengerValidation),
     holdoutConfirmed,
     reason: adopted
-      ? `Mean reversion cleared the earlier selection window; the untouched holdout ${holdoutConfirmed ? 'confirmed' : 'did not confirm'} the gain.`
-      : 'Mean reversion did not clear every earlier selection-window gate; keep the canonical model.',
+      ? 'Mean reversion cleared the earlier selection window and the untouched holdout confirmed the gain.'
+      : selectionCleared
+        ? 'Mean reversion cleared the earlier window but failed the untouched holdout; keep the canonical model.'
+        : 'Mean reversion did not clear every earlier selection-window gate; keep the canonical model.',
   }
 }
 
@@ -574,6 +869,56 @@ export function scoreExactScoreSamples(samples = [], predictionsById = new Map()
   }
 }
 
+export function scoreTotalGoalSamples(samples = []) {
+  const eligible = samples.filter(
+    (sample) =>
+      Number.isFinite(Number(sample.actualTotal)) &&
+      Array.isArray(sample.totalProbabilities) &&
+      sample.totalProbabilities.length === 8,
+  )
+  if (!eligible.length) return emptyTotalGoalMetrics()
+
+  let brier = 0
+  let logLoss = 0
+  let rps = 0
+  let absoluteError = 0
+  let top2Hits = 0
+  for (const sample of eligible) {
+    const probabilities = normalizeDistribution(sample.totalProbabilities)
+    const actual = Math.min(7, Math.max(0, Math.trunc(Number(sample.actualTotal))))
+    let predictedCumulative = 0
+    let sampleRps = 0
+    for (let index = 0; index < probabilities.length; index += 1) {
+      const observed = index === actual ? 1 : 0
+      brier += (probabilities[index] - observed) ** 2
+      if (index < probabilities.length - 1) {
+        predictedCumulative += probabilities[index]
+        sampleRps += (predictedCumulative - (actual <= index ? 1 : 0)) ** 2
+      }
+    }
+    rps += sampleRps / (probabilities.length - 1)
+    logLoss += -Math.log(Math.max(1e-12, probabilities[actual]))
+    const expectedTotal = probabilities.reduce((sum, probability, index) => sum + probability * index, 0)
+    absoluteError += Math.abs(expectedTotal - actual)
+    const topTwo = probabilities
+      .map((probability, index) => ({ probability, index }))
+      .sort((left, right) => right.probability - left.probability)
+      .slice(0, 2)
+      .map((item) => item.index)
+    if (topTwo.includes(actual)) top2Hits += 1
+  }
+
+  const count = eligible.length
+  return {
+    samples: count,
+    rps: round(rps / count, 4),
+    brier: round(brier / count, 4),
+    logLoss: round(logLoss / count, 4),
+    mae: round(absoluteError / count, 4),
+    top2Coverage: round(top2Hits / count, 4),
+  }
+}
+
 export function scoreProbabilitySamples(samples = []) {
   if (!samples.length) return emptyMetrics()
   let hits = 0
@@ -638,6 +983,17 @@ function emptyMetrics() {
   }
 }
 
+function emptyTotalGoalMetrics() {
+  return {
+    samples: 0,
+    rps: null,
+    brier: null,
+    logLoss: null,
+    mae: null,
+    top2Coverage: null,
+  }
+}
+
 function archivedProbabilityVector(archived) {
   const entries = archived?.resultProbabilities
   if (!Array.isArray(entries)) return null
@@ -683,6 +1039,13 @@ function normalizeVector(values) {
   const safe = values.map((value) => (Number.isFinite(Number(value)) && Number(value) >= 0 ? Number(value) : 0))
   const total = safe.reduce((sum, value) => sum + value, 0)
   return total > 0 ? safe.map((value) => value / total) : [1 / 3, 1 / 3, 1 / 3]
+}
+
+function normalizeDistribution(values) {
+  const safe = values.map((value) => (Number.isFinite(Number(value)) && Number(value) >= 0 ? Number(value) : 0))
+  const total = safe.reduce((sum, value) => sum + value, 0)
+  if (total > 0) return safe.map((value) => value / total)
+  return safe.map(() => 1 / Math.max(1, safe.length))
 }
 
 function actualIndex(homeGoals, awayGoals) {

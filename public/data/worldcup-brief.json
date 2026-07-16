@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-16T15:00:33.171Z",
-  "generatedAtChina": "07/16 23:00",
+  "generatedAt": "2026-07-16T15:32:57.873Z",
+  "generatedAtChina": "07/16 23:32",
   "targetDateChina": "2026-07-16",
   "timezone": "Asia/Shanghai",
   "summary": {
@@ -8,7 +8,7 @@
     "note": "系统将公开赛程、新闻和海外市场赔率转为概率视图，再给出谨慎的体彩核验方向。所有判断只作信息分析，不保证盈利。",
     "predictionScope": "90分钟常规时间 + 上下半场补时，不含加时赛和点球大战",
     "trackedMatches": 2,
-    "healthySources": 49,
+    "healthySources": 50,
     "updateMode": "本地脚本"
   },
   "sources": [
@@ -17,7 +17,7 @@
       "name": "FIFA 官方赛程",
       "status": "ok",
       "url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/match-schedule-fixtures-results-teams-stadiums",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "官方页面可访问"
     },
     {
@@ -25,7 +25,7 @@
       "name": "ESPN 赛程 20260611",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260611",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "2 场比赛"
     },
     {
@@ -33,7 +33,7 @@
       "name": "ESPN 赛程 20260612",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260612",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "2 场比赛"
     },
     {
@@ -41,7 +41,7 @@
       "name": "ESPN 赛程 20260613",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260613",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "3 场比赛"
     },
     {
@@ -49,7 +49,7 @@
       "name": "ESPN 赛程 20260614",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260614",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "5 场比赛"
     },
     {
@@ -57,7 +57,7 @@
       "name": "ESPN 赛程 20260615",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260615",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "4 场比赛"
     },
     {
@@ -65,7 +65,7 @@
       "name": "ESPN 赛程 20260616",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260616",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "3 场比赛"
     },
     {
@@ -73,7 +73,7 @@
       "name": "ESPN 赛程 20260617",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260617",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "5 场比赛"
     },
     {
@@ -81,7 +81,7 @@
       "name": "ESPN 赛程 20260618",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260618",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "4 场比赛"
     },
     {
@@ -89,7 +89,7 @@
       "name": "ESPN 赛程 20260619",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260619",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "4 场比赛"
     },
     {
@@ -97,7 +97,7 @@
       "name": "ESPN 赛程 20260620",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260620",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "3 场比赛"
     },
     {
@@ -105,7 +105,7 @@
       "name": "ESPN 赛程 20260621",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260621",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "5 场比赛"
     },
     {
@@ -113,7 +113,7 @@
       "name": "ESPN 赛程 20260622",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260622",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "4 场比赛"
     },
     {
@@ -121,7 +121,7 @@
       "name": "ESPN 赛程 20260623",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260623",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "4 场比赛"
     },
     {
@@ -129,7 +129,7 @@
       "name": "ESPN 赛程 20260624",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260624",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "6 场比赛"
     },
     {
@@ -137,7 +137,7 @@
       "name": "ESPN 赛程 20260625",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260625",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "6 场比赛"
     },
     {
@@ -145,7 +145,7 @@
       "name": "ESPN 赛程 20260626",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260626",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "6 场比赛"
     },
     {
@@ -153,7 +153,7 @@
       "name": "ESPN 赛程 20260627",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260627",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "6 场比赛"
     },
     {
@@ -161,7 +161,7 @@
       "name": "ESPN 赛程 20260628",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260628",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "1 场比赛"
     },
     {
@@ -169,7 +169,7 @@
       "name": "ESPN 赛程 20260629",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260629",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "3 场比赛"
     },
     {
@@ -177,7 +177,7 @@
       "name": "ESPN 赛程 20260630",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260630",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "3 场比赛"
     },
     {
@@ -185,7 +185,7 @@
       "name": "ESPN 赛程 20260701",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260701",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "3 场比赛"
     },
     {
@@ -193,7 +193,7 @@
       "name": "ESPN 赛程 20260702",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260702",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "3 场比赛"
     },
     {
@@ -201,7 +201,7 @@
       "name": "ESPN 赛程 20260703",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260703",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "3 场比赛"
     },
     {
@@ -209,7 +209,7 @@
       "name": "ESPN 赛程 20260704",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260704",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "2 场比赛"
     },
     {
@@ -217,7 +217,7 @@
       "name": "ESPN 赛程 20260705",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260705",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "2 场比赛"
     },
     {
@@ -225,7 +225,7 @@
       "name": "ESPN 赛程 20260706",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260706",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "2 场比赛"
     },
     {
@@ -233,7 +233,7 @@
       "name": "ESPN 赛程 20260707",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260707",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "2 场比赛"
     },
     {
@@ -241,7 +241,7 @@
       "name": "ESPN 赛程 20260708",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260708",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "0 场比赛"
     },
     {
@@ -249,7 +249,7 @@
       "name": "ESPN 赛程 20260709",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260709",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "1 场比赛"
     },
     {
@@ -257,7 +257,7 @@
       "name": "ESPN 赛程 20260710",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260710",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "1 场比赛"
     },
     {
@@ -265,7 +265,7 @@
       "name": "ESPN 赛程 20260711",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260711",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "2 场比赛"
     },
     {
@@ -273,7 +273,7 @@
       "name": "ESPN 赛程 20260712",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260712",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "0 场比赛"
     },
     {
@@ -281,7 +281,7 @@
       "name": "ESPN 赛程 20260713",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260713",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "0 场比赛"
     },
     {
@@ -289,7 +289,7 @@
       "name": "ESPN 赛程 20260714",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260714",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "1 场比赛"
     },
     {
@@ -297,7 +297,7 @@
       "name": "ESPN 赛程 20260715",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260715",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "1 场比赛"
     },
     {
@@ -305,7 +305,7 @@
       "name": "ESPN 赛程 20260716",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260716",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "0 场比赛"
     },
     {
@@ -313,7 +313,7 @@
       "name": "ESPN 赛程 20260717",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260717",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "0 场比赛"
     },
     {
@@ -321,7 +321,7 @@
       "name": "ESPN 赛程 20260718",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260718",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "1 场比赛"
     },
     {
@@ -329,7 +329,7 @@
       "name": "ESPN 赛程 20260719",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260719",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "1 场比赛"
     },
     {
@@ -337,7 +337,7 @@
       "name": "ESPN 赛程 20260720",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260720",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "0 场比赛"
     },
     {
@@ -345,7 +345,7 @@
       "name": "ESPN 赛程 20260721",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260721",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "0 场比赛"
     },
     {
@@ -353,7 +353,7 @@
       "name": "ESPN 世界杯新闻",
       "status": "ok",
       "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/news",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "6 条新闻"
     },
     {
@@ -361,7 +361,7 @@
       "name": "The Odds API",
       "status": "skipped",
       "url": "https://the-odds-api.com/",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "未设置 THE_ODDS_API_KEY"
     },
     {
@@ -369,7 +369,7 @@
       "name": "中国体彩网竞彩",
       "status": "warn",
       "url": "https://www.sporttery.cn/jc/",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "HTTP 403"
     },
     {
@@ -377,7 +377,7 @@
       "name": "ESPN 球队近 5 场",
       "status": "ok",
       "url": "https://www.espn.com/soccer/",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "4/4 项成功"
     },
     {
@@ -385,7 +385,7 @@
       "name": "ESPN 伤病名单",
       "status": "ok",
       "url": "https://www.espn.com/soccer/",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "4/4 项成功"
     },
     {
@@ -393,7 +393,7 @@
       "name": "Open-Meteo 天气",
       "status": "ok",
       "url": "https://open-meteo.com/",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "2/2 项成功"
     },
     {
@@ -401,7 +401,7 @@
       "name": "本地预测档案",
       "status": "ok",
       "url": "public/data/prediction-history.json",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "65 场赛前预测用于后续赛后训练"
     },
     {
@@ -409,7 +409,7 @@
       "name": "FIFA 历届世界杯表现档案",
       "status": "ok",
       "url": "https://www.fifa.com/en/tournaments/mens/worldcup",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "17 条球队历史档案参与低权重校准"
     },
     {
@@ -417,8 +417,16 @@
       "name": "Cup26 AI Elo + Dixon-Coles",
       "status": "ok",
       "url": "https://github.com/Hicruben/world-cup-2026-prediction-model",
-      "lastCheckedAt": "2026-07-16T15:00:33.171Z",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
       "detail": "MIT开源独立基线；本届走步回测 102 场"
+    },
+    {
+      "id": "openfootball-dynamic-attack-defence",
+      "name": "OpenFootball dynamic attack/defence Poisson",
+      "status": "ok",
+      "url": "https://github.com/openfootball/worldcup.json",
+      "lastCheckedAt": "2026-07-16T15:32:57.873Z",
+      "detail": "CC0历届世界杯964场90分钟数据；动态攻防模型仅作审计，未进入主概率"
     }
   ],
   "news": [
@@ -476,7 +484,7 @@
     "scope": "本届世界杯 2026-06-11 至 2026-07-16 已完赛样本",
     "standardEvaluation": {
       "methodology": "strict chronological walk-forward; each match is predicted before its result updates ratings",
-      "properScoring": "RPS, multiclass Brier, log-loss and ECE; lower is better except accuracy",
+      "properScoring": "1X2 and total-goal RPS, multiclass Brier and log-loss; lower is better except accuracy and coverage",
       "openSourceBaseline": {
         "canonical": {
           "samples": 102,
@@ -588,6 +596,14 @@
           "top3Coverage": 0.451,
           "top8Coverage": 0.7157
         },
+        "canonicalTotalGoals": {
+          "samples": 102,
+          "rps": 0.1352,
+          "brier": 0.8348,
+          "logLoss": 1.9078,
+          "mae": 1.381,
+          "top2Coverage": 0.4608
+        },
         "meanRevertingShadow": {
           "samples": 102,
           "accuracy": 0.6373,
@@ -697,6 +713,14 @@
           "top1Accuracy": 0.1471,
           "top3Coverage": 0.4412,
           "top8Coverage": 0.7157
+        },
+        "meanRevertingTotalGoals": {
+          "samples": 102,
+          "rps": 0.1352,
+          "brier": 0.8349,
+          "logLoss": 1.9079,
+          "mae": 1.3813,
+          "top2Coverage": 0.4608
         },
         "prequentialSelected": {
           "samples": 102,
@@ -808,6 +832,14 @@
           "top3Coverage": 0.4412,
           "top8Coverage": 0.7157
         },
+        "prequentialTotalGoals": {
+          "samples": 102,
+          "rps": 0.1352,
+          "brier": 0.8349,
+          "logLoss": 1.9079,
+          "mae": 1.3813,
+          "top2Coverage": 0.4608
+        },
         "prequentialChallengerSelections": 59,
         "variantPolicy": {
           "adopted": true,
@@ -865,7 +897,7 @@
             "ece": 0.0833
           },
           "holdoutConfirmed": true,
-          "reason": "Mean reversion cleared the earlier selection window; the untouched holdout confirmed the gain."
+          "reason": "Mean reversion cleared the earlier selection window and the untouched holdout confirmed the gain."
         },
         "reproducedUpstreamBacktest": {
           "evaluated": 763,
@@ -875,6 +907,233 @@
           "rps": 0.1746,
           "ece": 0.023,
           "sourceCommit": "184f5021c42192fb6abfac71abf641ff18df11e0"
+        }
+      },
+      "historicalAttackDefense": {
+        "source": {
+          "id": "openfootball-dynamic-attack-defence",
+          "name": "OpenFootball dynamic attack/defence Poisson",
+          "url": "https://github.com/openfootball/worldcup.json",
+          "commit": "5e4bc62f9e711f3ea83d2b150ac3200e7e9c90a0",
+          "license": "CC0-1.0"
+        },
+        "historicalSamples": 964,
+        "currentSamples": 102,
+        "selectionSize": 71,
+        "validationSize": 31,
+        "selectedCandidate": "dynamic-responsive",
+        "canonical": {
+          "selection": {
+            "direction": {
+              "samples": 71,
+              "accuracy": 0.6479,
+              "accuracy95": [
+                0.5318,
+                0.7488
+              ],
+              "brier": 0.5032,
+              "logLoss": 0.855,
+              "rps": 0.1523,
+              "ece": 0.0611
+            },
+            "totalGoals": {
+              "samples": 71,
+              "rps": 0.1532,
+              "brier": 0.8643,
+              "logLoss": 2.0224,
+              "mae": 1.571,
+              "top2Coverage": 0.3662
+            }
+          },
+          "validation": {
+            "direction": {
+              "samples": 31,
+              "accuracy": 0.6129,
+              "accuracy95": [
+                0.4382,
+                0.7627
+              ],
+              "brier": 0.4912,
+              "logLoss": 0.8382,
+              "rps": 0.1523,
+              "ece": 0.0824
+            },
+            "totalGoals": {
+              "samples": 31,
+              "rps": 0.0941,
+              "brier": 0.7674,
+              "logLoss": 1.6453,
+              "mae": 0.9458,
+              "top2Coverage": 0.6774
+            }
+          }
+        },
+        "candidates": [
+          {
+            "name": "dynamic-conservative",
+            "parameters": {
+              "updateRate": 0.1,
+              "halfLifeYears": 4,
+              "meanRate": 0.01
+            },
+            "selection": {
+              "direction": {
+                "samples": 71,
+                "accuracy": 0.5211,
+                "accuracy95": [
+                  0.4069,
+                  0.6332
+                ],
+                "brier": 0.6202,
+                "logLoss": 1.0338,
+                "rps": 0.2096,
+                "ece": 0.0827
+              },
+              "totalGoals": {
+                "samples": 71,
+                "rps": 0.1537,
+                "brier": 0.8624,
+                "logLoss": 2.0289,
+                "mae": 1.5583,
+                "top2Coverage": 0.3662
+              }
+            },
+            "validation": {
+              "direction": {
+                "samples": 31,
+                "accuracy": 0.5484,
+                "accuracy95": [
+                  0.3777,
+                  0.7084
+                ],
+                "brier": 0.5994,
+                "logLoss": 1.0046,
+                "rps": 0.2035,
+                "ece": 0.0875
+              },
+              "totalGoals": {
+                "samples": 31,
+                "rps": 0.0959,
+                "brier": 0.7706,
+                "logLoss": 1.657,
+                "mae": 0.9526,
+                "top2Coverage": 0.6774
+              }
+            },
+            "full": {
+              "direction": {
+                "samples": 102,
+                "accuracy": 0.5294,
+                "accuracy95": [
+                  0.4332,
+                  0.6234
+                ],
+                "brier": 0.6139,
+                "logLoss": 1.025,
+                "rps": 0.2078,
+                "ece": 0.0842
+              },
+              "totalGoals": {
+                "samples": 102,
+                "rps": 0.1361,
+                "brier": 0.8345,
+                "logLoss": 1.9159,
+                "mae": 1.3742,
+                "top2Coverage": 0.4608
+              },
+              "exactScore": {
+                "samples": 102,
+                "top1Accuracy": 0.1471,
+                "top3Coverage": 0.3137,
+                "top8Coverage": 0.6373
+              }
+            }
+          },
+          {
+            "name": "dynamic-responsive",
+            "parameters": {
+              "updateRate": 0.14,
+              "halfLifeYears": 2,
+              "meanRate": 0.03
+            },
+            "selection": {
+              "direction": {
+                "samples": 71,
+                "accuracy": 0.4789,
+                "accuracy95": [
+                  0.3668,
+                  0.5931
+                ],
+                "brier": 0.6246,
+                "logLoss": 1.0411,
+                "rps": 0.2118,
+                "ece": 0.0832
+              },
+              "totalGoals": {
+                "samples": 71,
+                "rps": 0.153,
+                "brier": 0.8618,
+                "logLoss": 2.0255,
+                "mae": 1.5585,
+                "top2Coverage": 0.3803
+              }
+            },
+            "validation": {
+              "direction": {
+                "samples": 31,
+                "accuracy": 0.5484,
+                "accuracy95": [
+                  0.3777,
+                  0.7084
+                ],
+                "brier": 0.5953,
+                "logLoss": 1,
+                "rps": 0.2014,
+                "ece": 0.0705
+              },
+              "totalGoals": {
+                "samples": 31,
+                "rps": 0.0964,
+                "brier": 0.7711,
+                "logLoss": 1.6581,
+                "mae": 0.9553,
+                "top2Coverage": 0.6774
+              }
+            },
+            "full": {
+              "direction": {
+                "samples": 102,
+                "accuracy": 0.5,
+                "accuracy95": [
+                  0.4047,
+                  0.5953
+                ],
+                "brier": 0.6157,
+                "logLoss": 1.0286,
+                "rps": 0.2087,
+                "ece": 0.0791
+              },
+              "totalGoals": {
+                "samples": 102,
+                "rps": 0.1358,
+                "brier": 0.8342,
+                "logLoss": 1.9138,
+                "mae": 1.3752,
+                "top2Coverage": 0.4706
+              },
+              "exactScore": {
+                "samples": 102,
+                "top1Accuracy": 0.1471,
+                "top3Coverage": 0.2843,
+                "top8Coverage": 0.6471
+              }
+            }
+          }
+        ],
+        "policy": {
+          "adopted": false,
+          "scope": "audit only",
+          "reason": "The training-selected challenger did not clear every untouched holdout gate, so it remains an audit-only signal."
         }
       },
       "ensemble": {
@@ -3261,25 +3520,25 @@
           {
             "label": "法国",
             "side": "spreadHome",
-            "american": "-120",
-            "decimal": 1.83,
-            "impliedProbability": 0.5454545454545454,
+            "american": "-115",
+            "decimal": 1.87,
+            "impliedProbability": 0.5348837209302325,
             "normalizedProbability": null,
             "line": "-0.5",
-            "movement": 5.8
+            "movement": 4.7
           },
           {
             "label": "英格兰",
             "side": "spreadAway",
-            "american": "-105",
-            "decimal": 1.95,
-            "impliedProbability": 0.5121951219512195,
+            "american": "-110",
+            "decimal": 1.91,
+            "impliedProbability": 0.5238095238095238,
             "normalizedProbability": null,
             "line": "+0.5",
-            "movement": -5.3
+            "movement": -4.1
           }
         ],
-        "updatedAt": "2026-07-16T15:00:33.171Z"
+        "updatedAt": "2026-07-16T15:32:57.873Z"
       },
       "context": {
         "home": {
@@ -3966,6 +4225,16 @@
               0.2870578657781846,
               0.2951497106299431
             ],
+            "totalGoals": [
+              0.082975,
+              0.149926,
+              0.260739,
+              0.220475,
+              0.14882,
+              0.080362,
+              0.036164,
+              0.020539
+            ],
             "topScores": [
               {
                 "score": "1-1",
@@ -4000,7 +4269,70 @@
                 "probability": 0.054722
               }
             ],
-            "variant": "mean-reversion-0.08"
+            "variant": "mean-reversion-0.08",
+            "historicalChallenger": {
+              "model": "time-decayed attack/defence Poisson challenger",
+              "source": {
+                "id": "openfootball-dynamic-attack-defence",
+                "name": "OpenFootball dynamic attack/defence Poisson",
+                "url": "https://github.com/openfootball/worldcup.json",
+                "commit": "5e4bc62f9e711f3ea83d2b150ac3200e7e9c90a0",
+                "license": "CC0-1.0"
+              },
+              "homeExpectedGoals": 1.551,
+              "awayExpectedGoals": 1.222,
+              "probabilities": [
+                0.43418316191109,
+                0.28111010117349033,
+                0.2847067369154198
+              ],
+              "totalGoals": [
+                0.077885,
+                0.142487,
+                0.255619,
+                0.22203,
+                0.15391,
+                0.085349,
+                0.039442,
+                0.023278
+              ],
+              "topScores": [
+                {
+                  "score": "1-1",
+                  "probability": 0.133808
+                },
+                {
+                  "score": "2-1",
+                  "probability": 0.091843
+                },
+                {
+                  "score": "1-0",
+                  "probability": 0.081544
+                },
+                {
+                  "score": "0-0",
+                  "probability": 0.077885
+                },
+                {
+                  "score": "2-0",
+                  "probability": 0.075186
+                },
+                {
+                  "score": "1-2",
+                  "probability": 0.072324
+                },
+                {
+                  "score": "0-1",
+                  "probability": 0.060942
+                },
+                {
+                  "score": "2-2",
+                  "probability": 0.056095
+                }
+              ],
+              "adopted": false,
+              "role": "audit-only challenger"
+            }
           },
           "validation": {
             "market": {
@@ -5242,12 +5574,12 @@
           {
             "label": "小球",
             "side": "under",
-            "american": "-170",
-            "decimal": 1.59,
-            "impliedProbability": 0.6296296296296297,
+            "american": "-165",
+            "decimal": 1.61,
+            "impliedProbability": 0.6226415094339622,
             "normalizedProbability": null,
             "line": "u2.5",
-            "movement": -0.7
+            "movement": -1.4
           }
         ],
         "spread": [
@@ -5272,7 +5604,7 @@
             "movement": 0.8
           }
         ],
-        "updatedAt": "2026-07-16T15:00:33.171Z"
+        "updatedAt": "2026-07-16T15:32:57.873Z"
       },
       "context": {
         "home": {
@@ -5890,8 +6222,8 @@
         "model": "胜平负去水概率 + 大小球盘口 + 历届世界杯低权重底蕴 + 平局压缩/抗热门校准 + Poisson/1万次模拟比分共识（90分钟含补时）",
         "scope": "90分钟常规时间 + 上下半场补时，不含加时赛和点球大战",
         "homeExpectedGoals": 1.22,
-        "awayExpectedGoals": 0.6,
-        "totalExpectedGoals": 1.82,
+        "awayExpectedGoals": 0.61,
+        "totalExpectedGoals": 1.83,
         "strengthProfile": {
           "homeStrength": 73.2,
           "awayStrength": 58.6,
@@ -5970,6 +6302,16 @@
               0.281930038558595,
               0.2580741509496495
             ],
+            "totalGoals": [
+              0.082705,
+              0.150469,
+              0.260472,
+              0.220479,
+              0.148822,
+              0.080363,
+              0.036164,
+              0.020526
+            ],
             "topScores": [
               {
                 "score": "1-1",
@@ -6004,7 +6346,70 @@
                 "probability": 0.05286
               }
             ],
-            "variant": "mean-reversion-0.08"
+            "variant": "mean-reversion-0.08",
+            "historicalChallenger": {
+              "model": "time-decayed attack/defence Poisson challenger",
+              "source": {
+                "id": "openfootball-dynamic-attack-defence",
+                "name": "OpenFootball dynamic attack/defence Poisson",
+                "url": "https://github.com/openfootball/worldcup.json",
+                "commit": "5e4bc62f9e711f3ea83d2b150ac3200e7e9c90a0",
+                "license": "CC0-1.0"
+              },
+              "homeExpectedGoals": 1.374,
+              "awayExpectedGoals": 1.123,
+              "probabilities": [
+                0.4092374381850539,
+                0.300668002094917,
+                0.2900945597200288
+              ],
+              "totalGoals": [
+                0.098829,
+                0.172527,
+                0.273178,
+                0.213649,
+                0.133381,
+                0.066617,
+                0.027726,
+                0.014093
+              ],
+              "topScores": [
+                {
+                  "score": "1-1",
+                  "probability": 0.143554
+                },
+                {
+                  "score": "0-0",
+                  "probability": 0.098829
+                },
+                {
+                  "score": "1-0",
+                  "probability": 0.096575
+                },
+                {
+                  "score": "2-1",
+                  "probability": 0.087269
+                },
+                {
+                  "score": "2-0",
+                  "probability": 0.077687
+                },
+                {
+                  "score": "0-1",
+                  "probability": 0.075951
+                },
+                {
+                  "score": "1-2",
+                  "probability": 0.071354
+                },
+                {
+                  "score": "0-2",
+                  "probability": 0.051936
+                }
+              ],
+              "adopted": false,
+              "role": "audit-only challenger"
+            }
           },
           "validation": {
             "market": {
@@ -6038,172 +6443,172 @@
         "bestPick": {
           "score": "1-0",
           "result": "主胜",
-          "probability": 0.2043,
-          "baseProbability": 0.1977,
+          "probability": 0.2019,
+          "baseProbability": 0.1957,
           "tailMultiplier": 1.19,
-          "fairOdds": 4.89,
-          "suggestedMinOdds": 5.73,
+          "fairOdds": 4.95,
+          "suggestedMinOdds": 5.79,
           "officialOdds": null,
           "expectedValue": null,
           "expectedValueAtSuggestedOdds": 0.17,
           "grade": "首选核验",
           "reason": "西班牙 胜面约 41%，一球小胜；低比分，对临场节奏和首发依赖更强。复盘校准参考让球盘口，热门方一球小胜路径已上调。",
-          "poissonProbability": 0.2079,
-          "simulationProbability": 0.2,
+          "poissonProbability": 0.2059,
+          "simulationProbability": 0.197,
           "openSourceProbability": 0.090079
         },
         "candidates": [
           {
             "score": "1-0",
             "result": "主胜",
-            "probability": 0.2043,
-            "baseProbability": 0.1977,
+            "probability": 0.2019,
+            "baseProbability": 0.1957,
             "tailMultiplier": 1.19,
-            "fairOdds": 4.89,
-            "suggestedMinOdds": 5.73,
+            "fairOdds": 4.95,
+            "suggestedMinOdds": 5.79,
             "officialOdds": null,
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.17,
             "grade": "首选核验",
             "reason": "西班牙 胜面约 41%，一球小胜；低比分，对临场节奏和首发依赖更强。复盘校准参考让球盘口，热门方一球小胜路径已上调。",
-            "poissonProbability": 0.2079,
-            "simulationProbability": 0.2,
+            "poissonProbability": 0.2059,
+            "simulationProbability": 0.197,
             "openSourceProbability": 0.090079
           },
           {
             "score": "0-0",
             "result": "平局",
-            "probability": 0.2006,
-            "baseProbability": 0.162,
+            "probability": 0.1952,
+            "baseProbability": 0.1604,
             "tailMultiplier": 1.6,
-            "fairOdds": 4.99,
-            "suggestedMinOdds": 5.83,
+            "fairOdds": 5.12,
+            "suggestedMinOdds": 5.99,
             "officialOdds": null,
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.17,
             "grade": "备选",
             "reason": "进球环境偏谨慎，平局概率约 32%，西班牙 与 阿根廷 的胜负差距不宜过度放大。复盘校准把平局热度和小总进球纳入主判断，这类比分不能只当防守票。",
-            "poissonProbability": 0.2291,
-            "simulationProbability": 0.1657,
+            "poissonProbability": 0.2269,
+            "simulationProbability": 0.1564,
             "openSourceProbability": 0.082705
           },
           {
             "score": "1-1",
             "result": "平局",
-            "probability": 0.1442,
-            "baseProbability": 0.1186,
+            "probability": 0.1431,
+            "baseProbability": 0.1194,
             "tailMultiplier": 1.51,
-            "fairOdds": 6.93,
-            "suggestedMinOdds": 8.11,
+            "fairOdds": 6.99,
+            "suggestedMinOdds": 8.18,
             "officialOdds": null,
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.17,
             "grade": "备选",
             "reason": "进球环境偏谨慎，平局概率约 32%，西班牙 与 阿根廷 的胜负差距不宜过度放大。复盘校准把平局热度和小总进球纳入主判断，这类比分不能只当防守票。",
-            "poissonProbability": 0.1583,
-            "simulationProbability": 0.127,
+            "poissonProbability": 0.1594,
+            "simulationProbability": 0.1231,
             "openSourceProbability": 0.134705
           },
           {
             "score": "2-0",
             "result": "主胜",
-            "probability": 0.0971,
-            "baseProbability": 0.1206,
+            "probability": 0.0978,
+            "baseProbability": 0.1194,
             "tailMultiplier": 0.78,
-            "fairOdds": 10.3,
-            "suggestedMinOdds": 12.05,
+            "fairOdds": 10.22,
+            "suggestedMinOdds": 11.96,
             "officialOdds": null,
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.17,
             "grade": "备选",
             "reason": "西班牙 胜面约 41%，两球以上优势；比分区间贴近市场总进球。尾部校准下调，需防模型把罕见路径估得过高。",
-            "poissonProbability": 0.0831,
-            "simulationProbability": 0.1143,
+            "poissonProbability": 0.0823,
+            "simulationProbability": 0.1168,
             "openSourceProbability": 0.082923
           },
           {
             "score": "0-1",
             "result": "客胜",
-            "probability": 0.084,
-            "baseProbability": 0.0972,
+            "probability": 0.0841,
+            "baseProbability": 0.0979,
             "tailMultiplier": 0.91,
-            "fairOdds": 11.9,
-            "suggestedMinOdds": 13.93,
+            "fairOdds": 11.89,
+            "suggestedMinOdds": 13.91,
             "officialOdds": null,
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.17,
             "grade": "备选",
             "reason": "阿根廷 胜面约 27%，一球小胜；低比分，对临场节奏和首发依赖更强。",
-            "poissonProbability": 0.0782,
-            "simulationProbability": 0.0911,
+            "poissonProbability": 0.0787,
+            "simulationProbability": 0.0907,
             "openSourceProbability": 0.060389
           },
           {
             "score": "2-1",
             "result": "主胜",
-            "probability": 0.0781,
-            "baseProbability": 0.0723,
+            "probability": 0.0802,
+            "baseProbability": 0.0728,
             "tailMultiplier": 1.24,
-            "fairOdds": 12.8,
-            "suggestedMinOdds": 14.98,
+            "fairOdds": 12.47,
+            "suggestedMinOdds": 14.59,
             "officialOdds": null,
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.17,
             "grade": "备选",
             "reason": "西班牙 胜面约 41%，一球小胜；比分区间贴近市场总进球。复盘校准参考让球盘口，热门方一球小胜路径已上调。",
-            "poissonProbability": 0.0793,
-            "simulationProbability": 0.0767,
+            "poissonProbability": 0.0798,
+            "simulationProbability": 0.0807,
             "openSourceProbability": 0.093631
           },
           {
             "score": "1-2",
             "result": "客胜",
-            "probability": 0.0344,
-            "baseProbability": 0.0356,
+            "probability": 0.0362,
+            "baseProbability": 0.0364,
             "tailMultiplier": 1.1,
-            "fairOdds": 29.07,
-            "suggestedMinOdds": 34.01,
+            "fairOdds": 27.62,
+            "suggestedMinOdds": 32.32,
             "officialOdds": null,
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.17,
             "grade": "备选",
             "reason": "阿根廷 胜面约 27%，一球小胜；比分区间贴近市场总进球。",
-            "poissonProbability": 0.0346,
-            "simulationProbability": 0.0341,
+            "poissonProbability": 0.0354,
+            "simulationProbability": 0.0371,
             "openSourceProbability": 0.067301
           },
           {
             "score": "3-0",
             "result": "主胜",
-            "probability": 0.0317,
-            "baseProbability": 0.049,
+            "probability": 0.0347,
+            "baseProbability": 0.0485,
             "tailMultiplier": 0.52,
-            "fairOdds": 31.55,
-            "suggestedMinOdds": 36.91,
+            "fairOdds": 28.82,
+            "suggestedMinOdds": 33.72,
             "officialOdds": null,
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.17,
             "grade": "备选",
             "reason": "西班牙 胜面约 41%，两球以上优势；比分区间贴近市场总进球。尾部校准下调，需防模型把罕见路径估得过高。",
-            "poissonProbability": 0.0225,
-            "simulationProbability": 0.043,
+            "poissonProbability": 0.0223,
+            "simulationProbability": 0.0499,
             "openSourceProbability": 0
           },
           {
             "score": "3-1",
             "result": "主胜",
-            "probability": 0.025,
-            "baseProbability": 0.0294,
+            "probability": 0.0266,
+            "baseProbability": 0.0296,
             "tailMultiplier": 0.86,
-            "fairOdds": 40,
-            "suggestedMinOdds": 46.8,
+            "fairOdds": 37.59,
+            "suggestedMinOdds": 43.98,
             "officialOdds": null,
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.17,
             "grade": "备选",
             "reason": "西班牙 胜面约 41%，两球以上优势；比分偏大，需要更高官方赔率补偿风险。尾部校准下调，需防模型把罕见路径估得过高。",
-            "poissonProbability": 0.0224,
-            "simulationProbability": 0.0281,
+            "poissonProbability": 0.0225,
+            "simulationProbability": 0.0315,
             "openSourceProbability": 0
           }
         ],
@@ -6214,8 +6619,8 @@
             "probability": 0,
             "baseProbability": 0,
             "tailMultiplier": 0.84,
-            "fairOdds": 128288.58,
-            "suggestedMinOdds": 150097.64,
+            "fairOdds": 117293.65,
+            "suggestedMinOdds": 137233.57,
             "officialOdds": null,
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.17,
@@ -6228,8 +6633,8 @@
             "probability": 0,
             "baseProbability": 0,
             "tailMultiplier": 0.84,
-            "fairOdds": 105154.57,
-            "suggestedMinOdds": 123030.85,
+            "fairOdds": 96142.33,
+            "suggestedMinOdds": 112486.53,
             "officialOdds": null,
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.17,
@@ -6242,8 +6647,8 @@
             "probability": 0,
             "baseProbability": 0,
             "tailMultiplier": 0.84,
-            "fairOdds": 172384.55,
-            "suggestedMinOdds": 201689.92,
+            "fairOdds": 157610.38,
+            "suggestedMinOdds": 184404.15,
             "officialOdds": null,
             "expectedValue": null,
             "expectedValueAtSuggestedOdds": 0.17,
@@ -6255,265 +6660,251 @@
           "model": "10,000-run deterministic Monte Carlo match-process simulation (90分钟含补时)",
           "scope": "90分钟常规时间 + 上下半场补时，不含加时赛和点球大战",
           "runs": 10000,
-          "seed": "Spain|Argentina|1.22|0.60|1.82|home:0.4119,draw:0.3212,away:0.2669",
+          "seed": "Spain|Argentina|1.22|0.61|1.83|home:0.4119,draw:0.3212,away:0.2669",
           "resultDistribution": [
             {
               "label": "主胜",
               "side": "home",
-              "probability": 0.5058,
-              "count": 5058
+              "probability": 0.5188,
+              "count": 5188
             },
             {
               "label": "平局",
               "side": "draw",
-              "probability": 0.3204,
-              "count": 3204
+              "probability": 0.3042,
+              "count": 3042
             },
             {
               "label": "客胜",
               "side": "away",
-              "probability": 0.1738,
-              "count": 1738
+              "probability": 0.177,
+              "count": 1770
             }
           ],
           "scoreDistribution": [
             {
               "label": "1-0",
               "side": null,
-              "probability": 0.2,
-              "count": 2000,
+              "probability": 0.197,
+              "count": 1970,
               "score": "1-0"
             },
             {
               "label": "0-0",
               "side": null,
-              "probability": 0.1657,
-              "count": 1657,
+              "probability": 0.1564,
+              "count": 1564,
               "score": "0-0"
             },
             {
               "label": "1-1",
               "side": null,
-              "probability": 0.127,
-              "count": 1270,
+              "probability": 0.1231,
+              "count": 1231,
               "score": "1-1"
             },
             {
               "label": "2-0",
               "side": null,
-              "probability": 0.1143,
-              "count": 1143,
+              "probability": 0.1168,
+              "count": 1168,
               "score": "2-0"
             },
             {
               "label": "0-1",
               "side": null,
-              "probability": 0.0911,
-              "count": 911,
+              "probability": 0.0907,
+              "count": 907,
               "score": "0-1"
             },
             {
               "label": "2-1",
               "side": null,
-              "probability": 0.0767,
-              "count": 767,
+              "probability": 0.0807,
+              "count": 807,
               "score": "2-1"
             },
             {
               "label": "3-0",
               "side": null,
-              "probability": 0.043,
-              "count": 430,
+              "probability": 0.0499,
+              "count": 499,
               "score": "3-0"
             },
             {
               "label": "1-2",
               "side": null,
-              "probability": 0.0341,
-              "count": 341,
+              "probability": 0.0371,
+              "count": 371,
               "score": "1-2"
             },
             {
               "label": "3-1",
               "side": null,
-              "probability": 0.0281,
-              "count": 281,
+              "probability": 0.0315,
+              "count": 315,
               "score": "3-1"
             },
             {
               "label": "0-2",
               "side": null,
-              "probability": 0.0281,
-              "count": 281,
+              "probability": 0.0291,
+              "count": 291,
               "score": "0-2"
             },
             {
               "label": "2-2",
               "side": null,
-              "probability": 0.0251,
-              "count": 251,
+              "probability": 0.0222,
+              "count": 222,
               "score": "2-2"
             },
             {
               "label": "4-0",
               "side": null,
-              "probability": 0.0127,
-              "count": 127,
+              "probability": 0.0124,
+              "count": 124,
               "score": "4-0"
             },
             {
               "label": "3-2",
               "side": null,
-              "probability": 0.0108,
-              "count": 108,
+              "probability": 0.01,
+              "count": 100,
               "score": "3-2"
             },
             {
               "label": "4-1",
               "side": null,
-              "probability": 0.0083,
-              "count": 83,
+              "probability": 0.0096,
+              "count": 96,
               "score": "4-1"
             },
             {
               "label": "1-3",
               "side": null,
-              "probability": 0.0073,
-              "count": 73,
+              "probability": 0.0077,
+              "count": 77,
               "score": "1-3"
             },
             {
               "label": "0-3",
               "side": null,
-              "probability": 0.0049,
-              "count": 49,
+              "probability": 0.0055,
+              "count": 55,
               "score": "0-3"
             },
             {
               "label": "2-3",
               "side": null,
-              "probability": 0.0048,
-              "count": 48,
+              "probability": 0.004,
+              "count": 40,
               "score": "2-3"
             },
             {
               "label": "5-0",
               "side": null,
-              "probability": 0.0037,
-              "count": 37,
+              "probability": 0.0033,
+              "count": 33,
               "score": "5-0"
-            },
-            {
-              "label": "4-2",
-              "side": null,
-              "probability": 0.0031,
-              "count": 31,
-              "score": "4-2"
             },
             {
               "label": "3-3",
               "side": null,
-              "probability": 0.0024,
-              "count": 24,
+              "probability": 0.0025,
+              "count": 25,
               "score": "3-3"
             },
             {
               "label": "5-1",
               "side": null,
-              "probability": 0.0022,
-              "count": 22,
+              "probability": 0.0025,
+              "count": 25,
               "score": "5-1"
             },
             {
-              "label": "1-4",
+              "label": "4-2",
               "side": null,
-              "probability": 0.0011,
-              "count": 11,
-              "score": "1-4"
-            },
-            {
-              "label": "0-4",
-              "side": null,
-              "probability": 0.0009,
-              "count": 9,
-              "score": "0-4"
-            },
-            {
-              "label": "6-0",
-              "side": null,
-              "probability": 0.0008,
-              "count": 8,
-              "score": "6-0"
-            },
-            {
-              "label": "5-2",
-              "side": null,
-              "probability": 0.0006,
-              "count": 6,
-              "score": "5-2"
-            },
-            {
-              "label": "6-1",
-              "side": null,
-              "probability": 0.0006,
-              "count": 6,
-              "score": "6-1"
-            },
-            {
-              "label": "3-4",
-              "side": null,
-              "probability": 0.0006,
-              "count": 6,
-              "score": "3-4"
-            },
-            {
-              "label": "2-4",
-              "side": null,
-              "probability": 0.0004,
-              "count": 4,
-              "score": "2-4"
-            },
-            {
-              "label": "1-5",
-              "side": null,
-              "probability": 0.0004,
-              "count": 4,
-              "score": "1-5"
+              "probability": 0.0019,
+              "count": 19,
+              "score": "4-2"
             },
             {
               "label": "4-3",
               "side": null,
-              "probability": 0.0003,
-              "count": 3,
+              "probability": 0.001,
+              "count": 10,
               "score": "4-3"
             },
             {
-              "label": "4-4",
+              "label": "2-4",
+              "side": null,
+              "probability": 0.0009,
+              "count": 9,
+              "score": "2-4"
+            },
+            {
+              "label": "6-0",
+              "side": null,
+              "probability": 0.0007,
+              "count": 7,
+              "score": "6-0"
+            },
+            {
+              "label": "6-1",
+              "side": null,
+              "probability": 0.0007,
+              "count": 7,
+              "score": "6-1"
+            },
+            {
+              "label": "1-4",
+              "side": null,
+              "probability": 0.0006,
+              "count": 6,
+              "score": "1-4"
+            },
+            {
+              "label": "5-2",
+              "side": null,
+              "probability": 0.0005,
+              "count": 5,
+              "score": "5-2"
+            },
+            {
+              "label": "0-4",
+              "side": null,
+              "probability": 0.0005,
+              "count": 5,
+              "score": "0-4"
+            },
+            {
+              "label": "3-4",
+              "side": null,
+              "probability": 0.0004,
+              "count": 4,
+              "score": "3-4"
+            },
+            {
+              "label": "2-5",
               "side": null,
               "probability": 0.0002,
               "count": 2,
-              "score": "4-4"
+              "score": "2-5"
             },
             {
-              "label": "5-4",
+              "label": "7-0",
               "side": null,
               "probability": 0.0002,
               "count": 2,
-              "score": "5-4"
+              "score": "7-0"
             },
             {
-              "label": "7-1",
+              "label": "1-5",
               "side": null,
               "probability": 0.0002,
               "count": 2,
-              "score": "7-1"
-            },
-            {
-              "label": "0-5",
-              "side": null,
-              "probability": 0.0001,
-              "count": 1,
-              "score": "0-5"
+              "score": "1-5"
             },
             {
               "label": "5-3",
@@ -6523,68 +6914,68 @@
               "score": "5-3"
             },
             {
-              "label": "7-0",
+              "label": "0-5",
               "side": null,
               "probability": 0.0001,
               "count": 1,
-              "score": "7-0"
+              "score": "0-5"
             }
           ],
           "topScores": [
             {
               "label": "1-0",
               "side": null,
-              "probability": 0.2,
-              "count": 2000,
+              "probability": 0.197,
+              "count": 1970,
               "score": "1-0"
             },
             {
               "label": "0-0",
               "side": null,
-              "probability": 0.1657,
-              "count": 1657,
+              "probability": 0.1564,
+              "count": 1564,
               "score": "0-0"
             },
             {
               "label": "1-1",
               "side": null,
-              "probability": 0.127,
-              "count": 1270,
+              "probability": 0.1231,
+              "count": 1231,
               "score": "1-1"
             },
             {
               "label": "2-0",
               "side": null,
-              "probability": 0.1143,
-              "count": 1143,
+              "probability": 0.1168,
+              "count": 1168,
               "score": "2-0"
             },
             {
               "label": "0-1",
               "side": null,
-              "probability": 0.0911,
-              "count": 911,
+              "probability": 0.0907,
+              "count": 907,
               "score": "0-1"
             },
             {
               "label": "2-1",
               "side": null,
-              "probability": 0.0767,
-              "count": 767,
+              "probability": 0.0807,
+              "count": 807,
               "score": "2-1"
             },
             {
               "label": "3-0",
               "side": null,
-              "probability": 0.043,
-              "count": 430,
+              "probability": 0.0499,
+              "count": 499,
               "score": "3-0"
             },
             {
               "label": "1-2",
               "side": null,
-              "probability": 0.0341,
-              "count": 341,
+              "probability": 0.0371,
+              "count": 371,
               "score": "1-2"
             }
           ],
@@ -6592,57 +6983,57 @@
             {
               "label": "0",
               "side": null,
-              "probability": 0.1657,
-              "count": 1657,
+              "probability": 0.1564,
+              "count": 1564,
               "goals": "0"
             },
             {
               "label": "1",
               "side": null,
-              "probability": 0.2911,
-              "count": 2911,
+              "probability": 0.2877,
+              "count": 2877,
               "goals": "1"
             },
             {
               "label": "2",
               "side": null,
-              "probability": 0.2694,
-              "count": 2694,
+              "probability": 0.269,
+              "count": 2690,
               "goals": "2"
             },
             {
               "label": "3",
               "side": null,
-              "probability": 0.1587,
-              "count": 1587,
+              "probability": 0.1732,
+              "count": 1732,
               "goals": "3"
             },
             {
               "label": "4",
               "side": null,
-              "probability": 0.0741,
-              "count": 741,
+              "probability": 0.0743,
+              "count": 743,
               "goals": "4"
             },
             {
               "label": "5",
               "side": null,
-              "probability": 0.0288,
-              "count": 288,
+              "probability": 0.0276,
+              "count": 276,
               "goals": "5"
             },
             {
               "label": "6",
               "side": null,
-              "probability": 0.0093,
-              "count": 93,
+              "probability": 0.0087,
+              "count": 87,
               "goals": "6"
             },
             {
               "label": "7+",
               "side": null,
-              "probability": 0.0029,
-              "count": 29,
+              "probability": 0.0031,
+              "count": 31,
               "goals": "7+"
             }
           ],
@@ -6652,35 +7043,35 @@
               {
                 "label": "平局",
                 "side": "draw",
-                "probability": 0.5662,
-                "count": 5662
+                "probability": 0.5651,
+                "count": 5651
               },
               {
                 "label": "主胜",
                 "side": "home",
-                "probability": 0.2991,
-                "count": 2991
+                "probability": 0.3057,
+                "count": 3057
               },
               {
                 "label": "客胜",
                 "side": "away",
-                "probability": 0.1347,
-                "count": 1347
+                "probability": 0.1292,
+                "count": 1292
               }
             ]
           },
           "process": {
-            "firstGoalHomeProbability": 0.5565,
-            "firstGoalAwayProbability": 0.2778,
-            "noGoalProbability": 0.1657,
+            "firstGoalHomeProbability": 0.5674,
+            "firstGoalAwayProbability": 0.2762,
+            "noGoalProbability": 0.1564,
             "firstGoalMostLikelyPhase": "31-45+",
-            "lateGoalProbability": 0.4089,
-            "noGoalFirst30Probability": 0.6998,
-            "equalizerProbability": 0.2656,
-            "comebackProbability": 0.061,
-            "favoriteCoverProbability": 0.2178
+            "lateGoalProbability": 0.4187,
+            "noGoalFirst30Probability": 0.6947,
+            "equalizerProbability": 0.2685,
+            "comebackProbability": 0.0631,
+            "favoriteCoverProbability": 0.2301
           },
-          "summary": "10,000次90分钟含补时进程模拟：主胜 51%；最密比分 1-0 20% / 0-0 17% / 1-1 13%；总进球最集中 1球 29%；76分钟后仍有进球 41%，前30分钟无进球 70%。"
+          "summary": "10,000次90分钟含补时进程模拟：主胜 52%；最密比分 1-0 20% / 0-0 16% / 1-1 12%；总进球最集中 1球 29%；76分钟后仍有进球 42%，前30分钟无进球 69%。"
         },
         "modelAgreement": {
           "model": "market + open Elo/Dixon-Coles + poisson + 10k monte-carlo agreement experiment",
@@ -6693,7 +7084,7 @@
             "side": "draw",
             "score": "0-0",
             "result": "平局",
-            "probability": 0.2291
+            "probability": 0.2269
           },
           "openSourceDirection": {
             "side": "home",
@@ -6708,8 +7099,8 @@
           "simulationDirection": {
             "label": "主胜",
             "side": "home",
-            "probability": 0.5058,
-            "count": 5058
+            "probability": 0.5188,
+            "count": 5188
           },
           "probabilityDisagreement": {
             "totalVariation": 0.0481,
@@ -6739,8 +7130,8 @@
           "首选比分采用55%校准Poisson概率与45%一万次比赛进程模拟概率融合，避免单一分布在低比分场过度集中。",
           "比分按55%校准Poisson与45%一万次模拟的融合概率排序；仅当胜平负主方向对应比分距统计众数不超过1个百分点时，才优先方向一致比分。",
           "比分玩法方差很大，候选只适合小额娱乐或赛前核验。",
-          "本版把总进球从基础 2.30 校准到 1.82，并对强弱分明场景的 3+ 进球比分做尾部上调。",
-          "10,000次90分钟含补时进程模拟：主胜 51%；最密比分 1-0 20% / 0-0 17% / 1-1 13%；总进球最集中 1球 29%；76分钟后仍有进球 41%，前30分钟无进球 70%。",
+          "本版把总进球从基础 2.31 校准到 1.83，并对强弱分明场景的 3+ 进球比分做尾部上调。",
+          "10,000次90分钟含补时进程模拟：主胜 52%；最密比分 1-0 20% / 0-0 16% / 1-1 12%；总进球最集中 1球 29%；76分钟后仍有进球 42%，前30分钟无进球 69%。",
           "模型一致性实验：盘口=主胜、开源Elo/DC=主胜、Poisson=平局、蒙特卡洛=主胜；决策层=主胜，冲突分 14/40（中），四模型有一票分歧；比分方向仅前三候选一致；蒙特卡洛主方向不足55%。",
           "开源独立模型：Elo + Dixon-Coles bivariate score grid；市场/开源总变差 5%；No fixed blend cleared every holdout gate, so the open model remains an uncertainty signal only.",
           "复盘校准：大小球盘口偏小，降低 3+ 进球扩张，优先保留 1-0 / 2-0 / 1-1。",
@@ -6785,7 +7176,7 @@
             "模型一致性实验：盘口=主胜、开源Elo/DC=主胜、Poisson=平局、蒙特卡洛=主胜；决策层=主胜，冲突分 14/40（中），四模型有一票分歧；比分方向仅前三候选一致；蒙特卡洛主方向不足55%。"
           ],
           "noBuyRules": [
-            "中国体彩比分赔率低于 ≥ 5.73 时不买。",
+            "中国体彩比分赔率低于 ≥ 5.79 时不买。",
             "胜平负 西班牙 主胜 低于 ≥ 2.68 时不买。",
             "首发出现核心前锋、门将或中卫明显轮换时不买。",
             "临场 30 分钟内热门方向继续大幅降赔时不追。",
@@ -6803,7 +7194,7 @@
           ],
           "marketDirection": "西班牙 主胜",
           "totalGoals": "总进球 0/1/2",
-          "buyCondition": "必须同时满足：比分赔率 ≥ 5.73、胜平负方向 ≥ 2.68、首发无明显轮换；若平局赔率给足，可用 0-0 平局防守 做极小防守。",
+          "buyCondition": "必须同时满足：比分赔率 ≥ 5.79、胜平负方向 ≥ 2.68、首发无明显轮换；若平局赔率给足，可用 0-0 平局防守 做极小防守。",
           "passCondition": "任一核心条件不满足就放弃；避免把淘汰赛常规时间的平局风险低估；平局只在盘口、总进球和模拟同时支持时升级。",
           "stakeCeiling": "保留预算。只做观察，不主动加码",
           "confidenceBand": "低：不进入购买清单"
@@ -6814,10 +7205,10 @@
           "priority": "主方案",
           "confidence": 78,
           "budgetShare": "单场预算 5%-9%",
-          "minOdds": "≥ 5.73",
-          "expectedValueNote": "模型概率 20%，盈亏线 4.89；官方赔率低于门槛则放弃。",
+          "minOdds": "≥ 5.79",
+          "expectedValueNote": "模型概率 20%，盈亏线 4.95；官方赔率低于门槛则放弃。",
           "reason": "西班牙 胜面约 41%，一球小胜；低比分，对临场节奏和首发依赖更强。复盘校准参考让球盘口，热门方一球小胜路径已上调。",
-          "noBetIf": "中国体彩该比分赔率低于 5.73，或赛前首发显示明显轮换。"
+          "noBetIf": "中国体彩该比分赔率低于 5.79，或赛前首发显示明显轮换。"
         },
         "plays": [
           {
@@ -6826,10 +7217,10 @@
             "priority": "主方案",
             "confidence": 78,
             "budgetShare": "单场预算 5%-9%",
-            "minOdds": "≥ 5.73",
-            "expectedValueNote": "模型概率 20%，盈亏线 4.89；官方赔率低于门槛则放弃。",
+            "minOdds": "≥ 5.79",
+            "expectedValueNote": "模型概率 20%，盈亏线 4.95；官方赔率低于门槛则放弃。",
             "reason": "西班牙 胜面约 41%，一球小胜；低比分，对临场节奏和首发依赖更强。复盘校准参考让球盘口，热门方一球小胜路径已上调。",
-            "noBetIf": "中国体彩该比分赔率低于 5.73，或赛前首发显示明显轮换。"
+            "noBetIf": "中国体彩该比分赔率低于 5.79，或赛前首发显示明显轮换。"
           },
           {
             "playType": "胜平负",
@@ -6849,8 +7240,8 @@
             "confidence": 68,
             "budgetShare": "单场预算 4%-8%",
             "minOdds": "以官方组合赔率核验",
-            "expectedValueNote": "模型总进球均值 1.82，只适合与比分方向交叉验证。",
-            "reason": "按1万次90分钟含补时模拟选择主落点，并在低节奏场保留0球路径，合计覆盖约 73%。",
+            "expectedValueNote": "模型总进球均值 1.83，只适合与比分方向交叉验证。",
+            "reason": "按1万次90分钟含补时模拟选择主落点，并在低节奏场保留0球路径，合计覆盖约 71%。",
             "noBetIf": "首发防守倾向或天气/场地导致节奏判断与模型相反。"
           },
           {
@@ -6859,7 +7250,7 @@
             "priority": "防守",
             "confidence": 64,
             "budgetShare": "单场预算 2%-4%",
-            "minOdds": "≥ 5.83",
+            "minOdds": "≥ 5.99",
             "expectedValueNote": "平局去水概率 32%，只作为防守小票，不扩大金额。",
             "reason": "平局噪音不低，若官方赔率给足，可用最集中平局比分小额防守。",
             "noBetIf": "平局比分赔率低于门槛，或双方首发明显偏进攻导致总进球环境上移。"
@@ -6886,7 +7277,7 @@
           },
           {
             "title": "进球节奏剧本",
-            "probability": "1.82 xG",
+            "probability": "1.83 xG",
             "scorePath": "总进球主区间是 总进球 0/1/2。",
             "action": "比分和总进球方向冲突时，以放弃为优先。"
           }
@@ -6900,15 +7291,15 @@
           },
           {
             "label": "比分集中度",
-            "score": 204,
+            "score": 202,
             "tone": "good",
-            "evidence": "首选比分 1-0 概率约 20%，盈亏线 4.89。"
+            "evidence": "首选比分 1-0 概率约 20%，盈亏线 4.95。"
           },
           {
             "label": "1万次进程模拟",
-            "score": 51,
+            "score": 52,
             "tone": "watch",
-            "evidence": "10,000次90分钟含补时进程模拟：主胜 51%；最密比分 1-0 20% / 0-0 17% / 1-1 13%；总进球最集中 1球 29%；76分钟后仍有进球 41%，前30分钟无进球 70%。"
+            "evidence": "10,000次90分钟含补时进程模拟：主胜 52%；最密比分 1-0 20% / 0-0 16% / 1-1 12%；总进球最集中 1球 29%；76分钟后仍有进球 42%，前30分钟无进球 69%。"
           },
           {
             "label": "模型一致性",
@@ -6979,7 +7370,7 @@
           {
             "label": "候选分歧",
             "level": "高",
-            "detail": "前两名比分差距约 0%，差距越小越不适合单点重仓。"
+            "detail": "前两名比分差距约 1%，差距越小越不适合单点重仓。"
           },
           {
             "label": "综合风险",
@@ -7018,7 +7409,7 @@
           }
         ],
         "checklist": [
-          "中国体彩比分 1-0（主胜） 官方赔率是否 ≥ 5.73",
+          "中国体彩比分 1-0（主胜） 官方赔率是否 ≥ 5.79",
           "胜平负 西班牙 主胜 是否达到 ≥ 2.68",
           "近5场实况是否仍支持：WWWWW vs WDWDW",
           "天气地理是否冲突：30°C，降水 1%，风 27 km/h，湿度 34%。露天影响按正常权重计入。",

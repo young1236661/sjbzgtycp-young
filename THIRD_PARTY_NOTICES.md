@@ -30,3 +30,15 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+## OpenFootball World Cup JSON
+
+Historical regulation-time World Cup match data is derived from:
+
+https://github.com/openfootball/worldcup.json
+
+Source revision: `5e4bc62f9e711f3ea83d2b150ac3200e7e9c90a0`
+
+The data is dedicated to the public domain under CC0 1.0:
+
+https://creativecommons.org/publicdomain/zero/1.0/

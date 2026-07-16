@@ -372,6 +372,9 @@ function ModelAuditPanel({ brief }: { brief: WorldCupBrief }) {
   const variant = evaluation.openSourceBaseline.variantPolicy
   const open = evaluation.openSourceBaseline.prequentialSelected
   const exact = evaluation.openSourceBaseline.prequentialExactScore
+  const totals = evaluation.openSourceBaseline.prequentialTotalGoals
+  const historical = evaluation.historicalAttackDefense
+  const historicalSelected = historical.candidates.find((candidate) => candidate.name === historical.selectedCandidate)
   if (!market) return null
 
   return (
@@ -403,6 +406,15 @@ function ModelAuditPanel({ brief }: { brief: WorldCupBrief }) {
           <small>{evaluation.ensemble.validationSize} 场时间留出集；未通过时只降低信心，不改主方向</small>
         </div>
         <div>
+          <span>历届攻防挑战模型</span>
+          <strong>{historical.policy.adopted ? '已通过总进球门禁' : '未通过，仅作审计'}</strong>
+          <small>
+            {historical.historicalSamples} 场历史预训练，{historical.validationSize} 场本届留出；总进球 RPS{' '}
+            {formatMetricNumber(historicalSelected?.validation.totalGoals.rps ?? null)} vs 基线{' '}
+            {formatMetricNumber(historical.canonical.validation.totalGoals.rps)}
+          </small>
+        </div>
+        <div>
           <span>特征纪律</span>
           <strong>盘口、Elo/DC、阵容优先</strong>
           <small>教练与心态仅作弱修正；占卜只展示，不进入数值预测</small>
@@ -411,6 +423,9 @@ function ModelAuditPanel({ brief }: { brief: WorldCupBrief }) {
       <p className="audit-exact-note">
         精确比分独立基线（{exact.samples} 场）：Top1 命中 {formatMetricPercent(exact.top1Accuracy)}，Top3 覆盖{' '}
         {formatMetricPercent(exact.top3Coverage)}，Top8 覆盖 {formatMetricPercent(exact.top8Coverage)}。比分天然高方差，网站只给概率排序与覆盖组，不把单一比分写成确定结论。
+        <br />
+        总进球独立基线（{totals.samples} 场）：RPS {formatMetricNumber(totals.rps)}，Top2 覆盖{' '}
+        {formatMetricPercent(totals.top2Coverage)}，平均绝对误差 {formatMetricNumber(totals.mae)} 球。
       </p>
     </section>
   )

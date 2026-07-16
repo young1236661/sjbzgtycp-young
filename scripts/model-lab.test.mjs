@@ -4,6 +4,7 @@ import {
   canonicalTeamKey,
   scoreExactScoreSamples,
   scoreProbabilitySamples,
+  scoreTotalGoalSamples,
 } from './model-lab.mjs'
 
 assert.equal(canonicalTeamKey('United States'), 'usa')
@@ -34,7 +35,12 @@ assert.equal(neutral.probabilities.length, 3)
 assert.ok(Math.abs(neutral.probabilities.reduce((sum, value) => sum + value, 0) - 1) < 1e-9)
 assert.ok(neutral.topScores.length >= 5)
 assert.ok(neutral.topScores.every((item) => item.probability >= 0 && item.probability <= 1))
+assert.equal(neutral.totalGoals.length, 8)
+assert.ok(Math.abs(neutral.totalGoals.reduce((sum, value) => sum + value, 0) - 1) < 1e-5)
+assert.equal(neutral.historicalChallenger.totalGoals.length, 8)
 assert.equal(lab.evaluation.openSourceBaseline.prequentialExactScore.samples, 2)
+assert.equal(lab.evaluation.openSourceBaseline.prequentialTotalGoals.samples, 2)
+assert.equal(lab.evaluation.historicalAttackDefense.historicalSamples, 964)
 
 const stronger = lab.predict('Spain', 'Haiti')
 assert.ok(stronger.probabilities[0] > stronger.probabilities[2])
@@ -67,6 +73,11 @@ assert.deepEqual(
   changedFutureResult.predictionForId('two').topScores,
   'a match result must not leak into its own exact-score ranking',
 )
+assert.deepEqual(
+  lab.predictionForId('two').totalGoals,
+  changedFutureResult.predictionForId('two').totalGoals,
+  'a match result must not leak into its own total-goal distribution',
+)
 
 const conservativeBlend = lab.combineWithMarket([0.5, 0.3, 0.2], lab.predict('Spain', 'Argentina'))
 assert.equal(conservativeBlend.adopted, false)
@@ -97,6 +108,19 @@ assert.deepEqual(exactScores, {
   top1Accuracy: 0.5,
   top3Coverage: 1,
   top8Coverage: 1,
+})
+
+const perfectTotals = scoreTotalGoalSamples([
+  { actualTotal: 0, totalProbabilities: [1, 0, 0, 0, 0, 0, 0, 0] },
+  { actualTotal: 7, totalProbabilities: [0, 0, 0, 0, 0, 0, 0, 1] },
+])
+assert.deepEqual(perfectTotals, {
+  samples: 2,
+  rps: 0,
+  brier: 0,
+  logLoss: 0,
+  mae: 0,
+  top2Coverage: 1,
 })
 
 console.log('model-lab tests passed')

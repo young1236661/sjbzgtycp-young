@@ -6,6 +6,7 @@
   "packageManager": "pnpm@11.5.3",
   "scripts": {
     "dev": "vite",
+    "import:history": "node scripts/import-openfootball-history.mjs",
     "update:data": "node scripts/update-data.mjs",
     "test:model": "node scripts/model-lab.test.mjs",
     "hash:access-code": "node scripts/hash-access-code.mjs",

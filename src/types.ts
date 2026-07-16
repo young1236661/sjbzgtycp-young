@@ -674,16 +674,28 @@ export interface ExactScoreMetrics {
   top8Coverage: number | null
 }
 
+export interface TotalGoalMetrics {
+  samples: number
+  rps: number | null
+  brier: number | null
+  logLoss: number | null
+  mae: number | null
+  top2Coverage: number | null
+}
+
 export interface StandardEvaluation {
   methodology: string
   properScoring: string
   openSourceBaseline: {
     canonical: ProbabilityMetrics
     canonicalExactScore: ExactScoreMetrics
+    canonicalTotalGoals: TotalGoalMetrics
     meanRevertingShadow: ProbabilityMetrics
     meanRevertingExactScore: ExactScoreMetrics
+    meanRevertingTotalGoals: TotalGoalMetrics
     prequentialSelected: ProbabilityMetrics
     prequentialExactScore: ExactScoreMetrics
+    prequentialTotalGoals: TotalGoalMetrics
     prequentialChallengerSelections: number
     variantPolicy: {
       adopted: boolean
@@ -707,6 +719,44 @@ export interface StandardEvaluation {
       rps: number
       ece: number
       sourceCommit: string
+    }
+  }
+  historicalAttackDefense: {
+    source: {
+      id: string
+      name: string
+      url: string
+      commit: string
+      license: string
+    }
+    historicalSamples: number
+    currentSamples: number
+    selectionSize: number
+    validationSize: number
+    selectedCandidate: string
+    canonical: {
+      selection: { direction: ProbabilityMetrics; totalGoals: TotalGoalMetrics }
+      validation: { direction: ProbabilityMetrics; totalGoals: TotalGoalMetrics }
+    }
+    candidates: Array<{
+      name: string
+      parameters: {
+        updateRate: number
+        halfLifeYears: number
+        meanRate: number
+      }
+      selection: { direction: ProbabilityMetrics; totalGoals: TotalGoalMetrics }
+      validation: { direction: ProbabilityMetrics; totalGoals: TotalGoalMetrics }
+      full: {
+        direction: ProbabilityMetrics
+        totalGoals: TotalGoalMetrics
+        exactScore: ExactScoreMetrics
+      }
+    }>
+    policy: {
+      adopted: boolean
+      scope: string
+      reason: string
     }
   }
   ensemble: {

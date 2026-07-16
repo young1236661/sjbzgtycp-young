@@ -1,7 +1,11 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { execFileSync } from 'node:child_process'
 import { dirname, resolve } from 'node:path'
-import { buildOpenSourceModelLab, OPEN_MODEL_SOURCE } from './model-lab.mjs'
+import {
+  buildOpenSourceModelLab,
+  HISTORICAL_MODEL_SOURCE,
+  OPEN_MODEL_SOURCE,
+} from './model-lab.mjs'
 
 const TIMEZONE = 'Asia/Shanghai'
 const SCOREBOARD_URL = 'https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard'
@@ -568,6 +572,14 @@ async function main() {
       lastCheckedAt: checkedAt,
       detail: `MIT开源独立基线；本届走步回测 ${openModelLab.evaluation.openSourceBaseline.canonical.samples} 场`,
     },
+    {
+      id: HISTORICAL_MODEL_SOURCE.id,
+      name: HISTORICAL_MODEL_SOURCE.name,
+      status: 'ok',
+      url: HISTORICAL_MODEL_SOURCE.url,
+      lastCheckedAt: checkedAt,
+      detail: `CC0历届世界杯964场90分钟数据；动态攻防模型${openModelLab.evaluation.historicalAttackDefense.policy.adopted ? '通过留出集门槛' : '仅作审计，未进入主概率'}`,
+    },
   )
   const healthySources = sources.filter((source) => source.status === 'ok').length
 
@@ -973,6 +985,7 @@ async function normalizeMatch(
     knockoutPaths,
   )
   const openPrediction = openModelLab?.predict(normalizedHome.name, normalizedAway.name, {
+    date: event.date,
     homeHost: context.situational?.host?.homeHost,
     awayHost: context.situational?.host?.awayHost,
   })
