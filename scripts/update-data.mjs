@@ -1,6 +1,7 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { execFileSync } from 'node:child_process'
 import { dirname, resolve } from 'node:path'
+import { buildOpenSourceModelLab, OPEN_MODEL_SOURCE } from './model-lab.mjs'
 
 const TIMEZONE = 'Asia/Shanghai'
 const SCOREBOARD_URL = 'https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard'
@@ -98,11 +99,11 @@ const verifiedAvailabilityOverrides = new Map([
     'Spain',
     {
       effectiveThrough: '2026-07-20T00:30:00Z',
-      riskFloor: 6,
-      headline: '西班牙决赛可用性更新：Lamine Yamal与Pedro Porro赛后均确认可以出战阿根廷',
-      note: 'Yamal离场时一度跛行但随后状态正常；Porro为负荷过高并非确认伤缺，主教练预计其可以参加决赛。保留轻微负荷风险，不按缺阵处理。',
-      sourceUrl: 'https://cadenaser.com/nacional/2026/07/14/tranquilidad-total-con-lamine-yamal-y-pedro-porro-ambos-estan-bien-y-podran-jugar-la-final-del-mundial-2026-cadena-ser/',
-      items: [],
+      riskFloor: 8,
+      headline: '西班牙决赛可用性更新：Yamal与Porro预计可出战；Yeremy Pino确认缺席',
+      note: 'Yamal与Porro预计可以出战；Pino肩伤缺席，但他并非当前主力且此前淘汰赛表现已反映其缺阵，因此只保留低权重阵容深度风险。',
+      sourceUrl: 'https://www.sportsmole.co.uk/football/spain/world-cup-2026/injuries-and-suspensions/yamal-porro-latest-spain-injury-suspension-list-vs-argentina_601315.html',
+      items: [{ player: 'Yeremy Pino', status: '确认缺阵', detail: '肩伤，本届余下比赛无法出场', riskWeight: 6 }],
     },
   ],
   [
@@ -506,6 +507,7 @@ async function main() {
   const groupStandings = buildGroupStandings(events)
   const knockoutPaths = buildKnockoutPaths(events, tournamentRecords)
   const predictionHistory = await readPredictionHistory()
+  const openModelLab = buildOpenSourceModelLab(buildModelLabRecords(events), predictionHistory.predictions)
   const newsResult = await fetchNews()
   const oddsApiResult = await fetchOddsApi()
   const oddsApiBook = buildOddsApiBook(oddsApiResult.data)
@@ -524,11 +526,13 @@ async function main() {
   const upcomingWindow = (nearTermWindow.length >= MIN_TRACKED_MATCHES ? nearTermWindow : allUpcoming)
     .slice(0, Math.max(MIN_TRACKED_MATCHES, nearTermWindow.length))
   const recentCompleted = completedEventsForReview(events, predictionHistory)
-  const modelReview = buildModelReview(recentCompleted)
+  const modelReview = buildModelReview(recentCompleted, openModelLab.evaluation)
   activeModelCalibration = modelReview.calibration
 
   const matches = await Promise.all(
-    upcomingWindow.map((event) => normalizeMatch(event, newsResult.news, tournamentRecords, groupStandings, knockoutPaths, oddsApiBook)),
+    upcomingWindow.map((event) =>
+      normalizeMatch(event, newsResult.news, tournamentRecords, groupStandings, knockoutPaths, oddsApiBook, openModelLab),
+    ),
   )
   const updatedPredictionHistory = updatePredictionHistory(predictionHistory, matches)
   sources.push(
@@ -555,6 +559,14 @@ async function main() {
       url: HISTORY_SOURCE_URL,
       lastCheckedAt: checkedAt,
       detail: `${worldCupHistoryProfiles.size} 条球队历史档案参与低权重校准`,
+    },
+    {
+      id: OPEN_MODEL_SOURCE.id,
+      name: OPEN_MODEL_SOURCE.name,
+      status: 'ok',
+      url: OPEN_MODEL_SOURCE.url,
+      lastCheckedAt: checkedAt,
+      detail: `MIT开源独立基线；本届走步回测 ${openModelLab.evaluation.openSourceBaseline.canonical.samples} 场`,
     },
   )
   const healthySources = sources.filter((source) => source.status === 'ok').length
@@ -937,6 +949,7 @@ async function normalizeMatch(
   groupStandings = new Map(),
   knockoutPaths = new Map(),
   oddsApiBook = new Map(),
+  openModelLab = null,
 ) {
   const competition = event.competitions?.[0] ?? {}
   const competitors = competition.competitors ?? []
@@ -959,8 +972,23 @@ async function normalizeMatch(
     groupStandings,
     knockoutPaths,
   )
-  const judgement = buildJudgement(market, event, newsItems, context)
-  const scoreline = buildScorelineAnalysis(market, normalizedHome, normalizedAway, judgement, newsItems, context)
+  const openPrediction = openModelLab?.predict(normalizedHome.name, normalizedAway.name, {
+    homeHost: context.situational?.host?.homeHost,
+    awayHost: context.situational?.host?.awayHost,
+  })
+  const probabilityEnsemble = market
+    ? openModelLab?.combineWithMarket(resultProbabilitiesFromMarket(market), openPrediction)
+    : null
+  const judgement = buildJudgement(market, event, newsItems, context, probabilityEnsemble)
+  const scoreline = buildScorelineAnalysis(
+    market,
+    normalizedHome,
+    normalizedAway,
+    judgement,
+    newsItems,
+    context,
+    probabilityEnsemble,
+  )
   const professional = buildProfessionalBrief(market, normalizedHome, normalizedAway, judgement, scoreline, newsItems, context)
 
   return {
@@ -1349,6 +1377,25 @@ function normalizeTeamKey(value) {
   return String(value ?? '').trim().toLowerCase()
 }
 
+function buildModelLabRecords(events) {
+  return events.map((event) => {
+    const competitors = event.competitions?.[0]?.competitors ?? []
+    const home = competitors.find((item) => item.homeAway === 'home') ?? competitors[0] ?? {}
+    const away = competitors.find((item) => item.homeAway === 'away') ?? competitors[1] ?? {}
+    const regulationScore = isCompletedEvent(event) ? regulationScoreForEvent(event) : null
+
+    return {
+      id: String(event.id),
+      date: event.date,
+      stage: event.season?.slug ?? event.competitions?.[0]?.altGameNote ?? 'unknown',
+      home: teamName(home),
+      away: teamName(away),
+      homeGoals: regulationScore?.home ?? null,
+      awayGoals: regulationScore?.away ?? null,
+    }
+  })
+}
+
 function completedEventsForReview(events, predictionHistory = null) {
   const lower = new Date(`${TOURNAMENT_START_DATE}T00:00:00Z`).getTime()
 
@@ -1389,7 +1436,7 @@ function completedEventsForReview(events, predictionHistory = null) {
     .sort((left, right) => right.timestamp - left.timestamp)
 }
 
-function buildModelReview(completedMatches) {
+function buildModelReview(completedMatches, standardEvaluation = null) {
   const recentCompleted = completedMatches.slice(0, 8)
   const scoredMatches = completedMatches.filter((match) => match.totalGoals >= 0)
   const predictionSamples = completedMatches.filter((match) => match.prediction?.available)
@@ -1460,6 +1507,7 @@ function buildModelReview(completedMatches) {
   return {
     title: '赛后复盘校准',
     scope: `本届世界杯 ${TOURNAMENT_START_DATE} 至 ${targetDateChina} 已完赛样本`,
+    standardEvaluation,
     trainingSet: {
       sampleSize: scoredMatches.length,
       predictionSamples: predictionSamples.length,
@@ -2277,7 +2325,7 @@ async function buildMatchContext(
     advancement,
     situational,
     adjustment,
-    note: '近况、球员、伤病、天气、地理、历届世界杯底蕴、赛程体能、生物钟、主场环境、晋级压力与半区对手强度进入主模型；古法占卜仅作低权重文化校验，不覆盖可验证事实。',
+    note: '近况、球员、伤病、天气、地理、历届世界杯底蕴、赛程体能、生物钟、主场环境、晋级压力与半区对手强度进入分层模型；古法占卜仅作文化展示，数值权重为0。',
   }
 }
 
@@ -2297,22 +2345,20 @@ async function fetchTeamRecentContext(team, kickoffUtc) {
     const formLetters = recentMatches.map((match) => match.result).join('') || team.form || ''
     const wins = recentMatches.filter((match) => match.result === 'W').length
     const draws = recentMatches.filter((match) => match.result === 'D').length
-    const goalsFor = recentMatches.reduce((sum, match) => sum + match.goalsFor, 0)
-    const goalsAgainst = recentMatches.reduce((sum, match) => sum + match.goalsAgainst, 0)
     const sampleSize = recentMatches.length
-    const goalDiff = goalsFor - goalsAgainst
-    const formScore = clamp(Math.round(50 + wins * 9 + draws * 3 + goalDiff * 2 - Math.max(0, 5 - sampleSize) * 4), 18, 88)
+    const weightedForm = recencyWeightedForm(recentMatches)
+    const formScore = weightedForm.formScore
 
     return {
       formString: formLetters,
       recentMatches,
       sampleSize,
       formScore,
-      goalsForAvg: sampleSize ? round(goalsFor / sampleSize, 2) : null,
-      goalsAgainstAvg: sampleSize ? round(goalsAgainst / sampleSize, 2) : null,
+      goalsForAvg: weightedForm.goalsForAvg,
+      goalsAgainstAvg: weightedForm.goalsAgainstAvg,
       trendNote:
         sampleSize >= 3
-          ? `近 ${sampleSize} 场 ${wins} 胜 ${draws} 平，场均 ${round(goalsFor / sampleSize, 2)}-${round(goalsAgainst / sampleSize, 2)}。`
+          ? `近 ${sampleSize} 场 ${wins} 胜 ${draws} 平；按 2.5 场半衰期加权后场均 ${weightedForm.goalsForAvg}-${weightedForm.goalsAgainstAvg}。`
           : `ESPN 实际比分样本只有 ${sampleSize} 场，剩余趋势参考 form：${team.form ?? '暂无'}。`,
       sourceUrl: url,
     }
@@ -2327,6 +2373,35 @@ async function fetchTeamRecentContext(team, kickoffUtc) {
       trendNote: `队伍赛程抓取失败：${shortError(error)}；仅使用 ESPN form 字符串。`,
       sourceUrl: url,
     }
+  }
+}
+
+function recencyWeightedForm(recentMatches) {
+  if (!recentMatches.length) {
+    return { formScore: 46, goalsForAvg: null, goalsAgainstAvg: null }
+  }
+
+  const halfLifeMatches = 2.5
+  const weighted = recentMatches.map((match, index) => ({
+    match,
+    weight: 0.5 ** (index / halfLifeMatches),
+  }))
+  const weightSum = weighted.reduce((sum, item) => sum + item.weight, 0)
+  const resultRate =
+    weighted.reduce(
+      (sum, item) => sum + item.weight * (item.match.result === 'W' ? 1 : item.match.result === 'D' ? 0.38 : 0),
+      0,
+    ) / weightSum
+  const goalsForAvg = weighted.reduce((sum, item) => sum + item.weight * item.match.goalsFor, 0) / weightSum
+  const goalsAgainstAvg = weighted.reduce((sum, item) => sum + item.weight * item.match.goalsAgainst, 0) / weightSum
+  const goalDiffAvg = goalsForAvg - goalsAgainstAvg
+  const samplePenalty = Math.max(0, 5 - recentMatches.length) * 3
+  const formScore = clamp(Math.round(28 + resultRate * 52 + clamp(goalDiffAvg, -2, 2) * 5 - samplePenalty), 18, 88)
+
+  return {
+    formScore,
+    goalsForAvg: round(goalsForAvg, 2),
+    goalsAgainstAvg: round(goalsAgainstAvg, 2),
   }
 }
 
@@ -2390,7 +2465,8 @@ async function fetchTeamInjuryContext(team, newsItems, kickoffUtc) {
     const data = await fetchJson(url)
     contextStats.injuriesOk += 1
     const items = [...extractInjuryItems(data), ...(verified?.items ?? [])].slice(0, 5)
-    const riskScore = clamp(Math.max(items.length * 18, verified?.riskFloor ?? 0), 0, 78)
+    const itemRisk = items.reduce((sum, item) => sum + (Number.isFinite(item.riskWeight) ? item.riskWeight : 18), 0)
+    const riskScore = clamp(Math.max(itemRisk, verified?.riskFloor ?? 0), 0, 78)
 
     return {
       status: items.length > 0 ? `${items.length} 条伤病/出战信息` : 'ESPN 未列出明确伤病',
@@ -3179,7 +3255,6 @@ function buildContextAdjustment(homeContext, awayContext, weather, geography, di
   const formEdge = homeContext.formScore - awayContext.formScore
   const injuryEdge = awayContext.injuries.riskScore - homeContext.injuries.riskScore
   const travelEdge = clamp((geography.distanceEdgeKm ?? 0) / 4500, -0.9, 0.9)
-  const divinationEdge = clamp((divination.delta ?? 0) * 0.18, -0.72, 0.72)
   const humanEdge = clamp((humanFactors?.edge ?? 0) / 28, -1, 1)
   const tournamentEdge = clamp(((homeContext.tournament?.strengthScore ?? 46) - (awayContext.tournament?.strengthScore ?? 46)) / 32, -1, 1)
   const historyEdge = clamp(((homeContext.history?.score ?? 44) - (awayContext.history?.score ?? 44)) / 34, -1, 1)
@@ -3217,13 +3292,12 @@ function buildContextAdjustment(homeContext, awayContext, weather, geography, di
         injuryEdge * 0.006 +
         travelEdge * 0.08 +
         tournamentEdge * 0.12 +
-        historyEdge * 0.07 +
-        humanEdge * 0.13 +
+        historyEdge * 0.03 +
+        humanEdge * 0.05 +
         advancementEdge +
         situationalEdge +
         homeNarrativePenalty +
-        awayQualityCorrection +
-        divinationEdge * 0.04,
+        awayQualityCorrection,
       2,
     ),
     -0.42,
@@ -3233,8 +3307,8 @@ function buildContextAdjustment(homeContext, awayContext, weather, geography, di
     round(
         ((homeContext.goalsForAvg ?? 1.2) + (awayContext.goalsForAvg ?? 1.2) - 2.6) * 0.09 +
         tournamentTempoAdjustment(homeContext.tournament, awayContext.tournament) +
-        worldCupHistoryTempoAdjustment(homeContext.history, awayContext.history) +
-        humanTempoAdjustment(humanFactors) -
+        worldCupHistoryTempoAdjustment(homeContext.history, awayContext.history) * 0.5 +
+        humanTempoAdjustment(humanFactors) * 0.35 -
         weatherTempoDrag +
         (activeModelCalibration.awayFavoriteTailGuard && awayQualityCorrection < 0 ? 0.05 : 0) -
         eliteLowScoreDrag +
@@ -3288,7 +3362,7 @@ function buildContextAdjustment(homeContext, awayContext, weather, geography, di
       ...(eliteLowScoreDrag > 0 ? ['昨日葡萄牙 0-1 西班牙复盘：强强淘汰赛下调总进球扩张，保留低比分胜负。'] : []),
       `伤病与天气风险使风险指数 ${riskDelta > 0 ? '+' : ''}${riskDelta}。`,
       humanFactors?.summary ?? '心态/教练代理：数据不足，未单独修正。',
-      `古法取象 ${divination.weight}：${divination.summary}`,
+      `古法取象仅展示、不进入数值预测：${divination.summary}`,
     ],
   }
 }
@@ -3337,7 +3411,7 @@ function outcome(label, side, openOdds, closeOdds, line = null) {
   }
 }
 
-function buildScorelineAnalysis(market, homeTeam, awayTeam, judgement, newsItems, context = null) {
+function buildScorelineAnalysis(market, homeTeam, awayTeam, judgement, newsItems, context = null, probabilityEnsemble = null) {
   if (!market) {
     return {
       model: `等待赔率后生成比分分布（${REGULATION_SCOPE_SHORT}）`,
@@ -3353,7 +3427,11 @@ function buildScorelineAnalysis(market, homeTeam, awayTeam, judgement, newsItems
     }
   }
 
-  const resultProbabilities = resultProbabilitiesFromMarket(market)
+  const marketResultProbabilities = resultProbabilitiesFromMarket(market)
+  const resultProbabilities = marketResultProbabilities.map((item, index) => ({
+    ...item,
+    probability: probabilityEnsemble?.blended?.[index] ?? item.probability,
+  }))
   const homeProbability = resultProbabilities.find((item) => item.side === 'home')?.probability ?? 0.33
   const drawProbability = resultProbabilities.find((item) => item.side === 'draw')?.probability ?? 0.26
   const awayProbability = resultProbabilities.find((item) => item.side === 'away')?.probability ?? 0.33
@@ -3453,19 +3531,10 @@ function buildScorelineAnalysis(market, homeTeam, awayTeam, judgement, newsItems
     })
     .filter(Boolean)
 
-  const resultStrength = {
-    主胜: homeProbability,
-    平局: drawProbability,
-    客胜: awayProbability,
-  }
   const candidatePool = allScores
     .filter((item) => item.probability >= 0.018)
-    .sort(
-      (left, right) =>
-        scoreCandidateRank(right, resultStrength, context, totalExpectedGoals, market) -
-        scoreCandidateRank(left, resultStrength, context, totalExpectedGoals, market),
-    )
-    .slice(0, 12)
+    .sort((left, right) => right.probability - left.probability)
+    .slice(0, 15)
 
   const avoid = allScores
     .filter((item) => item.probability < 0.014 && item.fairOdds > 70)
@@ -3488,38 +3557,42 @@ function buildScorelineAnalysis(market, homeTeam, awayTeam, judgement, newsItems
   const simulationScoreBook = new Map(
     (simulation.scoreDistribution ?? simulation.topScores ?? []).map((item) => [item.score, item.probability]),
   )
+  const openScoreBook = new Map(
+    (probabilityEnsemble?.openPrediction?.topScores ?? []).map((item) => [item.score, item.probability]),
+  )
+  // A 1X2 validation gate does not authorize exact-score blending.
+  const scoreWeights = { poisson: 0.55, simulation: 0.45, openSource: 0 }
   const rankedCandidates = candidatePool
     .map((item) => {
       const simulationProbability = simulationScoreBook.get(item.score) ?? 0
-      const consensusProbability = round(item.probability * 0.55 + simulationProbability * 0.45, 4)
+      const openSourceProbability = openScoreBook.get(item.score) ?? 0
+      const consensusProbability = round(
+        item.probability * scoreWeights.poisson +
+          simulationProbability * scoreWeights.simulation +
+          openSourceProbability * scoreWeights.openSource,
+        4,
+      )
       const fairOdds = consensusProbability > 0 ? 1 / consensusProbability : item.fairOdds
       return {
         ...item,
         poissonProbability: item.probability,
         simulationProbability,
+        openSourceProbability,
         probability: consensusProbability,
         fairOdds: round(fairOdds, 2),
         suggestedMinOdds: round(fairOdds * uncertainty, 2),
         expectedValueAtSuggestedOdds: round(consensusProbability * fairOdds * uncertainty - 1, 3),
       }
     })
-    .sort(
-      (left, right) =>
-        scoreCandidateRank(right, resultStrength, context, totalExpectedGoals, market) -
-        scoreCandidateRank(left, resultStrength, context, totalExpectedGoals, market),
-    )
-  const simulationTopScore = simulation.topScores?.[0]?.score
+    .sort((left, right) => right.probability - left.probability)
   const marketLeaderSide = [...resultProbabilities].sort((left, right) => right.probability - left.probability)[0]?.side
-  const simulationAlignedIndex = rankedCandidates.findIndex(
-    (item) => item.score === simulationTopScore && sideFromResult(item.result) === marketLeaderSide,
-  )
+  const directionAlignedIndex = rankedCandidates.findIndex((item) => sideFromResult(item.result) === marketLeaderSide)
   if (
-    simulationAlignedIndex > 0 &&
-    rankedCandidates[0].probability - rankedCandidates[simulationAlignedIndex].probability <=
-      SCORE_CONSENSUS_ALIGNMENT_MARGIN
+    directionAlignedIndex > 0 &&
+    rankedCandidates[0].probability - rankedCandidates[directionAlignedIndex].probability <= SCORE_CONSENSUS_ALIGNMENT_MARGIN
   ) {
-    const [simulationAlignedCandidate] = rankedCandidates.splice(simulationAlignedIndex, 1)
-    rankedCandidates.unshift(simulationAlignedCandidate)
+    const [directionAlignedCandidate] = rankedCandidates.splice(directionAlignedIndex, 1)
+    rankedCandidates.unshift(directionAlignedCandidate)
   }
   const candidates = rankedCandidates
     .slice(0, 9)
@@ -3528,10 +3601,12 @@ function buildScorelineAnalysis(market, homeTeam, awayTeam, judgement, newsItems
       grade: index === 0 ? '首选核验' : '备选',
     }))
   const modelAgreement = buildModelAgreement({
+    marketResultProbabilities,
     resultProbabilities,
     candidates,
     simulation,
     totalExpectedGoals,
+    probabilityEnsemble,
   })
 
   return {
@@ -3542,6 +3617,7 @@ function buildScorelineAnalysis(market, homeTeam, awayTeam, judgement, newsItems
     totalExpectedGoals,
     strengthProfile,
     resultProbabilities,
+    probabilityEnsemble,
     bestPick: candidates[0] ?? null,
     candidates,
     avoid,
@@ -3550,11 +3626,14 @@ function buildScorelineAnalysis(market, homeTeam, awayTeam, judgement, newsItems
     notes: [
       `预测口径：${REGULATION_SCOPE}。`,
       '首选比分采用55%校准Poisson概率与45%一万次比赛进程模拟概率融合，避免单一分布在低比分场过度集中。',
-      '若市场与蒙特卡洛方向一致，且对应模拟首选比分距离融合最高点不超过1个百分点，则决策层优先方向一致比分；原始概率仍完整保留。',
+      '比分按55%校准Poisson与45%一万次模拟的融合概率排序；仅当胜平负主方向对应比分距统计众数不超过1个百分点时，才优先方向一致比分。',
       '比分玩法方差很大，候选只适合小额娱乐或赛前核验。',
       `本版把总进球从基础 ${baseTotalExpectedGoals.toFixed(2)} 校准到 ${totalExpectedGoals.toFixed(2)}，并对强弱分明场景的 3+ 进球比分做尾部上调。`,
       simulation.summary,
       modelAgreement.summary,
+      probabilityEnsemble
+        ? `开源独立模型：${probabilityEnsemble.openPrediction.model}；市场/开源总变差 ${formatPct(probabilityEnsemble.disagreement.totalVariation)}；${probabilityEnsemble.reason}`
+        : '开源独立模型暂不可用，主概率不做额外修正。',
       ...(Math.abs(goalShareAdjustment) >= 0.01
         ? [
             `复盘校准：保留总进球 ${totalExpectedGoals.toFixed(2)} 不变，仅把主场弱势方的一球贡献修正 ${goalShareAdjustment > 0 ? '+' : ''}${goalShareAdjustment}。`,
@@ -3840,10 +3919,10 @@ function buildProfessionalBrief(market, homeTeam, awayTeam, judgement, scoreline
               evidence: context.situational.summary,
             },
             {
-              label: '古法占卜低权重',
-              score: Math.round(50 + context.divination.delta * 8),
+              label: '古法占卜（仅展示）',
+              score: 0,
               tone: 'watch',
-              evidence: `${context.divination.homeSymbol} vs ${context.divination.awaySymbol}；${context.divination.summary}`,
+              evidence: `${context.divination.homeSymbol} vs ${context.divination.awaySymbol}；不进入胜平负、比分或总进球概率。`,
             },
           ]
         : []),
@@ -3978,7 +4057,7 @@ function buildDeepThinkingPlan({ grade, expertAnswer, plays, scenarios, riskCont
         ? `天气/地理：${context.weather.summary} ${context.geography.travelEdge}`
         : '天气和地理信息待核验。',
       context
-        ? `古法低权重校验：${context.divination.summary}`
+        ? `古法文化展示：${context.divination.summary}（数值权重为0）`
         : '古法校验未参与本次评分。',
       `主要风险：${hotRisk?.label ?? '赔率'}为${hotRisk?.level ?? '中'}，${scoreRisk?.label ?? '比分方差'}为${scoreRisk?.level ?? '中'}。`,
       scenarios[0] ? `基准剧本：${scenarios[0].scorePath}` : '等待更多情景数据。',
@@ -4160,7 +4239,7 @@ function buildRiskControls(market, judgement, scoreline, favorite, context = nul
       {
         label: '占卜只作校验',
         level: '低',
-        detail: `${context.divination.method}，权重 ${context.divination.weight}；若与盘口相反，只用于提醒不要加码。`,
+        detail: `${context.divination.method}仅作文化展示，数值权重为0；不用于改变胜平负、比分或总进球概率。`,
       },
     )
   }
@@ -5491,9 +5570,22 @@ function simulateMatchProgress({
   }
 }
 
-function buildModelAgreement({ resultProbabilities, candidates, simulation, totalExpectedGoals }) {
-  const marketLeader = [...resultProbabilities].sort((left, right) => right.probability - left.probability)[0] ?? null
-  const marketRunnerUp = [...resultProbabilities].sort((left, right) => right.probability - left.probability)[1] ?? null
+function buildModelAgreement({
+  marketResultProbabilities,
+  resultProbabilities,
+  candidates,
+  simulation,
+  totalExpectedGoals,
+  probabilityEnsemble = null,
+}) {
+  const marketLeader = [...marketResultProbabilities].sort((left, right) => right.probability - left.probability)[0] ?? null
+  const marketRunnerUp = [...marketResultProbabilities].sort((left, right) => right.probability - left.probability)[1] ?? null
+  const ensembleLeader = [...resultProbabilities].sort((left, right) => right.probability - left.probability)[0] ?? null
+  const openSourceOutcomes = marketResultProbabilities.map((item, index) => ({
+    ...item,
+    probability: probabilityEnsemble?.openSource?.[index] ?? item.probability,
+  }))
+  const openSourceLeader = [...openSourceOutcomes].sort((left, right) => right.probability - left.probability)[0] ?? null
   const poissonCandidate = [...candidates].sort(
     (left, right) =>
       (right.poissonProbability ?? right.probability ?? 0) - (left.poissonProbability ?? left.probability ?? 0),
@@ -5503,7 +5595,7 @@ function buildModelAgreement({ resultProbabilities, candidates, simulation, tota
   const topSimulationScore = simulation?.topScores?.[0]?.score ?? ''
   const topPoissonScore = poissonCandidate?.score ?? ''
   const topThreeScores = candidates.slice(0, 3).map((item) => item.score)
-  const directionVotes = [marketLeader?.side, poissonLeader, simulationLeader].filter(Boolean)
+  const directionVotes = [marketLeader?.side, openSourceLeader?.side, poissonLeader, simulationLeader].filter(Boolean)
   const directionAgreement = Math.max(
     ...['home', 'draw', 'away'].map((side) => directionVotes.filter((vote) => vote === side).length),
     0,
@@ -5525,8 +5617,11 @@ function buildModelAgreement({ resultProbabilities, candidates, simulation, tota
   const simulationConfidence = simulation?.resultDistribution?.[0]?.probability ?? 0
   const flags = []
 
-  if (directionAgreement < 2) flags.push('三模型胜平负方向冲突')
-  if (directionAgreement === 2) flags.push('三模型仅两票一致')
+  if (directionAgreement < 2) flags.push('四模型胜平负方向高度冲突')
+  if (directionAgreement === 2) flags.push('四模型仅两票一致')
+  if (directionAgreement === 3) flags.push('四模型有一票分歧')
+  if (probabilityEnsemble?.disagreement?.directionConflict) flags.push('市场与开源独立模型主方向冲突')
+  if ((probabilityEnsemble?.disagreement?.totalVariation ?? 0) >= 0.12) flags.push('市场与开源概率差距较大')
   if (scoreAgreement === 'conflict') flags.push('Poisson首选比分与蒙特卡洛最密比分不在同一区间')
   if (scoreAgreement === 'top3') flags.push('比分方向仅前三候选一致')
   if (!totalAgreement) flags.push('总进球区间与蒙特卡洛最密总进球不一致')
@@ -5535,21 +5630,22 @@ function buildModelAgreement({ resultProbabilities, candidates, simulation, tota
   if ((simulation?.process?.lateGoalProbability ?? 0) >= 0.55) flags.push('后段进球概率高，比分尾部更容易漂移')
 
   const conflictScore = clamp(
-    (directionAgreement === 3 ? 0 : directionAgreement === 2 ? 7 : 16) +
+    (directionAgreement === 4 ? 0 : directionAgreement === 3 ? 5 : directionAgreement === 2 ? 10 : 16) +
       (scoreAgreement === 'top1' ? 0 : scoreAgreement === 'top3' ? 4 : 9) +
       (totalAgreement ? 0 : 5) +
       (marketGap < 0.08 ? 6 : 0) +
       (simulationConfidence < 0.55 ? 5 : 0) +
+      ((probabilityEnsemble?.disagreement?.totalVariation ?? 0) >= 0.12 ? 5 : 0) +
       ((simulation?.process?.lateGoalProbability ?? 0) >= 0.55 ? 3 : 0),
     0,
     40,
   )
   const riskLevel = conflictScore >= 24 ? '高' : conflictScore >= 14 ? '中' : '低'
   const stakeMultiplier = riskLevel === '高' ? 0.45 : riskLevel === '中' ? 0.7 : 1
-  const summary = `模型一致性实验：盘口=${sideLabel(marketLeader?.side)}、Poisson=${sideLabel(poissonLeader)}、蒙特卡洛=${sideLabel(simulationLeader)}；冲突分 ${conflictScore}/40（${riskLevel}），${flags.length ? flags.slice(0, 3).join('；') : '三层判断基本一致'}。`
+  const summary = `模型一致性实验：盘口=${sideLabel(marketLeader?.side)}、开源Elo/DC=${sideLabel(openSourceLeader?.side)}、Poisson=${sideLabel(poissonLeader)}、蒙特卡洛=${sideLabel(simulationLeader)}；决策层=${sideLabel(ensembleLeader?.side)}，冲突分 ${conflictScore}/40（${riskLevel}），${flags.length ? flags.slice(0, 3).join('；') : '四层判断基本一致'}。`
 
   return {
-    model: 'market + poisson + 10k monte-carlo agreement experiment',
+    model: 'market + open Elo/Dixon-Coles + poisson + 10k monte-carlo agreement experiment',
     marketDirection: marketLeader
       ? {
           side: marketLeader.side,
@@ -5563,7 +5659,22 @@ function buildModelAgreement({ resultProbabilities, candidates, simulation, tota
       result: poissonCandidate?.result ?? null,
       probability: poissonCandidate?.poissonProbability ?? poissonCandidate?.probability ?? null,
     },
+    openSourceDirection: openSourceLeader
+      ? {
+          side: openSourceLeader.side,
+          label: openSourceLeader.label,
+          probability: openSourceLeader.probability,
+        }
+      : null,
+    ensembleDirection: ensembleLeader
+      ? {
+          side: ensembleLeader.side,
+          label: ensembleLeader.label,
+          probability: ensembleLeader.probability,
+        }
+      : null,
     simulationDirection: simulation?.resultDistribution?.[0] ?? null,
+    probabilityDisagreement: probabilityEnsemble?.disagreement ?? null,
     marketGap,
     directionAgreement,
     scoreAgreement,
@@ -5780,7 +5891,7 @@ function factorial(number) {
   return value
 }
 
-function buildJudgement(market, event, newsItems, context = null) {
+function buildJudgement(market, event, newsItems, context = null, probabilityEnsemble = null) {
   if (!market) {
     return {
       confidence: 42,
@@ -5794,21 +5905,37 @@ function buildJudgement(market, event, newsItems, context = null) {
     }
   }
 
-  const outcomes = market.moneyline.filter((item) => typeof item.normalizedProbability === 'number')
+  const marketOutcomes = market.moneyline.filter((item) => typeof item.normalizedProbability === 'number')
+  const outcomes = marketOutcomes.map((item, index) => ({
+    ...item,
+    normalizedProbability: probabilityEnsemble?.blended?.[index] ?? item.normalizedProbability,
+  }))
   const favorite = [...outcomes].sort((left, right) => (right.normalizedProbability ?? 0) - (left.normalizedProbability ?? 0))[0]
   const draw = outcomes.find((item) => item.side === 'draw')
   const favoriteProbability = favorite?.normalizedProbability ?? 0
   const drawProbability = draw?.normalizedProbability ?? 0
-  const lineMove = favorite?.movement ?? 0
+  const lineMove = marketOutcomes.find((item) => item.side === favorite?.side)?.movement ?? 0
   const newsHeat = contextNewsRisk(context) ? 12 : 5
   const priceRisk = favoriteProbability > 0.76 ? 78 : favoriteProbability > 0.64 ? 58 : 46
   const drawRisk = drawProbability > 0.27 ? 66 : 42
   const moveRisk = Math.min(85, Math.abs(lineMove) * 7 + 38)
   const scheduleRisk = new Date(event.date).getTime() - now.getTime() < 5 * 60 * 60 * 1000 ? 62 : 48
   const contextRiskDelta = context?.adjustment?.riskDelta ?? 0
-  const risk = clamp(Math.round((priceRisk + drawRisk + moveRisk + scheduleRisk + newsHeat) / 5 + contextRiskDelta), 28, 92)
+  const openModelPenalty = probabilityEnsemble?.disagreement?.confidencePenalty ?? 0
+  const risk = clamp(
+    Math.round((priceRisk + drawRisk + moveRisk + scheduleRisk + newsHeat) / 5 + contextRiskDelta + openModelPenalty),
+    28,
+    92,
+  )
   const confidence = clamp(
-    Math.round(48 + favoriteProbability * 38 + Math.max(lineMove, 0) * 1.2 - risk * 0.12 + (context?.adjustment?.confidenceDelta ?? 0)),
+    Math.round(
+      48 +
+        favoriteProbability * 38 +
+        Math.max(lineMove, 0) * 1.2 -
+        risk * 0.12 +
+        (context?.adjustment?.confidenceDelta ?? 0) -
+        openModelPenalty * 0.6,
+    ),
     34,
     88,
   )
@@ -5866,6 +5993,16 @@ function buildJudgement(market, event, newsItems, context = null) {
         tone: newsHeat > 8 ? 'watch' : 'good',
         note: newsHeat > 8 ? '近期新闻包含阵容或纪律风险词' : '最新新闻未触发高风险词',
       },
+      ...(probabilityEnsemble
+        ? [
+            {
+              label: '开源模型共识',
+              value: Math.round((1 - probabilityEnsemble.disagreement.totalVariation) * 100),
+              tone: probabilityEnsemble.disagreement.directionConflict ? 'bad' : probabilityEnsemble.disagreement.totalVariation >= 0.12 ? 'watch' : 'good',
+              note: `市场/开源总变差 ${formatPct(probabilityEnsemble.disagreement.totalVariation)}；${probabilityEnsemble.adopted ? '验证后已进入概率集成' : '只用于不确定性惩罚'}`,
+            },
+          ]
+        : []),
       ...(context
         ? [
             {
@@ -5887,10 +6024,10 @@ function buildJudgement(market, event, newsItems, context = null) {
               note: context.situational.summary,
             },
             {
-              label: '古法校验',
-              value: Math.round(50 + (context.divination.delta ?? 0) * 8),
-              tone: context.divination.lean === 'neutral' ? 'watch' : 'good',
-              note: `${context.divination.method}；${context.divination.summary}`,
+              label: '古法展示',
+              value: 0,
+              tone: 'watch',
+              note: `${context.divination.method}；文化展示，不进入数值预测。`,
             },
           ]
         : []),

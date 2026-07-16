@@ -71,6 +71,7 @@
 
 .refresh-panel,
 .summary-strip,
+.model-audit-panel,
 .analysis-panel,
 .decision-panel,
 .bankroll-panel,
@@ -321,6 +322,75 @@
 
 .metric-cell strong {
   margin: 0;
+}
+
+.model-audit-panel {
+  display: grid;
+  gap: 14px;
+  padding: 14px 18px;
+}
+
+.model-audit-panel .section-heading {
+  justify-content: space-between;
+}
+
+.audit-metrics {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  border-block: 1px solid var(--line);
+}
+
+.audit-metrics > div {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  padding: 11px 12px;
+  border-right: 1px solid var(--line);
+}
+
+.audit-metrics > div:last-child {
+  border-right: 0;
+}
+
+.audit-metrics span,
+.audit-metrics small,
+.audit-decisions span,
+.audit-decisions small {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.audit-metrics strong {
+  font-size: 17px;
+  font-variant-numeric: tabular-nums;
+}
+
+.audit-decisions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.audit-decisions > div {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  padding-left: 11px;
+  border-left: 3px solid rgba(20, 133, 101, 0.28);
+}
+
+.audit-decisions strong {
+  font-size: 13px;
+}
+
+.audit-exact-note {
+  margin: 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.65;
 }
 
 .professional-ranking {
@@ -598,6 +668,58 @@
 .odds-table {
   border-top: 1px solid var(--line);
   padding-top: 12px;
+}
+
+.probability-crosscheck {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+.probability-crosscheck-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.probability-crosscheck-heading strong {
+  font-size: 13px;
+}
+
+.probability-crosscheck-heading span,
+.probability-crosscheck p {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.probability-crosscheck p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.probability-compare-grid {
+  display: grid;
+  grid-template-columns: minmax(90px, 1fr) repeat(2, minmax(82px, 0.8fr));
+  gap: 7px 12px;
+  align-items: center;
+  font-size: 12px;
+}
+
+.probability-compare-grid > span {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.probability-compare-row {
+  display: contents;
+}
+
+.probability-compare-row span {
+  font-variant-numeric: tabular-nums;
 }
 
 .table-grid {
@@ -1980,6 +2102,8 @@
   .context-grid,
   .environment-grid,
   .summary-strip,
+  .audit-metrics,
+  .audit-decisions,
   .scoreline-grid,
   .playbook-grid,
   .player-injury-grid,
@@ -1993,6 +2117,37 @@
   .play-map-content,
   .decision-rail {
     grid-template-columns: 1fr;
+  }
+
+  .dashboard-grid {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .main-stage {
+    order: 1;
+  }
+
+  .main-stage > * {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .source-rail {
+    order: 2;
+  }
+
+  .decision-rail {
+    order: 3;
+  }
+
+  .audit-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .audit-metrics > div:nth-child(even) {
+    border-right: 0;
   }
 
   .answer-grid > div.wide {

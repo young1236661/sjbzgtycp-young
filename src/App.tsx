@@ -189,6 +189,7 @@ function DashboardApp({ authMode, onLogout }: { authMode: string; onLogout: () =
         <section className="main-stage" aria-label="世界杯体彩分析">
           <TopNav />
           <SummaryStrip brief={brief} />
+          <ModelAuditPanel brief={brief} />
           <ProfessionalRanking
             matches={brief.matches}
             selectedMatchId={selectedMatch?.id ?? ''}
@@ -363,6 +364,82 @@ function SummaryStrip({ brief }: { brief: WorldCupBrief }) {
   )
 }
 
+function ModelAuditPanel({ brief }: { brief: WorldCupBrief }) {
+  const evaluation = brief.modelReview?.standardEvaluation
+  if (!evaluation) return null
+
+  const market = evaluation.ensemble.candidates.find((candidate) => candidate.name === 'market-only')?.full
+  const variant = evaluation.openSourceBaseline.variantPolicy
+  const open = evaluation.openSourceBaseline.prequentialSelected
+  const exact = evaluation.openSourceBaseline.prequentialExactScore
+  if (!market) return null
+
+  return (
+    <section className="model-audit-panel" aria-label="标准概率回测">
+      <div className="section-heading">
+        <div>
+          <strong>标准概率回测</strong>
+          <span>严格按开赛时间前推；每场先预测，再用赛果更新模型</span>
+        </div>
+        <span>{evaluation.ensemble.sampleSize} 场已存档赛前概率</span>
+      </div>
+      <div className="audit-metrics">
+        <AuditMetric label="方向准确率" value={formatMetricPercent(market.accuracy)} note="越高越好" />
+        <AuditMetric label="95% 区间" value={formatMetricInterval(market.accuracy95)} note="样本不确定性" />
+        <AuditMetric label="RPS" value={formatMetricNumber(market.rps)} note="越低越好" />
+        <AuditMetric label="Brier" value={formatMetricNumber(market.brier)} note="越低越好" />
+        <AuditMetric label="Log-loss" value={formatMetricNumber(market.logLoss)} note="越低越好" />
+        <AuditMetric label="ECE" value={formatMetricPercent(market.ece)} note="校准误差" />
+      </div>
+      <div className="audit-decisions">
+        <div>
+          <span>开源独立模型</span>
+          <strong>{variant.adopted ? '均值回归已通过门禁' : '保持原始 Elo/DC'}</strong>
+          <small>{open.samples} 场无泄漏在线选择：方向 {formatMetricPercent(open.accuracy)}，RPS {formatMetricNumber(open.rps)}</small>
+        </div>
+        <div>
+          <span>概率融合门禁</span>
+          <strong>{evaluation.ensemble.policy.adopted ? '已启用固定权重融合' : '未启用，主概率保持市场基线'}</strong>
+          <small>{evaluation.ensemble.validationSize} 场时间留出集；未通过时只降低信心，不改主方向</small>
+        </div>
+        <div>
+          <span>特征纪律</span>
+          <strong>盘口、Elo/DC、阵容优先</strong>
+          <small>教练与心态仅作弱修正；占卜只展示，不进入数值预测</small>
+        </div>
+      </div>
+      <p className="audit-exact-note">
+        精确比分独立基线（{exact.samples} 场）：Top1 命中 {formatMetricPercent(exact.top1Accuracy)}，Top3 覆盖{' '}
+        {formatMetricPercent(exact.top3Coverage)}，Top8 覆盖 {formatMetricPercent(exact.top8Coverage)}。比分天然高方差，网站只给概率排序与覆盖组，不把单一比分写成确定结论。
+      </p>
+    </section>
+  )
+}
+
+function AuditMetric({ label, value, note }: { label: string; value: string; note: string }) {
+  return (
+    <div>
+      <span>{label}</span>
+      <strong>{value}</strong>
+      <small>{note}</small>
+    </div>
+  )
+}
+
+function formatMetricPercent(value: number | null) {
+  return value === null ? '—' : `${(value * 100).toFixed(1)}%`
+}
+
+function formatMetricNumber(value: number | null) {
+  return value === null ? '—' : value.toFixed(4)
+}
+
+function formatMetricInterval(interval: [number | null, number | null]) {
+  return interval.some((value) => value === null)
+    ? '—'
+    : `${((interval[0] ?? 0) * 100).toFixed(1)}–${((interval[1] ?? 0) * 100).toFixed(1)}%`
+}
+
 function MetricCell({ label, value, icon }: { label: string; value: string; icon: ReactElement }) {
   return (
     <div className="metric-cell">
@@ -481,6 +558,7 @@ function MatchWorkspace({ match }: { match: MatchBrief }) {
                 </ResponsiveContainer>
               </div>
               <OddsTable title="胜平负市场" outcomes={match.market.moneyline} />
+              <ProbabilityCrosscheck match={match} />
             </>
           ) : (
             <EmptyData text="这场比赛暂无可用赔率，请等待下一次数据更新。" />
@@ -528,6 +606,35 @@ function MatchWorkspace({ match }: { match: MatchBrief }) {
         </div>
       </section>
     </section>
+  )
+}
+
+function ProbabilityCrosscheck({ match }: { match: MatchBrief }) {
+  const ensemble = match.scoreline.probabilityEnsemble
+  if (!ensemble) return null
+
+  const labels = [match.home.zhName, '平局', match.away.zhName]
+  return (
+    <div className="probability-crosscheck">
+      <div className="probability-crosscheck-heading">
+        <strong>独立模型交叉验证</strong>
+        <span>{ensemble.openPrediction.variant ?? ensemble.openPrediction.model}</span>
+      </div>
+      <div className="probability-compare-grid">
+        <span>方向</span><span>去水市场</span><span>开源模型</span>
+        {labels.map((label, index) => (
+          <div className="probability-compare-row" key={label}>
+            <strong>{label}</strong>
+            <span>{formatProbability(ensemble.market[index] ?? 0)}</span>
+            <span>{formatProbability(ensemble.openSource[index] ?? 0)}</span>
+          </div>
+        ))}
+      </div>
+      <p>
+        总变差 {formatProbability(ensemble.disagreement.totalVariation)}；
+        {ensemble.adopted ? '留出回测通过，已进入集成。' : '融合门禁未通过，仅用于风险惩罚。'}
+      </p>
+    </div>
   )
 }
 

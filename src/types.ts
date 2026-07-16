@@ -75,6 +75,7 @@ export interface InjuryItem {
   player: string
   status: string
   detail: string
+  riskWeight?: number
 }
 
 export interface InjuryContext {
@@ -311,6 +312,9 @@ export interface ScorelineCandidate {
   expectedValueAtSuggestedOdds: number
   grade: '首选核验' | '备选' | '回避'
   reason: string
+  poissonProbability?: number
+  simulationProbability?: number
+  openSourceProbability?: number
 }
 
 export interface SimulationDistribution {
@@ -329,6 +333,7 @@ export interface MatchProcessSimulation {
   seed: string
   resultDistribution: SimulationDistribution[]
   topScores: SimulationDistribution[]
+  scoreDistribution?: SimulationDistribution[]
   totalGoals: SimulationDistribution[]
   halftime: {
     mostCommonScore: string
@@ -355,6 +360,16 @@ export interface ModelAgreement {
     label: string
     probability: number
   } | null
+  openSourceDirection?: {
+    side: 'home' | 'draw' | 'away'
+    label: string
+    probability: number
+  } | null
+  ensembleDirection?: {
+    side: 'home' | 'draw' | 'away'
+    label: string
+    probability: number
+  } | null
   poissonDirection: {
     side: 'home' | 'draw' | 'away' | null
     score: string
@@ -362,6 +377,7 @@ export interface ModelAgreement {
     probability: number | null
   }
   simulationDirection: SimulationDistribution | null
+  probabilityDisagreement?: ProbabilityDisagreement | null
   marketGap: number
   directionAgreement: number
   scoreAgreement: 'top1' | 'top3' | 'conflict'
@@ -376,6 +392,35 @@ export interface ModelAgreement {
   summary: string
 }
 
+export interface ProbabilityDisagreement {
+  totalVariation: number
+  jsDivergence: number
+  directionConflict: boolean
+  confidencePenalty: number
+}
+
+export interface OpenModelPrediction {
+  model: string
+  variant?: string
+  probabilities: number[]
+  topScores: Array<{ score: string; probability: number }>
+}
+
+export interface ProbabilityEnsemble {
+  method: string
+  adopted: boolean
+  reason: string
+  weights: {
+    market: number
+    openSource: number
+  }
+  market: number[]
+  openSource: number[]
+  blended: number[]
+  disagreement: ProbabilityDisagreement
+  openPrediction: OpenModelPrediction
+}
+
 export interface ScorelineAnalysis {
   model: string
   scope?: string
@@ -388,6 +433,7 @@ export interface ScorelineAnalysis {
   avoid: ScorelineCandidate[]
   simulation?: MatchProcessSimulation
   modelAgreement?: ModelAgreement
+  probabilityEnsemble?: ProbabilityEnsemble
   notes: string[]
 }
 
@@ -602,6 +648,100 @@ export interface ModelReview {
   predictionBacktest: PredictionBacktestItem[]
   lessons: string[]
   calibration: Record<string, number>
+  standardEvaluation?: StandardEvaluation
+}
+
+export interface ProbabilityMetrics {
+  samples: number
+  accuracy: number | null
+  accuracy95: [number | null, number | null]
+  brier: number | null
+  logLoss: number | null
+  rps: number | null
+  ece: number | null
+  calibrationBins?: Array<{
+    range: [number, number]
+    count: number
+    averagePrediction: number | null
+    observedFrequency: number | null
+  }>
+}
+
+export interface ExactScoreMetrics {
+  samples: number
+  top1Accuracy: number | null
+  top3Coverage: number | null
+  top8Coverage: number | null
+}
+
+export interface StandardEvaluation {
+  methodology: string
+  properScoring: string
+  openSourceBaseline: {
+    canonical: ProbabilityMetrics
+    canonicalExactScore: ExactScoreMetrics
+    meanRevertingShadow: ProbabilityMetrics
+    meanRevertingExactScore: ExactScoreMetrics
+    prequentialSelected: ProbabilityMetrics
+    prequentialExactScore: ExactScoreMetrics
+    prequentialChallengerSelections: number
+    variantPolicy: {
+      adopted: boolean
+      name: string
+      selectionSize: number
+      validationSize: number
+      canonical: ProbabilityMetrics
+      challenger: ProbabilityMetrics
+      selection?: {
+        canonical: ProbabilityMetrics
+        challenger: ProbabilityMetrics
+      }
+      holdoutConfirmed?: boolean
+      reason: string
+    }
+    reproducedUpstreamBacktest: {
+      evaluated: number
+      accuracy: number
+      brier: number
+      logLoss: number
+      rps: number
+      ece: number
+      sourceCommit: string
+    }
+  }
+  ensemble: {
+    sampleSize: number
+    trainingSize: number
+    validationSize: number
+    candidates: Array<{
+      name: string
+      market: number
+      open: number
+      training: ProbabilityMetrics
+      validation: ProbabilityMetrics
+      full: ProbabilityMetrics
+    }>
+    policy: {
+      adopted: boolean
+      name: string
+      marketWeight: number
+      openWeight: number
+      reason: string
+    }
+    validation: {
+      market: ProbabilityMetrics
+      selected: ProbabilityMetrics
+      selectedCandidate: string
+      adopted: boolean
+    }
+  }
+  featurePolicy: {
+    tierA: string[]
+    tierB: string[]
+    tierC: string[]
+    displayOnly: string[]
+    rule: string
+  }
 }
 
 export interface WorldCupBrief {
