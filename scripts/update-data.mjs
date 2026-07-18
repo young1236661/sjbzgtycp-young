@@ -81,12 +81,12 @@ const verifiedAvailabilityOverrides = new Map([
     {
       effectiveThrough: '2026-07-19T00:30:00Z',
       riskFloor: 28,
-      headline: '英格兰三四名决赛可用性更新：Reece James肌肉问题高度存疑，Henderson继续缺席；Bellingham纪律风险尚未官宣',
-      note: 'Reece James在半决赛因疑似肌肉问题被换下，出战高度存疑；Jordan Henderson腕伤继续缺席。Quansah已服完两场停赛，可重新进入选择范围。Bellingham潜在纪律审查没有官方决定，因此只列为临场触发条件，不按确认停赛计分。',
-      sourceUrl: 'https://www.sportsmole.co.uk/football/france/world-cup-2026/preview/france-vs-england-prediction-team-news-lineups_601289.html',
+      headline: '英格兰三四名决赛可用性更新：Reece James高度存疑，Henderson确认缺席，Quansah恢复可选',
+      note: 'Reece James在半决赛因肌肉问题被换下，出战高度存疑；Jordan Henderson继续因腕伤缺席。Quansah已结束停赛。最新市场与预计阵容仍列出Bellingham，因此不再对未获官方确认的纪律传闻计分，最终以首发名单为准。',
+      sourceUrl: 'https://www.fanduel.com/research/france-vs-england-prediction-picks-lineups-odds-and-best-bets-today-third-place-world-cup',
       items: [
         { player: 'Reece James', status: '出战高度存疑', detail: '半决赛因疑似肌肉问题被换下', riskWeight: 16 },
-        { player: 'Jordan Henderson', status: '预计缺阵', detail: '腕伤仍未恢复', riskWeight: 6 },
+        { player: 'Jordan Henderson', status: '确认缺阵', detail: '腕伤仍未恢复', riskWeight: 6 },
       ],
     },
   ],
@@ -94,13 +94,13 @@ const verifiedAvailabilityOverrides = new Map([
     'France',
     {
       effectiveThrough: '2026-07-19T00:30:00Z',
-      riskFloor: 24,
-      headline: '法国三四名决赛可用性更新：Saliba背部问题高度存疑，Samba缺席赛后首堂训练',
-      note: 'William Saliba因背部问题在半决赛上半场离场，尚无法国队官方最终结论，但周六出战被媒体判断为高度存疑；替补门将Brice Samba缺席首堂训练，预计不影响首发门将。只对防线连续性作中等修正。',
-      sourceUrl: 'https://www.sportsmole.co.uk/football/france/world-cup-2026/preview/france-vs-england-prediction-team-news-lineups_601289.html',
+      riskFloor: 30,
+      headline: '法国三四名决赛可用性更新：Saliba与Samba均确认缺席',
+      note: 'William Saliba背伤确认需要手术，将缺席本场；Maxence Lacroix预计顶替中卫位置。替补门将Brice Samba也因小腿伤缺席。模型上调法国防线连续性风险，但不把替补门将缺阵等同于主力门将损失。',
+      sourceUrl: 'https://www.fanduel.com/research/france-vs-england-prediction-picks-lineups-odds-and-best-bets-today-third-place-world-cup',
       items: [
-        { player: 'William Saliba', status: '出战高度存疑', detail: '背部问题导致半决赛提前离场', riskWeight: 18 },
-        { player: 'Brice Samba', status: '训练缺席', detail: '替补门将缺席赛后首堂训练', riskWeight: 3 },
+        { player: 'William Saliba', status: '确认缺阵', detail: '背伤需要手术', riskWeight: 24 },
+        { player: 'Brice Samba', status: '确认缺阵', detail: '替补门将小腿伤', riskWeight: 3 },
       ],
     },
   ],
@@ -108,11 +108,22 @@ const verifiedAvailabilityOverrides = new Map([
     'Spain',
     {
       effectiveThrough: '2026-07-20T00:30:00Z',
-      riskFloor: 8,
-      headline: '西班牙决赛可用性更新：Yamal与Porro预计可出战；Yeremy Pino确认缺席',
-      note: 'Yamal与Porro预计可以出战；Pino肩伤缺席，但他并非当前主力且此前淘汰赛表现已反映其缺阵，因此只保留低权重阵容深度风险。',
-      sourceUrl: 'https://www.sportsmole.co.uk/football/spain/world-cup-2026/injuries-and-suspensions/yamal-porro-latest-spain-injury-suspension-list-vs-argentina_601315.html',
-      items: [{ player: 'Yeremy Pino', status: '确认缺阵', detail: '肩伤，本届余下比赛无法出场', riskWeight: 6 }],
+      riskFloor: 0,
+      headline: '西班牙决赛可用性更新：足协通报26名球员全部参加赛前训练',
+      note: '西班牙足协7月17日的官方训练通报显示26名球员全部参加合练；Yamal与Porro均已回归全队训练。该一手信息晚于此前伤停列表，因此撤销旧数据中对Yeremy Pino的确认缺阵计分，仍需赛前首发复核。',
+      sourceUrl: 'https://rfef.es/es/noticias/penultima-prueba-antes-de-la-gran-final',
+      items: [],
+    },
+  ],
+  [
+    'Argentina',
+    {
+      effectiveThrough: '2026-07-20T00:30:00Z',
+      riskFloor: 0,
+      headline: '阿根廷决赛可用性更新：26人阵容均可供选择',
+      note: '最新赛前阵容信息显示阿根廷26人均可供选择，Romero与Paredes此前问题已经恢复。当前不加入确认伤停扣分，最终以赛前名单为准。',
+      sourceUrl: 'https://www.sportsmole.co.uk/football/spain/world-cup-2026/preview/spain-vs-argentina-prediction-team-news-lineups_601336.html',
+      items: [],
     },
   ],
   [
@@ -2513,7 +2524,16 @@ async function fetchTeamInjuryContext(team, newsItems, kickoffUtc) {
   try {
     const data = await fetchJson(url)
     contextStats.injuriesOk += 1
-    const items = [...extractInjuryItems(data), ...(verified?.items ?? [])].slice(0, 5)
+    const itemsByPlayer = new Map()
+    for (const item of [...extractInjuryItems(data), ...(verified?.items ?? [])]) {
+      const key = String(item.player ?? '').trim().toLowerCase()
+      if (!key) continue
+      const existing = itemsByPlayer.get(key)
+      const itemRisk = Number.isFinite(item.riskWeight) ? item.riskWeight : 18
+      const existingRisk = Number.isFinite(existing?.riskWeight) ? existing.riskWeight : 18
+      if (!existing || itemRisk >= existingRisk) itemsByPlayer.set(key, item)
+    }
+    const items = [...itemsByPlayer.values()].slice(0, 5)
     const itemRisk = items.reduce((sum, item) => sum + (Number.isFinite(item.riskWeight) ? item.riskWeight : 18), 0)
     const riskScore = clamp(Math.max(itemRisk, verified?.riskFloor ?? 0), 0, 78)
 
@@ -2530,10 +2550,15 @@ async function fetchTeamInjuryContext(team, newsItems, kickoffUtc) {
       sourceUrl: verified?.sourceUrl ?? url,
     }
   } catch (error) {
+    const verifiedItems = verified?.items ?? []
+    const verifiedRisk = verifiedItems.reduce(
+      (sum, item) => sum + (Number.isFinite(item.riskWeight) ? item.riskWeight : 18),
+      0,
+    )
     return {
       status: '伤病接口不可用',
-      riskScore: Math.max(20, verified?.riskFloor ?? 0),
-      items: verified?.items ?? [],
+      riskScore: verified ? clamp(Math.max(verifiedRisk, verified.riskFloor ?? 0), 0, 78) : 20,
+      items: verifiedItems,
       relatedNews: [...relatedNews.map((item) => item.title), ...(verified?.headline ? [verified.headline] : [])],
       note: verified?.note ?? `伤病接口失败：${shortError(error)}；保留接口缺失基线，新闻关键词只作提醒。`,
       sourceUrl: verified?.sourceUrl ?? url,
