@@ -109,8 +109,8 @@ const verifiedAvailabilityOverrides = new Map([
     {
       effectiveThrough: '2026-07-20T00:30:00Z',
       riskFloor: 0,
-      headline: '西班牙决赛可用性更新：足协通报26名球员全部参加赛前训练',
-      note: '西班牙足协7月17日的官方训练通报显示26名球员全部参加合练；Yamal与Porro均已回归全队训练。该一手信息晚于此前伤停列表，因此撤销旧数据中对Yeremy Pino的确认缺阵计分，仍需赛前首发复核。',
+      headline: '西班牙决赛更新：26人参加赛前训练，Fabián Ruiz预计继续首发',
+      note: '西班牙足协7月17日通报26名球员全部参加合练，Yamal与Porro均在预计首发中；最新阵容预览倾向Fabián Ruiz继续压过Pedri首发。部分媒体仍把Pino和Víctor Muñoz列为缺阵，但两人都不是预计首发，因此只保留阵容深度提醒，不加入核心伤停扣分。',
       sourceUrl: 'https://rfef.es/es/noticias/penultima-prueba-antes-de-la-gran-final',
       items: [],
     },
@@ -120,9 +120,9 @@ const verifiedAvailabilityOverrides = new Map([
     {
       effectiveThrough: '2026-07-20T00:30:00Z',
       riskFloor: 0,
-      headline: '阿根廷决赛可用性更新：26人阵容均可供选择',
-      note: '最新赛前阵容信息显示阿根廷26人均可供选择，Romero与Paredes此前问题已经恢复。当前不加入确认伤停扣分，最终以赛前名单为准。',
-      sourceUrl: 'https://www.sportsmole.co.uk/football/spain/world-cup-2026/preview/spain-vs-argentina-prediction-team-news-lineups_601336.html',
+      headline: '阿根廷决赛更新：De Paul预计回归首发，Romero与Paredes均已恢复',
+      note: '最新阵容预览显示Romero与Paredes身体状态正常，De Paul预计回归中场，Montiel更可能出任右后卫，Álvarez继续与Messi搭档。当前没有需要计入模型的确认核心缺阵，最终以赛前首发为准。',
+      sourceUrl: 'https://www.fanduel.com/research/spain-vs-argentina-world-cup-final-prediction-picks-lineups-odds-and-best-bets-updated-sunday',
       items: [],
     },
   ],
@@ -1719,6 +1719,12 @@ function buildPredictionReflection(predictionSamples) {
   const zeroGoalBandMisses = predictionSamples.filter(
     (match) => match.totalGoals === 0 && match.prediction.totalBandHit === false,
   )
+  const placementTailMisses = predictionSamples.filter(
+    (match) =>
+      (match.stage === 'third-place' || match.stage === '3rd-place-match') &&
+      match.totalGoals >= 6 &&
+      match.prediction.totalBandHit === false,
+  )
   const cleanSheetOverrated = exactScoreMisses.filter((match) => {
     const predicted = scoreParts(match.prediction.topScores[0]?.score)
     const actual = scoreParts(match.score)
@@ -1764,6 +1770,15 @@ function buildPredictionReflection(predictionSamples) {
       evidence: `总进球区间错 ${totalBandMisses.length}/${sampleSize}，通常优于精确比分首选。`,
       adjustment: '组合购买里让总进球承担节奏判断，比分只承担小额高赔率验证。',
     },
+    ...(placementTailMisses.length > 0
+      ? [
+          {
+            pattern: '三四名赛不能套用高压淘汰赛节奏',
+            evidence: `低压力排位赛出现 ${placementTailMisses.length} 场6球以上且总进球区间未覆盖，最新是法国 4-6 英格兰。`,
+            adjustment: '三四名赛单独提高开放度、双方进球和4+球尾部，同时降低胜负方向信心；该修正不迁移到决赛。',
+          },
+        ]
+      : []),
     ...(homeNarrativeMisses.length > 0
       ? [
           {
@@ -1864,6 +1879,9 @@ function buildPredictionReflection(predictionSamples) {
         : []),
       ...(zeroGoalBandMisses.length > 0
         ? ['昨日瑞士 0-0 哥伦比亚后新增0球保护：低节奏平局场的总进球区间必须能覆盖 0。']
+        : []),
+      ...(placementTailMisses.length > 0
+        ? ['法国 4-6 英格兰后新增三四名赛专用高方差层：提高双方进球与4+球尾部，降低方向置信度；决赛等高压淘汰赛不套用。']
         : []),
     ],
   }
@@ -2012,6 +2030,11 @@ function predictionRecordFromMatch(match, createdAt, sourceCommit) {
 function buildArchivedPredictionSample(archivedPrediction, homeScore, awayScore) {
   const actualScore = `${homeScore}-${awayScore}`
   const actualTotalGoals = homeScore + awayScore
+  const modelSnapshot = archivedPrediction.modelSnapshot ?? null
+  const archivedResultProbabilities =
+    archivedPrediction.resultProbabilities?.length > 0
+      ? archivedPrediction.resultProbabilities
+      : modelSnapshot?.resultProbabilities ?? []
   const topScores =
     archivedPrediction.topScores?.length > 0
       ? archivedPrediction.topScores.map((item) => ({
@@ -2031,10 +2054,10 @@ function buildArchivedPredictionSample(archivedPrediction, homeScore, awayScore)
     provider: 'prediction-history',
     predictedResult,
     favoriteSide: sideFromResult(predictedResult),
-    favoriteProbability: archivedPrediction.resultProbabilities?.find((item) => item.side === sideFromResult(predictedResult))?.probability ?? null,
-    totalExpectedGoals: null,
-    homeExpectedGoals: null,
-    awayExpectedGoals: null,
+    favoriteProbability: archivedResultProbabilities.find((item) => item.side === sideFromResult(predictedResult))?.probability ?? null,
+    totalExpectedGoals: Number.isFinite(modelSnapshot?.totalExpectedGoals) ? modelSnapshot.totalExpectedGoals : null,
+    homeExpectedGoals: Number.isFinite(modelSnapshot?.homeExpectedGoals) ? modelSnapshot.homeExpectedGoals : null,
+    awayExpectedGoals: Number.isFinite(modelSnapshot?.awayExpectedGoals) ? modelSnapshot.awayExpectedGoals : null,
     totalBand,
     totalBandHit: totalBandNumbers.length > 0 ? totalBandNumbers.includes(actualTotalGoals) : null,
     topScores: topScoreList,
@@ -2926,9 +2949,9 @@ function buildAdvancementContext(event, competition, homeTeam, awayTeam, homeCon
       summary: `三四名决赛没有晋级压力，轮换和失利后的心理波动高于普通淘汰赛，节奏通常更开放。${motivationNote}`,
       sourceUrl: 'https://www.foxsports.com/stories/soccer/2026-world-cup-third-place-odds-france-england',
       homeGoalDiffDelta: 0,
-      totalGoalsDelta: 0.08,
-      riskDelta: 6,
-      confidenceDelta: -4,
+      totalGoalsDelta: 0.28,
+      riskDelta: 12,
+      confidenceDelta: -8,
     }
   }
 
@@ -4872,6 +4895,11 @@ function scoreStrengthCoherenceMultiplier(
     if (advancement.homeNeed.includes('基本出线') && homeGoals - awayGoals >= 3) multiplier -= 0.05
     if (advancement.awayNeed.includes('基本出线') && awayGoals - homeGoals >= 3) multiplier -= 0.05
   }
+  if (advancement?.pressureType === 'placement') {
+    if (totalGoals >= 4) multiplier += 0.12
+    if (homeGoals > 0 && awayGoals > 0 && totalGoals >= 4) multiplier += 0.06
+    if (totalGoals <= 1) multiplier -= 0.06
+  }
   if (situational) {
     if (situational.knockoutTempo.penaltyRisk >= 68) {
       if (result === scoreResult(0, 0) || result === scoreResult(1, 1)) multiplier += 0.08
@@ -5042,6 +5070,12 @@ function scoreTailMultiplier(homeGoals, awayGoals, totalExpectedGoals, resultPro
   }
   if (activeModelCalibration.highGoalVolatility && totalGoals <= 1 && favoriteProbability >= 0.62) {
     multiplier -= 0.03
+  }
+  if (context?.advancement?.pressureType === 'placement') {
+    if (totalGoals >= 5) multiplier += 0.14
+    else if (totalGoals === 4) multiplier += 0.08
+    if (homeGoals > 0 && awayGoals > 0 && totalGoals >= 4) multiplier += 0.06
+    if (totalGoals <= 1) multiplier -= 0.05
   }
   if (
     activeModelCalibration.awayFavoriteTailGuard &&
@@ -5259,6 +5293,12 @@ function scoreCandidateRank(item, resultStrength, context = null, totalExpectedG
   }
   if (activeModelCalibration.highGoalVolatility && totalGoals <= 1 && favoriteProbability >= 0.62) {
     reviewLift *= 0.97
+  }
+  if (context?.advancement?.pressureType === 'placement') {
+    if (totalGoals >= 5) reviewLift *= 1.14
+    else if (totalGoals === 4) reviewLift *= 1.08
+    if (homeGoals > 0 && awayGoals > 0 && totalGoals >= 4) reviewLift *= 1.06
+    if (totalGoals <= 1) reviewLift *= 0.95
   }
   if (
     activeModelCalibration.awayFavoriteTailGuard &&
