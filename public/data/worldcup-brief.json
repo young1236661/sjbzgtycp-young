@@ -383,7 +383,7 @@
     {
       "id": "the-odds-api",
       "name": "The Odds API",
-      "status": "skipped",
+      "status": "ok",
       "url": "https://the-odds-api.com/",
       "lastCheckedAt": "2026-07-19T12:56:53.804Z",
       "detail": "未设置 THE_ODDS_API_KEY"
@@ -4368,7 +4368,8 @@
             "impliedProbability": 0.3333333333333333,
             "normalizedProbability": 0.3163064833005894,
             "line": null,
-            "movement": -0.6
+            "movement": null,
+            "bookmakerCount": 50
           },
           {
             "label": "阿根廷",
@@ -4407,22 +4408,24 @@
           {
             "label": "西班牙",
             "side": "spreadHome",
-            "american": "+120",
-            "decimal": 2.2,
-            "impliedProbability": 0.45454545454545453,
+            "american": "+125",
+            "decimal": 2.26,
+            "impliedProbability": 0.4434589800443459,
             "normalizedProbability": null,
-            "line": "-0.5",
-            "movement": 0
+            "line": -0.5,
+            "movement": null,
+            "bookmakerCount": 10
           },
           {
             "label": "阿根廷",
             "side": "spreadAway",
-            "american": "-150",
-            "decimal": 1.67,
-            "impliedProbability": 0.6,
+            "american": "-146",
+            "decimal": 1.69,
+            "impliedProbability": 0.5934718100890207,
             "normalizedProbability": null,
-            "line": "+0.5",
-            "movement": 0
+            "line": 0.5,
+            "movement": null,
+            "bookmakerCount": 10
           }
         ],
         "updatedAt": "2026-07-19T12:56:53.804Z"
@@ -5622,6 +5625,13 @@
               "score": "0-0"
             },
             {
+              "label": "2-1",
+              "side": null,
+              "probability": 0.0938,
+              "count": 938,
+              "score": "2-1"
+            },
+            {
               "label": "0-1",
               "side": null,
               "probability": 0.0961,
@@ -5741,7 +5751,7 @@
               "score": "1-4"
             },
             {
-              "label": "5-1",
+              "label": "5-0",
               "side": null,
               "probability": 0.0039,
               "count": 39,
@@ -5755,11 +5765,11 @@
               "score": "0-4"
             },
             {
-              "label": "5-0",
+              "label": "4-3",
               "side": null,
-              "probability": 0.0031,
-              "count": 31,
-              "score": "5-0"
+              "probability": 0.0027,
+              "count": 27,
+              "score": "4-3"
             },
             {
               "label": "2-4",
@@ -5923,6 +5933,13 @@
               "probability": 0.1007,
               "count": 1007,
               "score": "0-0"
+            },
+            {
+              "label": "2-1",
+              "side": null,
+              "probability": 0.0938,
+              "count": 938,
+              "score": "2-1"
             },
             {
               "label": "0-1",
