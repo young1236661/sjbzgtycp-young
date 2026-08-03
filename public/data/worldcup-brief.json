@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-08-02T04:37:11.658Z",
-  "generatedAtChina": "08/02 12:37",
-  "targetDateChina": "2026-08-02",
+  "generatedAt": "2026-08-03T04:46:44.022Z",
+  "generatedAtChina": "08/03 12:46",
+  "targetDateChina": "2026-08-03",
   "timezone": "Asia/Shanghai",
   "summary": {
     "headline": "未来暂无可解析比赛",
     "note": "系统将公开赛程、新闻和海外市场赔率转为概率视图，再给出谨慎的体彩核验方向。所有判断只作信息分析，不保证盈利。",
     "predictionScope": "90分钟常规时间 + 上下半场补时，不含加时赛和点球大战",
     "trackedMatches": 0,
-    "healthySources": 66,
+    "healthySources": 67,
     "updateMode": "GitHub 定时"
   },
   "sources": [
@@ -17,7 +17,7 @@
       "name": "FIFA 官方赛程",
       "status": "ok",
       "url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/match-schedule-fixtures-results-teams-stadiums",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "官方页面可访问"
     },
     {
@@ -25,7 +25,7 @@
       "name": "ESPN 赛程 20260611",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260611",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "2 场比赛"
     },
     {
@@ -33,7 +33,7 @@
       "name": "ESPN 赛程 20260612",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260612",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "2 场比赛"
     },
     {
@@ -41,7 +41,7 @@
       "name": "ESPN 赛程 20260613",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260613",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "3 场比赛"
     },
     {
@@ -49,7 +49,7 @@
       "name": "ESPN 赛程 20260614",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260614",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "5 场比赛"
     },
     {
@@ -57,7 +57,7 @@
       "name": "ESPN 赛程 20260615",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260615",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "4 场比赛"
     },
     {
@@ -65,7 +65,7 @@
       "name": "ESPN 赛程 20260616",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260616",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "3 场比赛"
     },
     {
@@ -73,7 +73,7 @@
       "name": "ESPN 赛程 20260617",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260617",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "5 场比赛"
     },
     {
@@ -81,7 +81,7 @@
       "name": "ESPN 赛程 20260618",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260618",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "4 场比赛"
     },
     {
@@ -89,7 +89,7 @@
       "name": "ESPN 赛程 20260619",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260619",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "4 场比赛"
     },
     {
@@ -97,7 +97,7 @@
       "name": "ESPN 赛程 20260620",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260620",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "3 场比赛"
     },
     {
@@ -105,7 +105,7 @@
       "name": "ESPN 赛程 20260621",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260621",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "5 场比赛"
     },
     {
@@ -113,7 +113,7 @@
       "name": "ESPN 赛程 20260622",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260622",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "4 场比赛"
     },
     {
@@ -121,7 +121,7 @@
       "name": "ESPN 赛程 20260623",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260623",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "4 场比赛"
     },
     {
@@ -129,7 +129,7 @@
       "name": "ESPN 赛程 20260624",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260624",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "6 场比赛"
     },
     {
@@ -137,7 +137,7 @@
       "name": "ESPN 赛程 20260625",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260625",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "6 场比赛"
     },
     {
@@ -145,7 +145,7 @@
       "name": "ESPN 赛程 20260626",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260626",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "6 场比赛"
     },
     {
@@ -153,7 +153,7 @@
       "name": "ESPN 赛程 20260627",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260627",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "6 场比赛"
     },
     {
@@ -161,7 +161,7 @@
       "name": "ESPN 赛程 20260628",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260628",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "1 场比赛"
     },
     {
@@ -169,7 +169,7 @@
       "name": "ESPN 赛程 20260629",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260629",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "3 场比赛"
     },
     {
@@ -177,7 +177,7 @@
       "name": "ESPN 赛程 20260630",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260630",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "3 场比赛"
     },
     {
@@ -185,7 +185,7 @@
       "name": "ESPN 赛程 20260701",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260701",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "3 场比赛"
     },
     {
@@ -193,7 +193,7 @@
       "name": "ESPN 赛程 20260702",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260702",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "3 场比赛"
     },
     {
@@ -201,7 +201,7 @@
       "name": "ESPN 赛程 20260703",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260703",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "3 场比赛"
     },
     {
@@ -209,7 +209,7 @@
       "name": "ESPN 赛程 20260704",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260704",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "2 场比赛"
     },
     {
@@ -217,7 +217,7 @@
       "name": "ESPN 赛程 20260705",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260705",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "2 场比赛"
     },
     {
@@ -225,7 +225,7 @@
       "name": "ESPN 赛程 20260706",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260706",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "2 场比赛"
     },
     {
@@ -233,7 +233,7 @@
       "name": "ESPN 赛程 20260707",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260707",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "2 场比赛"
     },
     {
@@ -241,7 +241,7 @@
       "name": "ESPN 赛程 20260708",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260708",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "0 场比赛"
     },
     {
@@ -249,7 +249,7 @@
       "name": "ESPN 赛程 20260709",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260709",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "1 场比赛"
     },
     {
@@ -257,7 +257,7 @@
       "name": "ESPN 赛程 20260710",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260710",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "1 场比赛"
     },
     {
@@ -265,7 +265,7 @@
       "name": "ESPN 赛程 20260711",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260711",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "2 场比赛"
     },
     {
@@ -273,7 +273,7 @@
       "name": "ESPN 赛程 20260712",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260712",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "0 场比赛"
     },
     {
@@ -281,7 +281,7 @@
       "name": "ESPN 赛程 20260713",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260713",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "0 场比赛"
     },
     {
@@ -289,7 +289,7 @@
       "name": "ESPN 赛程 20260714",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260714",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "1 场比赛"
     },
     {
@@ -297,7 +297,7 @@
       "name": "ESPN 赛程 20260715",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260715",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "1 场比赛"
     },
     {
@@ -305,7 +305,7 @@
       "name": "ESPN 赛程 20260716",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260716",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "0 场比赛"
     },
     {
@@ -313,7 +313,7 @@
       "name": "ESPN 赛程 20260717",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260717",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "0 场比赛"
     },
     {
@@ -321,7 +321,7 @@
       "name": "ESPN 赛程 20260718",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260718",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "1 场比赛"
     },
     {
@@ -329,7 +329,7 @@
       "name": "ESPN 赛程 20260719",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260719",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "1 场比赛"
     },
     {
@@ -337,7 +337,7 @@
       "name": "ESPN 赛程 20260720",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260720",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "0 场比赛"
     },
     {
@@ -345,7 +345,7 @@
       "name": "ESPN 赛程 20260721",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260721",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "0 场比赛"
     },
     {
@@ -353,7 +353,7 @@
       "name": "ESPN 赛程 20260722",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260722",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "0 场比赛"
     },
     {
@@ -361,7 +361,7 @@
       "name": "ESPN 赛程 20260723",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260723",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "0 场比赛"
     },
     {
@@ -369,7 +369,7 @@
       "name": "ESPN 赛程 20260724",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260724",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "0 场比赛"
     },
     {
@@ -377,7 +377,7 @@
       "name": "ESPN 赛程 20260725",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260725",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "0 场比赛"
     },
     {
@@ -385,7 +385,7 @@
       "name": "ESPN 赛程 20260726",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260726",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "0 场比赛"
     },
     {
@@ -393,7 +393,7 @@
       "name": "ESPN 赛程 20260727",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260727",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "0 场比赛"
     },
     {
@@ -401,7 +401,7 @@
       "name": "ESPN 赛程 20260728",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260728",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "0 场比赛"
     },
     {
@@ -409,7 +409,7 @@
       "name": "ESPN 赛程 20260729",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260729",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "0 场比赛"
     },
     {
@@ -417,7 +417,7 @@
       "name": "ESPN 赛程 20260730",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260730",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "0 场比赛"
     },
     {
@@ -425,7 +425,7 @@
       "name": "ESPN 赛程 20260731",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260731",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "0 场比赛"
     },
     {
@@ -433,7 +433,7 @@
       "name": "ESPN 赛程 20260801",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260801",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "0 场比赛"
     },
     {
@@ -441,7 +441,7 @@
       "name": "ESPN 赛程 20260802",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260802",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "0 场比赛"
     },
     {
@@ -449,7 +449,7 @@
       "name": "ESPN 赛程 20260803",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260803",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "0 场比赛"
     },
     {
@@ -457,7 +457,7 @@
       "name": "ESPN 赛程 20260804",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260804",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "0 场比赛"
     },
     {
@@ -465,7 +465,7 @@
       "name": "ESPN 赛程 20260805",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260805",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "0 场比赛"
     },
     {
@@ -473,7 +473,7 @@
       "name": "ESPN 赛程 20260806",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260806",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "0 场比赛"
     },
     {
@@ -481,7 +481,15 @@
       "name": "ESPN 赛程 20260807",
       "status": "ok",
       "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260807",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
+      "detail": "0 场比赛"
+    },
+    {
+      "id": "espn-scoreboard-20260808",
+      "name": "ESPN 赛程 20260808",
+      "status": "ok",
+      "url": "https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260808",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "0 场比赛"
     },
     {
@@ -489,7 +497,7 @@
       "name": "ESPN 世界杯新闻",
       "status": "ok",
       "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/news",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "6 条新闻"
     },
     {
@@ -497,7 +505,7 @@
       "name": "The Odds API",
       "status": "ok",
       "url": "https://the-odds-api.com/",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "0 场赔率"
     },
     {
@@ -505,7 +513,7 @@
       "name": "中国体彩网竞彩",
       "status": "warn",
       "url": "https://www.sporttery.cn/jc/",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "HTTP 567"
     },
     {
@@ -513,7 +521,7 @@
       "name": "ESPN 球队近 5 场",
       "status": "warn",
       "url": "https://www.espn.com/soccer/",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "未触发"
     },
     {
@@ -521,7 +529,7 @@
       "name": "ESPN 伤病名单",
       "status": "warn",
       "url": "https://www.espn.com/soccer/",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "未触发"
     },
     {
@@ -529,7 +537,7 @@
       "name": "Open-Meteo 天气",
       "status": "warn",
       "url": "https://open-meteo.com/",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "未触发"
     },
     {
@@ -537,7 +545,7 @@
       "name": "本地预测档案",
       "status": "ok",
       "url": "public/data/prediction-history.json",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "65 场赛前预测用于后续赛后训练"
     },
     {
@@ -545,7 +553,7 @@
       "name": "FIFA 历届世界杯表现档案",
       "status": "ok",
       "url": "https://www.fifa.com/en/tournaments/mens/worldcup",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "17 条球队历史档案参与低权重校准"
     },
     {
@@ -553,7 +561,7 @@
       "name": "Cup26 AI Elo + Dixon-Coles",
       "status": "ok",
       "url": "https://github.com/Hicruben/world-cup-2026-prediction-model",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "MIT开源独立基线；本届走步回测 104 场"
     },
     {
@@ -561,7 +569,7 @@
       "name": "OpenFootball dynamic attack/defence Poisson",
       "status": "ok",
       "url": "https://github.com/openfootball/worldcup.json",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "CC0历届世界杯964场90分钟数据；动态攻防模型仅作审计，未进入主概率"
     },
     {
@@ -569,11 +577,43 @@
       "name": "Oxford Football Forecasting locked ensemble",
       "status": "ok",
       "url": "https://fatih.ai/worldcup2026/fixtures/",
-      "lastCheckedAt": "2026-08-02T04:37:11.658Z",
+      "lastCheckedAt": "2026-08-03T04:46:44.022Z",
       "detail": "赛前锁定的72场公开预测已独立回测；淘汰赛外推未通过门槛，仅作审计"
     }
   ],
   "news": [
+    {
+      "id": "49466177",
+      "title": "Socceroos transfer tracker: Where Australia's stars will play in 2026-27",
+      "summary": "There's nothing like a World Cup to put young stars in the shop window! With that in mind, ESPN has assembled a list of all the Socceroos' post-tournament transfers, all in one place.",
+      "url": "https://www.espn.com/soccer/story/_/id/49466177/socceroos-transfer-tracker-where-australias-stars-play-2026-27",
+      "publishedAt": "2026-08-03T02:24:12Z",
+      "impact": "新闻"
+    },
+    {
+      "id": "49513925",
+      "title": "Andy Burnham: Gianni Infantino isn't the right man to lead FIFA - we can't 'move on and forget' World Cup plan",
+      "summary": "U.K. Prime Minister Andy Burnham has doubled down on his call for change at the top of FIFA, insisting football cannot \"move on and forget.\"",
+      "url": "https://www.espn.com/soccer/story/_/id/49513925/andy-burnham-gianni-infantino-right-man-fifa-move-forget-world-cup-plan",
+      "publishedAt": "2026-08-02T18:57:05Z",
+      "impact": "新闻"
+    },
+    {
+      "id": "49512906",
+      "title": "Real Madrid thank UEFA for 'protecting football' after FIFA abandon private equity proposal",
+      "summary": "Real Madrid have praised UEFA for helping protect football \"at a decisive moment\" after FIFA abandoned plans to sell stakes in a World Cup company to private investors.",
+      "url": "https://www.espn.com/soccer/story/_/id/49512906/real-madrid-thank-uefa-protecting-football-fifa-abandon-private-equity-proposal",
+      "publishedAt": "2026-08-02T15:52:20Z",
+      "impact": "新闻"
+    },
+    {
+      "id": "49511728",
+      "title": "Why Infantino's plans to sell off World Cup made no sense",
+      "summary": "FIFA president Gianni Infantino has gambled unsuccessfully on questionable ideas before, but his World Cup plans were ham-fisted and delusional from both a business and political perspective.",
+      "url": "https://www.espn.com/soccer/story/_/id/49511728/why-fifa-president-infantino-plans-sell-world-cup-made-no-sense",
+      "publishedAt": "2026-08-02T13:28:42Z",
+      "impact": "新闻"
+    },
     {
       "id": "47978642",
       "title": "Messi tracker: Goals, assists, key moments in 2026",
@@ -583,49 +623,17 @@
       "impact": "新闻"
     },
     {
-      "id": "49466177",
-      "title": "Socceroos transfer tracker: Where Australia's stars will play in 2026-27",
-      "summary": "There's nothing like a World Cup to put young stars in the shop window! With that in mind, ESPN has assembled a list of all the Socceroos' post-tournament transfers, all in one place.",
-      "url": "https://www.espn.com/soccer/story/_/id/49466177/socceroos-transfer-tracker-where-australias-stars-play-2026-27",
-      "publishedAt": "2026-08-02T01:10:56Z",
-      "impact": "新闻"
-    },
-    {
       "id": "49503925",
       "title": "Marcotti: Infantino's sell-off plan never made sense",
       "summary": "Marcotti: Infantino's sell-off plan never made sense",
       "url": "https://www.espn.com/video/clip/_/id/49503925/infantino-sell-plan-never-made-sense",
       "publishedAt": "2026-08-01T12:02:49Z",
       "impact": "新闻"
-    },
-    {
-      "id": "49503505",
-      "title": "Gianni Infantino has 'lost UEFA's confidence' as World Cup investment plan fails",
-      "summary": "FIFA president Gianni Infantino has \"lost the confidence\" of UEFA over a plan to sell stakes in a World Cup company to private investors, the European football governing body has said.",
-      "url": "https://www.espn.com/soccer/story/_/id/49503505/gianni-infantino-lost-uefa-confidence-world-cup-investment-plan-fails",
-      "publishedAt": "2026-08-01T18:47:22Z",
-      "impact": "新闻"
-    },
-    {
-      "id": "49503295",
-      "title": "Will Infantino survive as FIFA president after sell-off U-turn?",
-      "summary": "Will Infantino survive as FIFA president after sell-off U-turn?",
-      "url": "https://www.espn.com/video/clip/_/id/49503295/will-infantino-survive-fifa-president-sell-u-turn",
-      "publishedAt": "2026-08-01T08:26:37Z",
-      "impact": "新闻"
-    },
-    {
-      "id": "49497503",
-      "title": "Could Infantino lose FIFA presidency after World Cup plans were rejected?",
-      "summary": "Despite making FIFA unimaginable fortunes, Gianni Infantino is wearing out his welcome. His scrapped plans to privatize the World Cup might be the last straw.",
-      "url": "https://www.espn.com/soccer/story/_/id/49497503/fifa-world-cup-president-gianni-infantino-world-cup-selloff-plan-lose-power-analysis",
-      "publishedAt": "2026-08-01T16:31:08Z",
-      "impact": "新闻"
     }
   ],
   "modelReview": {
     "title": "赛后复盘校准",
-    "scope": "本届世界杯 2026-06-11 至 2026-08-02 已完赛样本",
+    "scope": "本届世界杯 2026-06-11 至 2026-08-03 已完赛样本",
     "standardEvaluation": {
       "methodology": "strict chronological walk-forward; each match is predicted before its result updates ratings",
       "properScoring": "1X2 and total-goal RPS, multiclass Brier and log-loss; lower is better except accuracy and coverage",
